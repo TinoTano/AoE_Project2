@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Application.h"
 #include "Render.h"
 #include "FileSystem.h"
 #include "Textures.h"
@@ -59,7 +59,7 @@ bool Textures::CleanUp()
 SDL_Texture* const Textures::Load(const char* path)
 {
 	SDL_Texture* texture = NULL;
-	SDL_Surface* surface = IMG_Load_RW(_App->fs->Load(path), 1);
+	SDL_Surface* surface = IMG_Load_RW(App->fs->Load(path), 1);
 
 	if(surface == NULL)
 	{
@@ -94,7 +94,7 @@ bool Textures::UnLoad(SDL_Texture* texture)
 // Translate a surface into a texture
 SDL_Texture* const Textures::LoadSurface(SDL_Surface* surface)
 {
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(_App->render->renderer, surface);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(App->render->renderer, surface);
 
 	if(texture == NULL)
 	{

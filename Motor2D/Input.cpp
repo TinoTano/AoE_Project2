@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Application.h"
 #include "Input.h"
 #include "Window.h"
 #include "p2Log.h"
@@ -117,7 +117,7 @@ bool Input::PreUpdate()
 			break;
 
 			case SDL_MOUSEMOTION:{
-				int scale = _App->win->GetScale();
+				int scale = App->win->GetScale();
 				mouse_motion_x = event.motion.xrel / scale;
 				mouse_motion_y = event.motion.yrel / scale;
 				mouse_x = event.motion.x / scale;

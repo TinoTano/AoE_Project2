@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Application.h"
 #include "PathFinding.h"
 #include "p2Log.h"
 
@@ -120,22 +120,22 @@ uint PathNode::FindWalkableAdjacents(PathList& list_to_fill) const
 
 	// north
 	cell.create(pos.x, pos.y + 1);
-	if(_App->pathfinding->IsWalkable(cell))
+	if(App->pathfinding->IsWalkable(cell))
 		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
 
 	// south
 	cell.create(pos.x, pos.y - 1);
-	if(_App->pathfinding->IsWalkable(cell))
+	if(App->pathfinding->IsWalkable(cell))
 		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
 
 	// east
 	cell.create(pos.x + 1, pos.y);
-	if(_App->pathfinding->IsWalkable(cell))
+	if(App->pathfinding->IsWalkable(cell))
 		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
 
 	// west
 	cell.create(pos.x - 1, pos.y);
-	if(_App->pathfinding->IsWalkable(cell))
+	if(App->pathfinding->IsWalkable(cell))
 		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
 
 	return list_to_fill.pathNodeList.size();

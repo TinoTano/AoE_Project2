@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Application.h"
 #include "Window.h"
 #include "SDL/include/SDL.h"
 #include "p2Log.h"
@@ -60,7 +60,7 @@ bool Window::Awake(pugi::xml_node& config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(_App->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(App->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
 		{

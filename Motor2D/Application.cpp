@@ -11,11 +11,11 @@
 #include "Map.h"
 #include "Pathfinding.h"
 #include "Fonts.h"
-#include "App.h"
+#include "Application.h"
 #include "p2Log.h"
 
 // Constructor
-App::App(int argc, char* args[]) : argc(argc), args(args)
+Application::Application(int argc, char* args[]) : argc(argc), args(args)
 {
 	PERF_START(ptimer);
 
@@ -51,7 +51,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 }
 
 // Destructor
-App::~App()
+Application::~Application()
 {
 	// release modules
 	for (list<Module*>::iterator it = modules.begin(); it != modules.end(); it++) {
@@ -61,14 +61,14 @@ App::~App()
 	modules.clear();
 }
 
-void App::AddModule(Module* module)
+void Application::AddModule(Module* module)
 {
 	module->Init();
 	modules.push_back(module);
 }
 
 // Called before render is available
-bool App::Awake()
+bool Application::Awake()
 {
 	PERF_START(ptimer);
 
@@ -109,7 +109,7 @@ bool App::Awake()
 }
 
 // Called before the first frame
-bool App::Start()
+bool Application::Start()
 {
 	PERF_START(ptimer);
 	bool ret = true;
@@ -126,7 +126,7 @@ bool App::Start()
 }
 
 // Called each loop iteration
-bool App::Update()
+bool Application::Update()
 {
 	bool ret = true;
 	PrepareUpdate();
@@ -149,12 +149,12 @@ bool App::Update()
 }
 
 // ---------------------------------------------
-pugi::xml_node App::LoadConfig(pugi::xml_document& config_file) const
+pugi::xml_node Application::LoadConfig(pugi::xml_document& config_file) const
 {
 	pugi::xml_node ret;
 
 	char* buf;
-	int size = _App->fs->Load("config.xml", &buf);
+	int size = App->fs->Load("config.xml", &buf);
 	pugi::xml_parse_result result = config_file.load_buffer(buf, size);
 	RELEASE(buf);
 
@@ -167,7 +167,7 @@ pugi::xml_node App::LoadConfig(pugi::xml_document& config_file) const
 }
 
 // ---------------------------------------------
-void App::PrepareUpdate()
+void Application::PrepareUpdate()
 {
 	frame_count++;
 	last_sec_frame_count++;
@@ -177,7 +177,7 @@ void App::PrepareUpdate()
 }
 
 // ---------------------------------------------
-void App::FinishUpdate()
+void Application::FinishUpdate()
 {
 	if(want_to_save == true)
 		SavegameNow();
@@ -202,7 +202,7 @@ void App::FinishUpdate()
 	static char title[256];
 	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %u Last sec frames: %i Last dt: %.3f Time since startup: %.3f Frame Count: %lu ",
 			  avg_fps, last_frame_ms, frames_on_last_update, dt, seconds_since_startup, frame_count);
-	_App->win->SetTitle(title);
+	App->win->SetTitle(title);
 
 	if(capped_ms > 0 && last_frame_ms < capped_ms)
 	{
@@ -213,7 +213,7 @@ void App::FinishUpdate()
 }
 
 // Call modules before each loop iteration
-bool App::PreUpdate()
+bool Application::PreUpdate()
 {
 	bool ret = true;
 	for (list<Module*>::iterator it = modules.begin(); it != modules.end(); it++)
@@ -226,7 +226,7 @@ bool App::PreUpdate()
 }
 
 // Call modules on each loop iteration
-bool App::DoUpdate()
+bool Application::DoUpdate()
 {
 	bool ret = true;
 	for (list<Module*>::iterator it = modules.begin(); it != modules.end(); it++)
@@ -239,7 +239,7 @@ bool App::DoUpdate()
 }
 
 // Call modules after each loop iteration
-bool App::PostUpdate()
+bool Application::PostUpdate()
 {
 	bool ret = true;
 	for (list<Module*>::iterator it = modules.begin(); it != modules.end(); it++)
@@ -252,7 +252,7 @@ bool App::PostUpdate()
 }
 
 // Called before quitting
-bool App::CleanUp()
+bool Application::CleanUp()
 {
 	PERF_START(ptimer);
 	bool ret = true;
@@ -265,13 +265,13 @@ bool App::CleanUp()
 }
 
 // ---------------------------------------
-int App::GetArgc() const
+int Application::GetArgc() const
 {
 	return argc;
 }
 
 // ---------------------------------------
-const char* App::GetArgv(int index) const
+const char* Application::GetArgv(int index) const
 {
 	if(index < argc)
 		return args[index];
@@ -280,25 +280,25 @@ const char* App::GetArgv(int index) const
 }
 
 // ---------------------------------------
-const char* App::GetTitle() const
+const char* Application::GetTitle() const
 {
 	return title.c_str();
 }
 
 // ---------------------------------------
-float App::GetDT() const
+float Application::GetDT() const
 {
 	return dt;
 }
 
 // ---------------------------------------
-const char* App::GetOrganization() const
+const char* Application::GetOrganization() const
 {
 	return organization.c_str();
 }
 
 // Load / Save
-void App::LoadGame(const char* file)
+void Application::LoadGame(const char* file)
 {
 	// we should be checking if that file actually exist
 	// from the "GetSaveGames" list
@@ -307,7 +307,7 @@ void App::LoadGame(const char* file)
 }
 
 // ---------------------------------------
-void App::SaveGame(const char* file) const
+void Application::SaveGame(const char* file) const
 {
 	// we should be checking if that file actually exist
 	// from the "GetSaveGames" list ... should we overwrite ?
@@ -317,12 +317,12 @@ void App::SaveGame(const char* file) const
 }
 
 // ---------------------------------------
-void App::GetSaveGames(list<string>& list_to_fill) const
+void Application::GetSaveGames(list<string>& list_to_fill) const
 {
 	// need to add functionality to file_system module for this to work
 }
 
-bool App::LoadGameNow()
+bool Application::LoadGameNow()
 {
 	bool ret = false;
 
@@ -365,7 +365,7 @@ bool App::LoadGameNow()
 	return ret;
 }
 
-bool App::SavegameNow() const
+bool Application::SavegameNow() const
 {
 	bool ret = true;
 

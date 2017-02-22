@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Application.h"
 #include "Window.h"
 #include "Render.h"
 #include "p2Log.h"
@@ -33,7 +33,7 @@ bool Render::Awake(pugi::xml_node& config)
 		LOG("Using vsync");
 	}
 
-	renderer = SDL_CreateRenderer(_App->win->window, -1, flags);
+	renderer = SDL_CreateRenderer(App->win->window, -1, flags);
 
 	if(renderer == NULL)
 	{
@@ -42,8 +42,8 @@ bool Render::Awake(pugi::xml_node& config)
 	}
 	else
 	{
-		camera.w = _App->win->screen_surface->w;
-		camera.h = _App->win->screen_surface->h;
+		camera.w = App->win->screen_surface->w;
+		camera.h = App->win->screen_surface->h;
 		camera.x = 0;
 		camera.y = 0;
 	}
@@ -120,7 +120,7 @@ void Render::ResetViewPort()
 iPoint Render::ScreenToWorld(int x, int y) const
 {
 	iPoint ret;
-	int scale = _App->win->GetScale();
+	int scale = App->win->GetScale();
 
 	ret.x = (x - camera.x / scale);
 	ret.y = (y - camera.y / scale);
@@ -132,7 +132,7 @@ iPoint Render::ScreenToWorld(int x, int y) const
 bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section,bool use_camera, float speed, double angle, int pivot_x, int pivot_y) const
 {
 	bool ret = true;
-	uint scale = _App->win->GetScale();
+	uint scale = App->win->GetScale();
 
 	SDL_Rect rect;
 	rect.x =  x * scale;
@@ -177,7 +177,7 @@ bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section,bo
 bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled, bool use_camera) const
 {
 	bool ret = true;
-	uint scale = _App->win->GetScale();
+	uint scale = App->win->GetScale();
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
@@ -205,7 +205,7 @@ bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, 
 bool Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
 {
 	bool ret = true;
-	uint scale = _App->win->GetScale();
+	uint scale = App->win->GetScale();
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
@@ -229,7 +229,7 @@ bool Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b,
 bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
 {
 	bool ret = true;
-	uint scale = _App->win->GetScale();
+	uint scale = App->win->GetScale();
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);

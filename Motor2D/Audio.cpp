@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Application.h"
 #include "FileSystem.h"
 #include "Audio.h"
 #include "p2Log.h"
@@ -103,7 +103,7 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		Mix_FreeMusic(music);
 	}
 
-	music = Mix_LoadMUS_RW(_App->fs->Load(path), 1);
+	music = Mix_LoadMUS_RW(App->fs->Load(path), 1);
 
 	if(music == NULL)
 	{
@@ -142,7 +142,7 @@ unsigned int Audio::LoadFx(const char* path)
 	if(!active)
 		return 0;
 
-	Mix_Chunk* chunk = Mix_LoadWAV_RW(_App->fs->Load(path), 1);
+	Mix_Chunk* chunk = Mix_LoadWAV_RW(App->fs->Load(path), 1);
 
 	if(chunk == NULL)
 	{

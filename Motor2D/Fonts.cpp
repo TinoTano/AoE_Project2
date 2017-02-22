@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Application.h"
 #include "Textures.h"
 #include "FileSystem.h"
 #include "Fonts.h"
@@ -55,7 +55,7 @@ bool Fonts::CleanUp()
 // Load new texture from file path
 TTF_Font* const Fonts::Load(const char* path, int size)
 {
-	TTF_Font* font = TTF_OpenFontRW(_App->fs->Load(path), 1, size);
+	TTF_Font* font = TTF_OpenFontRW(App->fs->Load(path), 1, size);
 
 	if(font == NULL)
 	{
@@ -82,7 +82,7 @@ SDL_Texture* Fonts::Print(const char* text, SDL_Color color, _TTF_Font* font)
 	}
 	else
 	{
-		ret = _App->tex->LoadSurface(surface);
+		ret = App->tex->LoadSurface(surface);
 		SDL_FreeSurface(surface);
 	}
 

@@ -1,4 +1,4 @@
-#include "App.h"
+#include "Application.h"
 #include "Render.h"
 #include "FileSystem.h"
 #include "Textures.h"
@@ -50,7 +50,7 @@ void Map::Draw()
 					SDL_Rect r = tileset->GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 
-					_App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+					App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 				}
 			}
 		}
@@ -187,7 +187,7 @@ bool Map::Load(const char* file_name)
 	string tmp = folder.c_str();
 
 	char* buf;
-	int size = _App->fs->Load(tmp.c_str(), &buf);
+	int size = App->fs->Load(tmp.c_str(), &buf);
 	pugi::xml_parse_result result = map_file.load_buffer(buf, size);
 
 	RELEASE(buf);
@@ -371,7 +371,7 @@ bool Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 	}
 	else
 	{
-		set->texture = _App->tex->Load(PATH(folder.c_str(), image.attribute("source").as_string()));
+		set->texture = App->tex->Load(PATH(folder.c_str(), image.attribute("source").as_string()));
 		int w, h;
 		SDL_QueryTexture(set->texture, NULL, NULL, &w, &h);
 		set->tex_width = image.attribute("width").as_int();

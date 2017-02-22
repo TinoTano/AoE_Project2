@@ -34,9 +34,6 @@
     <ClCompile Include="Scene.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="App.cpp">
-      <Filter>Project 2</Filter>
-    </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Project 2</Filter>
     </ClCompile>
@@ -47,6 +44,9 @@
       <Filter>Project 2\Tools</Filter>
     </ClCompile>
     <ClCompile Include="p2Log.cpp">
+      <Filter>Project 2</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
       <Filter>Project 2</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,9 +87,6 @@
     <ClInclude Include="Scene.h">
       <Filter>Project 2\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="App.h">
-      <Filter>Project 2</Filter>
-    </ClInclude>
     <ClInclude Include="Module.h">
       <Filter>Project 2</Filter>
     </ClInclude>
@@ -106,6 +103,12 @@
       <Filter>Project 2</Filter>
     </ClInclude>
     <ClInclude Include="p2Point.h">
+      <Filter>Project 2</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Project 2\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
       <Filter>Project 2</Filter>
     </ClInclude>
   </ItemGroup>

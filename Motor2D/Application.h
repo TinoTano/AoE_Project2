@@ -1,5 +1,5 @@
-#ifndef __APP_H__
-#define __APP_H__
+#ifndef __APPLICATION_H__
+#define __APPLICATION_H__
 
 #include "Module.h"
 #include "PerfTimer.h"
@@ -19,15 +19,15 @@ class Map;
 class PathFinding;
 class Fonts;
 
-class App
+class Application
 {
 public:
 
 	// Constructor
-	App(int argc, char* args[]);
+	Application(int argc, char* args[]);
 
 	// Destructor
-	virtual ~App();
+	virtual ~Application();
 
 	// Called before render is available
 	bool Awake();
@@ -120,6 +120,6 @@ private:
 	int					capped_ms = -1;
 };
 
-extern App* _App; 
+extern Application* App; 
 
 #endif
