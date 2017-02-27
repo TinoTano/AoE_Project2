@@ -15,6 +15,8 @@
 #include "p2Log.h"
 #include "EntityManager.h"
 #include "Collision.h"
+#include "Gui.h"
+#include "SceneTest.h"
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -33,6 +35,8 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	font = new Fonts();
 	entityManager = new EntityManager();
 	collision = new Collision();
+	gui = new Gui();
+	scenetest = new SceneTest();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -44,6 +48,8 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(map);
 	AddModule(pathfinding);
 	AddModule(font);
+	AddModule(gui);
+	AddModule(scenetest);
 
 	// scene last
 	AddModule(scene);

@@ -127,10 +127,7 @@ bool Input::PreUpdate()
 			break;
 
 			case SDL_TEXTINPUT:
-				input_text->insert(*input_cursor, event.text.text);
-				*input_cursor += strlen(event.text.text);
-				//LOG("Input event: %s", event.edit.text);
-				break;
+				addtext += event.text.text;
 		}
 	}
 
@@ -180,4 +177,17 @@ void Input::EndInputText()
 	SDL_StopTextInput();
 	input_cursor = nullptr;
 	input_text = nullptr;
+}
+
+string Input::GetText()
+{
+	string ret;
+	ret += addtext.c_str();
+	addtext.clear();
+	return ret;
+}
+
+uint Input::TextSize()
+{
+	return addtext.size();
 }

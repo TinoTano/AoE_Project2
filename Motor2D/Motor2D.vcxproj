@@ -80,6 +80,7 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Fonts.cpp" />
+    <ClCompile Include="Gui.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Audio.cpp" />
@@ -89,6 +90,7 @@
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneTest.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Textures.cpp" />
@@ -103,6 +105,7 @@
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Fonts.h" />
+    <ClInclude Include="Gui.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="p2Defs.h" />
     <ClInclude Include="p2Log.h" />
@@ -110,6 +113,7 @@
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneTest.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Input.h" />

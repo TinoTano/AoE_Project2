@@ -15,11 +15,13 @@ class Textures;
 class Audio;
 class FileSystem;
 class Scene;
+class SceneTest;
 class Map;
 class PathFinding;
 class Fonts;
 class EntityManager;
 class Collision;
+class Gui;
 
 class Application
 {
@@ -96,6 +98,8 @@ public:
 	Fonts*				font = NULL;
 	EntityManager*		entityManager = NULL;
 	Collision*			collision = NULL;
+	Gui*				gui = NULL;
+	SceneTest*			scenetest = NULL;
 
 	bool				quit = false;
 

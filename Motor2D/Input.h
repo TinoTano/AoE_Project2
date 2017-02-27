@@ -71,6 +71,8 @@ public:
 	void StartInputText(std::string* text, int* cursor);
 	void EndInputText();
 
+	string	GetText();
+	uint	TextSize();
 private:
 	bool		windowEvents[WE_COUNT];
 	KeyState*	keyboard;
@@ -84,7 +86,7 @@ public:
 	//text input management
 	string*		input_text = nullptr;
 	int*		input_cursor = nullptr;
-
+	string		addtext;
 };
 
 #endif // __INPUT_H__
