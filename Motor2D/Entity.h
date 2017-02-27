@@ -4,7 +4,7 @@
 #include "p2Point.h"
 #include "SDL\include\SDL.h"
 
-class Collider;
+struct Collider;
 
 class Entity
 {
@@ -23,7 +23,7 @@ public:
 	int entityID;
 	bool isActive = false;
 	SDL_Texture* entityTexture;
-	iPoint position;
+	iPoint entityPosition;
 	Collider* collider;
 };
 

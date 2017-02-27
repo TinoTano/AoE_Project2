@@ -99,6 +99,7 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 		for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 			if ((*it)->collider == c1) {
 				Unit* unit = (Unit*)(*it);
+				unit->entityTexture = unit->unitAttack;
 				unit->state = ATTACKING;
 				unit->SetAnim(unit->currentDirection);
 			}
@@ -106,7 +107,7 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 	}
 }
 
-void EntityManager::OnCollisionExit(Collider * c1, Collider * c2)
+/*void EntityManager::OnCollisionExit(Collider * c1, Collider * c2)
 {
 	if (c2->type == COLLIDER_ENEMY_UNIT || c2->type == COLLIDER_ENEMY_BUILDING) {
 		for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
@@ -117,7 +118,7 @@ void EntityManager::OnCollisionExit(Collider * c1, Collider * c2)
 			}
 		}
 	}
-}
+}*/
 
 void EntityManager::DestroyEntity(Entity * entity)
 {

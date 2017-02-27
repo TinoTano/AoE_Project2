@@ -186,7 +186,7 @@ int PathFinding::CreatePath(iPoint& origin, iPoint& destination, list<iPoint>& p
 	int ret = -1;
 
 	if (!IsWalkable(origin)) {
-		FindNearOrigin(origin);
+		return ret;
 	}
 
 	if (!IsWalkable(destination)) {
@@ -261,48 +261,6 @@ int PathFinding::CreatePath(iPoint& origin, iPoint& destination, list<iPoint>& p
 	return ret;
 }
 
-void PathFinding::FindNearOrigin(iPoint& origin)
-{
-	iPoint cell;
-
-	// north
-	cell.create(origin.x, origin.y + 1);
-	if (App->pathfinding->IsWalkable(cell))
-		origin = cell;
-
-	// south
-	cell.create(origin.x, origin.y - 1);
-	if (App->pathfinding->IsWalkable(cell))
-		origin = cell;
-
-	// east
-	cell.create(origin.x + 1, origin.y);
-	if (App->pathfinding->IsWalkable(cell))
-		origin = cell;
-
-	// west
-	cell.create(origin.x - 1, origin.y);
-	if (App->pathfinding->IsWalkable(cell))
-		origin = cell;
-
-	//diagonal cells
-	cell.create(origin.x + 1, origin.y + 1);
-	if (App->pathfinding->IsWalkable(cell))
-		origin = cell;
-
-	cell.create(origin.x - 1, origin.y + 1);
-	if (App->pathfinding->IsWalkable(cell))
-		origin = cell;
-
-	cell.create(origin.x - 1, origin.y - 1);
-	if (App->pathfinding->IsWalkable(cell))
-		origin = cell;
-
-	cell.create(origin.x + 1, origin.y - 1);
-	if (App->pathfinding->IsWalkable(cell))
-		origin = cell;
-
-}
 
 void PathFinding::FindAvailableDestination(iPoint& destination, iPoint& origin)
 {

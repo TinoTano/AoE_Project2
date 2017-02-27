@@ -84,7 +84,7 @@ bool Scene::Update(float dt)
 	int x, y;
 	App->input->GetMousePosition(x, y);
 	iPoint map_coordinates = App->map->WorldToMap(x - App->render->camera.x, y - App->render->camera.y);
-	iPoint villagerToWorld = App->map->WorldToMap(villager->position.x, villager->position.y);
+	iPoint villagerToWorld = App->map->WorldToMap(villager->entityPosition.x, villager->entityPosition.y);
 	string str = to_string(map_coordinates.x) + "," + to_string(map_coordinates.y) + "  " + to_string(villagerToWorld.x) + "," + to_string(villagerToWorld.y);
 	App->win->SetTitle(str.c_str());
 

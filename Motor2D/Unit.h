@@ -64,6 +64,10 @@ private:
 public:
 	unitState state;
 	unitDirection currentDirection;
+	SDL_Texture* unitIdle;
+	SDL_Texture* unitMove;
+	SDL_Texture* unitAttack;
+	SDL_Texture* unitDie;
 	//Animations
 
 	//Idle directions

@@ -17,7 +17,7 @@
 using namespace std;
 
 class App;
-class Collider;
+struct Collider;
 
 class Module
 {

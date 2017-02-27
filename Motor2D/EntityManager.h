@@ -39,7 +39,7 @@ public:
 
 	void DeleteEntity(Entity* entity);
 	void OnCollision(Collider* c1, Collider* c2);
-	void OnCollisionExit(Collider* c1, Collider* c2);
+	//void OnCollisionExit(Collider* c1, Collider* c2);
 
 private:
 	void DestroyEntity(Entity* entity);

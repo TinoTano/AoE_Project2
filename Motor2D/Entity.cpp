@@ -11,7 +11,7 @@ Entity::~Entity()
 
 iPoint Entity::GetPosition() const
 {
-	return position;
+	return entityPosition;
 }
 
 int Entity::GetEntityID() const

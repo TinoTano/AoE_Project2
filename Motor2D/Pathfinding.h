@@ -43,8 +43,6 @@ public:
 	// Utility: return the walkability value of a tile
 	uchar GetTileAt(const iPoint& pos) const;
 
-	void FindNearOrigin(iPoint& origin);
-
 	void FindAvailableDestination(iPoint& destination, iPoint& origin);
 
 private:

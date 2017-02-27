@@ -13,13 +13,13 @@
 
 Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 {
-	position = App->map->MapToWorld(posX, posY);
+	entityPosition = App->map->MapToWorld(posX, posY);
 	this->isEnemy = isEnemy;
 	this->type = type;
 	this->race = race;
 
-	position.x -= App->map->data.tile_width / 2;
-	position.y -= App->map->data.tile_height / 2;
+	entityPosition.x -= App->map->data.tile_width / 2;
+	entityPosition.y -= App->map->data.tile_height / 2;
 
 	//Provisional
 	switch (race) 
@@ -28,7 +28,11 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 		switch (type)
 		{
 		case ARCHER:
-			entityTexture = App->tex->Load("textures/ElvenArcherIdle.png");
+			unitIdle = App->tex->Load("textures/ElvenArcherIdle.png");
+			unitMove = App->tex->Load("textures/ElvenArcherMove.png");
+			unitAttack = App->tex->Load("textures/ElvenArcherAttack.png");
+			//unitDie = ;
+			entityTexture = unitIdle;
 			
 			//Anim Idle//
 			//Anim idle down
@@ -185,7 +189,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 			attackingDown.PushBack({ 496,0,62,74 });
 			attackingDown.PushBack({ 558,0,62,74 });
 			attackingDown.speed = 0.2f;
-			//Anim moving down-left
+			//Anim attacking down-left
 			attackingDownLeft.PushBack({ 0,74,62,74 });
 			attackingDownLeft.PushBack({ 62,74,62,74 });
 			attackingDownLeft.PushBack({ 124,74,62,74 });
@@ -197,7 +201,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 			attackingDownLeft.PushBack({ 496,74,62,74 });
 			attackingDownLeft.PushBack({ 558,74,62,74 });
 			attackingDownLeft.speed = 0.2f;
-			//Anim moving left
+			//Anim attacking left
 			attackingLeft.PushBack({ 0,148,62,74 });
 			attackingLeft.PushBack({ 62,148,62,74 });
 			attackingLeft.PushBack({ 124,148,62,74 });
@@ -209,7 +213,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 			attackingLeft.PushBack({ 496,148,62,74 });
 			attackingLeft.PushBack({ 558,148,62,74 });
 			attackingLeft.speed = 0.2f;
-			//Anim moving up-left
+			//Anim attacking up-left
 			attackingUpLeft.PushBack({ 0,222,62,74 });
 			attackingUpLeft.PushBack({ 62,222,62,74 });
 			attackingUpLeft.PushBack({ 124,222,62,74 });
@@ -221,7 +225,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 			attackingUpLeft.PushBack({ 496,222,62,74 });
 			attackingUpLeft.PushBack({ 558,222,62,74 });
 			attackingUpLeft.speed = 0.2f;
-			//Anim moving up
+			//Anim attacking up
 			attackingUp.PushBack({ 0,296,62,74 });
 			attackingUp.PushBack({ 62,296,62,74 });
 			attackingUp.PushBack({ 124,296,62,74 });
@@ -233,13 +237,13 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 			attackingUp.PushBack({ 496,296,62,74 });
 			attackingUp.PushBack({ 558,296,62,74 });
 			attackingUp.speed = 0.2f;
-			//Anim moving down-right
+			//Anim attacking down-right
 			attackingDownRight = attackingDownLeft;
 			attackingDownRight.flipAnim = true;
-			//Anim moving right
+			//Anim attacking right
 			attackingRight = attackingLeft;
 			attackingRight.flipAnim = true;
-			//Anim moving up-right
+			//Anim attacking up-right
 			attackingUpRight = attackingUpLeft;
 			attackingUpRight.flipAnim = true;
 			break;
@@ -251,7 +255,6 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 		switch (type)
 		{
 		case ARCHER:
-			entityTexture = App->tex->Load("textures/archer.png");
 			break;
 		default:
 			break;
@@ -259,7 +262,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 		break;
 	}
 
-	SDL_Rect colliderRect = { position.x, position.y, 47, 50 }; // missing w and h of texture
+	SDL_Rect colliderRect = { entityPosition.x, entityPosition.y, 47, 50 }; // missing w and h of texture
 	COLLIDER_TYPE colliderType;
 	if (isEnemy) {
 		colliderType = COLLIDER_ENEMY_UNIT;
@@ -298,10 +301,10 @@ bool Unit::Update(float dt)
 bool Unit::Draw()
 {
 	if (state != IDLE) {
-		App->render->Blit(entityTexture, currentAnim->flipAnim, position.x, position.y, &(currentAnim->GetCurrentFrame()));
+		App->render->Blit(entityTexture, currentAnim->flipAnim, entityPosition.x, entityPosition.y, &(currentAnim->GetCurrentFrame()));
 	}
 	else {
-		App->render->Blit(entityTexture, currentAnim->flipAnim, position.x, position.y, &(currentAnim->GetCurrentFrame()));
+		App->render->Blit(entityTexture, currentAnim->flipAnim, entityPosition.x, entityPosition.y, &(currentAnim->GetCurrentFrame()));
 	}
 	
 	return true;
@@ -319,8 +322,8 @@ int Unit::GetLife() const
 
 void Unit::SetPos(int posX, int posY)
 {
-	position.x = posX;
-	position.y = posY;
+	entityPosition.x = posX;
+	entityPosition.y = posY;
 }
 
 void Unit::SetSpeed(int amount)
@@ -335,19 +338,21 @@ void Unit::SetDestination()
 	target = App->map->WorldToMap(target.x - App->render->camera.x, target.y - App->render->camera.y);
 
 	iPoint origin;
-	origin.x = position.x + (App->map->data.tile_width / 2);
-	origin.y = position.y + (App->map->data.tile_height / 2);
+	origin.x = entityPosition.x + (App->map->data.tile_width / 2);
+	origin.y = entityPosition.y + (App->map->data.tile_height / 2);
 	
 	origin = App->map->WorldToMap(origin.x, origin.y);
 	App->pathfinding->CreatePath(origin, target, path);
 	
 	if (path.size() > 0) {
 		state = MOVING;
-		entityTexture = App->tex->Load("textures/ElvenArcherMove.png");
+		entityTexture = unitMove;
 		destinationReached = false;
 		if (path.front() == origin) {
-			destinationTile = path.begin()._Ptr->_Next->_Myval;
-			path.remove(path.begin()._Ptr->_Next->_Myval);
+			if (path.size() > 1) {
+				destinationTile = path.begin()._Ptr->_Next->_Myval;
+				path.remove(path.begin()._Ptr->_Next->_Myval);
+			}
 		}
 		else {
 			destinationTile = path.front();
@@ -367,12 +372,12 @@ void Unit::Move(float dt)
 		fPoint vel = (velocity * speed) * dt;
 		roundf(vel.x);
 		roundf(vel.y);
-		position.x += int(vel.x);
-		position.y += int(vel.y);
+		entityPosition.x += int(vel.x);
+		entityPosition.y += int(vel.y);
 		collider->rect.x += int(vel.x);
 		collider->rect.y += int(vel.y);
 
-		if (position.DistanceNoSqrt(destinationTileWorld) < 1) {
+		if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
 			LOG("%d", path.size());
 			if (path.size() > 0) {
 				destinationTile = path.front();
@@ -381,7 +386,7 @@ void Unit::Move(float dt)
 			else {
 				destinationReached = true;
 				state = IDLE;
-				entityTexture = App->tex->Load("textures/ElvenArcherIdle.png");
+				entityTexture = unitIdle;
 				SetAnim(currentDirection);
 			}
 		}
@@ -391,8 +396,8 @@ void Unit::Move(float dt)
 void Unit::CalculateVelocity()
 {
 	destinationTileWorld = App->map->MapToWorld(destinationTile.x, destinationTile.y);
-	velocity.x = destinationTileWorld.x - position.x;
-	velocity.y = destinationTileWorld.y - position.y;
+	velocity.x = destinationTileWorld.x - entityPosition.x;
+	velocity.y = destinationTileWorld.y - entityPosition.y;
 
 	velocity.Normalize();
 }
@@ -546,5 +551,4 @@ void Unit::SetAnim(unitDirection currentDirection){
 void Unit::SetAttackTarget()
 {
 	//WIP
-	entityTexture = App->tex->Load("textures/ElvenArcherAttack.png");
 }
