@@ -18,6 +18,8 @@ class Scene;
 class Map;
 class PathFinding;
 class Fonts;
+class EntityManager;
+class Collision;
 
 class Application
 {
@@ -92,6 +94,8 @@ public:
 	Map*				map = NULL;
 	PathFinding*		pathfinding = NULL;
 	Fonts*				font = NULL;
+	EntityManager*		entityManager = NULL;
+	Collision*			collision = NULL;
 
 	bool				quit = false;
 

@@ -59,6 +59,16 @@ public:
 		return(r);
 	}
 
+	p2Point operator * (const float& m) const
+	{
+		p2Point r;
+
+		r.x = x * m;
+		r.y = y * m;
+
+		return (r);
+	}
+
 	const p2Point& operator -=(const p2Point &v)
 	{
 		x -= v.x;
@@ -125,6 +135,18 @@ public:
 	TYPE DistanceManhattan(const p2Point& v) const
 	{
 		return abs(v.x - x) + abs(v.y - y);
+	}
+
+	void Normalize()
+	{
+		float module = sqrt(x * x + y * y);
+		x = x / module;
+		y = y / module;
+	}
+
+	float GetAngle()
+	{
+		return (atan2(y, x) * RADTODEG);
 	}
 };
 

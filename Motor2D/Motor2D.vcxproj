@@ -75,6 +75,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Fonts.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -89,11 +92,15 @@
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Textures.cpp" />
+    <ClCompile Include="Unit.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Collision.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="Map.h" />
@@ -110,6 +117,7 @@
     <ClInclude Include="Module.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Textures.h" />
+    <ClInclude Include="Unit.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />

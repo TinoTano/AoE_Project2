@@ -12,10 +12,12 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include "SDL\include\SDL.h"
 
 using namespace std;
 
 class App;
+class Collider;
 
 class Module
 {
@@ -77,6 +79,12 @@ public:
 	{
 		return true;
 	}
+
+	virtual void OnCollision(Collider* c1, Collider* c2)
+	{}
+
+	virtual void OnCollisionExit(Collider* c1, Collider* c2)
+	{}
 
 
 public:

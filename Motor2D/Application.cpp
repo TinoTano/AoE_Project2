@@ -13,6 +13,8 @@
 #include "Fonts.h"
 #include "Application.h"
 #include "p2Log.h"
+#include "EntityManager.h"
+#include "Collision.h"
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -29,6 +31,8 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	map = new Map();
 	pathfinding = new PathFinding();
 	font = new Fonts();
+	entityManager = new EntityManager();
+	collision = new Collision();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -43,6 +47,8 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 
 	// scene last
 	AddModule(scene);
+	AddModule(entityManager);
+	AddModule(collision);
 
 	// render last to swap buffer
 	AddModule(render);

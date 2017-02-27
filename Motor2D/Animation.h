@@ -11,6 +11,7 @@ public:
 	bool loop = true;
 	float speed = 1.0f;
 	SDL_Rect frames[MAX_FRAMES];
+	bool flipAnim = false;
 
 private:
 	float current_frame;

@@ -29,10 +29,10 @@ public:
 	void SetMap(uint width, uint height, uchar* data);
 
 	// Main function to request a path from A to B
-	int CreatePath(const iPoint& origin, const iPoint& destination);
+	int CreatePath(iPoint& origin, iPoint& destination, list<iPoint>& path);
 
 	// To request all tiles involved in the last generated path
-	const vector<iPoint>* GetLastPath() const;
+	const list<iPoint>* GetLastPath() const;
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries(const iPoint& pos) const;
@@ -43,6 +43,10 @@ public:
 	// Utility: return the walkability value of a tile
 	uchar GetTileAt(const iPoint& pos) const;
 
+	void FindNearOrigin(iPoint& origin);
+
+	void FindAvailableDestination(iPoint& destination, iPoint& origin);
+
 private:
 
 	// size of the map
@@ -51,7 +55,7 @@ private:
 	// all map walkability values [0..255]
 	uchar* map;
 	// we store the created path here
-	vector<iPoint> last_path;
+	list<iPoint> lastPath;
 };
 
 // forward declaration

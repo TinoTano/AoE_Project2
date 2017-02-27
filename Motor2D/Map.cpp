@@ -50,7 +50,7 @@ void Map::Draw()
 					SDL_Rect r = tileset->GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 
-					App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+					App->render->Blit(tileset->texture, false, pos.x, pos.y, &r);
 				}
 			}
 		}
@@ -147,6 +147,17 @@ SDL_Rect TileSet::GetTileRect(int id) const
 	return rect;
 }
 
+iPoint Map::GetTileCenter(int x, int y) const
+{
+	iPoint ret(x, y);
+
+	ret = MapToWorld(ret.x, ret.y);
+
+	ret.y += data.tile_height / 2;
+
+	return ret;
+}
+
 // Called before quitting
 bool Map::CleanUp()
 {
@@ -184,7 +195,7 @@ bool Map::CleanUp()
 bool Map::Load(const char* file_name)
 {
 	bool ret = true;
-	string tmp = folder.c_str();
+	string tmp = folder.c_str() + (string)file_name;
 
 	char* buf;
 	int size = App->fs->Load(tmp.c_str(), &buf);

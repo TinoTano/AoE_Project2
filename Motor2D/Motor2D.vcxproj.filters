@@ -49,6 +49,18 @@
     <ClCompile Include="Application.cpp">
       <Filter>Project 2</Filter>
     </ClCompile>
+    <ClCompile Include="Unit.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>Project 2\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -111,6 +123,18 @@
     <ClInclude Include="Application.h">
       <Filter>Project 2</Filter>
     </ClInclude>
+    <ClInclude Include="Unit.h">
+      <Filter>Project 2\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Project 2\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Project 2\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>Project 2\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">
@@ -127,6 +151,9 @@
     </Filter>
     <Filter Include="Project 2\Modules">
       <UniqueIdentifier>{244722d1-90ce-423d-8e7a-556211865a32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project 2\Entities">
+      <UniqueIdentifier>{52b054e4-6d6c-4d3b-8276-c912ba96e370}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "Render.h"
 #include "p2Log.h"
+#include "Input.h"
 
 #define VSYNC true
 
@@ -107,6 +108,38 @@ void Render::SetBackgroundColor(SDL_Color color)
 	background = color;
 }
 
+void Render::MoveCameraWithCursor(float dt)
+{
+	int mousePosX;
+	int mousePosY;
+
+	App->input->GetMousePosition(mousePosX, mousePosY);
+
+	//Move left
+	if (mousePosX < 10)
+	{
+		camera.x += 5;
+	}
+	
+	//Move right
+	if (mousePosX > camera.w - 10)
+	{
+		camera.x -= 5;
+	}
+
+	//Move up
+	if (mousePosY < 10)
+	{
+		camera.y += 5;
+	}
+
+	//Move down
+	if (mousePosY > camera.h - 10)
+	{
+		camera.y -= 5;
+	}
+}
+
 void Render::SetViewPort(const SDL_Rect& rect)
 {
 	SDL_RenderSetViewport(renderer, &rect);
@@ -129,7 +162,7 @@ iPoint Render::ScreenToWorld(int x, int y) const
 }
 
 // Blit to screen
-bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section,bool use_camera, float speed, double angle, int pivot_x, int pivot_y) const
+bool Render::Blit(SDL_Texture* texture, bool flipImage, int x, int y, const SDL_Rect* section,bool use_camera, float speed, double angle, int pivot_x, int pivot_y) const
 {
 	bool ret = true;
 	uint scale = App->win->GetScale();
@@ -165,7 +198,12 @@ bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section,bo
 		p = &pivot;
 	}
 
-	if(SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, SDL_FLIP_NONE) != 0)
+	SDL_RendererFlip flip = SDL_FLIP_NONE;
+	if (flipImage) {
+		flip = SDL_FLIP_HORIZONTAL;
+	}
+
+	if(SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, flip) != 0)
 	{
 		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
 		ret = false;

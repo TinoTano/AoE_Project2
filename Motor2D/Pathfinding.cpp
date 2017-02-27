@@ -2,7 +2,7 @@
 #include "PathFinding.h"
 #include "p2Log.h"
 
-PathFinding::PathFinding() : Module(), map(NULL), last_path(DEFAULT_PATH_LENGTH),width(0), height(0)
+PathFinding::PathFinding() : Module(), map(NULL), lastPath(DEFAULT_PATH_LENGTH),width(0), height(0)
 {
 	name = "pathfinding";
 }
@@ -18,7 +18,7 @@ bool PathFinding::CleanUp()
 {
 	LOG("Freeing pathfinding library");
 
-	last_path.clear();
+	lastPath.clear();
 	RELEASE_ARRAY(map);
 	return true;
 }
@@ -58,9 +58,9 @@ uchar PathFinding::GetTileAt(const iPoint& pos) const
 }
 
 // To request all tiles involved in the last generated path
-const vector<iPoint>* PathFinding::GetLastPath() const
+const list<iPoint>* PathFinding::GetLastPath() const
 {
-	return &last_path;
+	return &lastPath;
 }
 
 // PathList ------------------------------------------------------------------------
@@ -138,6 +138,23 @@ uint PathNode::FindWalkableAdjacents(PathList& list_to_fill) const
 	if(App->pathfinding->IsWalkable(cell))
 		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
 
+	//diagonal cells
+	cell.create(pos.x + 1, pos.y + 1);
+	if (App->pathfinding->IsWalkable(cell))
+		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+
+	cell.create(pos.x - 1, pos.y + 1);
+	if (App->pathfinding->IsWalkable(cell))
+		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+
+	cell.create(pos.x - 1, pos.y - 1);
+	if (App->pathfinding->IsWalkable(cell))
+		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+
+	cell.create(pos.x + 1, pos.y - 1);
+	if (App->pathfinding->IsWalkable(cell))
+		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+
 	return list_to_fill.pathNodeList.size();
 }
 
@@ -163,12 +180,166 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 // Actual A* algorithm: return number of steps in the creation of the path or -1 ----
 // ----------------------------------------------------------------------------------
-int PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+int PathFinding::CreatePath(iPoint& origin, iPoint& destination, list<iPoint>& path)
 {
+	lastPath.clear();
 	int ret = -1;
 
-	// Nice try :)
+	if (!IsWalkable(origin)) {
+		FindNearOrigin(origin);
+	}
+
+	if (!IsWalkable(destination)) {
+		FindAvailableDestination(destination, origin);
+	}
+
+	PathList open;
+	PathList close;
+	PathNode originTile(0, origin.DistanceTo(destination), origin, nullptr);
+	open.pathNodeList.push_back(new PathNode(originTile));
+	while (open.pathNodeList.size() > 0)
+	{
+		PathNode* nextTile = open.GetNodeLowestScore();
+		close.pathNodeList.push_back(new PathNode(*nextTile));
+
+		if (close.Find(destination))
+		{
+			iPoint backtrack(destination);
+			while (backtrack != origin)
+			{
+				lastPath.push_front(backtrack);
+				backtrack = close.Find(backtrack)->parent->pos;
+			}
+			lastPath.push_front(backtrack);
+
+			ret = lastPath.size();
+			path = lastPath;
+			//clean memory for open and close list
+			for (list<PathNode*>::iterator openNode = open.pathNodeList.begin(); openNode != open.pathNodeList.end(); openNode++)
+			{
+				RELEASE(*openNode);
+			}
+			for (list<PathNode*>::iterator closeNode = close.pathNodeList.begin(); closeNode != close.pathNodeList.end(); closeNode++)
+			{
+				RELEASE(*closeNode);
+			}
+
+			open.pathNodeList.clear();
+			close.pathNodeList.clear();
+
+			break;
+		}
+
+		PathList adjacents;
+		int walkables = nextTile->FindWalkableAdjacents(adjacents);
+
+		for (list<PathNode*>::iterator curr_adjacent = adjacents.pathNodeList.begin(); curr_adjacent != adjacents.pathNodeList.end(); curr_adjacent++)
+		{
+			(*curr_adjacent)->parent = nextTile;
+
+			if (close.Find((*curr_adjacent)->pos) != NULL)
+				continue;
+			if (open.Find((*curr_adjacent)->pos) == NULL)
+			{
+				(*curr_adjacent)->CalculateF(destination);
+				open.pathNodeList.push_back(*curr_adjacent);
+			}
+			else
+			{
+				PathNode* oldNode = open.Find((*curr_adjacent)->pos);
+				if ((*curr_adjacent)->CalculateF(destination) < oldNode->Score())
+				{
+					open.pathNodeList.remove(oldNode);
+					open.pathNodeList.push_back(*curr_adjacent);
+				}
+			}
+		}
+
+		open.pathNodeList.remove(nextTile);
+	}
 
 	return ret;
+}
+
+void PathFinding::FindNearOrigin(iPoint& origin)
+{
+	iPoint cell;
+
+	// north
+	cell.create(origin.x, origin.y + 1);
+	if (App->pathfinding->IsWalkable(cell))
+		origin = cell;
+
+	// south
+	cell.create(origin.x, origin.y - 1);
+	if (App->pathfinding->IsWalkable(cell))
+		origin = cell;
+
+	// east
+	cell.create(origin.x + 1, origin.y);
+	if (App->pathfinding->IsWalkable(cell))
+		origin = cell;
+
+	// west
+	cell.create(origin.x - 1, origin.y);
+	if (App->pathfinding->IsWalkable(cell))
+		origin = cell;
+
+	//diagonal cells
+	cell.create(origin.x + 1, origin.y + 1);
+	if (App->pathfinding->IsWalkable(cell))
+		origin = cell;
+
+	cell.create(origin.x - 1, origin.y + 1);
+	if (App->pathfinding->IsWalkable(cell))
+		origin = cell;
+
+	cell.create(origin.x - 1, origin.y - 1);
+	if (App->pathfinding->IsWalkable(cell))
+		origin = cell;
+
+	cell.create(origin.x + 1, origin.y - 1);
+	if (App->pathfinding->IsWalkable(cell))
+		origin = cell;
+
+}
+
+void PathFinding::FindAvailableDestination(iPoint& destination, iPoint& origin)
+{
+	iPoint newDestination(destination);
+	list<iPoint> newDestinationList;
+	int distance = 1;
+
+	while (newDestinationList.size() == 0)
+	{
+		for (int x = -distance; x < distance; x++)
+		{
+			for (int y = -distance; y < distance; y++)
+			{
+				newDestination.x = destination.x + x;
+				newDestination.y = destination.y + y;
+				if (IsWalkable(newDestination)) {
+					newDestinationList.push_back(newDestination);
+				}
+			}
+		}
+		++distance;
+	}
+
+	if (newDestinationList.size() == 1) {
+		destination = newDestinationList.front();
+	}
+	else {
+		for (list<iPoint>::iterator it = newDestinationList.begin(); it != newDestinationList.end(); it++) {
+			if (it._Ptr->_Next != nullptr) {
+				if ((*it).DistanceTo(origin) < it._Ptr->_Next->_Myval.DistanceTo(origin)) {
+					destination = (*it);
+				}
+				else {
+					destination = it._Ptr->_Myval;
+				}
+			}
+		}
+	}
 }
 

@@ -4,6 +4,7 @@
 #include "Module.h"
 
 struct SDL_Texture;
+class Unit;
 
 class Scene : public Module
 {
@@ -34,6 +35,9 @@ public:
 
 private:
 	SDL_Texture* debug_tex;
+	bool debug = false;
+	Unit* villager;
+	Unit* villager2;
 };
 
 #endif // __SCENE_H__
