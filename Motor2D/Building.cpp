@@ -2,11 +2,11 @@
 
 
 
-Building::Building()
-{
-}
-
-
-Building::~Building()
-{
-}
+//Building::Building()
+//{
+//}
+//
+//
+//Building::~Building()
+//{
+//}

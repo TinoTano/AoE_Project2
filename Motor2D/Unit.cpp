@@ -384,13 +384,9 @@ bool Unit::Update(float dt)
 
 bool Unit::Draw()
 {
-	if (state != IDLE) {
-		App->render->Blit(entityTexture, currentAnim->flipAnim, entityPosition.x, entityPosition.y, &(currentAnim->GetCurrentFrame()));
-	}
-	else {
-		App->render->Blit(entityTexture, currentAnim->flipAnim, entityPosition.x, entityPosition.y, &(currentAnim->GetCurrentFrame()));
-	}
-	
+	SDL_Rect r = currentAnim->GetCurrentFrame();
+	App->render->Blit(entityTexture, currentAnim->flipAnim, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r);
+
 	return true;
 }
 

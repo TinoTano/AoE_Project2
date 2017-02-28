@@ -165,7 +165,7 @@ pugi::xml_node Application::LoadConfig(pugi::xml_document& config_file) const
 {
 	pugi::xml_node ret;
 
-	char* buf;
+	char* buf = NULL;
 	int size = App->fs->Load("config.xml", &buf);
 	pugi::xml_parse_result result = config_file.load_buffer(buf, size);
 	RELEASE(buf);
