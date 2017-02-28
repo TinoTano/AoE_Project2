@@ -144,10 +144,6 @@ public:
 		y = y / module;
 	}
 
-	float GetAngle()
-	{
-		return (atan2(y, x) * RADTODEG);
-	}
 };
 
 typedef p2Point<int> iPoint;

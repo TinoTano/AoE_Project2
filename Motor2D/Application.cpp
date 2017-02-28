@@ -49,7 +49,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(pathfinding);
 	AddModule(font);
 	AddModule(gui);
-	AddModule(scenetest);
+	//AddModule(scenetest);
 
 	// scene last
 	AddModule(scene);

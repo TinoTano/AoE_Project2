@@ -1,6 +1,8 @@
 #include "EntityManager.h"
 #include "p2Log.h"
 #include "Collision.h"
+#include "Application.h"
+#include "Scene.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -34,7 +36,11 @@ bool EntityManager::PreUpdate()
 
 bool EntityManager::Update(float dt)
 {
-	for (list<Unit*>::iterator it = unitList.begin(); it != unitList.end(); it++) {
+	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+		(*it)->Update(dt);
+		(*it)->Draw();
+	}
+	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
 	}
@@ -43,17 +49,17 @@ bool EntityManager::Update(float dt)
 
 bool EntityManager::PostUpdate()
 {
-	if (removeEntityList.size() > 0) {
-		list<Entity*>::iterator i = removeEntityList.begin();
+	if (removeUnitList.size() > 0) {
+		list<Unit*>::iterator i = removeUnitList.begin();
 
-		while (i != removeEntityList.end())
+		while (i != removeUnitList.end())
 		{
-			list<Entity*>::iterator entityToDestroy = i;
+			list<Unit*>::iterator unitToDestroy = i;
 			++i;
-			DestroyEntity((*entityToDestroy));
+			DestroyEntity((*unitToDestroy));
 		}
 
-		removeEntityList.clear();
+		removeUnitList.clear();
 	}
 	return true;
 }
@@ -62,46 +68,95 @@ bool EntityManager::CleanUp()
 {
 	LOG("Freeing EntityManager");
 
-	for (list<Unit*>::iterator it = unitList.begin(); it != unitList.end(); it++) {
+	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 		RELEASE((*it));
 	}
-	unitList.clear();
+	friendlyUnitList.clear();
 
-	for (list<Entity*>::iterator it = removeEntityList.begin(); it != removeEntityList.end(); it++) {
+	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		RELEASE((*it));
 	}
-	removeEntityList.clear();
+	enemyUnitList.clear();
+
+	for (list<Unit*>::iterator it = removeUnitList.begin(); it != removeUnitList.end(); it++) {
+		RELEASE((*it));
+	}
+	removeUnitList.clear();
 
 	return true;
 }
 
-Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
+Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type, unitFaction race)
 {
 	Unit* unit = new Unit(posX, posY, isEnemy, type, race);
 	unit->entityID = nextID;
 	nextID++;
-	unitList.push_back(unit);
+	if (!isEnemy) {
+		friendlyUnitList.push_back(unit);
+	}
+	else {
+		enemyUnitList.push_back(unit);
+	}
+	
 
 	return unit;
 }
 
-void EntityManager::DeleteEntity(Entity * entity)
+void EntityManager::DeleteUnit(Unit* unit, bool isEnemy)
 {
-	if (entity != nullptr){
-		removeEntityList.push_back(entity);
+	if (unit != nullptr){
+		removeUnitList.push_back(unit);
+		if (isEnemy) {
+			enemyUnitList.remove(unit);
+		}
+		else {
+			friendlyUnitList.remove(unit);
+		}
 	}
 }
 
-void EntityManager::OnCollision(Collider * c1, Collider * c2)
+void EntityManager::OnCollisionEnter(Collider * c1, Collider * c2)
 {
 	//WIP
 	if (c2->type == COLLIDER_ENEMY_UNIT || c2->type == COLLIDER_ENEMY_BUILDING) {
-		for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 			if ((*it)->collider == c1) {
-				Unit* unit = (Unit*)(*it);
-				unit->entityTexture = unit->unitAttack;
-				unit->state = ATTACKING;
-				unit->SetAnim(unit->currentDirection);
+				(*it)->SetState(ATTACKING);
+				if (c2->type == COLLIDER_ENEMY_UNIT) {
+					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
+						if ((*it2)->collider == c2) {
+							(*it)->attackUnitTarget = (*it2);
+						}
+					}
+				}
+				if (c2->type == COLLIDER_ENEMY_BUILDING) {
+					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
+						if ((*it2)->collider == c2) {
+							(*it)->attackUnitTarget = (*it2);
+						}
+					}
+				}
+			}
+		}
+	}
+	if (c1->type == COLLIDER_FRIENDLY_UNIT || c1->type == COLLIDER_FRIENDLY_BUILDING) {
+		for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+			if ((*it)->collider == c2) {
+				(*it)->SetState(ATTACKING);
+				if (c1->type == COLLIDER_FRIENDLY_UNIT) {
+					for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
+						if ((*it2)->collider == c1) {
+							(*it)->attackUnitTarget = (*it2);
+						}
+					}
+				}
+				if (c1->type == COLLIDER_FRIENDLY_BUILDING) {
+					for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
+						if ((*it2)->collider == c1) {
+							(*it)->attackUnitTarget = (*it2);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -123,13 +178,13 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 void EntityManager::DestroyEntity(Entity * entity)
 {
 	if (entity != nullptr) {
-		list<Entity*>::iterator it = removeEntityList.begin();
+		list<Unit*>::iterator it = removeUnitList.begin();
 
-		while (it != removeEntityList.end())
+		while (it != removeUnitList.end())
 		{
 			if (*it == entity)
 			{
-				removeEntityList.remove(*it);
+				removeUnitList.remove(*it);
 				delete entity;
 				return;
 			}

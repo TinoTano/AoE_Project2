@@ -32,25 +32,26 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type, unitRace race);
+	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type, unitFaction race);
 	/*Entity* CreateBuilding(buildingType type, int posX, int posY, bool isEnemy);
 	Entity* CreateResource(resourceType type, int posX, int posY, bool isEnemy);
 	Entity* CreateAnimal(animalType type, int posX, int posY, bool isEnemy);*/
 
-	void DeleteEntity(Entity* entity);
-	void OnCollision(Collider* c1, Collider* c2);
+	void DeleteUnit(Unit* unit, bool isEnemy);
+	void OnCollisionEnter(Collider* c1, Collider* c2);
 	//void OnCollisionExit(Collider* c1, Collider* c2);
 
 private:
 	void DestroyEntity(Entity* entity);
 
 private:
-	list<Unit*> unitList;
+	list<Unit*> friendlyUnitList;
+	list<Unit*> enemyUnitList;
 	//list<Unit*> buildingList;
-	list<Entity*> removeEntityList;
+	list<Unit*> removeUnitList;
 
 public:
-	list<Entity*> selectedEntityList;
+	//list<Entity*> selectedEntityList;
 	int nextID;
 
 };

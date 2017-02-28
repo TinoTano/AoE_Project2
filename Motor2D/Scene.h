@@ -2,6 +2,7 @@
 #define __SCENE_H__
 
 #include "Module.h"
+#include "Timer.h"
 
 struct SDL_Texture;
 class Unit;
@@ -38,6 +39,7 @@ private:
 	bool debug = false;
 	Unit* villager;
 	Unit* villager2;
+
 };
 
 #endif // __SCENE_H__

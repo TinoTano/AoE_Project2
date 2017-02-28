@@ -45,9 +45,8 @@ bool Scene::Start()
 	debug_tex = App->tex->Load("maps/path2.png");
 
 	//Test
-	villager = App->entityManager->CreateUnit(18, 5, false, ARCHER, HUMAN);
-	villager2 = App->entityManager->CreateUnit(23, 2, true, ARCHER, HUMAN);
-	App->entityManager->selectedEntityList.push_back(villager);
+	villager = App->entityManager->CreateUnit(18, 5, false, ELVEN_ARCHER, FREE_MEN);
+	villager2 = App->entityManager->CreateUnit(23, 2, true, ELVEN_ARCHER, FREE_MEN);
 	return true;
 }
 
@@ -69,7 +68,6 @@ bool Scene::Update(float dt)
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {
 		villager->SetDestination();
-		villager->SetSpeed(100);
 	}
 
 	if (debug) {

@@ -10,8 +10,9 @@
 #include "Collision.h"
 #include "Textures.h"
 #include "p2Defs.h"
+#include "Scene.h"
 
-Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
+Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitFaction race)
 {
 	entityPosition = App->map->MapToWorld(posX, posY);
 	this->isEnemy = isEnemy;
@@ -24,16 +25,22 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 	//Provisional
 	switch (race) 
 	{
-	case HUMAN:
+	case FREE_MEN:
 		switch (type)
 		{
-		case ARCHER:
-			unitIdle = App->tex->Load("textures/ElvenArcherIdle.png");
-			unitMove = App->tex->Load("textures/ElvenArcherMove.png");
-			unitAttack = App->tex->Load("textures/ElvenArcherAttack.png");
-			//unitDie = ;
-			entityTexture = unitIdle;
-			
+		case ELVEN_ARCHER:
+			unitIdleTexture = App->tex->Load("textures/ElvenArcherIdle.png");
+			unitMoveTexture = App->tex->Load("textures/ElvenArcherMove.png");
+			unitAttackTexture = App->tex->Load("textures/ElvenArcherAttack.png");
+			unitDieTexture = App->tex->Load("textures/ElvenArcherDie.png");
+			entityTexture = unitIdleTexture;
+			attackDelay = 1 / 2.2f;
+			unitLife = 35;
+			unitAttack = 5;
+			unitDefense = 0;
+			unitPiercingDamage = 1;
+			unitMovementSpeed = 101.1f;
+
 			//Anim Idle//
 			//Anim idle down
 			idleDown.PushBack({ 0,0,53,55 });
@@ -246,15 +253,91 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 			//Anim attacking up-right
 			attackingUpRight = attackingUpLeft;
 			attackingUpRight.flipAnim = true;
+
+			//Anim Dead//
+			//Anim dying down
+			dyingDown.PushBack({ 0,0,142,107 });
+			dyingDown.PushBack({ 142,0,142,107 });
+			dyingDown.PushBack({ 284,0,142,107 });
+			dyingDown.PushBack({ 426,0,142,107 });
+			dyingDown.PushBack({ 568,0,142,107 });
+			dyingDown.PushBack({ 710,0,142,107 });
+			dyingDown.PushBack({ 852,0,142,107 });
+			dyingDown.PushBack({ 994,0,142,107 });
+			dyingDown.PushBack({ 1136,0,142,107 });
+			dyingDown.PushBack({ 1278,0,142,107 });
+			dyingDown.speed = 0.2f;
+			dyingDown.loop = false;
+			//Anim dying down-left
+			dyingDownLeft.PushBack({ 0,107,142,107 });
+			dyingDownLeft.PushBack({ 142,107,142,107 });
+			dyingDownLeft.PushBack({ 284,107,142,107 });
+			dyingDownLeft.PushBack({ 426,107,142,107 });
+			dyingDownLeft.PushBack({ 568,107,142,107 });
+			dyingDownLeft.PushBack({ 710,107,142,107 });
+			dyingDownLeft.PushBack({ 852,107,142,107 });
+			dyingDownLeft.PushBack({ 994,107,142,107 });
+			dyingDownLeft.PushBack({ 1136,107,142,107 });
+			dyingDownLeft.PushBack({ 1278,107,142,107 });
+			dyingDownLeft.speed = 0.2f;
+			dyingDownLeft.loop = false;
+			//Anim dying left
+			dyingLeft.PushBack({ 0,214,142,107 });
+			dyingLeft.PushBack({ 142,214,142,107 });
+			dyingLeft.PushBack({ 284,214,142,107 });
+			dyingLeft.PushBack({ 426,214,142,107 });
+			dyingLeft.PushBack({ 568,214,142,107 });
+			dyingLeft.PushBack({ 710,214,142,107 });
+			dyingLeft.PushBack({ 852,214,142,107 });
+			dyingLeft.PushBack({ 994,214,142,107 });
+			dyingLeft.PushBack({ 1136,214,142,107 });
+			dyingLeft.PushBack({ 1278,214,142,107 });
+			dyingLeft.speed = 0.2f;
+			dyingLeft.loop = false;
+			//Anim dying up-left
+			dyingUpLeft.PushBack({ 0,321,142,107 });
+			dyingUpLeft.PushBack({ 142,321,142,107 });
+			dyingUpLeft.PushBack({ 284,321,142,107 });
+			dyingUpLeft.PushBack({ 426,321,142,107 });
+			dyingUpLeft.PushBack({ 568,321,142,107 });
+			dyingUpLeft.PushBack({ 710,321,142,107 });
+			dyingUpLeft.PushBack({ 852,321,142,107 });
+			dyingUpLeft.PushBack({ 994,321,142,107 });
+			dyingUpLeft.PushBack({ 1136,321,142,107 });
+			dyingUpLeft.PushBack({ 1278,321,142,107 });
+			dyingUpLeft.speed = 0.2f;
+			dyingUpLeft.loop = false;
+			//Anim dying up
+			dyingUp.PushBack({ 0,428,142,107 });
+			dyingUp.PushBack({ 142,428,142,107 });
+			dyingUp.PushBack({ 284,428,142,107 });
+			dyingUp.PushBack({ 426,428,142,107 });
+			dyingUp.PushBack({ 568,428,142,107 });
+			dyingUp.PushBack({ 710,428,142,107 });
+			dyingUp.PushBack({ 852,428,142,107 });
+			dyingUp.PushBack({ 994,428,142,107 });
+			dyingUp.PushBack({ 1136,428,142,107 });
+			dyingUp.PushBack({ 1278,428,142,107 });
+			dyingUp.speed = 0.2f;
+			dyingUp.loop = false;
+			//Anim dying down-right
+			dyingDownRight = dyingDownLeft;
+			dyingDownRight.flipAnim = true;
+			//Anim dying right
+			dyingRight = dyingLeft;
+			dyingRight.flipAnim = true;
+			//Anim dying up-right
+			dyingUpRight = dyingUpLeft;
+			dyingUpRight.flipAnim = true;
 			break;
 		default:
 			break;
 		}
 		break;
-	case GOBLIN:
+	case SAURON_ARMY:
 		switch (type)
 		{
-		case ARCHER:
+		case ELVEN_ARCHER:
 			break;
 		default:
 			break;
@@ -272,7 +355,8 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race)
 	}
 	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
 
-	currentAnim = &idleRight;
+	currentDirection = RIGHT; // starting direction
+	SetAnim(currentDirection);
 }
 
 Unit::~Unit()
@@ -282,16 +366,16 @@ Unit::~Unit()
 bool Unit::Update(float dt)
 {
 	switch (state) {
-	case IDLE:
-		break;
 	case MOVING:
 		Move(dt);
 		break;
 	case ATTACKING:
-		SetAttackTarget();
+		AttackEnemyUnit(dt);
 		break;
 	case DEAD:
-		App->entityManager->DeleteEntity(this);
+		if (currentAnim->Finished()) {
+			App->entityManager->DeleteUnit(this,isEnemy);
+		}
 		break;
 	}
 
@@ -317,7 +401,7 @@ unitType Unit::GetType() const
 
 int Unit::GetLife() const
 {
-	return life;
+	return unitLife;
 }
 
 void Unit::SetPos(int posX, int posY)
@@ -328,7 +412,7 @@ void Unit::SetPos(int posX, int posY)
 
 void Unit::SetSpeed(int amount)
 {
-	speed = amount;
+	unitMovementSpeed = amount;
 }
 
 void Unit::SetDestination()
@@ -345,8 +429,7 @@ void Unit::SetDestination()
 	App->pathfinding->CreatePath(origin, target, path);
 	
 	if (path.size() > 0) {
-		state = MOVING;
-		entityTexture = unitMove;
+		SetState(MOVING);
 		destinationReached = false;
 		if (path.front() == origin) {
 			if (path.size() > 1) {
@@ -369,7 +452,7 @@ void Unit::Move(float dt)
 
 	if (!destinationReached) {
 
-		fPoint vel = (velocity * speed) * dt;
+		fPoint vel = (velocity * unitMovementSpeed) * dt;
 		roundf(vel.x);
 		roundf(vel.y);
 		entityPosition.x += int(vel.x);
@@ -378,16 +461,13 @@ void Unit::Move(float dt)
 		collider->rect.y += int(vel.y);
 
 		if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
-			LOG("%d", path.size());
 			if (path.size() > 0) {
 				destinationTile = path.front();
 				path.erase(path.begin());
 			}
 			else {
 				destinationReached = true;
-				state = IDLE;
-				entityTexture = unitIdle;
-				SetAnim(currentDirection);
+				SetState(IDLE);
 			}
 		}
 	}
@@ -404,6 +484,18 @@ void Unit::CalculateVelocity()
 
 void Unit::LookAt()
 {
+
+	if (state == ATTACKING)
+	{
+		if (attackUnitTarget)
+		{
+			velocity.x = attackUnitTarget->entityPosition.x - entityPosition.x;
+			velocity.y = attackUnitTarget->entityPosition.y - entityPosition.y;
+
+			velocity.Normalize();
+		}
+	}
+
 	float angle = atan2f(velocity.y, velocity.x) * RADTODEG;
 
 	if (angle < 22.5 && angle > -22.5)
@@ -430,7 +522,57 @@ void Unit::LookAt()
 	}
 }
 
-void Unit::SetAnim(unitDirection currentDirection){
+void Unit::AttackEnemyUnit(float dt)
+{
+	LookAt();
+	if (timer >= attackDelay) {
+		attackUnitTarget->unitLife -= unitAttack - attackUnitTarget->unitDefense;
+		if (attackUnitTarget->unitLife <= 0) {
+			attackUnitTarget->Dead();
+			if (unitLife > 0) {
+				SetState(IDLE);
+			}
+		}
+		timer = 0;
+	}
+	else {
+		timer += dt;
+	}
+	
+}
+
+void Unit::Dead() {
+	SetState(DEAD);
+	App->collision->DeleteCollider(collider);
+}
+
+void Unit::SetState(unitState state)
+{
+	switch (state) {
+	case IDLE:
+		this->state = IDLE;
+		SetAnim(currentDirection);
+		entityTexture = unitIdleTexture;
+		break;
+	case MOVING:
+		this->state = MOVING;
+		SetAnim(currentDirection);
+		entityTexture = unitMoveTexture;
+		break;
+	case ATTACKING:
+		this->state = ATTACKING;
+		SetAnim(currentDirection);
+		entityTexture = unitAttackTexture;
+		break;
+	case DEAD:
+		this->state = DEAD;
+		SetAnim(currentDirection);
+		entityTexture = unitDieTexture;
+		break;
+	}
+}
+
+void Unit::SetAnim(unitDirection currentDirection) {
 
 	switch (state) {
 	case IDLE:
@@ -546,9 +688,4 @@ void Unit::SetAnim(unitDirection currentDirection){
 		}
 		break;
 	}
-}
-
-void Unit::SetAttackTarget()
-{
-	//WIP
 }

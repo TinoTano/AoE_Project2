@@ -61,9 +61,14 @@
     <ClCompile Include="Collision.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Gui.cpp" />
     <ClCompile Include="SceneTest.cpp">
       <Filter>Project 2\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="Building.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui.cpp">
+      <Filter>Project 2\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -144,6 +149,9 @@
     </ClInclude>
     <ClInclude Include="SceneTest.h">
       <Filter>Project 2\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Building.h">
+      <Filter>Project 2\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

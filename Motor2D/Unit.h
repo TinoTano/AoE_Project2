@@ -11,7 +11,9 @@
 using namespace std;
 
 enum unitType {
-	SOLDIER, ARCHER
+	ELVEN_LONGBLADE, DWARVEN_MULER, GONDOR_SPEARMAN, SOLDIER, ELVEN_ARCHER, DUNEDAIN_RANGER, ELVEN_CAVALRY, GONDOR_KNIGHT,
+	ROHAN_KNIGHT, MOUNTED_DUNEDAIN, SIEGE_TOWER, LIGHT_CATAPULT, GOBLIN_SOLDIER, ORC_SOLDIER, URUK_HAI_SOLDIER, ORC_ARCHER,
+	VENOMOUS_SPIDER, HARADRIM_OLIFANT, MOUNTED_NAZGUL, TROLL_MAULER
 };
 
 enum unitState
@@ -19,8 +21,8 @@ enum unitState
 	IDLE, MOVING, ATTACKING, DEAD
 };
 
-enum unitRace {
-	HUMAN, GOBLIN // test
+enum unitFaction {
+	FREE_MEN, SAURON_ARMY
 };
 
 enum unitDirection {
@@ -30,7 +32,7 @@ enum unitDirection {
 class Unit : public Entity
 {
 public:
-	Unit(int posX, int posY, bool isEnemy, unitType type, unitRace race);
+	Unit(int posX, int posY, bool isEnemy, unitType type, unitFaction race);
 	~Unit();
 
 	bool Update(float dt);
@@ -45,14 +47,20 @@ public:
 	void CalculateVelocity();
 	void LookAt();
 	void SetAnim(unitDirection currentDirection);
-	void SetAttackTarget();
+	void AttackEnemyUnit(float dt);
+	void Dead();
+	void SetState(unitState state);
 
 private:
 	unitType type;
-	unitRace race;
+	unitFaction race;
 	unitDirection direction;
-	int life;
-	float speed;
+	uint unitLife;
+	uint unitAttack;
+	uint unitDefense;
+	float unitAttackSpeed;
+	int unitPiercingDamage;
+	float unitMovementSpeed;
 	bool isEnemy;
 	list<iPoint> path;
 	bool destinationReached = true;
@@ -60,14 +68,18 @@ private:
 	iPoint destinationTile;
 	iPoint destinationTileWorld;
 	iPoint ret;
+	float attackDelay;
+	float timer = 0;
 
 public:
 	unitState state;
 	unitDirection currentDirection;
-	SDL_Texture* unitIdle;
-	SDL_Texture* unitMove;
-	SDL_Texture* unitAttack;
-	SDL_Texture* unitDie;
+	SDL_Texture* unitIdleTexture;
+	SDL_Texture* unitMoveTexture;
+	SDL_Texture* unitAttackTexture;
+	SDL_Texture* unitDieTexture;
+	Unit* attackUnitTarget;
+
 	//Animations
 
 	//Idle directions
