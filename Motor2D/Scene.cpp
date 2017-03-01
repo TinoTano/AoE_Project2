@@ -45,8 +45,9 @@ bool Scene::Start()
 	debug_tex = App->tex->Load("maps/path2.png");
 
 	//Test
-	villager = App->entityManager->CreateUnit(18, 5, false, ELVEN_ARCHER, FREE_MEN);
-	villager2 = App->entityManager->CreateUnit(23, 2, true, ELVEN_ARCHER, FREE_MEN);
+	villager = App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER, FREE_MEN_UNIT);
+	villager2 = App->entityManager->CreateUnit(600, 400, true, ELVEN_ARCHER, FREE_MEN_UNIT);
+	TestBuilding = App->entityManager->CreateBuilding(150, 100, true, BARRACKS, FREE_MEN_BUILDING);
 	return true;
 }
 
@@ -62,7 +63,7 @@ bool Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
 	}
-		
+
 	App->render->MoveCameraWithCursor(dt);
 	App->map->Draw();
 
@@ -75,8 +76,9 @@ bool Scene::Update(float dt)
 
 		for (list<iPoint>::const_iterator it = path->begin(); it != path->end(); it++) {
 			iPoint pos = App->map->MapToWorld((*it).x, (*it).y);
-			App->render->Blit(debug_tex, false, pos.x, pos.y);
+			App->render->Blit(debug_tex, pos.x, pos.y);
 		}
+
 	}
 
 	int x, y;
@@ -104,4 +106,3 @@ bool Scene::CleanUp()
 
 	return true;
 }
-

@@ -8,7 +8,7 @@
 #include "Input.h"
 #include "Map.h"
 
-using namespace std;
+class Building;
 
 enum unitType {
 	ELVEN_LONGBLADE, DWARVEN_MULER, GONDOR_SPEARMAN, SOLDIER, ELVEN_ARCHER, DUNEDAIN_RANGER, ELVEN_CAVALRY, GONDOR_KNIGHT,
@@ -18,11 +18,11 @@ enum unitType {
 
 enum unitState
 {
-	IDLE, MOVING, ATTACKING, DEAD
+	UNIT_IDLE, UNIT_MOVING, UNIT_ATTACKING, UNIT_DEAD
 };
 
 enum unitFaction {
-	FREE_MEN, SAURON_ARMY
+	FREE_MEN_UNIT, SAURON_ARMY_UNIT
 };
 
 enum unitDirection {
@@ -32,7 +32,7 @@ enum unitDirection {
 class Unit : public Entity
 {
 public:
-	Unit(int posX, int posY, bool isEnemy, unitType type, unitFaction race);
+	Unit(int posX, int posY, bool isEnemy, unitType type, unitFaction faction);
 	~Unit();
 
 	bool Update(float dt);
@@ -48,16 +48,14 @@ public:
 	void LookAt();
 	void SetAnim(unitDirection currentDirection);
 	void AttackEnemyUnit(float dt);
+	void AttackEnemyBuilding(float dt);
 	void Dead();
 	void SetState(unitState state);
 
 private:
 	unitType type;
-	unitFaction race;
+	unitFaction faction;
 	unitDirection direction;
-	uint unitLife;
-	uint unitAttack;
-	uint unitDefense;
 	float unitAttackSpeed;
 	int unitPiercingDamage;
 	float unitMovementSpeed;
@@ -67,7 +65,6 @@ private:
 	fPoint velocity;
 	iPoint destinationTile;
 	iPoint destinationTileWorld;
-	iPoint ret;
 	float attackDelay;
 	float timer = 0;
 
@@ -79,6 +76,10 @@ public:
 	SDL_Texture* unitAttackTexture;
 	SDL_Texture* unitDieTexture;
 	Unit* attackUnitTarget;
+	Building* attackBuildingTarget;
+	int unitLife;
+	int unitAttack;
+	int unitDefense;
 
 	//Animations
 
@@ -127,4 +128,5 @@ public:
 };
 
 #endif // !__UNIT_H__
+
 

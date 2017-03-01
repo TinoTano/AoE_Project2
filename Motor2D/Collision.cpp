@@ -70,16 +70,16 @@ bool Collision::PreUpdate()
 
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
 		c1 = (*col1);
-		
+
 		for (list<Collider*>::iterator col2 = next(col1); col2 != colliders.end(); col2++) {
 			c2 = (*col2);
 
 			if (c1->CheckCollision(c2->rect) == true) {
 				if (matrix[c1->type][c2->type] && c1->callback)
-					c1->callback->OnCollisionEnter(c1, c2);
+					c1->callback->OnCollision(c1, c2);
 
 				if (matrix[c2->type][c1->type] && c2->callback)
-					c2->callback->OnCollisionEnter(c2, c1);
+					c2->callback->OnCollision(c2, c1);
 			}
 		}
 	}
@@ -92,7 +92,7 @@ bool Collision::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
 	}
-		
+
 	if (debug) {
 		DebugDraw();
 	}
@@ -103,7 +103,7 @@ bool Collision::Update(float dt)
 bool Collision::CleanUp()
 {
 	LOG("Freeing colliders");
-	list<Collider*>::reverse_iterator it= colliders.rbegin();
+	list<Collider*>::reverse_iterator it = colliders.rbegin();
 
 	while (it != colliders.rend())
 	{
@@ -130,11 +130,6 @@ void Collision::DeleteCollider(Collider * collider)
 }
 
 bool Collider::CheckCollision(const SDL_Rect& r) const
-{
-	return (bool)SDL_HasIntersection(&rect, &r);
-}
-
-bool Collider::CheckCollisionExit(const SDL_Rect& r) const
 {
 	return (bool)SDL_HasIntersection(&rect, &r);
 }

@@ -6,6 +6,7 @@
 
 struct SDL_Texture;
 class Unit;
+class Building;
 
 class Scene : public Module
 {
@@ -39,6 +40,7 @@ private:
 	bool debug = false;
 	Unit* villager;
 	Unit* villager2;
+	Building* TestBuilding;
 
 };
 

@@ -220,8 +220,8 @@ void Image::Update()
 void Image::Draw()
 {
 	if (section.w>0 && section.h>0)
-		App->render->Blit(texture, false, pos.first, pos.second, &section);
-	else App->render->Blit(texture, false, pos.first, pos.second);
+		App->render->Blit(texture, pos.first, pos.second, &section);
+	else App->render->Blit(texture, pos.first, pos.second);
 }
 
 MouseState Image::MouseDetect()
@@ -264,7 +264,7 @@ void Label::Draw()
 	texture = App->font->Print(str.c_str());
 	App->font->CalcSize(str.c_str(), width, height);
 	SDL_Rect text_size{ 0, 0, width, height };
-	App->render->Blit(texture,false,  pos.first, pos.second, &text_size);
+	App->render->Blit(texture, pos.first, pos.second, &text_size);
 }
 
 void Label::SetText(char* text) {
@@ -303,7 +303,7 @@ void Button::Update()
 
 void Button::Draw(SDL_Rect section)
 {
-	App->render->Blit(texture,false,  pos.first, pos.second, &section);
+	App->render->Blit(texture, pos.first, pos.second, &section);
 
 
 }
@@ -387,7 +387,7 @@ void InputText::Draw() {
 	texture = App->font->Print(str.c_str());
 	App->font->CalcSize(str.c_str(), width, height);
 	SDL_Rect text_size{ 0, 0, width, height };
-	App->render->Blit(texture, false, pos.first, pos.second, &text_size);
+	App->render->Blit(texture, pos.first, pos.second, &text_size);
 }
 
 MouseState InputText::MouseDetect() {

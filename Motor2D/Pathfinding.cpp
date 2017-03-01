@@ -185,7 +185,7 @@ int PathFinding::CreatePath(iPoint& origin, iPoint& destination, list<iPoint>& p
 	lastPath.clear();
 	int ret = -1;
 
-	if (!IsWalkable(origin)) {
+	if (!IsWalkable(origin) || origin == destination) {
 		return ret;
 	}
 

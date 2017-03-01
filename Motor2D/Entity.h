@@ -4,6 +4,8 @@
 #include "p2Point.h"
 #include "SDL\include\SDL.h"
 
+using namespace std;
+
 struct Collider;
 
 class Entity

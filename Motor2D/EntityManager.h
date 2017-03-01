@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Entity.h"
 #include "Unit.h"
+#include "Building.h"
 
 class Entity;
 
@@ -32,13 +33,12 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type, unitFaction race);
-	/*Entity* CreateBuilding(buildingType type, int posX, int posY, bool isEnemy);
-	Entity* CreateResource(resourceType type, int posX, int posY, bool isEnemy);
-	Entity* CreateAnimal(animalType type, int posX, int posY, bool isEnemy);*/
+	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type, unitFaction faction);
+	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type, buildingFaction faction);
 
 	void DeleteUnit(Unit* unit, bool isEnemy);
-	void OnCollisionEnter(Collider* c1, Collider* c2);
+	void DeleteBuilding(Building*, bool isEnemy);
+	void OnCollision(Collider* c1, Collider* c2);
 	//void OnCollisionExit(Collider* c1, Collider* c2);
 
 private:
@@ -47,8 +47,10 @@ private:
 private:
 	list<Unit*> friendlyUnitList;
 	list<Unit*> enemyUnitList;
-	//list<Unit*> buildingList;
 	list<Unit*> removeUnitList;
+	list<Building*> friendlyBuildingList;
+	list<Building*> enemyBuildingList;
+	list<Building*> removeBuildingList;
 
 public:
 	//list<Entity*> selectedEntityList;
@@ -57,5 +59,8 @@ public:
 };
 
 #endif // !__ENTITY_MANAGER__
+
+
+
 
 
