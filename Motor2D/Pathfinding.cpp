@@ -276,7 +276,7 @@ void PathFinding::FindAvailableDestination(iPoint& destination, iPoint& origin)
 			{
 				newDestination.x = destination.x + x;
 				newDestination.y = destination.y + y;
-				if (IsWalkable(newDestination)) {
+				if (IsWalkable(newDestination) && newDestination != origin) {
 					newDestinationList.push_back(newDestination);
 				}
 			}

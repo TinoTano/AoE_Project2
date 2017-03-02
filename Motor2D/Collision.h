@@ -43,7 +43,7 @@ class Collision : public Module
 public:
 
 	Collision();
-	~Collision();
+	virtual ~Collision();
 
 	// Called when before render is available
 	bool Awake(pugi::xml_node&);

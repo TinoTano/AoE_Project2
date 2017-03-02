@@ -3,9 +3,6 @@
 
 #include "Module.h"
 
-struct SDL_Texture;
-struct SDL_Surface;
-
 class Textures : public Module
 {
 public:
@@ -26,8 +23,10 @@ public:
 
 	// Load Texture
 	SDL_Texture* const	Load(const char* path);
+	SDL_Surface* const	LoadImageAsSurface(const char* path);
 	bool				UnLoad(SDL_Texture* texture);
-	SDL_Texture* const	LoadSurface(SDL_Surface* surface);
+	SDL_Texture* const	LoadStaticSurface(SDL_Surface* surface);
+	SDL_Texture* const	LoadStreamingSurface(SDL_Surface* surface);
 	void				GetSize(const SDL_Texture* texture, uint& width, uint& height) const;
 
 public:

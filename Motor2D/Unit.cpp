@@ -20,9 +20,6 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type, unitFaction faction)
 	this->type = type;
 	this->faction = faction;
 
-	/*entityPosition.x -= App->map->data.tile_width / 2;
-	entityPosition.y -= App->map->data.tile_height / 2;*/
-
 	switch (faction)
 	{
 	case FREE_MEN_UNIT:

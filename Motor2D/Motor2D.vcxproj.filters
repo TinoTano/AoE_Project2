@@ -70,6 +70,9 @@
     <ClCompile Include="Gui.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="FogOfWar.cpp">
+      <Filter>Project 2\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>Project 2\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="FogOfWar.h">
+      <Filter>Project 2\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

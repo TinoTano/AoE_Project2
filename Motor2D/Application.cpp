@@ -17,6 +17,7 @@
 #include "Collision.h"
 #include "Gui.h"
 #include "SceneTest.h"
+#include "FogOfWar.h"
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -37,6 +38,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	collision = new Collision();
 	gui = new Gui();
 	scenetest = new SceneTest();
+	fog = new FogOfWar();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -55,7 +57,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(scene);
 	AddModule(entityManager);
 	AddModule(collision);
-
+	AddModule(fog);
 	// render last to swap buffer
 	AddModule(render);
 

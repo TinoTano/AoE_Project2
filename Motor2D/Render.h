@@ -54,6 +54,9 @@ public:
 	SDL_Rect		camera;
 	SDL_Rect		viewport;
 	SDL_Color		background;
+	SDL_Surface*	fogSurface;
+	SDL_Texture*	fogTexture;
+	SDL_Texture*	fogRemover;
 
 private:
 

@@ -80,6 +80,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="FogOfWar.cpp" />
     <ClCompile Include="Fonts.cpp" />
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="FogOfWar.h" />
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="Map.h" />

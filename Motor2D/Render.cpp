@@ -3,6 +3,7 @@
 #include "Render.h"
 #include "p2Log.h"
 #include "Input.h"
+#include "Textures.h"
 
 #define VSYNC true
 

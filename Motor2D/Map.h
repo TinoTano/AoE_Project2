@@ -3,6 +3,7 @@
 
 #include "PugiXml/src/pugixml.hpp"
 #include "Module.h"
+#include "p2Point.h"
 
 // ----------------------------------------------------
 struct Properties
@@ -119,7 +120,6 @@ public:
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
 	bool CreateWalkabilityMap(int& width, int& height, uchar** buffer) const;
-	iPoint GetTileBlit(int x, int y) const;
 
 private:
 
@@ -140,6 +140,7 @@ private:
 	pugi::xml_document	map_file;
 	string				folder;
 	bool				map_loaded;
+	SDL_Surface*		fogSurface;
 };
 
 #endif // __MAP_H__

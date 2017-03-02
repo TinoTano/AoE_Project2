@@ -10,6 +10,7 @@
 #include "p2Log.h"
 #include "EntityManager.h"
 #include "Unit.h"
+#include "FogOfWar.h"
 
 Scene::Scene() : Module()
 {
@@ -48,6 +49,8 @@ bool Scene::Start()
 	villager = App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER, FREE_MEN_UNIT);
 	villager2 = App->entityManager->CreateUnit(600, 400, true, ELVEN_ARCHER, FREE_MEN_UNIT);
 	TestBuilding = App->entityManager->CreateBuilding(150, 100, true, BARRACKS, FREE_MEN_BUILDING);
+
+	App->fog->CreateFog(App->map->data.width*App->map->data.tile_width, App->map->data.height*App->map->data.tile_height);
 	return true;
 }
 
@@ -78,7 +81,6 @@ bool Scene::Update(float dt)
 			iPoint pos = App->map->MapToWorld((*it).x, (*it).y);
 			App->render->Blit(debug_tex, pos.x, pos.y);
 		}
-
 	}
 
 	int x, y;
@@ -88,6 +90,8 @@ bool Scene::Update(float dt)
 	string str = to_string(map_coordinates.x) + "," + to_string(map_coordinates.y) + "  " + to_string(villagerToWorld.x) + "," + to_string(villagerToWorld.y);
 	App->win->SetTitle(str.c_str());
 
+	//App->fog->removeFog(villager->entityPosition.x, villager->entityPosition.y);
+
 	return true;
 }
 
@@ -95,7 +99,6 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate()
 {
 	bool ret = true;
-
 	return ret;
 }
 

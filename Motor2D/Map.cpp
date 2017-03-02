@@ -147,15 +147,6 @@ SDL_Rect TileSet::GetTileRect(int id) const
 	return rect;
 }
 
-iPoint Map::GetTileBlit(int x, int y)const
-{
-	iPoint ret(x, y);
-
-	ret = MapToWorld(ret.x, ret.y);
-	ret.x -= data.tile_width / 2;
-	return ret;
-
-}
 
 // Called before quitting
 bool Map::CleanUp()
@@ -507,3 +498,4 @@ bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 
 	return ret;
 }
+

@@ -67,11 +67,23 @@ SDL_Texture* const Textures::Load(const char* path)
 	}
 	else
 	{
-		texture = LoadSurface(surface);
+		texture = LoadStaticSurface(surface);
 		SDL_FreeSurface(surface);
 	}
 
 	return texture;
+}
+
+SDL_Surface* const Textures::LoadImageAsSurface(const char* path) {
+	
+	SDL_Surface* surface = IMG_Load_RW(App->fs->Load(path), 1);
+
+	if (surface == NULL)
+	{
+		LOG("Could not load surface with path: %s. IMG_Load: %s", path, IMG_GetError());
+	}
+	
+	return surface;
 }
 
 // Unload texture
@@ -91,14 +103,31 @@ bool Textures::UnLoad(SDL_Texture* texture)
 	return false;
 }
 
-// Translate a surface into a texture
-SDL_Texture* const Textures::LoadSurface(SDL_Surface* surface)
+// Translate a surface into a static texture
+SDL_Texture* const Textures::LoadStaticSurface(SDL_Surface* surface)
 {
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(App->render->renderer, surface);
 
 	if(texture == NULL)
 	{
 		LOG("Unable to create texture from surface! SDL Error: %s\n", SDL_GetError());
+	}
+	else
+	{
+		textures.push_back(texture);
+	}
+
+	return texture;
+}
+
+// Translate a surface into a streaming texture (can be locked/unlocked (modify pixels))
+SDL_Texture* const Textures::LoadStreamingSurface(SDL_Surface* surface)
+{
+	SDL_Texture* texture = SDL_CreateTexture(App->render->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, surface->w, surface->h);
+
+	if (texture == NULL)
+	{
+		LOG("Unable to create streaming texture from surface! SDL Error: %s\n", SDL_GetError());
 	}
 	else
 	{

@@ -20,7 +20,7 @@ public:
 	PathFinding();
 
 	// Destructor
-	~PathFinding();
+	virtual ~PathFinding();
 
 	// Called before quitting
 	bool CleanUp();
