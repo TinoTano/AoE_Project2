@@ -36,7 +36,9 @@ private:
 	uint fogTextHeight;
 	uint removerTextWidth;
 	uint removerTextHeight;
-	//SDL_Rect lastPixelsRect = { 0,0,0,0 };
+	
+	bool showHighFog;
+	bool showLowFog;
 };
 
 #endif // !__FOG_OF_WAR__

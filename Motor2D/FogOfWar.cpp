@@ -6,6 +6,7 @@
 #include "Textures.h"
 #include "p2Defs.h"
 #include "Map.h"
+#include "Input.h"
 
 FogOfWar::FogOfWar()
 {
@@ -19,6 +20,8 @@ FogOfWar::~FogOfWar()
 
 bool FogOfWar::Start()
 {
+	showHighFog = true;
+	showLowFog = true;
 	return true;
 }
 
@@ -30,8 +33,21 @@ bool FogOfWar::Update(float dt)
 
 void FogOfWar::DrawFog()
 {
-	App->render->Blit(lowFogTexture, -App->map->data.mapWidth / 2, 0);
-	App->render->Blit(highFogTexture, -App->map->data.mapWidth / 2, 0);
+	if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN) {
+		showLowFog = !showLowFog;
+	}
+	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) {
+		showHighFog = !showHighFog;
+	}
+
+	if (showLowFog) {
+		App->render->Blit(lowFogTexture, -App->map->data.mapWidth / 2, 0);
+	}
+	
+	if (showHighFog) {
+		App->render->Blit(highFogTexture, -App->map->data.mapWidth / 2, 0);
+	}
+	
 }
 
 void FogOfWar::CreateFog(int width, int height)
@@ -150,7 +166,7 @@ void FogOfWar::removeFog(int posX, int posY)
 
 			unsigned char* highFogPixelAlpha = (unsigned char*)highFogPixel + 3; // alpha channel
 			unsigned char* lowFogPixelAlpha = (unsigned char*)lowFogPixel + 3; // alpha channel
-			unsigned char* removerPixelAlpha = (unsigned char*)removerPixel;
+			unsigned char* removerPixelAlpha = (unsigned char*)removerPixel + 3;
 
 			if (keepFogRemoved == true && *removerPixelAlpha > 0)
 			{
