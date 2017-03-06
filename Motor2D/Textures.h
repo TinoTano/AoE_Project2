@@ -26,7 +26,7 @@ public:
 	SDL_Surface* const	LoadImageAsSurface(const char* path);
 	bool				UnLoad(SDL_Texture* texture);
 	SDL_Texture* const	LoadStaticSurface(SDL_Surface* surface);
-	SDL_Texture* const	LoadStreamingSurface(SDL_Surface* surface);
+	SDL_Texture* const	LoadStreamingTextureFromSurface(SDL_Surface* surface);
 	void				GetSize(const SDL_Texture* texture, uint& width, uint& height) const;
 
 public:

@@ -159,6 +159,9 @@
     <ClInclude Include="FogOfWar.h">
       <Filter>Project 2\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="MemLeaks.h">
+      <Filter>Project 2\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">

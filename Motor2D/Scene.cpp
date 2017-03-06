@@ -46,11 +46,11 @@ bool Scene::Start()
 	debug_tex = App->tex->Load("maps/path2.png");
 
 	//Test
-	villager = App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER, FREE_MEN_UNIT);
-	villager2 = App->entityManager->CreateUnit(600, 400, true, ELVEN_ARCHER, FREE_MEN_UNIT);
-	TestBuilding = App->entityManager->CreateBuilding(150, 100, true, BARRACKS, FREE_MEN_BUILDING);
+	elvenArcher = App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
+	troll = App->entityManager->CreateUnit(600, 400, true, TROLL_MAULER);
+	testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
 
-	App->fog->CreateFog(App->map->data.width*App->map->data.tile_width, App->map->data.height*App->map->data.tile_height);
+	App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 	return true;
 }
 
@@ -71,7 +71,7 @@ bool Scene::Update(float dt)
 	App->map->Draw();
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {
-		villager->SetDestination();
+		elvenArcher->SetDestination();
 	}
 
 	if (debug) {
@@ -83,14 +83,9 @@ bool Scene::Update(float dt)
 		}
 	}
 
-	int x, y;
-	App->input->GetMousePosition(x, y);
-	iPoint map_coordinates = App->map->WorldToMap(x - App->render->camera.x, y - App->render->camera.y);
-	iPoint villagerToWorld = App->map->WorldToMap(villager->entityPosition.x, villager->entityPosition.y);
-	string str = to_string(map_coordinates.x) + "," + to_string(map_coordinates.y) + "  " + to_string(villagerToWorld.x) + "," + to_string(villagerToWorld.y);
-	App->win->SetTitle(str.c_str());
-
-	//App->fog->removeFog(villager->entityPosition.x, villager->entityPosition.y);
+	App->fog->removeFog(elvenArcher->entityPosition.x, elvenArcher->entityPosition.y);
+	App->fog->removeFog(troll->entityPosition.x, troll->entityPosition.y);
+	App->fog->removeFog(testBuilding->entityPosition.x, testBuilding->entityPosition.y);
 
 	return true;
 }

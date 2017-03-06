@@ -111,6 +111,7 @@
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="MemLeaks.h" />
     <ClInclude Include="p2Defs.h" />
     <ClInclude Include="p2Log.h" />
     <ClInclude Include="p2Point.h" />

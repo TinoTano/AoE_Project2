@@ -262,6 +262,8 @@ bool Map::Load(const char* file_name)
 			LOG("tile width: %d tile height: %d", l->width, l->height);
 			item_layer_it++;
 		}
+		data.mapWidth = data.width * data.tile_width;
+		data.mapHeight = data.height * data.tile_height;
 	}
 
 	map_loaded = ret;

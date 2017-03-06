@@ -39,3 +39,13 @@ bool Entity::HandleInput()
 	return true;
 }
 
+bool Entity::Load(pugi::xml_node &)
+{
+	return true;
+}
+
+bool Entity::Save(pugi::xml_node &) const
+{
+	return true;
+}
+

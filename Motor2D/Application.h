@@ -60,6 +60,8 @@ public:
 	void SaveGame(const char* file) const;
 	void GetSaveGames(list<string>& list_to_fill) const;
 
+	pugi::xml_node LoadGameData(pugi::xml_document&) const;
+
 private:
 
 	// Load config file

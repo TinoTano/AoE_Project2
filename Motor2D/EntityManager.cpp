@@ -3,6 +3,7 @@
 #include "Collision.h"
 #include "Application.h"
 #include "Scene.h"
+#include "Unit.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -14,11 +15,11 @@ EntityManager::~EntityManager()
 {
 }
 
-bool EntityManager::Awake(pugi::xml_node &)
+bool EntityManager::Awake(pugi::xml_node & config)
 {
-	bool ret = true;
+	
 
-	return ret;
+	return true;
 }
 
 bool EntityManager::Start()
@@ -122,9 +123,9 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type, unitFaction faction)
+Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type)
 {
-	Unit* unit = new Unit(posX, posY, isEnemy, type, faction);
+	Unit* unit = new Unit(posX, posY, isEnemy, type);
 	unit->entityID = nextID;
 	nextID++;
 	if (!isEnemy) {
@@ -138,9 +139,9 @@ Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type,
 	return unit;
 }
 
-Building* EntityManager::CreateBuilding(int posX, int posY, bool isEnemy, buildingType type, buildingFaction faction)
+Building* EntityManager::CreateBuilding(int posX, int posY, bool isEnemy, buildingType type)
 {
-	Building* building = new Building(posX, posY, isEnemy, type, faction);
+	Building* building = new Building(posX, posY, isEnemy, type);
 	building->entityID = nextID;
 	nextID++;
 	if (!isEnemy) {
@@ -192,6 +193,7 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 						for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
 							if ((*it2)->collider == c2) {
 								(*it)->attackUnitTarget = (*it2);
+								break;
 							}
 						}
 					}
@@ -199,9 +201,11 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 						for (list<Building*>::iterator it2 = enemyBuildingList.begin(); it2 != enemyBuildingList.end(); it2++) {
 							if ((*it2)->collider == c2) {
 								(*it)->attackBuildingTarget = (*it2);
+								break;
 							}
 						}
 					}
+					break;
 				}
 			}
 		}
@@ -209,12 +213,16 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 	if (c1->type == COLLIDER_FRIENDLY_BUILDING && c2->type == COLLIDER_ENEMY_UNIT) {
 		for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
 			if ((*it)->collider == c1) {
-				(*it)->state = BUILDING_ATTACKING;
-				for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
-					if ((*it2)->collider == c2) {
-						(*it)->attackUnitTarget = (*it2);
+				if ((*it)->canAttack) {
+					(*it)->state = BUILDING_ATTACKING;
+					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
+						if ((*it2)->collider == c2) {
+							(*it)->attackUnitTarget = (*it2);
+							break;
+						}
 					}
 				}
+				break;
 			}
 		}
 	}
@@ -229,16 +237,19 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 						for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
 							if ((*it2)->collider == c1) {
 								(*it)->attackUnitTarget = (*it2);
+								break;
 							}
 						}
 					}
 					if (c1->type == COLLIDER_FRIENDLY_BUILDING) {
 						for (list<Building*>::iterator it2 = friendlyBuildingList.begin(); it2 != friendlyBuildingList.end(); it2++) {
 							if ((*it2)->collider == c1) {
-								(*it)->attackBuildingTarget = (*it2);
+								(*it)->attackBuildingTarget = (*it2); 
+								break;
 							}
 						}
 					}
+					break;
 				}
 			}
 		}
@@ -246,12 +257,16 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 	if (c2->type == COLLIDER_ENEMY_BUILDING && c1->type == COLLIDER_FRIENDLY_UNIT) {
 		for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
 			if ((*it)->collider == c2) {
-				(*it)->state = BUILDING_ATTACKING;
-				for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
-					if ((*it2)->collider == c1) {
-						(*it)->attackUnitTarget = (*it2);
+				if ((*it)->canAttack) {
+					(*it)->state = BUILDING_ATTACKING;
+					for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
+						if ((*it2)->collider == c1) {
+							(*it)->attackUnitTarget = (*it2);
+							break;
+						}
 					}
 				}
+				break;
 			}
 		}
 	}

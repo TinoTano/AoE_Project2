@@ -8,7 +8,7 @@
 class Unit;
 
 enum buildingType {
-	TOWN_CENTER, BARRACKS, FARM, ARCHER_TOWER
+	TOWN_CENTER, HOUSE, ORC_BARRACKS, ARCHERY_RANGE, STABLES, SIEGE_WORKSHOP, MARKET, BLACKSMITH, MILL, WALL, GATE, OUTPOST, MONASTERY, CASTLE
 };
 
 enum buildingState
@@ -23,14 +23,17 @@ enum buildingFaction {
 class Building : public Entity
 {
 public:
-	Building(int posX, int posY, bool isEnemy, buildingType type, buildingFaction faction);
+	Building(int posX, int posY, bool isEnemy, buildingType type);
 	~Building();
 
 	bool Update(float dt);
 	bool Draw();
 	void Attack(float dt);
 	void Dead();
-	void SetAnim();
+	pugi::xml_node LoadBuildingInfo(buildingType type);
+
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
 
 private:
 	buildingType type;
@@ -38,18 +41,28 @@ private:
 	float buildingAttackSpeed;
 	int buildingPiercingDamage;
 	bool isEnemy;
-	float attackDelay;
 	float timer = 0;
 	list<Unit*> availableUnitsToCreateList;
 	bool isDamaged;
-	Animation* currentAnim = nullptr;
+	int hpBarWidth;
+	pugi::xml_node buildingNodeInfo;
+	int buildingWoodCost;
+	int buildingStoneCost;
+	int buildingBuildTime;
+	SDL_Texture* buildingIdleTexture;
+	SDL_Texture* buildingDieTexture;
+	uint imageWidth;
+	uint imageHeight;
 
 public:
 	Unit* attackUnitTarget;
 	int buildingLife;
+	int buildingMaxLife;
 	int buildingAttack;
 	int buildingDefense;
 	buildingState state;
+	bool isSelected;
+	bool canAttack;
 };
 
 #endif // !__BUILDING_H__

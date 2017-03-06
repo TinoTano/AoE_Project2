@@ -3,14 +3,15 @@
 
 #include "SDL/include/SDL_rect.h"
 #include "p2Defs.h"
-#define MAX_FRAMES 25
+#include <vector>
+//#define MAX_FRAMES 25
 
 class Animation
 {
 public:
 	bool loop = true;
 	float speed = 1.0f;
-	SDL_Rect frames[MAX_FRAMES];
+	vector<SDL_Rect> frames;
 	SDL_RendererFlip flip;
 
 private:
@@ -22,16 +23,16 @@ public:
 
 	void PushBack(const SDL_Rect& rect)
 	{
-		frames[last_frame++] = rect;
+		frames.push_back(rect);
 	}
 
 	// return current_frame+speed frame Rect
 	SDL_Rect& GetCurrentFrame()
 	{
 		current_frame += speed;
-		if (current_frame >= last_frame)
+		if (current_frame >= frames.size())
 		{
-			current_frame = (loop) ? 0.0f : last_frame - 1;
+			current_frame = (loop) ? 0.0f : frames.size() - 1;
 			loops++;
 		}
 
@@ -76,5 +77,6 @@ public:
 		current_frame = 0;
 		loops = 0;
 	}
+	
 };
 #endif

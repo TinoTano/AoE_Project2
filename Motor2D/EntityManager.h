@@ -33,13 +33,12 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type, unitFaction faction);
-	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type, buildingFaction faction);
+	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type);
+	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type);
 
 	void DeleteUnit(Unit* unit, bool isEnemy);
 	void DeleteBuilding(Building*, bool isEnemy);
 	void OnCollision(Collider* c1, Collider* c2);
-	//void OnCollisionExit(Collider* c1, Collider* c2);
 
 private:
 	void DestroyEntity(Entity* entity);
@@ -51,9 +50,13 @@ private:
 	list<Building*> friendlyBuildingList;
 	list<Building*> enemyBuildingList;
 	list<Building*> removeBuildingList;
+	list<Unit*> selectedUnitList;
+	list<Building*> selectedBuildingtList;
+	Unit* selectedUnit;
+	Building* selectedBuilding;
+	
 
 public:
-	//list<Entity*> selectedEntityList;
 	int nextID;
 
 };

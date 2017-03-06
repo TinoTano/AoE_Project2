@@ -3,6 +3,7 @@
 #include "FileSystem.h"
 #include "Textures.h"
 #include "p2Log.h"
+#include "Window.h"
 
 #include "SDL_image/include/SDL_image.h"
 #pragma comment( lib, "SDL_image/libx86/SDL2_image.lib" )
@@ -116,14 +117,14 @@ SDL_Texture* const Textures::LoadStaticSurface(SDL_Surface* surface)
 	{
 		textures.push_back(texture);
 	}
-
+	
 	return texture;
 }
 
 // Translate a surface into a streaming texture (can be locked/unlocked (modify pixels))
-SDL_Texture* const Textures::LoadStreamingSurface(SDL_Surface* surface)
+SDL_Texture* const Textures::LoadStreamingTextureFromSurface(SDL_Surface* surface)
 {
-	SDL_Texture* texture = SDL_CreateTexture(App->render->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, surface->w, surface->h);
+	SDL_Texture* texture = SDL_CreateTexture(App->render->renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, surface->w, surface->h);
 
 	if (texture == NULL)
 	{

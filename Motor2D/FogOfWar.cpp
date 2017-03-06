@@ -5,6 +5,7 @@
 #include "p2Log.h"
 #include "Textures.h"
 #include "p2Defs.h"
+#include "Map.h"
 
 FogOfWar::FogOfWar()
 {
@@ -18,38 +19,89 @@ FogOfWar::~FogOfWar()
 
 bool FogOfWar::Start()
 {
-	fogRemover = App->tex->LoadImageAsSurface("textures/fogCercle.png");
 	return true;
 }
 
 bool FogOfWar::Update(float dt)
 {
-	DrawFog(fogSurface, 0, 0);
+	DrawFog();
 	return true;
 }
 
-void FogOfWar::DrawFog(SDL_Surface* in_Surface, int in_X, int in_Y)
+void FogOfWar::DrawFog()
 {
-	///if (SDL_UpdateTexture(fogTexture, NULL, fogSurface->pixels, fogSurface->pitch) != -1) {
-		//App->render->Blit(fogTexture, App->render->camera.x, App->render->camera.y);
-	//}
+	App->render->Blit(lowFogTexture, -App->map->data.mapWidth / 2, 0);
+	App->render->Blit(highFogTexture, -App->map->data.mapWidth / 2, 0);
 }
 
 void FogOfWar::CreateFog(int width, int height)
 {
-	fogSurface = SDL_CreateRGBSurface(0, width, height, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-	SDL_Rect screenRect = { 0, 0, width, height };
-	SDL_FillRect(fogSurface, &screenRect, 0xFF202020);
-	fogTexture = App->tex->LoadStreamingSurface(fogSurface);
+	//High fog creation
+	highFogSurface = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	SDL_FillRect(highFogSurface, NULL, 0xFF000000);
+	highFogTexture = App->tex->LoadStreamingTextureFromSurface(highFogSurface);
+	SDL_SetTextureBlendMode(highFogTexture, SDL_BLENDMODE_BLEND);
+
+	//Remove fog zone creation
+	removerSurface = App->tex->LoadImageAsSurface("textures/fogCercle.png");
+	fogRemoverTexture = App->tex->LoadStreamingTextureFromSurface(removerSurface);
+
+	//Low fog creation
+	lowFogSurface = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	SDL_FillRect(lowFogSurface, NULL, 0xFF000000);
+	lowFogTexture = App->tex->LoadStreamingTextureFromSurface(lowFogSurface);
+	SDL_SetTextureBlendMode(lowFogTexture, SDL_BLENDMODE_BLEND);
+	SDL_SetTextureAlphaMod(lowFogTexture, 125);
+
+	//------- Get 
+	SDL_LockTexture(highFogTexture, NULL, &highFogPixels, &highFogPitch);
+
+	//Copy loaded/formatted surface pixels
+	memcpy(highFogPixels, highFogSurface->pixels, highFogSurface->pitch * highFogSurface->h);
+
+	//Unlock texture to update
+	SDL_UnlockTexture(highFogTexture);
+	highFogPixels = NULL;
+
+	//Get image dimensions
+	App->tex->GetSize(highFogTexture, fogTextWidth, fogTextHeight);
+
+
+	//////////////////////////////
+	SDL_LockTexture(fogRemoverTexture, NULL, &removerPixels, &removerPitch);
+
+	//Copy loaded/formatted surface pixels
+	memcpy(removerPixels, removerSurface->pixels, removerSurface->pitch * removerSurface->h);
+
+	//Unlock texture to update
+	SDL_UnlockTexture(fogRemoverTexture);
+	removerPixels = NULL;
+
+	//Get image dimensions
+	App->tex->GetSize(fogRemoverTexture, removerTextWidth, removerTextHeight);
+
+
+	//////////////////////////////
+	SDL_LockTexture(lowFogTexture, NULL, &lowFogPixels, &lowFogPitch);
+
+	//Copy loaded/formatted surface pixels
+	memcpy(lowFogPixels, lowFogSurface->pixels, lowFogSurface->pitch * lowFogSurface->h);
+
+	//Unlock texture to update
+	SDL_UnlockTexture(lowFogTexture);
+	lowFogPixels = NULL;
+
 }
 
 void FogOfWar::removeFog(int posX, int posY)
 {
-	const int halfWidth = fogRemover->w / 2;
-	const int halfHeight = fogRemover->h / 2;
+	const int halfWidth = removerTextWidth / 2;
+	const int halfHeight = removerTextHeight / 2;
 
-	SDL_Rect sourceRect = { 0, 0, fogRemover->w, fogRemover->h };
-	SDL_Rect destRect = { posX - halfWidth, posY - halfHeight, fogRemover->w, fogRemover->h };
+	posX += App->map->data.mapWidth / 2;
+
+	SDL_Rect sourceRect = { 0, 0,removerTextWidth, removerTextHeight };
+	SDL_Rect destRect = { posX - halfWidth, posY - halfHeight, removerTextWidth, removerTextHeight };
 
 	// Make sure our rects stays within bounds
 	if (destRect.x < 0)
@@ -67,23 +119,24 @@ void FogOfWar::removeFog(int posX, int posY)
 		destRect.h -= sourceRect.y; // shrink the height to stay within bounds
 	}
 
-	int xDistanceFromEdge = (destRect.x + destRect.w) - fogSurface->w;
+	int xDistanceFromEdge = (destRect.x + destRect.w) - highFogSurface->w;
 	if (xDistanceFromEdge > 0) // we're busting
 	{
 		sourceRect.w -= xDistanceFromEdge;
 		destRect.w -= xDistanceFromEdge;
 	}
-	int yDistanceFromEdge = (destRect.y + destRect.h) - fogSurface->h;
+	int yDistanceFromEdge = (destRect.y + destRect.h) - highFogSurface->h;
 	if (yDistanceFromEdge > 0) // we're busting
 	{
 		sourceRect.h -= yDistanceFromEdge;
 		destRect.h -= yDistanceFromEdge;
 	}
 
-	SDL_LockSurface(fogSurface);
+	SDL_LockTexture(highFogTexture,NULL,&highFogPixels,&highFogPitch);
 
-	Uint32* destPixels = (Uint32*)fogSurface->pixels;
-	Uint32* srcPixels = (Uint32*)fogRemover->pixels;
+	SDL_LockTexture(fogRemoverTexture,NULL,&removerPixels,&removerPitch);
+
+	SDL_LockTexture(lowFogTexture, NULL, &lowFogPixels, &lowFogPitch);
 
 	static bool keepFogRemoved = true;
 
@@ -91,20 +144,26 @@ void FogOfWar::removeFog(int posX, int posY)
 	{
 		for (int y = 0; y < destRect.h; ++y)
 		{
-			Uint32* destPixel = destPixels + (y + destRect.y) * fogSurface->w + destRect.x + x;
-			Uint32* srcPixel = srcPixels + (y + sourceRect.y) * fogRemover->w + sourceRect.x + x;
+			Uint32* highFogPixel = (Uint32*)highFogPixels + (y + destRect.y) * fogTextWidth + destRect.x + x;
+			Uint32* lowFogPixel = (Uint32*)lowFogPixels + (y + destRect.y) * fogTextWidth + destRect.x + x;
+			Uint32* removerPixel = (Uint32*)removerPixels + (y + sourceRect.y) * removerTextWidth + sourceRect.x + x;
 
-			unsigned char* destAlpha = (unsigned char*)destPixel + 3; // fetch alpha channel
-			unsigned char* srcAlpha = (unsigned char*)srcPixel + 3; // fetch alpha channel
-			if (keepFogRemoved == true && *srcAlpha > 0)
+			unsigned char* highFogPixelAlpha = (unsigned char*)highFogPixel + 3; // alpha channel
+			unsigned char* lowFogPixelAlpha = (unsigned char*)lowFogPixel + 3; // alpha channel
+			unsigned char* removerPixelAlpha = (unsigned char*)removerPixel;
+
+			if (keepFogRemoved == true && *removerPixelAlpha > 0)
 			{
-				continue; // skip this pixel
+				*lowFogPixelAlpha = *removerPixelAlpha;
+				continue; // skip highFog pixel
 			}
-
-			*destAlpha = *srcAlpha;
+			*highFogPixelAlpha = *lowFogPixelAlpha = *removerPixelAlpha;
 		}
 	}
 
-	SDL_UnlockSurface(fogSurface);
+	SDL_UnlockTexture(fogRemoverTexture);
+	SDL_UnlockTexture(lowFogTexture);
+	SDL_UnlockTexture(highFogTexture);
+
 }
 

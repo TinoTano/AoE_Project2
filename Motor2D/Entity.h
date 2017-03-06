@@ -3,6 +3,7 @@
 
 #include "p2Point.h"
 #include "SDL\include\SDL.h"
+#include "PugiXml\src\pugixml.hpp"
 
 using namespace std;
 
@@ -20,6 +21,10 @@ public:
 	virtual bool Update(float dt);
 	virtual bool Draw();
 	virtual bool HandleInput();
+	 
+	virtual bool Load(pugi::xml_node&);
+	virtual bool Save(pugi::xml_node&) const;
+
 
 public:
 	int entityID;

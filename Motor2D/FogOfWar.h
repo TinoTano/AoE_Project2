@@ -13,16 +13,30 @@ public:
 
 	bool Update(float dt);
 
-	void DrawFog(SDL_Surface* in_Surface, int in_X, int in_Y);
+	void DrawFog();
 
 	void CreateFog(int widht, int height);
 
 	void removeFog(int posX, int posY);
 
 private:
-	SDL_Surface* fogSurface;
-	SDL_Texture* fogTexture;
-	SDL_Surface* fogRemover;
+	SDL_Surface* highFogSurface;
+	SDL_Surface* removerSurface;
+	SDL_Surface* lowFogSurface;
+	SDL_Texture* highFogTexture;
+	SDL_Texture* fogRemoverTexture;
+	SDL_Texture* lowFogTexture;
+	void* highFogPixels;
+	int highFogPitch;
+	void* removerPixels;
+	int removerPitch;
+	void* lowFogPixels;
+	int lowFogPitch;
+	uint fogTextWidth;
+	uint fogTextHeight;
+	uint removerTextWidth;
+	uint removerTextHeight;
+	//SDL_Rect lastPixelsRect = { 0,0,0,0 };
 };
 
 #endif // !__FOG_OF_WAR__

@@ -4,6 +4,7 @@
 #include "p2Log.h"
 #include "Input.h"
 #include "Textures.h"
+#include "Map.h"
 
 #define VSYNC true
 
@@ -119,25 +120,33 @@ void Render::MoveCameraWithCursor(float dt)
 	//Move left
 	if (mousePosX < 10)
 	{
-		camera.x += 5;
+		if (camera.x + (camera.w / 2) < App->map->data.mapWidth) {
+			camera.x += 5;
+		}
 	}
 	
 	//Move right
 	if (mousePosX > camera.w - 10)
 	{
-		camera.x -= 5;
+		if (-camera.x - (-camera.w / 2) < App->map->data.mapWidth / 2) {
+			camera.x -= 5;
+		}
 	}
 
 	//Move up
 	if (mousePosY < 10)
 	{
-		camera.y += 5;
+		if (camera.y + (camera.h / 2) < App->map->data.mapHeight / 1.5f) {
+			camera.y += 5;
+		}
 	}
 
 	//Move down
 	if (mousePosY > camera.h - 10)
 	{
-		camera.y -= 5;
+		if (-camera.y - (-camera.h / 2) < App->map->data.mapHeight) {
+			camera.y -= 5;
+		}
 	}
 }
 
@@ -272,6 +281,14 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 	SDL_Point points[360];
 
 	float factor = (float)M_PI / 180.0f;
+
+	if (use_camera)
+	{
+		x *= scale;
+		y *= scale;
+		x += camera.x;
+		y += camera.y;
+	}
 
 	for(uint i = 0; i < 360; ++i)
 	{

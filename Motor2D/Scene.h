@@ -38,9 +38,9 @@ public:
 private:
 	SDL_Texture* debug_tex;
 	bool debug = false;
-	Unit* villager;
-	Unit* villager2;
-	Building* TestBuilding;
+	Unit* elvenArcher;
+	Unit* troll;
+	Building* testBuilding;
 
 };
 
