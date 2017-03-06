@@ -110,11 +110,11 @@ void Render::SetBackgroundColor(SDL_Color color)
 	background = color;
 }
 
-void Render::MoveCameraWithCursor(float dt)
+pair <int,int> Render::MoveCameraWithCursor(float dt)
 {
 	int mousePosX;
 	int mousePosY;
-
+	pair<int, int> movement;
 	App->input->GetMousePosition(mousePosX, mousePosY);
 
 	//Move left
@@ -122,6 +122,7 @@ void Render::MoveCameraWithCursor(float dt)
 	{
 		if (camera.x + (camera.w / 2) < App->map->data.mapWidth) {
 			camera.x += 5;
+			movement.first = 5;
 		}
 	}
 	
@@ -130,6 +131,7 @@ void Render::MoveCameraWithCursor(float dt)
 	{
 		if (-camera.x - (-camera.w / 2) < App->map->data.mapWidth / 2) {
 			camera.x -= 5;
+			movement.first = -5;
 		}
 	}
 
@@ -138,6 +140,7 @@ void Render::MoveCameraWithCursor(float dt)
 	{
 		if (camera.y + (camera.h / 2) < App->map->data.mapHeight / 1.5f) {
 			camera.y += 5;
+			movement.second = 5;
 		}
 	}
 
@@ -146,8 +149,10 @@ void Render::MoveCameraWithCursor(float dt)
 	{
 		if (-camera.y - (-camera.h / 2) < App->map->data.mapHeight) {
 			camera.y -= 5;
+			movement.second = -5;
 		}
 	}
+	return movement;
 }
 
 void Render::SetViewPort(const SDL_Rect& rect)

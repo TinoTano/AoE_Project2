@@ -54,7 +54,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	
 
 	// scene last
-	//AddModule(scene);
+	AddModule(scene);
 	AddModule(scenetest);
 	AddModule(entityManager);
 	AddModule(collision);

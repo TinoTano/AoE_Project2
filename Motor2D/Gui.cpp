@@ -5,6 +5,7 @@
 #include "Textures.h"
 #include "Fonts.h"
 #include "Input.h"
+#include "Window.h"
 #include "Gui.h"
 
 Gui::Gui() : Module()
@@ -102,6 +103,18 @@ bool Gui::Save(pugi::xml_node &) const
 bool Gui::Load(pugi::xml_node &)
 {
 	return true;
+}
+
+void Gui::ScreenMoves(pair<int,int> movement) {
+
+	if (Elements.empty() != true)
+	{
+		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+		{
+			if (it._Ptr->_Myval->enabled == true)
+				it._Ptr->_Myval->Movement(movement);
+		}
+	}
 }
 
 // UI ELEMENT
@@ -254,6 +267,11 @@ MouseState Image::MouseDetect()
 	return ret;
 }
 
+void Image::Movement(pair<int, int> movement) {
+	pos.first -= movement.first;
+	pos.second -= movement.second;
+}
+
 void Image::DebugMode() {
 	App->render->DrawQuad({ pos.first, pos.second, section.w, section.h }, debug_color.r, debug_color.g, debug_color.b, debug_color.a, true);
 }
@@ -280,11 +298,17 @@ void Label::SetText(char* text) {
 	str = text;
 }
 
+void Label::Movement(pair<int, int> movement) {
+	pos.first -= movement.first;
+	pos.second -= movement.second;
+}
+
 //BUTTON 
 
 Button::Button(int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier Tier, SDL_Texture* argtexture) : UIElement(true, x, y, BUTTON, argtexture), button_tier(Tier) {
 	this->blit_sections = blit_sections;
 	this->detect_sections = detect_sections;
+
 }
 
 void Button::Update()
@@ -307,14 +331,23 @@ void Button::Update()
 		else Draw(blit_sections[0]);
 		break;
 	}
+
 	if (debug) DebugMode();
 }
 
 void Button::Draw(SDL_Rect section)
 {
 	App->render->Blit(texture, pos.first, pos.second, &section);
+}
 
+void Button::Movement(pair<int, int> movement) {
+	pos.first -= movement.first;
+	pos.second -= movement.second;
 
+	for (int i = 0; i < detect_sections.size(); ++i) {
+		detect_sections[i].x -= movement.first;
+		detect_sections[i].y = movement.second;
+	}
 }
 
 MouseState Button::MouseDetect()
@@ -323,7 +356,7 @@ MouseState Button::MouseDetect()
 	for (int it = 0; it < detect_sections.size(); ++it) {
 		pair<int, int> mouse_pos;
 		App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
-		if (mouse_pos.first >= pos.first && mouse_pos.first <= (pos.first + detect_sections[it].w) && mouse_pos.second >= pos.second && mouse_pos.second <= (pos.second + detect_sections[it].h)) {
+		if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + detect_sections[it].w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + detect_sections[it].h)) {
 			ret = HOVER;
 			break;
 		}

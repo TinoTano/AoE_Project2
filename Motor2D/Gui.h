@@ -53,6 +53,7 @@ public:
 	virtual void	Update() {}
 	virtual	void	Draw() {}
 	virtual void	DebugMode() {}
+	virtual void	Movement(pair<int,int>) {}
 	void			SetPos(int x, int y);
 	void			SetParentPos(int x, int y);
 	void			Move(int x, int y);
@@ -71,6 +72,7 @@ public:
 	Image(SDL_Rect argsection, int x, int y, SDL_Texture* argtexture);
 	Image(int x, int y, SDL_Texture* argtexture);
 	MouseState MouseDetect();
+	void Movement(pair<int, int> movement);
 
 
 	void Update();
@@ -86,6 +88,7 @@ class Label : public UIElement {
 public:
 	Label(char * text, int x, int y, _TTF_Font* font);
 	Label(char * text, SDL_Rect area, _TTF_Font* font);
+	void Movement(pair<int, int> movement);
 
 	void Update();
 	void Draw();
@@ -106,6 +109,7 @@ public:
 
 	void Update();
 	void Draw(SDL_Rect section);
+	void Movement(pair<int,int> movement);
 	MouseState MouseDetect();
 	void DebugMode();
 
@@ -227,6 +231,7 @@ public:
 	UIElement* CreateQuad(SDL_Rect size, SDL_Color color);
 	UIElement* CreateCursor(char* path, vector<SDL_Rect> cursor_list);
 	SDL_Texture* GetAtlas() const;
+	void ScreenMoves(pair<int,int> movement);
 
 	list<UIElement*> Elements;
 	Cursor* cursor;

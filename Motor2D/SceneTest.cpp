@@ -36,21 +36,20 @@ bool SceneTest::Start()
 {
 
 	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 4, 114, 222, 64 });
-	blit_sections.push_back({ 415, 170, 222, 64 });
-	blit_sections.push_back({ 646, 170, 222, 64 });
+	blit_sections.push_back({ 0, 0, 220, 30 });
+	blit_sections.push_back({ 0, 30, 220, 30 });
 
 	vector<SDL_Rect> detect_sections;
-	detect_sections.push_back({ 200, 200, 222, 64 });
-	detect_sections.push_back({ 0, 0, 222, 64 });
+	detect_sections.push_back({ 0, 0, 220, 30 });
+	//detect_sections.push_back({ 0, 0, 222, 64 });
 
-	Button* button = (Button*)App->gui->CreateButton("gui/atlas_lol.png", 50, 50, blit_sections, detect_sections, TIER1);
+	button = (Button*)App->gui->CreateButton("gui/button.png", 50, 50, blit_sections, detect_sections, TIER2);
 
-	Input* input = (Input*)App->gui->CreateInput(500, 35, { 515, 35, 338, 54 }, nullptr);
+	top = (Image*)App->gui->CreateImage("gui/ingame_layer.png", 0, 0, { 0,0,1920, 30 });
+	bottom = (Image*)App->gui->CreateImage("gui/ingame_layer.png", 0, 550, { 0, 40,1920, 200 });
 
-	scroll = (ScrollBar*)App->gui->CreateScrollBar(500, 200, MODEL1);
-	_itoa_s(scroll->GetData(), &mierda, 65, 10);
-	val = (Label*)App->gui->CreateLabel(&mierda, 480, 120, nullptr);
+	//Input* input = (Input*)App->gui->CreateInput(500, 35, { 515, 35, 338, 54 }, nullptr);
+
 
 	// To use the cursor, this is needed!
 	// This contains all the rects for the cursor. To change the blitted cursor just:
@@ -91,9 +90,14 @@ bool SceneTest::PreUpdate()
 
 bool SceneTest::Update(float dt)
 {
-
+	/*
 	_itoa_s(scroll->GetData(), &mierda, 65, 10);
 	val->SetText(&mierda);
+	*/
+	
+
+	if (button->current == HOVER || button->current == CLICKIN) App->gui->cursor->SetCursor(3);
+	else App->gui->cursor->SetCursor(0);
 
 	return true;
 }

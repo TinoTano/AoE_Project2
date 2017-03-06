@@ -43,9 +43,8 @@ private:
 	char mierda;
 	uint hero_y;
 	list<Image*> heroes;
-	ScrollBar* scroll;
-	Label* val;
-
+	Button* button;
+	Image* top, * bottom;
 };
 
 #endif // __j1SCENE_H__

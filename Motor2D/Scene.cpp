@@ -11,6 +11,7 @@
 #include "EntityManager.h"
 #include "Unit.h"
 #include "FogOfWar.h"
+#include "Gui.h"
 
 Scene::Scene() : Module()
 {
@@ -67,7 +68,7 @@ bool Scene::Update(float dt)
 		debug = !debug;
 	}
 
-	App->render->MoveCameraWithCursor(dt);
+	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {

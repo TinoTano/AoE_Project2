@@ -46,7 +46,7 @@ public:
 	void SetBackgroundColor(SDL_Color color);
 
 	//Move camera with cursor
-	void MoveCameraWithCursor(float dt);
+	pair<int,int> MoveCameraWithCursor(float dt);
 
 public:
 
