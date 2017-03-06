@@ -206,6 +206,15 @@ UIElement * Gui::CreateQuad(SDL_Rect size, SDL_Color color)
 	return ret;
 }
 
+UIElement * Gui::CreateCursor(char* path, vector<SDL_Rect> cursor_list)
+{
+	UIElement* ret = nullptr;
+	SDL_Texture * tex = App->tex->Load(path);
+	ret = new Cursor(tex, cursor_list);
+	Elements.push_back(ret);
+	return ret;
+}
+
 // IMAGE
 Image::Image(SDL_Rect argsection, int x, int y, SDL_Texture* argtexture) : UIElement(true, x, y, IMAGE, argtexture), section(argsection) {}
 Image::Image(int x, int y, SDL_Texture* argtexture) : UIElement(true, x, y, IMAGE, argtexture) {}
@@ -575,4 +584,28 @@ void Quad::Draw() {
 void Quad::SetArea(SDL_Rect area) {
 	this->area = area;
 	SetPos(area.x, area.y);
+}
+
+// CURSOR
+
+Cursor::Cursor(SDL_Texture* tex, vector<SDL_Rect> area) : UIElement(true, area[1].x, area[1].y, CURSOR, tex), sprite_list(area) {
+	id = 1;
+}
+
+void Cursor::Update() {
+	if (texture != nullptr) {
+		SDL_ShowCursor(false);
+		App->input->GetMousePosition(cursor_pos.first, cursor_pos.second);
+		pos.first = cursor_pos.first - App->render->camera.x;
+		pos.second = cursor_pos.second - App->render->camera.y;
+		Draw();
+		if (id == 1 || id == 2 || id == 5 || id == 7 || id == 8 || id == 12 || id == 16) blitoffset.second = 20;
+	}
+}
+void Cursor::Draw() {
+	
+	App->render->Blit(texture, pos.first - blitoffset.first , pos.second - blitoffset.second, &sprite_list[id]);
+}
+void Cursor::SetCursor(int id) {
+	this->id = id;
 }

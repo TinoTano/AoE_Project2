@@ -40,11 +40,11 @@ private:
 	//GuiText* text;
 
 
-	char mierda, mierda2;
+	char mierda;
 	uint hero_y;
 	list<Image*> heroes;
-	ScrollBar* scroll, *scroll2;
-	Label* val, *val2;
+	ScrollBar* scroll;
+	Label* val;
 
 };
 

@@ -35,8 +35,6 @@ bool SceneTest::Awake()
 bool SceneTest::Start()
 {
 
-	//Image* test= (Image*)App->gui->CreateImage( "gui/atlas_lol.png", 0,0 , { 0 , 0, 100, 100 } );
-	Label* label = (Label*)App->gui->CreateLabel("no crashees pls", 0, 0, nullptr);
 	vector<SDL_Rect> blit_sections;
 	blit_sections.push_back({ 4, 114, 222, 64 });
 	blit_sections.push_back({ 415, 170, 222, 64 });
@@ -48,24 +46,38 @@ bool SceneTest::Start()
 
 	Button* button = (Button*)App->gui->CreateButton("gui/atlas_lol.png", 50, 50, blit_sections, detect_sections, TIER1);
 
-	Image* in_bg = (Image*)App->gui->CreateImage("gui/atlas_lol.png", 500, 30, { 491 , 572, 338, 54 });
 	Input* input = (Input*)App->gui->CreateInput(500, 35, { 515, 35, 338, 54 }, nullptr);
 
 	scroll = (ScrollBar*)App->gui->CreateScrollBar(500, 200, MODEL1);
-
-	scroll2 = (ScrollBar*)App->gui->CreateScrollBar(700, 400, MODEL1);
-
-	ScrollBar* scroll3 = (ScrollBar*)App->gui->CreateScrollBar(0, 400, MODEL1);
-
-
 	_itoa_s(scroll->GetData(), &mierda, 65, 10);
-	_itoa_s(scroll2->GetData(), &mierda2, 65, 10);
-
 	val = (Label*)App->gui->CreateLabel(&mierda, 480, 120, nullptr);
-	val2 = (Label*)App->gui->CreateLabel(&mierda2, 680, 320, nullptr);
 
-	//Quad* quad = (Quad*)App->gui->CreateQuad({ 0, 0 ,800, 400 }, { 100,100,100, 255 });
+	// To use the cursor, this is needed!
+	// This contains all the rects for the cursor. To change the blitted cursor just:
+	// Call App->gui->cursor->SetCursor(int id);
+	// Where id is a number from 0 to 17, should be an enum later on.
 
+	vector<SDL_Rect> sprites_cursor;
+	sprites_cursor.push_back({ 0,   0, 70, 50 });
+	sprites_cursor.push_back({ 70,   0, 70, 50});
+	sprites_cursor.push_back({ 140, 0, 70, 50 });
+	sprites_cursor.push_back({ 210, 0, 70, 50 });
+	sprites_cursor.push_back({ 280, 0, 70, 50 });
+	sprites_cursor.push_back({ 350, 0, 70, 50 });
+	sprites_cursor.push_back({ 420, 0, 70, 50 });
+	sprites_cursor.push_back({ 490, 0, 70, 50 });
+	sprites_cursor.push_back({ 560, 0, 70, 50 });
+	sprites_cursor.push_back({ 0,   50, 70, 50 });
+	sprites_cursor.push_back({ 70,  50, 70, 50 });
+	sprites_cursor.push_back({ 140, 50, 70, 50 });
+	sprites_cursor.push_back({ 210, 50, 70, 50 });
+	sprites_cursor.push_back({ 280, 50, 70, 50 });
+	sprites_cursor.push_back({ 350, 50, 70, 50 });
+	sprites_cursor.push_back({ 420, 50, 70, 50 });
+	sprites_cursor.push_back({ 490, 50, 70, 50 });
+	sprites_cursor.push_back({ 560, 50, 70, 50 });
+
+	App->gui->cursor = (Cursor*)App->gui->CreateCursor("gui/cursor.png", sprites_cursor);
 	return true;
 }
 
@@ -82,10 +94,6 @@ bool SceneTest::Update(float dt)
 
 	_itoa_s(scroll->GetData(), &mierda, 65, 10);
 	val->SetText(&mierda);
-	_itoa_s(scroll2->GetData(), &mierda2, 65, 10);
-	val2->SetText(&mierda2);
-
-
 
 	return true;
 }

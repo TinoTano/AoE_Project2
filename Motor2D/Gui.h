@@ -23,6 +23,7 @@ enum ElementType {
 	INPUTTEXT,
 	SCROLLBAR,
 	QUAD,
+	CURSOR,
 	UNKNOWN
 };
 
@@ -32,6 +33,7 @@ enum MouseState {
 	CLICKIN,
 	CLICKOUT
 };
+
 enum ButtonTier {
 	TIER1,
 	// Has 3 SDL_Rects section: one for 'standard' state, one for 'on hover' state, and one for 'on click' state.
@@ -170,6 +172,21 @@ public:
 	SDL_Rect	area;
 	SDL_Color	color;
 };
+
+class Cursor : public UIElement {
+public:
+	Cursor(SDL_Texture* tex, vector<SDL_Rect> area);
+	void Update();
+	void Draw();
+	void SetCursor(int id);
+	
+private:
+	int id;
+	pair<int, int> cursor_pos;
+	pair<int, int> blitoffset;
+	vector<SDL_Rect> sprite_list;
+	
+};
 // ---------------------------------------------------
 
 class Gui : public Module
@@ -208,9 +225,11 @@ public:
 	UIElement* CreateInput(int x, int y, SDL_Rect detect_section, _TTF_Font* font);
 	UIElement* CreateScrollBar(int x, int y, ScrollBarModel model);
 	UIElement* CreateQuad(SDL_Rect size, SDL_Color color);
+	UIElement* CreateCursor(char* path, vector<SDL_Rect> cursor_list);
 	SDL_Texture* GetAtlas() const;
 
 	list<UIElement*> Elements;
+	Cursor* cursor;
 
 private:
 	SDL_Texture* atlas;

@@ -51,13 +51,15 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(pathfinding);
 	AddModule(font);
 	AddModule(gui);
-	//AddModule(scenetest);
+	
 
 	// scene last
-	AddModule(scene);
+	//AddModule(scene);
+	AddModule(scenetest);
 	AddModule(entityManager);
 	AddModule(collision);
 	AddModule(fog);
+	
 	// render last to swap buffer
 	AddModule(render);
 

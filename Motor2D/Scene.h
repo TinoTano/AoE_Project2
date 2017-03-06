@@ -41,7 +41,6 @@ private:
 	Unit* elvenArcher;
 	Unit* troll;
 	Building* testBuilding;
-
 };
 
 #endif // __SCENE_H__
