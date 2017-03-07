@@ -50,33 +50,7 @@ bool SceneTest::Start()
 
 	//Input* input = (Input*)App->gui->CreateInput(500, 35, { 515, 35, 338, 54 }, nullptr);
 
-
-	// To use the cursor, this is needed!
-	// This contains all the rects for the cursor. To change the blitted cursor just:
-	// Call App->gui->cursor->SetCursor(int id);
-	// Where id is a number from 0 to 17, should be an enum later on.
-
-	vector<SDL_Rect> sprites_cursor;
-	sprites_cursor.push_back({ 0,   0, 70, 50 });
-	sprites_cursor.push_back({ 70,   0, 70, 50});
-	sprites_cursor.push_back({ 140, 0, 70, 50 });
-	sprites_cursor.push_back({ 210, 0, 70, 50 });
-	sprites_cursor.push_back({ 280, 0, 70, 50 });
-	sprites_cursor.push_back({ 350, 0, 70, 50 });
-	sprites_cursor.push_back({ 420, 0, 70, 50 });
-	sprites_cursor.push_back({ 490, 0, 70, 50 });
-	sprites_cursor.push_back({ 560, 0, 70, 50 });
-	sprites_cursor.push_back({ 0,   50, 70, 50 });
-	sprites_cursor.push_back({ 70,  50, 70, 50 });
-	sprites_cursor.push_back({ 140, 50, 70, 50 });
-	sprites_cursor.push_back({ 210, 50, 70, 50 });
-	sprites_cursor.push_back({ 280, 50, 70, 50 });
-	sprites_cursor.push_back({ 350, 50, 70, 50 });
-	sprites_cursor.push_back({ 420, 50, 70, 50 });
-	sprites_cursor.push_back({ 490, 50, 70, 50 });
-	sprites_cursor.push_back({ 560, 50, 70, 50 });
-
-	App->gui->cursor = (Cursor*)App->gui->CreateCursor("gui/cursor.png", sprites_cursor);
+	
 	return true;
 }
 

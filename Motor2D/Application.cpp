@@ -58,7 +58,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(scenetest);
 	AddModule(entityManager);
 	AddModule(collision);
-	AddModule(fog);
+	//AddModule(fog);
 	
 	// render last to swap buffer
 	AddModule(render);

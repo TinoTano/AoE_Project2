@@ -60,9 +60,10 @@ public:
 	int buildingMaxLife;
 	int buildingAttack;
 	int buildingDefense;
-	buildingState state;
+	bool isVisible;
 	bool isSelected;
 	bool canAttack;
+	buildingState state;
 };
 
 #endif // !__BUILDING_H__

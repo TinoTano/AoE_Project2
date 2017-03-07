@@ -75,20 +75,21 @@ private:
 	float timer = 0;
 	pugi::xml_node unitNodeInfo;
 	int hpBarWidth;
-
-public:
-	unitState state;
 	unitDirection currentDirection;
 	SDL_Texture* unitIdleTexture;
 	SDL_Texture* unitMoveTexture;
 	SDL_Texture* unitAttackTexture;
 	SDL_Texture* unitDieTexture;
+	unitState state;
+
+public:
 	Unit* attackUnitTarget;
 	Building* attackBuildingTarget;
 	int unitLife;
 	int unitMaxLife;
 	int unitAttack;
 	int unitDefense;
+	bool isVisible;
 	bool isSelected;
 
 	//Animations
@@ -96,45 +97,6 @@ public:
 	vector<Animation> movingAnimations;
 	vector<Animation> attackingAnimations;
 	vector<Animation> dyingAnimations;
-	//Idle directions
-	Animation idleUp;
-	Animation idleDown;
-	Animation idleRight;
-	Animation idleLeft;
-	Animation idleUpRight;
-	Animation idleDownRight;
-	Animation idleUpLeft;
-	Animation idleDownLeft;
-
-	//Move directions
-	Animation movingUp;
-	Animation movingDown;
-	Animation movingRight;
-	Animation movingLeft;
-	Animation movingUpRight;
-	Animation movingDownRight;
-	Animation movingUpLeft;
-	Animation movingDownLeft;
-
-	//Attack directions
-	Animation attackingUp;
-	Animation attackingDown;
-	Animation attackingRight;
-	Animation attackingLeft;
-	Animation attackingUpRight;
-	Animation attackingDownRight;
-	Animation attackingUpLeft;
-	Animation attackingDownLeft;
-
-	//Death directions
-	Animation dyingUp;
-	Animation dyingDown;
-	Animation dyingRight;
-	Animation dyingLeft;
-	Animation dyingUpRight;
-	Animation dyingDownRight;
-	Animation dyingUpLeft;
-	Animation dyingDownLeft;
 
 	Animation* currentAnim = nullptr;
 

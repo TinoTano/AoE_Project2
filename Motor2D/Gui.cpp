@@ -40,6 +40,28 @@ bool Gui::Start()
 
 	atlas = App->tex->Load(atlas_file_name.c_str());
 
+	vector<SDL_Rect> sprites_cursor;
+	sprites_cursor.push_back({ 0,   0, 70, 50 });
+	sprites_cursor.push_back({ 70,   0, 70, 50 });
+	sprites_cursor.push_back({ 140, 0, 70, 50 });
+	sprites_cursor.push_back({ 210, 0, 70, 50 });
+	sprites_cursor.push_back({ 280, 0, 70, 50 });
+	sprites_cursor.push_back({ 350, 0, 70, 50 });
+	sprites_cursor.push_back({ 420, 0, 70, 50 });
+	sprites_cursor.push_back({ 490, 0, 70, 50 });
+	sprites_cursor.push_back({ 560, 0, 70, 50 });
+	sprites_cursor.push_back({ 0,   50, 70, 50 });
+	sprites_cursor.push_back({ 70,  50, 70, 50 });
+	sprites_cursor.push_back({ 140, 50, 70, 50 });
+	sprites_cursor.push_back({ 210, 50, 70, 50 });
+	sprites_cursor.push_back({ 280, 50, 70, 50 });
+	sprites_cursor.push_back({ 350, 50, 70, 50 });
+	sprites_cursor.push_back({ 420, 50, 70, 50 });
+	sprites_cursor.push_back({ 490, 50, 70, 50 });
+	sprites_cursor.push_back({ 560, 50, 70, 50 });
+
+	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
+
 	return true;
 }
 
@@ -69,6 +91,8 @@ bool Gui::PostUpdate()
 				it._Ptr->_Myval->Update();
 		}
 	}
+
+	cursor->Update();
 
 	return true;
 }
@@ -622,7 +646,7 @@ void Quad::SetArea(SDL_Rect area) {
 // CURSOR
 
 Cursor::Cursor(SDL_Texture* tex, vector<SDL_Rect> area) : UIElement(true, area[1].x, area[1].y, CURSOR, tex), sprite_list(area) {
-	id = 1;
+	id = 0;
 }
 
 void Cursor::Update() {

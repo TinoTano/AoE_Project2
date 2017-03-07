@@ -49,7 +49,13 @@ Building::Building(int posX, int posY, bool isEnemy, buildingType type)
 	}
 	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
 
-	isSelected = true;
+	isSelected = false;
+	if (!isEnemy) {
+		isVisible = true;
+	}
+	else {
+		isVisible = false;
+	}
 
 	hpBarWidth = 50;
 }
@@ -73,6 +79,23 @@ bool Building::Update(float dt)
 
 	if (isDamaged) {
 		//blit fire animation
+	}
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+		int x;
+		int y;
+		App->input->GetMousePosition(x, y);
+		if (x < entityPosition.x + (collider->rect.w / 2) && x > entityPosition.x - (collider->rect.w / 2) &&
+			y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
+			if (isVisible) {
+				isSelected = true;
+			}
+		}
+		else {
+			if (isSelected) {
+				isSelected = false;
+			}
+		}
 	}
 
 	return true;

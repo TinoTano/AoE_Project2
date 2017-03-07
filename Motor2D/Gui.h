@@ -233,12 +233,13 @@ public:
 	SDL_Texture* GetAtlas() const;
 	void ScreenMoves(pair<int,int> movement);
 
-	list<UIElement*> Elements;
-	Cursor* cursor;
-
 private:
 	SDL_Texture* atlas;
 	string atlas_file_name;
+	list<UIElement*> Elements;
+
+public:
+	Cursor* cursor;
 };
 
 

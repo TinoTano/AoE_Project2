@@ -139,7 +139,14 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type)
 	}
 	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
 
-	isSelected = true;
+	isSelected = false;
+	/*if (!isEnemy) {
+		isVisible = true;
+	}
+	else {
+		isVisible = false;
+	}*/
+	isVisible = true;
 
 	hpBarWidth = 40;
 }
@@ -167,6 +174,25 @@ bool Unit::Update(float dt)
 			App->entityManager->DeleteUnit(this, isEnemy);
 		}
 		break;
+	}
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+		int x;
+		int y;
+		App->input->GetMousePosition(x, y);
+		x -= App->render->camera.x;
+		y -= App->render->camera.y;
+		if (x < entityPosition.x + (collider->rect.w / 2) && x > entityPosition.x - (collider->rect.w / 2) &&
+			y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
+			if (isVisible) {
+				isSelected = true;
+			}
+		}
+		else {
+			if (isSelected) {
+				isSelected = false;
+			}
+		}
 	}
 
 	return true;
@@ -237,7 +263,9 @@ void Unit::SetDestination()
 		}
 		path.erase(path.begin());
 	}
-
+	if (attackUnitTarget != nullptr) {
+		attackUnitTarget = nullptr;
+	}
 }
 
 void Unit::Move(float dt)

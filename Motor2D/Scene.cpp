@@ -48,6 +48,7 @@ bool Scene::Start()
 
 	//Test
 	elvenArcher = App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
+	elvenArcher = App->entityManager->CreateUnit(300, 350, false, ELVEN_ARCHER);
 	troll = App->entityManager->CreateUnit(600, 400, true, TROLL_MAULER);
 	testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
 
@@ -71,10 +72,6 @@ bool Scene::Update(float dt)
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {
-		elvenArcher->SetDestination();
-	}
-
 	if (debug) {
 		const list<iPoint>* path = App->pathfinding->GetLastPath();
 
@@ -83,10 +80,6 @@ bool Scene::Update(float dt)
 			App->render->Blit(debug_tex, pos.x, pos.y);
 		}
 	}
-
-	App->fog->removeFog(elvenArcher->entityPosition.x, elvenArcher->entityPosition.y);
-	App->fog->removeFog(troll->entityPosition.x, troll->entityPosition.y);
-	App->fog->removeFog(testBuilding->entityPosition.x, testBuilding->entityPosition.y);
 
 	return true;
 }
