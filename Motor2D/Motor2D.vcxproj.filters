@@ -187,5 +187,8 @@
     <Xml Include="..\Game\config.xml">
       <Filter>Project 2</Filter>
     </Xml>
+    <Xml Include="..\Game\GameData.xml">
+      <Filter>Project 2</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

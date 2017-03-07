@@ -16,7 +16,23 @@ Building::Building(int posX, int posY, bool isEnemy, buildingType type)
 	this->isEnemy = isEnemy;
 	this->type = type;
 
-	buildingNodeInfo = LoadBuildingInfo(type);
+	pugi::xml_document gameDataFile;
+	pugi::xml_node gameData;
+	pugi::xml_node buildingNodeInfo;
+
+	gameData = App->LoadGameData(gameDataFile);
+
+	if (gameData.empty() == false)
+	{
+		pugi::xml_node building;
+
+		for (building = gameData.child("Buildings").child("Building"); building; building = building.next_sibling("Building")) {
+			LOG("%d", building.child("Info").child("ID").attribute("value").as_int());
+			if (building.child("Info").child("ID").attribute("value").as_int() == type) {
+				buildingNodeInfo = building;
+			}
+		}
+	}
 
 	string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 	string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
@@ -143,21 +159,7 @@ void Building::Dead()
 
 pugi::xml_node Building::LoadBuildingInfo(buildingType type)
 {
-	pugi::xml_document	gameDataFile;
-	pugi::xml_node		gameData;
-
-	gameData = App->LoadGameData(gameDataFile);
-
-	if (gameData.empty() == false)
-	{
-		pugi::xml_node building;
-
-		for (building = gameData.child("Buildings").child("Building"); building; building = building.next_sibling("Building")) {
-			if (building.attribute("BuildingID").as_int() == type) {
-				return building;
-			}
-		}
-	}
+	
 	return pugi::xml_node();
 }
 

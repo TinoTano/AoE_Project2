@@ -20,7 +20,25 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type)
 	this->isEnemy = isEnemy;
 	this->type = type;
 
-	unitNodeInfo = LoadUnitInfo(type);
+	pugi::xml_document gameDataFile;
+	pugi::xml_node gameData;
+	pugi::xml_node unitNodeInfo;
+
+	gameData = App->LoadGameData(gameDataFile);
+
+	if (gameData.empty() == false)
+	{
+		pugi::xml_node unit;
+		int i = 0;
+		for (unit = gameData.child("Units").child("Unit"); unit; unit = unit.next_sibling("Unit")) {
+			i++;
+			if (unit.child("Info").child("ID").attribute("value").as_int() == type) {
+				unitNodeInfo = unit;
+				break;
+			}
+			LOG("%d", unit.child("Info").child("ID").attribute("value").as_int());
+		}
+	}	
 
 	string idleTexturePath = unitNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 	string moveTexturePath = unitNodeInfo.child("Textures").child("Move").attribute("value").as_string();
@@ -448,20 +466,6 @@ void Unit::SetAnim(unitDirection currentDirection) {
 pugi::xml_node Unit::LoadUnitInfo(unitType type)
 {
 
-	pugi::xml_document	gameDataFile;
-	pugi::xml_node		gameData;
-
-	gameData = App->LoadGameData(gameDataFile);
-
-	if (gameData.empty() == false)
-	{
-		pugi::xml_node unit;
-
-		for (unit = gameData.child("Units").child("Unit"); unit; unit = unit.next_sibling("Unit")) {
-			if (unit.attribute("UnitID").as_int() == type) {
-				return unit;
-			}
-		}
-	}
+	
 	return pugi::xml_node();
 }

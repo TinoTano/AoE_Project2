@@ -133,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\Game\config.xml" />
+    <Xml Include="..\Game\GameData.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

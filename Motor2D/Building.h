@@ -45,7 +45,6 @@ private:
 	list<Unit*> availableUnitsToCreateList;
 	bool isDamaged;
 	int hpBarWidth;
-	pugi::xml_node buildingNodeInfo;
 	int buildingWoodCost;
 	int buildingStoneCost;
 	int buildingBuildTime;

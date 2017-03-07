@@ -73,7 +73,6 @@ private:
 	iPoint destinationTileWorld;
 	float attackSpeed;
 	float timer = 0;
-	pugi::xml_node unitNodeInfo;
 	int hpBarWidth;
 	unitDirection currentDirection;
 	SDL_Texture* unitIdleTexture;

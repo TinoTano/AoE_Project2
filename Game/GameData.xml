@@ -2,7 +2,11 @@
 	<Units>
 	
 <!-- FREE_MEN_UNITS -->
-		<Unit value="ELVEN_LONGBLADE" UnitID = "0">
+		<Unit>
+      <Info>
+        <Name value = "ELVEN_LONGBLADE"/>
+        <ID value = "0"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/ElvenLongblade/ElvenLongbladeIdle.png"/>
 				<Move value="textures/Units/ElvenLongblade/ElvenLongbladeMove.png"/>
@@ -54,8 +58,12 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="DWARVEN_MAULER" UnitID = "1">
-			<Textures>
+		<Unit>
+      <Info>
+        <Name value = "DWARVEN_MAULER"/>
+        <ID value = "1"/>
+      </Info>
+      <Textures>
 				<Idle value="textures/Units/DwarvenMauler/DwarvenMaulerIdle.png"/>
 				<Move value="textures/Units/DwarvenMauler/DwarvenMaulerMove.png"/>
 				<Attack value="textures/Units/DwarvenMauler/DwarvenMaulerAttack.png"/>
@@ -106,7 +114,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="GONDOR_SPEARMAN" UnitID = "2">
+		<Unit>
+      <Info>
+        <Name value = "GONDOR_SPEARMAN"/>
+        <ID value = "2"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
 				<Move value="textures/Units/"/>
@@ -158,7 +170,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="ELVEN_ARCHER" UnitID = "3">
+		<Unit>
+      <Info>
+        <Name value = "ELVEN_ARCHER"/>
+        <ID value = "3"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/ElvenArcher/ElvenArcherIdle.png"/>
 				<Move value="textures/Units/ElvenArcher/ElvenArcherMove.png"/>
@@ -210,7 +226,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="DUNEDAIN_RANGER" UnitID = "4">
+		<Unit>
+      <Info>
+        <Name value = "DUNEDAIN_RANGE"/>
+        <ID value = "4"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/DunedainRanger/DunedainRangerIdle.png"/>
 				<Move value="textures/Units/DunedainRanger/DunedainRangerMove.png"/>
@@ -262,7 +282,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="ELVEN_CAVALRY" UnitID = "5">
+		<Unit>
+      <Info>
+        <Name value = "ELVEN_CAVALRYE"/>
+        <ID value = "5"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/ElvenCavalery/elvenCavaleryIdle.png"/>
 				<Move value="textures/Units/ElvenCavalery/elvenCavaleryMove.png"/>
@@ -314,7 +338,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="GONDOR_KNIGHT" UnitID = "6">
+		<Unit>
+      <Info>
+        <Name value = "GONDOR_KNIGHT"/>
+        <ID value = "6"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/GondorKnight/GondorKnightIdle.png"/>
 				<Move value="textures/Units/GondorKnight/GondorKnightMove.png"/>
@@ -366,7 +394,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="ROHAN_KNIGHT" UnitID = "7">
+		<Unit>
+      <Info>
+        <Name value = "ROHAN_KNIGHT"/>
+        <ID value = "7"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
 				<Move value="textures/Units/"/>
@@ -418,7 +450,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="MOUNTED_DUNEDAIN" UnitID = "8">
+		<Unit>
+      <Info>
+        <Name value = "MOUNTED_DUNEDAIN"/>
+        <ID value = "4"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
 				<Move value="textures/Units/"/>
@@ -470,7 +506,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="SIEGE_TOWER" UnitID = "9">
+		<Unit>
+      <Info>
+        <Name value = "SIEGE_TOWER"/>
+        <ID value = "9"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
 				<Move value="textures/Units/"/>
@@ -522,7 +562,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="LIGHT_CATAPULT" UnitID = "10">
+		<Unit>
+      <Info>
+        <Name value = "LIGHT_CATAPULT"/>
+        <ID value = "10"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
 				<Move value="textures/Units/"/>
@@ -575,7 +619,11 @@
 		</Unit>
 		
 <!-- SAURON_ARMY_UNITS -->
-		<Unit value="GOBLIN_SOLDIER" UnitID = "11">
+		<Unit>
+      <Info>
+        <Name value = "GOBLIN_SOLDIER"/>
+        <ID value = "11"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/GoblinSoldier/GoblinSoldierIdle.png"/>
 				<Move value="textures/Units/GoblinSoldier/GoblinSoldierMove.png"/>
@@ -627,7 +675,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="ORC_SOLDIER" UnitID = "12">
+		<Unit>
+      <Info>
+        <Name value = "ORC_SOLDIER"/>
+        <ID value = "12"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/OrcSoldier/OrcSoldierIdle.png"/>
 				<Move value="textures/Units/OrcSoldier/OrcSoldierMove.png"/>
@@ -679,7 +731,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="URUK_HAI_SOLDIER" UnitID = "13">
+		<Unit>
+      <Info>
+        <Name value = "URUK_HAI_SOLDIER"/>
+        <ID value = "13"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/Uruk-haiSoldier/Uruk-haiSoldierIdle.png"/>
 				<Move value="textures/Units/Uruk-haiSoldier/Uruk-haiSoldierMove.png"/>
@@ -731,7 +787,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="ORC_ARCHER" UnitID = "14">
+		<Unit>
+      <Info>
+        <Name value = "ORC_ARCHER"/>
+        <ID value = "14"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/OrcArcher/OrcArcherIdle.png"/>
 				<Move value="textures/Units/OrcArcher/OrcArcherMove.png"/>
@@ -783,7 +843,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="VENOMOUS_SPIDER" UnitID = "15">
+		<Unit>
+      <Info>
+        <Name value = "VENOMOUS_SPIDER"/>
+        <ID value = "15"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/VenomousSpider/VenomousSpiderIdle.png"/>
 				<Move value="textures/Units/VenomousSpider/VenomousSpiderMove.png"/>
@@ -835,7 +899,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="HARADRIM_OLIFANT" UnitID = "16">
+		<Unit>
+      <Info>
+        <Name value = "HARADRIM_OLIFANT"/>
+        <ID value = "16"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/HaradrimOlifant/HaradrimOlifantIdle.png"/>
 				<Move value="textures/Units/HaradrimOlifant/HaradrimOlifantMove.png"/>
@@ -887,7 +955,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="NAZGUL" UnitID = "17">
+		<Unit>
+      <Info>
+        <Name value = "NAZGUL"/>
+        <ID value = "17"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/Nazgul/NazgulIdle.png"/>
 				<Move value="textures/Units/Nazgul/NazgulMove.png"/>
@@ -939,7 +1011,11 @@
 			</Animations>
 		</Unit>
 		
-		<Unit value="TROLL_MAULER" UnitID = "18">
+		<Unit>
+      <Info>
+        <Name value = "TROLL_MAULER"/>
+        <ID value = "18"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Units/troll/trollIdle.png"/>
 				<Move value="textures/Units/troll/trollMove.png"/>
@@ -994,7 +1070,12 @@
 	
 <!-- BUILDINGS -->
 	<Buildings>
-		<Building value="TOWN_CENTER" BuildingID = "0">
+    
+		<Building>
+      <Info>
+        <Name value = "TOWN_CENTER"/>
+        <ID value = "0"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1008,7 +1089,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="HOUSE" BuildingID = "1">
+		<Building>
+      <Info>
+        <Name value = "HOUSE"/>
+        <ID value = "1"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1023,6 +1108,10 @@
 		</Building>
 		
 		<Building value="ORC_BARRACKS" BuildingID = "2">
+      <Info>
+        <Name value = "ORC_BARRACKS"/>
+        <ID value = "2"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/barracksOrcs.png"/>
 				<Die value="textures/Buildings/barracksOrcs.png"/>
@@ -1036,7 +1125,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="ARCHERY_RANGE" BuildingID = "3">
+		<Building>
+      <Info>
+        <Name value = "ARCHERY_RANGE"/>
+        <ID value = "3"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1050,7 +1143,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="STABLES" BuildingID = "4">
+		<Building>
+      <Info>
+        <Name value = "STABLES"/>
+        <ID value = "4"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1064,7 +1161,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="SIEGE_WORKSHOP" BuildingID = "5">
+		<Building>
+      <Info>
+        <Name value = "SIEGE_WORKSHOP"/>
+        <ID value = "5"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1078,7 +1179,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="MARKET" BuildingID = "6">
+		<Building>
+      <Info>
+        <Name value = "MARKET"/>
+        <ID value = "6"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1092,7 +1197,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="BLACKSMITH" BuildingID = "7">
+		<Building>
+      <Info>
+        <Name value = "BLACKSMITH"/>
+        <ID value = "7"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1106,7 +1215,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="MILL" BuildingID = "8">
+		<Building>
+      <Info>
+        <Name value = "MILL"/>
+        <ID value = "8"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1120,7 +1233,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="WALL" BuildingID = "9">
+		<Building>
+      <Info>
+        <Name value = "WALL"/>
+        <ID value = "9"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1134,7 +1251,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="GATE" BuildingID = "10">
+		<Building>
+      <Info>
+        <Name value = "GATE"/>
+        <ID value = "10"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1148,7 +1269,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="OUTPOST" BuildingID = "11">
+		<Building>
+      <Info>
+        <Name value = "OUTPOST"/>
+        <ID value = "11"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1162,7 +1287,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="MONASTERY" BuildingID = "12">
+		<Building>
+      <Info>
+        <Name value = "MONASTERY"/>
+        <ID value = "12"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
@@ -1176,7 +1305,11 @@
 			</Stats>
 		</Building>
 		
-		<Building value="CASTLE" BuildingID = "13">
+		<Building>
+      <Info>
+        <Name value = "CASTLE"/>
+        <ID value = "13"/>
+      </Info>
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
