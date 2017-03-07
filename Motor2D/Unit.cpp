@@ -427,8 +427,7 @@ void Unit::SetState(unitState newState)
 		entityTexture = unitAttackTexture;
 		break;
 	case UNIT_DEAD:
-		if (state)
-			this->state = UNIT_DEAD;
+		this->state = UNIT_DEAD;
 		SetAnim(currentDirection);
 		entityTexture = unitDieTexture;
 		break;
