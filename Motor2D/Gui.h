@@ -42,8 +42,10 @@ enum ButtonTier {
 };
 
 enum ScrollBarModel {
-	MODEL1
+	MODEL1,
 	//Which we use for settings
+	MODEL2
+	//WHich we use for command window
 };
 
 
@@ -57,7 +59,8 @@ public:
 	void			SetPos(int x, int y);
 	void			SetParentPos(int x, int y);
 	void			Move(int x, int y);
-	bool enabled, debug = false;
+	bool			enabled, debug = false;
+
 	UIElement* parent;
 	pair<int, int> pos, parent_pos;
 	ElementType type;
@@ -65,6 +68,8 @@ public:
 
 	SDL_Texture* texture;
 	SDL_Color debug_color;
+
+	uint			priority;
 };
 
 class Image : public UIElement {
@@ -172,6 +177,7 @@ public:
 	void Update();
 	void Draw();
 	void SetArea(SDL_Rect area);
+	void Movement(pair<int, int> movement);
 
 	SDL_Rect	area;
 	SDL_Color	color;

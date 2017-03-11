@@ -64,11 +64,6 @@ bool SceneTest::PreUpdate()
 
 bool SceneTest::Update(float dt)
 {
-	/*
-	_itoa_s(scroll->GetData(), &mierda, 65, 10);
-	val->SetText(&mierda);
-	*/
-	
 
 	if (button->current == HOVER || button->current == CLICKIN) App->gui->cursor->SetCursor(3);
 	else App->gui->cursor->SetCursor(0);

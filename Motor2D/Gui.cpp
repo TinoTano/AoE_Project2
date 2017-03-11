@@ -68,7 +68,21 @@ bool Gui::Start()
 // Update all guis
 bool Gui::PreUpdate()
 {
+	list<UIElement*> Priority;
 
+	for (list<UIElement*>::iterator it = Elements.begin(); Priority.size() != Elements.size(); ++it)
+	{
+		switch (it._Ptr->_Myval->priority) {
+		case 0:
+			Priority.push_front(it._Ptr->_Myval);
+			break;
+		case 1:
+			Priority.push_back(it._Ptr->_Myval);
+			break;
+		}
+	}
+
+	Elements = Priority;
 	return true;
 }
 
@@ -641,6 +655,10 @@ void Quad::Draw() {
 void Quad::SetArea(SDL_Rect area) {
 	this->area = area;
 	SetPos(area.x, area.y);
+}
+void Quad::Movement(pair<int, int> movement) {
+	area.x -= movement.first;
+	area.y -= movement.second;
 }
 
 // CURSOR

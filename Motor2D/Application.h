@@ -23,6 +23,7 @@ class EntityManager;
 class Collision;
 class Gui;
 class FogOfWar;
+class Console;
 
 class Application
 {
@@ -104,7 +105,7 @@ public:
 	Gui*				gui = NULL;
 	SceneTest*			scenetest = NULL;
 	FogOfWar*			fog = NULL;
-
+	Console*			console = NULL;
 	bool				quit = false;
 
 private:

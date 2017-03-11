@@ -49,6 +49,10 @@ bool Scene::Start()
 	//Test
 	elvenArcher = App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
 	elvenArcher = App->entityManager->CreateUnit(100, 500, false, ELVEN_ARCHER);
+	elvenArcher = App->entityManager->CreateUnit(320, 350, false, ELVEN_ARCHER);
+	elvenArcher = App->entityManager->CreateUnit(100, 520, false, ELVEN_ARCHER);
+	elvenArcher = App->entityManager->CreateUnit(380, 350, false, ELVEN_ARCHER);
+	elvenArcher = App->entityManager->CreateUnit(140, 500, false, ELVEN_ARCHER);
 	troll = App->entityManager->CreateUnit(600, 400, true, TROLL_MAULER);
 	testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
 
