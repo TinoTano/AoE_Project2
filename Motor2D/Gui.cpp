@@ -461,6 +461,7 @@ void InputText::Update() {
 	else SDL_StopTextInput();
 
 	Draw();
+	if (debug) DebugMode();
 }
 
 void InputText::Draw() {
@@ -475,7 +476,7 @@ MouseState InputText::MouseDetect() {
 
 	pair<int, int> mouse_pos;
 	App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
-	if (mouse_pos.first >= pos.first && mouse_pos.first <= (pos.first + area.w) && mouse_pos.second >= pos.second && mouse_pos.second <= (pos.second + area.h)) {
+	if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + area.w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + area.h)) {
 		ret = HOVER;
 	}
 	if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
@@ -558,6 +559,10 @@ void InputText::SetBarToEnd() {
 		}
 	}
 }
+
+void InputText::DebugMode() {
+	App->render->DrawQuad(area, 0, 255, 255, 255, true);
+}
 // ScrollBar
 
 ScrollBar::ScrollBar(int x, int y, ScrollBarModel model) : UIElement(true, x, y, SCROLLBAR, nullptr), model(model)
@@ -595,17 +600,18 @@ ScrollBar::ScrollBar(int x, int y, ScrollBarModel model) : UIElement(true, x, y,
 
 		Down = (Button*)App->gui->CreateButton("gui/scroll_button2.png", x + xs, y + ys, sections_b, sections_d, TIER2);
 		max_y = y + ys;
-
+		break;
 	}
 }
 
 void ScrollBar::Update()
 {
 	Up->pos.second;
-	switch (model) {
-	case MODEL1:
 		pair<int, int> motion;
 		App->input->GetMouseMotion(motion.first, motion.second);
+
+	switch (model) {
+	case MODEL1:
 
 		if (!App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
 			current = Thumb->MouseDetect();
@@ -629,7 +635,19 @@ void ScrollBar::Update()
 			if (Thumb->pos.second > Down->pos.second - Thumb->section.h) Thumb->pos.second = Down->pos.second - Thumb->section.h;
 		}
 		break;
+	case MODEL2:
+		if (!App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+			current = MouseDetect();
+		if (current == HOVER)
+			current = MouseDetect();
+		else if (current == CLICKIN && ABar.SmallSquare->area.y >= BarRect->area.y && ABar.SmallSquare->area.y + ABar.SmallSquare->area.h <= BarRect->area.y + BarRect->area.h) {
+			ABar.SmallSquare->area.y += motion.second;
+			if (ABar.SmallSquare->area.y <= BarRect->area.y) ABar.SmallSquare->area.y = BarRect->area.y;
+			if (ABar.SmallSquare->area.y + ABar.SmallSquare->area.h >= BarRect->area.y + BarRect->area.h) ABar.SmallSquare->area.y = BarRect->area.y + BarRect->area.h - ABar.SmallSquare->area.h;
+		}
 	}
+
+	if (debug) DebugMode();
 }
 
 int ScrollBar::GetData() {
@@ -637,6 +655,47 @@ int ScrollBar::GetData() {
 	data *= 2;
 	if (data  > 100) data = 100;
 	return data;
+}
+
+MouseState ScrollBar::MouseDetect() {
+	MouseState ret = FREE;
+	switch (model) {
+	case MODEL2:
+		pair<int, int> mouse_pos;
+		App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
+		if (mouse_pos.first - App->render->camera.x >= ABar.SmallSquare->area.x && mouse_pos.first - App->render->camera.x <= (ABar.SmallSquare->area.x + ABar.SmallSquare->area.w) && mouse_pos.second - App->render->camera.y >= ABar.SmallSquare->area.y && mouse_pos.second - App->render->camera.y <= (ABar.SmallSquare->area.y + ABar.SmallSquare->area.h)) {
+			ret = HOVER;
+		}
+		if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			ret = CLICKOUT;
+		}
+		else {
+			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+				ret = CLICKIN;
+			}
+		}
+	}
+	return ret;
+}
+
+void ScrollBar::SetBar(SDL_Rect BlitSquare, SDL_Rect BarIt) {
+	this->BlitSquare = (Quad*)App->gui->CreateQuad(BlitSquare, BAR_COLOR);
+	BarRect = (Quad*)App->gui->CreateQuad(BarIt, BAR_COLOR);
+	ABar.SmallSquare = (Quad*)App->gui->CreateQuad(BarIt, THUMB_COLOR);
+	ABar.BigSquare = BlitSquare; //FOR NOW
+}
+
+void ScrollBar::UpdateThumbSize(int h) {
+	if (h > ABar.BigSquare.h) {
+		ABar.BigSquare.h = h;
+		ABar.SmallSquare->area.h = BlitSquare->area.h  * BarRect->area.h / ABar.BigSquare.h;
+	}
+}
+void ScrollBar::DebugMode() {
+	switch (model) {
+	case MODEL2:
+		App->render->DrawQuad(ABar.BigSquare, 255, 255, 255, 255, true);
+	}
 }
 
 // QUAD

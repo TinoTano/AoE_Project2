@@ -12,7 +12,9 @@ using namespace std;
 #define CURSOR_WIDTH 2
 #define MAX_CHAR 15
 #define DEBUG_COLOR {200, 0, 100, 100}
-
+#define BAR_COLOR {200,0,100,100}
+#define THUMB_COLOR {0,50,200, 200}
+#define BLIT_SQUARE_COLOR {200,0,100,100}
 struct _TTF_Font;
 
 
@@ -128,7 +130,7 @@ public:
 class InputText : public UIElement {
 public:
 	InputText(int x, int y, SDL_Rect detect_area, _TTF_Font* font);
-
+	void DebugMode();
 	void Update();
 	void Draw();
 	MouseState MouseDetect();
@@ -155,17 +157,33 @@ private:
 	void SetBarToEnd();
 };
 
+class Quad;
+
+struct BarElements {
+	SDL_Rect		BigSquare;
+	Quad			*SmallSquare;
+};
+
 class ScrollBar : public UIElement {
 public:
 	ScrollBar(int x, int y, ScrollBarModel model);
 	void Update();
 	int GetData();
-
+	// BAR 1
 	int data, max_y, min_y;
 	Image* Bar;
 	Image* Thumb;
 	Button* Up;
 	Button* Down;
+	// BAR 2
+	void			UpdateThumbSize(int h);
+	void			SetBar(SDL_Rect BlitSquare, SDL_Rect thumb); // TO START THE BAR
+	void			DebugMode();
+	MouseState		MouseDetect();
+
+	Quad* BlitSquare;
+	Quad* BarRect;
+	BarElements ABar;
 
 	ScrollBarModel model;
 

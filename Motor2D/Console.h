@@ -40,10 +40,13 @@ public:
 	list<UIElement*>	console_elements;
 	Quad*				cbackground;
 	Quad*				cinput;
+	ScrollBar*			cscroll;
 	InputText*			ctextinput;
+	int h = 0;
 
 private:
 	void				SetConsoleText();
+	void				MoveEverything();
 
 };
 
