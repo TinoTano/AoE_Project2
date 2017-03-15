@@ -103,8 +103,11 @@ bool EntityManager::Update(float dt)
 			drawMultiSelectionRect = false;
 
 			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if ((*it)->entityPosition.x > multiSelectionRect.x && (*it)->entityPosition.x < multiSelectionRect.x + multiSelectionRect.w &&
-					(*it)->entityPosition.y > multiSelectionRect.y && (*it)->entityPosition.y <  multiSelectionRect.y + multiSelectionRect.h) {
+				if (((*it)->entityPosition.x > multiSelectionRect.x && (*it)->entityPosition.x < multiSelectionRect.x + multiSelectionRect.w &&
+					(*it)->entityPosition.y > multiSelectionRect.y && (*it)->entityPosition.y <  multiSelectionRect.y + multiSelectionRect.h) ||
+					((*it)->entityPosition.x < multiSelectionRect.x && (*it)->entityPosition.x > multiSelectionRect.x + multiSelectionRect.w &&
+					(*it)->entityPosition.y < multiSelectionRect.y && (*it)->entityPosition.y >  multiSelectionRect.y + multiSelectionRect.h))
+				{
 					(*it)->isSelected = true;
 				}
 			}
