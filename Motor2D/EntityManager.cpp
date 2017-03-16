@@ -102,17 +102,61 @@ bool EntityManager::Update(float dt)
 		if (drawMultiSelectionRect == true) {
 			drawMultiSelectionRect = false;
 
+			bool selectedCount = 0;
+
+			if (multiSelectionRect.w < 0) {
+				multiSelectionRect.x += multiSelectionRect.w;
+				multiSelectionRect.w *= -1;
+			}
+			if (multiSelectionRect.h < 0) {
+				multiSelectionRect.y += multiSelectionRect.h;
+				multiSelectionRect.h *= -1;
+			}
+
 			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if (((*it)->entityPosition.x > multiSelectionRect.x && (*it)->entityPosition.x < multiSelectionRect.x + multiSelectionRect.w &&
-					(*it)->entityPosition.y > multiSelectionRect.y && (*it)->entityPosition.y <  multiSelectionRect.y + multiSelectionRect.h) ||
-					((*it)->entityPosition.x < multiSelectionRect.x && (*it)->entityPosition.x > multiSelectionRect.x + multiSelectionRect.w &&
-					(*it)->entityPosition.y < multiSelectionRect.y && (*it)->entityPosition.y >  multiSelectionRect.y + multiSelectionRect.h))
-				{
+				SDL_Point pos;
+				pos.x = (*it)->entityPosition.x;
+				pos.y = (*it)->entityPosition.y;
+
+				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
 					(*it)->isSelected = true;
+					selectedCount++;
+					selectedUnitList.push_back((*it));
+				}
+			}
+			if (selectedCount == 0) {
+				for (list<Unit*>::iterator it2 = selectedUnitList.begin(); it2 != selectedUnitList.end(); it2++) {
+					if ((*it2)->isSelected) {
+						(*it2)->isSelected = false;
+					}
 				}
 			}
 			multiSelectionRect = { 0,0,0,0 };
 		}
+		else {
+			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+				if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
+					mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+					(*it)->isSelected = true;
+					selectedUnitList.push_back(*it);
+					for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
+						if (*it != *it2) {
+							if ((*it2)->isSelected) {
+								(*it2)->isSelected = false;
+							}
+						}
+					}
+					break;
+				}
+				else {
+					if ((*it)->isSelected) {
+						(*it)->isSelected = false;
+						selectedUnitList.remove(*it);
+					}
+				}
+			}
+		}
+
 	}
 
 	if (drawMultiSelectionRect) {

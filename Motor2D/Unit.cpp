@@ -194,25 +194,6 @@ bool Unit::Update(float dt)
 		break;
 	}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-		int x;
-		int y;
-		App->input->GetMousePosition(x, y);
-		x -= App->render->camera.x;
-		y -= App->render->camera.y;
-		if (x < entityPosition.x + (collider->rect.w / 2) && x > entityPosition.x - (collider->rect.w / 2) &&
-			y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
-			if (isVisible) {
-				isSelected = true;
-			}
-		}
-		else {
-			if (isSelected) {
-				isSelected = false;
-			}
-		}
-	}
-
 	return true;
 }
 

@@ -52,8 +52,6 @@ private:
 	list<Building*> removeBuildingList;
 	list<Unit*> selectedUnitList;
 	list<Building*> selectedBuildingtList;
-	Unit* selectedUnit;
-	Building* selectedBuilding;
 	SDL_Rect multiSelectionRect = { 0,0,0,0 };
 	bool drawMultiSelectionRect;
 
