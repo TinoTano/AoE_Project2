@@ -23,7 +23,8 @@ enum buildingFaction {
 class Building : public Entity
 {
 public:
-	Building(int posX, int posY, bool isEnemy, buildingType type);
+	Building();
+	Building(int posX, int posY, bool isEnemy, Building* building);
 	~Building();
 
 	bool Update(float dt);
@@ -36,33 +37,33 @@ public:
 	bool Save(pugi::xml_node&) const;
 
 private:
-	buildingType type;
-	buildingFaction faction;
-	float buildingAttackSpeed;
-	int buildingPiercingDamage;
-	bool isEnemy;
-	float timer = 0;
-	list<Unit*> availableUnitsToCreateList;
-	bool isDamaged;
-	int hpBarWidth;
-	int buildingWoodCost;
-	int buildingStoneCost;
-	int buildingBuildTime;
-	SDL_Texture* buildingIdleTexture;
-	SDL_Texture* buildingDieTexture;
-	uint imageWidth;
-	uint imageHeight;
 
 public:
-	Unit* attackUnitTarget;
-	int buildingLife;
-	int buildingMaxLife;
-	int buildingAttack;
-	int buildingDefense;
-	bool isVisible;
-	bool isSelected;
-	bool canAttack;
-	buildingState state;
+	buildingType type = ORC_BARRACKS;
+	buildingFaction faction;
+	float buildingAttackSpeed = 0;
+	int buildingPiercingDamage = 0;
+	bool isEnemy = false;
+	float timer = 0;
+	list<Unit*> availableUnitsToCreateList;
+	bool isDamaged = false;
+	int hpBarWidth = 0;
+	int buildingWoodCost = 0;
+	int buildingStoneCost = 0;
+	int buildingBuildTime = 0;
+	SDL_Texture* buildingIdleTexture = nullptr;
+	SDL_Texture* buildingDieTexture = nullptr;
+	uint imageWidth = 0;
+	uint imageHeight = 0;
+	Unit* attackUnitTarget = nullptr;
+	int buildingLife = 0;
+	int buildingMaxLife = 0;
+	int buildingAttack = 0;
+	int buildingDefense = 0;
+	bool isVisible = true;
+	bool isSelected = false;
+	bool canAttack = false;
+	buildingState state = BUILDING_IDLE;
 };
 
 #endif // !__BUILDING_H__

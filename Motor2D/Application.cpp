@@ -54,11 +54,12 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(gui);
 	AddModule(console);
-	
 
 	// scene last
 	AddModule(scene);
 	AddModule(scenetest);
+
+
 	AddModule(entityManager);
 	AddModule(collision);
 	//AddModule(fog);
@@ -134,7 +135,9 @@ bool Application::Start()
 	bool ret = true;
 
 	for (list<Module*>::iterator it = modules.begin(); it != modules.end(); it++) {
-		ret = (*it)->Start();
+		if ((*it)->active) {
+			ret = (*it)->Start();
+		}
 	}
 		
 	startup_time.Start();
@@ -185,7 +188,7 @@ pugi::xml_node Application::LoadConfig(pugi::xml_document& config_file) const
 	return ret;
 }
 
-pugi::xml_node Application::LoadGameData(pugi::xml_document & gameDatafile) const
+pugi::xml_node Application::LoadGameDataFile(pugi::xml_document & gameDatafile) const
 {
 	pugi::xml_node ret;
 

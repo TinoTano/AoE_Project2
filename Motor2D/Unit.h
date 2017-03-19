@@ -34,7 +34,8 @@ enum unitDirection {
 class Unit : public Entity
 {
 public:
-	Unit(int posX, int posY, bool isEnemy, unitType type);
+	Unit();
+	Unit(int posX, int posY, bool isEnemy, Unit* unit);
 	~Unit();
 
 	bool Update(float dt);
@@ -59,37 +60,37 @@ public:
 	bool Save(pugi::xml_node&) const;
 
 private:
-	unitType type;
-	unitFaction faction;
-	unitDirection direction;
-	float unitAttackSpeed;
-	int unitPiercingDamage;
-	float unitMovementSpeed;
-	bool isEnemy;
-	list<iPoint> path;
-	bool destinationReached = true;
-	fPoint velocity;
-	iPoint destinationTile;
-	iPoint destinationTileWorld;
-	float attackSpeed;
-	float timer = 0;
-	int hpBarWidth;
-	unitDirection currentDirection;
-	SDL_Texture* unitIdleTexture;
-	SDL_Texture* unitMoveTexture;
-	SDL_Texture* unitAttackTexture;
-	SDL_Texture* unitDieTexture;
-	unitState state;
 
 public:
-	Unit* attackUnitTarget;
-	Building* attackBuildingTarget;
-	int unitLife;
-	int unitMaxLife;
-	int unitAttack;
-	int unitDefense;
-	bool isVisible;
-	bool isSelected;
+	unitType type = ELVEN_ARCHER;
+	unitFaction faction;
+	unitDirection direction = RIGHT;
+	float unitAttackSpeed = 0;
+	int unitPiercingDamage = 0;
+	float unitMovementSpeed = 0;
+	bool isEnemy = false;
+	list<iPoint> path;
+	bool destinationReached = true;
+	fPoint velocity = { 0,0 };
+	iPoint destinationTile = { 0,0 };
+	iPoint destinationTileWorld = { 0,0 };
+	float attackSpeed = 0;
+	float timer = 0;
+	int hpBarWidth = 40;
+	unitDirection currentDirection = RIGHT;
+	SDL_Texture* unitIdleTexture = nullptr;
+	SDL_Texture* unitMoveTexture = nullptr;
+	SDL_Texture* unitAttackTexture = nullptr;
+	SDL_Texture* unitDieTexture = nullptr;
+	unitState state = UNIT_IDLE;
+	Unit* attackUnitTarget = nullptr;
+	Building* attackBuildingTarget = nullptr;
+	int unitLife = 0;
+	int unitMaxLife= 0;
+	int unitAttack = 0;
+	int unitDefense = 0;
+	bool isVisible = true;
+	bool isSelected = false;
 
 	//Animations
 	vector<Animation> idleAnimations;

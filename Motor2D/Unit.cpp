@@ -13,141 +13,44 @@
 #include "Scene.h"
 #include "Gui.h"
 
-Unit::Unit(int posX, int posY, bool isEnemy, unitType type)
+Unit::Unit()
+{
+}
+
+Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
 	this->isEnemy = isEnemy;
-	this->type = type;
+	this->type = unit->type;
+	faction = unit->faction;
+	direction = unit->direction;
+	unitAttackSpeed = unit->attackSpeed;
+	unitPiercingDamage = unit->unitPiercingDamage;
+	unitMovementSpeed = unit->unitMovementSpeed;
+	attackSpeed = unit->unitAttackSpeed;
+	currentDirection = unit->currentDirection;
+	unitIdleTexture = unit->unitIdleTexture;
+	unitMoveTexture = unit->unitMoveTexture;
+	unitAttackTexture = unit->unitAttackTexture;
+	unitDieTexture = unit->unitDieTexture;
+	unitLife = unit->unitLife;
+	unitMaxLife = unit->unitMaxLife;
+	unitAttack = unit->unitAttack;
+	unitDefense = unit->unitDefense;
 
-	pugi::xml_document gameDataFile;
-	pugi::xml_node gameData;
-	pugi::xml_node unitNodeInfo;
-
-	gameData = App->LoadGameData(gameDataFile);
-
-	if (gameData.empty() == false)
-	{
-		pugi::xml_node unit;
-		int i = 0;
-		for (unit = gameData.child("Units").child("Unit"); unit; unit = unit.next_sibling("Unit")) {
-			i++;
-			if (unit.child("Info").child("ID").attribute("value").as_int() == type) {
-				unitNodeInfo = unit;
-				break;
-			}
-			LOG("%d", unit.child("Info").child("ID").attribute("value").as_int());
-		}
-	}	
-
-	string idleTexturePath = unitNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
-	string moveTexturePath = unitNodeInfo.child("Textures").child("Move").attribute("value").as_string();
-	string attackTexturePath = unitNodeInfo.child("Textures").child("Attack").attribute("value").as_string();
-	string dieTexturePath = unitNodeInfo.child("Textures").child("Die").attribute("value").as_string();
-
-	faction = (unitFaction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
-	attackSpeed = 1 / unitNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
-	unitLife = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-	unitMaxLife = unitLife;
-	unitAttack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
-	unitDefense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
-	unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
-	unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
-
-	pugi::xml_node animationNode;
-	int width;
-	int height;
-	int rows;
-	int columns;
-
-	//Anim Idle//
-	animationNode = unitNodeInfo.child("Animations").child("Idle");
-	width = animationNode.child("Width").attribute("value").as_int();
-	height = animationNode.child("Height").attribute("value").as_int();
-	rows = animationNode.child("Rows").attribute("value").as_int();
-	columns = animationNode.child("Columns").attribute("value").as_int();
-	for (int i = 0; i < rows; i++) {
-		Animation idle;
-		for (int j = 0; j < columns; j++) {
-			idle.PushBack({ width*j,height*i,width,height });
-		}
-		idle.speed = animationNode.child("Speed").attribute("value").as_float();
-		idleAnimations.push_back(idle);
-		if (i != 0 && i != rows - 1) {
-			idle.flip = SDL_FLIP_HORIZONTAL;
-			idleAnimations.push_back(idle);
-		}
-	}
-
-	//Anim Moving//
-	animationNode = unitNodeInfo.child("Animations").child("Move");
-	width = animationNode.child("Width").attribute("value").as_int();
-	height = animationNode.child("Height").attribute("value").as_int();
-	rows = animationNode.child("Rows").attribute("value").as_int();
-	columns = animationNode.child("Columns").attribute("value").as_int();
-	for (int i = 0; i < rows; i++) {
-		Animation move;
-		for (int j = 0; j < columns; j++) {
-			move.PushBack({ width*j,height*i,width,height });
-		}
-		move.speed = animationNode.child("Speed").attribute("value").as_float();
-		movingAnimations.push_back(move);
-		if (i != 0 && i != rows - 1) {
-			move.flip = SDL_FLIP_HORIZONTAL;
-			movingAnimations.push_back(move);
-		}
-	}
-
-	//Anim Attacking//
-	animationNode = unitNodeInfo.child("Animations").child("Attack");
-	width = animationNode.child("Width").attribute("value").as_int();
-	height = animationNode.child("Height").attribute("value").as_int();
-	rows = animationNode.child("Rows").attribute("value").as_int();
-	columns = animationNode.child("Columns").attribute("value").as_int();
-	for (int i = 0; i < rows; i++) {
-		Animation attack;
-		for (int j = 0; j < columns; j++) {
-			attack.PushBack({ width*j,height*i,width,height });
-		}
-		attack.speed = animationNode.child("Speed").attribute("value").as_float();
-		attackingAnimations.push_back(attack);
-		if (i != 0 && i != rows - 1) {
-			attack.flip = SDL_FLIP_HORIZONTAL;
-			attackingAnimations.push_back(attack);
-		}
-	}
-
-	//Anim Dying//
-	animationNode = unitNodeInfo.child("Animations").child("Die");
-	width = animationNode.child("Width").attribute("value").as_int();
-	height = animationNode.child("Height").attribute("value").as_int();
-	rows = animationNode.child("Rows").attribute("value").as_int();
-	columns = animationNode.child("Columns").attribute("value").as_int();
-	for (int i = 0; i < rows; i++) {
-		Animation die;
-		for (int j = 0; j < columns; j++) {
-			die.PushBack({ width*j,height*i,width,height });
-		}
-		die.speed = animationNode.child("Speed").attribute("value").as_float();
-		dyingAnimations.push_back(die);
-		if (i != 0 && i != rows - 1) {
-			die.flip = SDL_FLIP_HORIZONTAL;
-			dyingAnimations.push_back(die);
-		}
-	}
-
-	unitIdleTexture = App->tex->Load(idleTexturePath.c_str());
-	unitMoveTexture = App->tex->Load(moveTexturePath.c_str());
-	unitAttackTexture = App->tex->Load(attackTexturePath.c_str());
-	unitDieTexture = App->tex->Load(dieTexturePath.c_str());
+	//Animations
+	idleAnimations = unit->idleAnimations;
+	movingAnimations = unit->movingAnimations;
+	attackingAnimations = unit->attackingAnimations;
+	dyingAnimations = unit->dyingAnimations;
 
 	entityTexture = unitIdleTexture;
 
-	currentDirection = RIGHT; // starting direction
 	SetAnim(currentDirection);
 
 	SDL_Rect r = currentAnim->GetCurrentFrame();
-	SDL_Rect colliderRect = { entityPosition.x - (r.w / 2.5f), entityPosition.y - (r.h / 2.5f), r.w / 1.25f, r.h };
+	SDL_Rect colliderRect = { entityPosition.x - (r.w / 4), entityPosition.y - (r.h / 3), r.w / 2, r.h / 1.25f};
 	COLLIDER_TYPE colliderType;
 	if (isEnemy) {
 		colliderType = COLLIDER_ENEMY_UNIT;
@@ -157,16 +60,13 @@ Unit::Unit(int posX, int posY, bool isEnemy, unitType type)
 	}
 	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
 
-	isSelected = false;
 	/*if (!isEnemy) {
 		isVisible = true;
 	}
 	else {
 		isVisible = false;
 	}*/
-	isVisible = true;
 
-	hpBarWidth = 40;
 }
 
 Unit::~Unit()
@@ -199,20 +99,22 @@ bool Unit::Update(float dt)
 
 bool Unit::Draw()
 {
-	SDL_Rect r = currentAnim->GetCurrentFrame();
-	collider->rect.x = entityPosition.x - (r.w / 2.5f);
-	collider->rect.y = entityPosition.y - (r.h / 2.5f);
-	
-	if (isSelected) {
-		int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
-		int barPercent = (percent * hpBarWidth) / 100;
-		App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
-		App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
-		App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
-		App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
-	}
-	else {
-		App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
+	if (isVisible) {
+		SDL_Rect r = currentAnim->GetCurrentFrame();
+		collider->rect.x = entityPosition.x - (r.w / 4);
+		collider->rect.y = entityPosition.y - (r.h / 3);
+
+		if (isSelected) {
+			int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
+			int barPercent = (percent * hpBarWidth) / 100;
+			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
+			App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
+		}
+		else {
+			App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
+		}
 	}
 	
 	return true;

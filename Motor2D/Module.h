@@ -11,6 +11,7 @@
 #include <list>
 #include <string>
 #include <vector>
+#include <map>
 #include <iostream>
 #include "SDL\include\SDL.h"
 

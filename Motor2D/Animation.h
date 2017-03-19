@@ -12,7 +12,7 @@ public:
 	bool loop = true;
 	float speed = 1.0f;
 	vector<SDL_Rect> frames;
-	SDL_RendererFlip flip;
+	SDL_RendererFlip flip = SDL_FLIP_NONE;
 
 private:
 	float current_frame;

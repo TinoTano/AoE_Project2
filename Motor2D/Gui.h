@@ -63,15 +63,15 @@ public:
 	void			Move(int x, int y);
 	bool			enabled, debug = false;
 
-	UIElement* parent;
+	UIElement* parent = nullptr;
 	pair<int, int> pos, parent_pos;
 	ElementType type;
 	MouseState current;
 
-	SDL_Texture* texture;
+	SDL_Texture* texture = nullptr;
 	SDL_Color debug_color;
 
-	uint			priority;
+	uint priority = 0;
 };
 
 class Image : public UIElement {
@@ -101,7 +101,7 @@ public:
 	void Draw();
 	void SetText(char* text);
 
-	int width, height, size;
+	int width = 0, height = 0, size = 0;
 	_TTF_Font* font;
 	string str;
 
@@ -136,7 +136,7 @@ public:
 	MouseState MouseDetect();
 
 
-	int width, height;
+	int width = 0, height = 0;
 	_TTF_Font* font;
 
 	string		str;
@@ -146,8 +146,8 @@ public:
 	bool editable;
 
 private:
-	uint		bar_pos;
-	uint		bar_pos_x;
+	uint		bar_pos = 0;
+	uint		bar_pos_x = 0;
 	SDL_Rect	bar;
 	list<int>	words_lenght;
 
@@ -170,19 +170,19 @@ public:
 	void Update();
 	int GetData();
 	// BAR 1
-	int data, max_y, min_y;
-	Image* Bar;
-	Image* Thumb;
-	Button* Up;
-	Button* Down;
+	int data = 0, max_y = 0, min_y = 0;
+	Image* Bar = nullptr;
+	Image* Thumb = nullptr;
+	Button* Up = nullptr;
+	Button* Down = nullptr;
 	// BAR 2
 	void			UpdateThumbSize(int h);
 	void			SetBar(SDL_Rect BlitSquare, SDL_Rect thumb); // TO START THE BAR
 	void			DebugMode();
 	MouseState		MouseDetect();
 
-	Quad* BlitSquare;
-	Quad* BarRect;
+	Quad* BlitSquare = nullptr;
+	Quad* BarRect = nullptr;
 	BarElements ABar;
 
 	ScrollBarModel model;
@@ -209,7 +209,7 @@ public:
 	void SetCursor(int id);
 	
 private:
-	int id;
+	int id = 0;
 	pair<int, int> cursor_pos;
 	pair<int, int> blitoffset;
 	vector<SDL_Rect> sprite_list;
@@ -258,12 +258,12 @@ public:
 	void ScreenMoves(pair<int,int> movement);
 
 private:
-	SDL_Texture* atlas;
+	SDL_Texture* atlas = nullptr;
 	string atlas_file_name;
 	list<UIElement*> Elements;
 
 public:
-	Cursor* cursor;
+	Cursor* cursor = nullptr;
 };
 
 

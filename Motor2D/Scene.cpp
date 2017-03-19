@@ -23,17 +23,18 @@ Scene::~Scene()
 {}
 
 // Called before render is available
-bool Scene::Awake()
+bool Scene::Awake(pugi::xml_node & config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
-
+	active = false;
 	return ret;
 }
 
 // Called before the first frame
 bool Scene::Start()
 {
+	active = true;
 	if (App->map->Load("iso_walk.tmx") == true)
 	{
 		int w, h;

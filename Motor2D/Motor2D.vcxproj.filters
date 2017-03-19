@@ -74,6 +74,9 @@
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Resource.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -164,6 +167,9 @@
       <Filter>Project 2\Tools</Filter>
     </ClInclude>
     <ClInclude Include="Console.h" />
+    <ClInclude Include="Resource.h">
+      <Filter>Project 2\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">

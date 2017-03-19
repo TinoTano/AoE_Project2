@@ -9,48 +9,32 @@
 #include "p2Log.h"
 #include "math.h"
 
-Building::Building(int posX, int posY, bool isEnemy, buildingType type)
+
+
+Building::Building()
+{
+}
+
+Building::Building(int posX, int posY, bool isEnemy, Building* building)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
 	this->isEnemy = isEnemy;
 	this->type = type;
 
-	pugi::xml_document gameDataFile;
-	pugi::xml_node gameData;
-	pugi::xml_node buildingNodeInfo;
-
-	gameData = App->LoadGameData(gameDataFile);
-
-	if (gameData.empty() == false)
-	{
-		pugi::xml_node building;
-
-		for (building = gameData.child("Buildings").child("Building"); building; building = building.next_sibling("Building")) {
-			LOG("%d", building.child("Info").child("ID").attribute("value").as_int());
-			if (building.child("Info").child("ID").attribute("value").as_int() == type) {
-				buildingNodeInfo = building;
-			}
-		}
-	}
-
-	string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
-	string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
-
-	//faction = (buildingFaction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
-	//buildingAttackSpeed = 1 / buildingNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
-	buildingLife = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-	buildingMaxLife = buildingLife;
-	//buildingAttack = buildingNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
-	//buildingDefense = buildingNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
-	//buildingPiercingDamage = buildingNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
-	buildingWoodCost = buildingNodeInfo.child("Stats").child("WoodCost").attribute("value").as_int();
-	buildingStoneCost = buildingNodeInfo.child("Stats").child("StoneCost").attribute("value").as_int();
-	buildingBuildTime = buildingNodeInfo.child("Stats").child("BuildTime").attribute("value").as_int();
-	canAttack = buildingNodeInfo.child("Stats").child("CanAttack").attribute("value").as_bool();
-
-	buildingIdleTexture = App->tex->Load(idleTexturePath.c_str());
-	buildingDieTexture = App->tex->Load(dieTexturePath.c_str());
+	faction = building->faction;
+	buildingAttackSpeed = building->buildingAttackSpeed;
+	buildingPiercingDamage = building->buildingPiercingDamage;
+	buildingWoodCost = building->buildingWoodCost;
+	buildingStoneCost = building->buildingStoneCost;
+	buildingBuildTime = building->buildingBuildTime;
+	buildingIdleTexture = building->buildingIdleTexture;
+	buildingDieTexture = building->buildingDieTexture;
+	buildingLife = building->buildingLife;
+	buildingMaxLife = building->buildingMaxLife;
+	buildingAttack = building->buildingAttack;
+	buildingDefense = building->buildingDefense;
+	canAttack = building->canAttack;
 
 	entityTexture = buildingIdleTexture;
 
@@ -119,16 +103,17 @@ bool Building::Update(float dt)
 
 bool Building::Draw()
 {
-	
-	if (isSelected) {
-		App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
-		int percent = ((buildingMaxLife - buildingLife) * 100) / buildingMaxLife;
-		int barPercent = (percent * hpBarWidth) / 100;
-		App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), hpBarWidth, 5 }, 255, 0, 0);
-		App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), min(hpBarWidth, max(hpBarWidth - barPercent, 0)), 5 }, 0, 255, 0);
-	}
-	else {
-		App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
+	if (isVisible) {
+		if (isSelected) {
+			App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
+			int percent = ((buildingMaxLife - buildingLife) * 100) / buildingMaxLife;
+			int barPercent = (percent * hpBarWidth) / 100;
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), hpBarWidth, 5 }, 255, 0, 0);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), min(hpBarWidth, max(hpBarWidth - barPercent, 0)), 5 }, 0, 255, 0);
+		}
+		else {
+			App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
+		}
 	}
 	
 	return true;

@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Unit.h"
 #include "Building.h"
+#include "Resource.h"
 
 class Entity;
 
@@ -33,11 +34,15 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool LoadGameData();
+
 	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type);
 	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type);
+	Resource* CreateResource(int posX, int posY, resourceType type);
 
 	void DeleteUnit(Unit* unit, bool isEnemy);
-	void DeleteBuilding(Building*, bool isEnemy);
+	void DeleteBuilding(Building* building, bool isEnemy);
+	void DeleteResource(Resource* resource);
 	void OnCollision(Collider* c1, Collider* c2);
 
 private:
@@ -50,14 +55,25 @@ private:
 	list<Building*> friendlyBuildingList;
 	list<Building*> enemyBuildingList;
 	list<Building*> removeBuildingList;
-	list<Unit*> selectedUnitList;
-	list<Building*> selectedBuildingtList;
-	SDL_Rect multiSelectionRect = { 0,0,0,0 };
-	bool drawMultiSelectionRect;
+	list<Resource*> resourceList;
+	list<Resource*> removeResourceList;
 
+	SDL_Rect multiSelectionRect = { 0,0,0,0 };
+	int timesClicked = 0;
+	float doubleClickTimer = 0;
+
+	map<int, Unit*> unitsDB;
+	map<int, Building*> buildingsDB;
+	map<int, Resource*> resourcesDB;
+
+	int mouseX;
+	int mouseY;
+	
 public:
 	int nextID;
-
+	list<Unit*> selectedUnitList;
+	list<Building*> selectedBuildingtList;
+	Resource* selectedResource = nullptr;
 };
 
 #endif // !__ENTITY_MANAGER__

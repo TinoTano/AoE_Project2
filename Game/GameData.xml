@@ -6,6 +6,7 @@
       <Info>
         <Name value = "ELVEN_LONGBLADE"/>
         <ID value = "0"/>
+        <Collider w="" h=""/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/ElvenLongblade/ElvenLongbladeIdle.png"/>
@@ -1085,7 +1086,7 @@
 				<WoodCost value="275"/>
 				<StoneCost value="100"/>
 				<BuildTime value="150"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1103,7 +1104,7 @@
 				<WoodCost value="25"/>
 				<StoneCost value="0"/>
 				<BuildTime value="25"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1121,7 +1122,7 @@
 				<WoodCost value="155"/>
 				<StoneCost value="0"/>
 				<BuildTime value="50"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1139,7 +1140,7 @@
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
 				<BuildTime value="50"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1157,7 +1158,7 @@
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
 				<BuildTime value="50"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1175,7 +1176,7 @@
 				<WoodCost value="200"/>
 				<StoneCost value="0"/>
 				<BuildTime value="40"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1193,7 +1194,7 @@
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
 				<BuildTime value="60"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1211,7 +1212,7 @@
 				<WoodCost value="150"/>
 				<StoneCost value="0"/>
 				<BuildTime value="40"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1229,7 +1230,7 @@
 				<WoodCost value="100"/>
 				<StoneCost value="0"/>
 				<BuildTime value="35"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1247,7 +1248,7 @@
 				<WoodCost value=""/>
 				<StoneCost value=""/>
 				<BuildTime value=""/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1265,7 +1266,7 @@
 				<WoodCost value=""/>
 				<StoneCost value=""/>
 				<BuildTime value=""/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1283,7 +1284,7 @@
 				<WoodCost value="25"/>
 				<StoneCost value="125"/>
 				<BuildTime value="15"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1301,7 +1302,7 @@
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
 				<BuildTime value="40"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 		
@@ -1319,8 +1320,68 @@
 				<WoodCost value="0"/>
 				<StoneCost value="650"/>
 				<BuildTime value="200"/>
-				<CanAttack value="0"/>
+				<CanAttack value="false"/>
 			</Stats>
 		</Building>
 	</Buildings>
+
+  <Resources>
+    
+    <Resouce>
+      <Info>
+        <Name value ="WOOD"/>
+        <ID value ="0"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="100"/>
+      </Stats>
+    </Resouce>
+
+    <Resouce>
+      <Info>
+        <Name value ="GOLD_MINE"/>
+        <ID value ="1"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="100"/>
+      </Stats>
+    </Resouce>
+
+    <Resouce>
+      <Info>
+        <Name value ="FOOD"/>
+        <ID value ="2"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="100"/>
+      </Stats>
+    </Resouce>
+
+    <Resouce>
+      <Info>
+        <Name value ="STONE"/>
+        <ID value ="3"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="100"/>
+      </Stats>
+    </Resouce>
+    
+  </Resources>
 </GameData>

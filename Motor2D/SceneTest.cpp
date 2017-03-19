@@ -23,18 +23,16 @@ SceneTest::~SceneTest()
 {}
 
 
-bool SceneTest::Awake()
+bool SceneTest::Awake(pugi::xml_node & config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
-
 	return ret;
 }
 
 
 bool SceneTest::Start()
 {
-
 	vector<SDL_Rect> blit_sections;
 	blit_sections.push_back({ 0, 0, 220, 30 });
 	blit_sections.push_back({ 0, 30, 220, 30 });
