@@ -4,6 +4,7 @@
 #include "Application.h"
 #include "Scene.h"
 #include "Unit.h"
+#include "Pathfinding.h"
 #include "FogOfWar.h"
 #include "Render.h"
 #include "Textures.h"
@@ -326,6 +327,19 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
+bool EntityManager::IsOccupied(iPoint tile, Unit* ignore_unit) {
+
+	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+		if ((*it) != ignore_unit) {
+			if (tile == App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y) && (*it)->state == UNIT_IDLE)
+				return true;
+		}
+	}
+
+	return false;
+
+}
+
 bool EntityManager::LoadGameData()
 {
 	bool ret = false;
@@ -574,32 +588,54 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 {
 	//Uncomment for combat
 
-	//if (c1->type == COLLIDER_FRIENDLY_UNIT) {
-	//	if (c2->type == COLLIDER_ENEMY_UNIT || c2->type == COLLIDER_ENEMY_BUILDING) {
-	//		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-	//			if ((*it)->collider == c1 && (*it)->attackUnitTarget != nullptr) {
-	//				(*it)->SetState(UNIT_ATTACKING);
-	//				/*if (c2->type == COLLIDER_ENEMY_UNIT) {
-	//					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
-	//						if ((*it2)->collider == c2) {
-	//							(*it)->attackUnitTarget = (*it2);
-	//							break;
-	//						}
-	//					}
-	//				}
-	//				if (c2->type == COLLIDER_ENEMY_BUILDING) {
-	//					for (list<Building*>::iterator it2 = enemyBuildingList.begin(); it2 != enemyBuildingList.end(); it2++) {
-	//						if ((*it2)->collider == c2) {
-	//							(*it)->attackBuildingTarget = (*it2);
-	//							break;
-	//						}
-	//					}
-	//				}*/
-	//				break;
-	//			}
-	//		}
-	//	}
-	//}
+	//What about creating a var in collider class that stores the unit or buildings?
+	//and we take out all these for
+
+	if (c1->type == COLLIDER_FRIENDLY_UNIT) {
+		if (c2->type == COLLIDER_ENEMY_UNIT || c2->type == COLLIDER_ENEMY_BUILDING) {
+			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+				if ((*it)->collider == c1 && (*it)->attackUnitTarget != nullptr) {
+					(*it)->SetState(UNIT_ATTACKING);
+					/*if (c2->type == COLLIDER_ENEMY_UNIT) {
+						for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
+							if ((*it2)->collider == c2) {
+								(*it)->attackUnitTarget = (*it2);
+								break;
+							}
+						}
+					}
+					if (c2->type == COLLIDER_ENEMY_BUILDING) {
+						for (list<Building*>::iterator it2 = enemyBuildingList.begin(); it2 != enemyBuildingList.end(); it2++) {
+							if ((*it2)->collider == c2) {
+								(*it)->attackBuildingTarget = (*it2);
+								break;
+							}
+						}
+					}*/
+					break;
+				}
+			}
+		}
+		else if (c2->type == COLLIDER_FRIENDLY_UNIT) {
+			for (list<Unit*>::iterator unit1 = friendlyUnitList.begin(); unit1 != friendlyUnitList.end(); unit1++) {
+				if ((*unit1)->collider == c1) {
+					for (list<Unit*>::iterator unit2 = friendlyUnitList.begin(); unit2 != friendlyUnitList.end(); unit2++) {
+						if ((*unit2)->collider == c2) {
+
+							if ((*unit1)->state == UNIT_MOVING && (*unit2)->state == UNIT_IDLE) {
+
+								if (!(*unit1)->path.empty())
+									(*unit1)->path.pop_front();
+
+								(*unit1)->path.push_front(App->pathfinding->FindNearestAvailable((*unit1)));
+								(*unit1)->SetState(UNIT_MOVING);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	//if (c1->type == COLLIDER_FRIENDLY_BUILDING && c2->type == COLLIDER_ENEMY_UNIT) {
 	//	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
 	//		if ((*it)->collider == c1) {

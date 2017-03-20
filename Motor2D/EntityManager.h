@@ -34,6 +34,8 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool IsOccupied(iPoint tile, Unit* ignore_unit = nullptr);
+
 	bool LoadGameData();
 
 	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type);

@@ -2,7 +2,9 @@
 #define __PATHFINDING_H__
 
 #include "Module.h"
+#include "Unit.h"
 #include "p2Point.h"
+
 
 #define DEFAULT_PATH_LENGTH 50
 #define INVALID_WALK_CODE 255
@@ -44,6 +46,7 @@ public:
 	uchar GetTileAt(const iPoint& pos) const;
 
 	void FindAvailableDestination(iPoint& destination, iPoint& origin);
+	iPoint FindNearestAvailable(Unit* unit) const;
 
 private:
 

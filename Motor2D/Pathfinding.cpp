@@ -1,4 +1,6 @@
 #include "Application.h"
+#include "Map.h"
+#include "EntityManager.h"
 #include "PathFinding.h"
 #include "p2Log.h"
 
@@ -116,44 +118,21 @@ PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), 
 uint PathNode::FindWalkableAdjacents(PathList& list_to_fill) const
 {
 	iPoint cell;
-	uint before = list_to_fill.pathNodeList.size();
 
-	// north
-	cell.create(pos.x, pos.y + 1);
-	if(App->pathfinding->IsWalkable(cell))
-		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+	for (int i = -1; i < 2; i++) {
+		for (int j = -1; j < 2; j++) {
 
-	// south
-	cell.create(pos.x, pos.y - 1);
-	if(App->pathfinding->IsWalkable(cell))
-		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+			if (!(i == 0 && j == 0)) {
 
-	// east
-	cell.create(pos.x + 1, pos.y);
-	if(App->pathfinding->IsWalkable(cell))
-		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+				cell.create(pos.x + i, pos.y + j);
+				if (App->pathfinding->IsWalkable(cell) && !App->entityManager->IsOccupied(cell))
+					list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
 
-	// west
-	cell.create(pos.x - 1, pos.y);
-	if(App->pathfinding->IsWalkable(cell))
-		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+			}
+		}
+	}
 
-	//diagonal cells
-	cell.create(pos.x + 1, pos.y + 1);
-	if (App->pathfinding->IsWalkable(cell))
-		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
-
-	cell.create(pos.x - 1, pos.y + 1);
-	if (App->pathfinding->IsWalkable(cell))
-		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
-
-	cell.create(pos.x - 1, pos.y - 1);
-	if (App->pathfinding->IsWalkable(cell))
-		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
-
-	cell.create(pos.x + 1, pos.y - 1);
-	if (App->pathfinding->IsWalkable(cell))
-		list_to_fill.pathNodeList.push_back(new PathNode(-1, -1, cell, this));
+	// Needs optimization for diagonals if sides are not walkable
 
 	return list_to_fill.pathNodeList.size();
 }
@@ -300,4 +279,46 @@ void PathFinding::FindAvailableDestination(iPoint& destination, iPoint& origin)
 		}
 	}
 }
+
+iPoint PathFinding::FindNearestAvailable(Unit* unit) const {
+
+	iPoint pos = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+	iPoint ret = pos;
+	iPoint adj;
+
+	bool found = false;
+
+	int dist = 0;
+
+	while (!found) {
+
+		dist++;
+
+		for (int i = -dist; i < (dist + 1); i++) {
+			for (int j = -dist; j < (dist + 1); j++) {
+
+				adj.create(pos.x + i, pos.y + j);
+
+				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj)) {
+
+					if (unit->path.empty()) {
+
+						ret = adj;
+						found = true;
+					}
+					else if (adj.DistanceManhattan(unit->path.front()) < ret.DistanceManhattan(unit->path.front())) {
+						ret = adj;
+						found = true;
+					}
+				}
+			}
+		}
+
+		if (dist > 5)
+			return pos;
+	}
+
+	return ret;
+}
+
 
