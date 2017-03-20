@@ -15,6 +15,7 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	resourceLife = resource->resourceLife;
 	resourceIdleTexture = resource->resourceIdleTexture;
 	resourceGatheringTexture = resource->resourceGatheringTexture;
+	resourceRect = resource->resourceRect;
 
 	entityTexture = resourceIdleTexture;
 }
@@ -31,6 +32,6 @@ bool Resource::Update(float dt)
 
 bool Resource::Draw()
 {
-	App->render->Blit(entityTexture, entityPosition.x, entityPosition.y);
+	App->render->Blit(entityTexture, entityPosition.x, entityPosition.y, &resourceRect);
 	return true;
 }

@@ -31,6 +31,7 @@ public:
 	SDL_Texture* resourceGatheringTexture = nullptr;
 	bool isVisible = true;
 	bool isSelected = false;
+	SDL_Rect resourceRect;
 };
 
 #endif

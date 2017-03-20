@@ -7,6 +7,7 @@
 struct SDL_Texture;
 class Unit;
 class Building;
+class Resource;
 
 class Scene : public Module
 {
@@ -41,6 +42,7 @@ private:
 	Unit* elvenArcher;
 	Unit* troll;
 	Building* testBuilding;
+	Resource* tree;
 };
 
 #endif // __SCENE_H__

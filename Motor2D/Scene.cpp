@@ -35,7 +35,7 @@ bool Scene::Awake(pugi::xml_node & config)
 bool Scene::Start()
 {
 	active = true;
-	if (App->map->Load("iso_walk.tmx") == true)
+	if (App->map->Load("rivendell.tmx") == true)
 	{
 		int w, h;
 		uchar* data = NULL;
@@ -56,6 +56,7 @@ bool Scene::Start()
 	elvenArcher = App->entityManager->CreateUnit(140, 500, false, ELVEN_ARCHER);
 	troll = App->entityManager->CreateUnit(600, 400, true, TROLL_MAULER);
 	testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
+	tree = App->entityManager->CreateResource(400, 400, WOOD);
 
 	App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 	return true;

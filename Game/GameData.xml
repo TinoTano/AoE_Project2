@@ -1333,7 +1333,7 @@
         <ID value ="0"/>
       </Info>
       <Textures>
-        <Idle value="textures/Resources/"/>
+        <Idle value="textures/Resources/Trees/GreenTrees.png"/>
         <Gathering value="textures/Resources/"/>
       </Textures>
       <Stats>
@@ -1351,7 +1351,7 @@
         <Gathering value="textures/Resources/"/>
       </Textures>
       <Stats>
-        <Life value ="100"/>
+        <Life value ="800"/>
       </Stats>
     </Resouce>
 
@@ -1379,7 +1379,7 @@
         <Gathering value="textures/Resources/"/>
       </Textures>
       <Stats>
-        <Life value ="100"/>
+        <Life value ="350"/>
       </Stats>
     </Resouce>
     

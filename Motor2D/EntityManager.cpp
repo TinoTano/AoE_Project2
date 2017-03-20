@@ -8,6 +8,7 @@
 #include "FogOfWar.h"
 #include "Render.h"
 #include "Textures.h"
+#include "Resource.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -48,6 +49,10 @@ bool EntityManager::Update(float dt)
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;
 
+	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
+		(*it)->Update(dt);
+		(*it)->Draw();
+	}
 	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
@@ -79,13 +84,10 @@ bool EntityManager::Update(float dt)
 		}
 
 		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-			//Remove if (selectedUnitList.size() == 1) when testing group moving! Now only 1 can move.
-			if (selectedUnitList.size() == 1) {
-				if ((*it)->isSelected) {
-					(*it)->SetDestination();
-					if (clickedUnit != nullptr) {
-						(*it)->attackUnitTarget = clickedUnit;
-					}
+			if ((*it)->isSelected) {
+				(*it)->SetDestination();
+				if (clickedUnit != nullptr) {
+					(*it)->attackUnitTarget = clickedUnit;
 				}
 			}
 		}
@@ -495,6 +497,7 @@ bool EntityManager::LoadGameData()
 			string gatheringTexturePath = resourceNodeInfo.child("Textures").child("Gathering").attribute("value").as_string();
 
 			resourceTemplate->resourceLife = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
+			resourceTemplate->resourceRect = { 0,0,121,195 };
 
 			resourceTemplate->resourceIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			resourceTemplate->resourceGatheringTexture = App->tex->Load(gatheringTexturePath.c_str());
