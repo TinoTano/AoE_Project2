@@ -73,9 +73,11 @@
     <ClCompile Include="FogOfWar.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Console.cpp" />
     <ClCompile Include="Resource.cpp">
       <Filter>Project 2\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Project 2\Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,9 +168,11 @@
     <ClInclude Include="MemLeaks.h">
       <Filter>Project 2\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Console.h" />
     <ClInclude Include="Resource.h">
       <Filter>Project 2\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Project 2\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

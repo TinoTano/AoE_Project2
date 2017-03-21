@@ -489,7 +489,7 @@ bool EntityManager::LoadGameData()
 			buildingsDB.insert(pair<int, Building*>(buildingTemplate->type, buildingTemplate));
 		}
 
-		for (resourceNodeInfo = gameData.child("Resources").child("Resouce"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resouce")) {
+		for (resourceNodeInfo = gameData.child("Resources").child("Trees"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resouce")) {
 
 			Resource* resourceTemplate = new Resource();
 
