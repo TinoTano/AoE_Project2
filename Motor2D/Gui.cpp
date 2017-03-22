@@ -316,19 +316,21 @@ void Image::Draw()
 MouseState Image::MouseDetect()
 {
 	MouseState ret = FREE;
+	if (focused)
+	{
+		pair<int, int> mouse_pos;
+		App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
+		if (mouse_pos.first >= pos.first && mouse_pos.first <= (pos.first + section.w) && mouse_pos.second >= pos.second && mouse_pos.second <= (pos.second + section.h)) {
+			ret = HOVER;
+		}
+		if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+			ret = CLICKOUT;
+		}
+		else {
+			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+				ret = CLICKIN;
 
-	pair<int, int> mouse_pos;
-	App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
-	if (mouse_pos.first >= pos.first && mouse_pos.first <= (pos.first + section.w) && mouse_pos.second >= pos.second && mouse_pos.second <= (pos.second + section.h)) {
-		ret = HOVER;
-	}
-	if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-		ret = CLICKOUT;
-	}
-	else {
-		if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-			ret = CLICKIN;
-
+			}
 		}
 	}
 	return ret;
@@ -344,9 +346,15 @@ void Image::DebugMode() {
 }
 // LABEL 
 
-Label::Label(char* text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {}
+Label::Label(char* text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {
+	texture = App->font->Print(str.c_str());
+	App->font->CalcSize(str.c_str(), width, height);
+}
 
-Label::Label(char * text, SDL_Rect area, _TTF_Font* font) : UIElement(true, area.x, area.y, LABEL, nullptr), str(text), font(font) {}
+Label::Label(char * text, SDL_Rect area, _TTF_Font* font) : UIElement(true, area.x, area.y, LABEL, nullptr), str(text), font(font) {
+	texture = App->font->Print(str.c_str());
+	App->font->CalcSize(str.c_str(), width, height);
+}
 
 void Label::Update()
 {
@@ -355,14 +363,21 @@ void Label::Update()
 
 void Label::Draw()
 {
-	texture = App->font->Print(str.c_str());
-	App->font->CalcSize(str.c_str(), width, height);
 	SDL_Rect text_size{ 0, 0, width, height };
 	App->render->Blit(texture, pos.first, pos.second, &text_size);
 }
 
 void Label::SetText(char* text) {
 	str = text;
+	texture = App->font->Print(str.c_str());
+	App->font->CalcSize(str.c_str(), width, height);
+}
+
+void Label::SetSize(int size) {
+	font = App->font->Load(nullptr, size);
+	this->size = size;
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 void Label::Movement(pair<int, int> movement) {
@@ -420,21 +435,23 @@ void Button::Movement(pair<int, int> movement) {
 MouseState Button::MouseDetect()
 {
 	MouseState ret = FREE;
-	for (int it = 0; it < detect_sections.size(); ++it) {
-		pair<int, int> mouse_pos;
-		App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
-		if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + detect_sections[it].w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + detect_sections[it].h)) {
-			ret = HOVER;
-			break;
+	if (focused) {
+		for (int it = 0; it < detect_sections.size(); ++it) {
+			pair<int, int> mouse_pos;
+			App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
+			if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + detect_sections[it].w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + detect_sections[it].h)) {
+				ret = HOVER;
+				break;
+			}
 		}
-	}
-	if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-		ret = CLICKOUT;
-	}
-	else {
-		if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-			ret = CLICKIN;
+		if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			ret = CLICKOUT;
+		}
+		else {
+			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+				ret = CLICKIN;
 
+			}
 		}
 	}
 	return ret;
@@ -502,18 +519,20 @@ void InputText::Draw() {
 
 MouseState InputText::MouseDetect() {
 	MouseState ret = FREE;
-
-	pair<int, int> mouse_pos;
-	App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
-	if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + area.w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + area.h)) {
-		ret = HOVER;
-	}
-	if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-		ret = CLICKOUT;
-	}
-	else {
-		if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-			ret = CLICKIN;
+	if (focused)
+	{
+		pair<int, int> mouse_pos;
+		App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
+		if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + area.w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + area.h)) {
+			ret = HOVER;
+		}
+		if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			ret = CLICKOUT;
+		}
+		else {
+			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+				ret = CLICKIN;
+			}
 		}
 	}
 	return ret;

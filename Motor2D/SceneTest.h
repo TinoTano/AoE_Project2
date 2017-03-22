@@ -43,8 +43,16 @@ private:
 	char mierda;
 	uint hero_y;
 	list<Image*> heroes;
-	Button* button;
 	Image* top, * bottom;
+	Button* menu_bt;
+
+
+	WindowUI ui_menu;
+	Image* menu_bg_img;
+	Button* quit_game_bt;
+	Button* back_to_menu_bt;
+	Button* save_game_bt;
+	Button* cancel_bt;
 };
 
 #endif // __j1SCENE_H__
