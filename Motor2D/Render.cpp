@@ -50,7 +50,7 @@ bool Render::Awake(pugi::xml_node& config)
 		camera.x = 0;
 		camera.y = 0;
 	}
-
+	culling_cam = camera;
 	return ret;
 }
 
@@ -152,6 +152,10 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 			movement.second = -5;
 		}
 	}
+
+	culling_cam.x = -camera.x;
+	culling_cam.y = -camera.y;
+
 	return movement;
 }
 

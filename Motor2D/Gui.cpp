@@ -68,23 +68,13 @@ bool Gui::Start()
 // Update all guis
 bool Gui::PreUpdate()
 {
-	list<UIElement*> Priority;
-
-	for (list<UIElement*>::iterator it = Elements.begin(); Priority.size() != Elements.size(); ++it)
-	{
-		switch (it._Ptr->_Myval->priority) {
-		case 0:
-			Priority.push_front(it._Ptr->_Myval);
-			break;
-		case 1:
-			Priority.push_back(it._Ptr->_Myval);
-			break;
-		}
-	}
-
-	Elements = Priority;
 	return true;
 }
+bool Gui::Update(float dt)
+{
+	return true;
+}
+
 
 // Called after all Updates
 bool Gui::PostUpdate()
@@ -103,6 +93,7 @@ bool Gui::PostUpdate()
 		{
 			if (it._Ptr->_Myval->enabled == true)
 				it._Ptr->_Myval->Update();
+			else if (it._Ptr->_Myval->type == BUTTON && it._Ptr->_Myval->current != FREE) it._Ptr->_Myval->current = FREE;
 		}
 	}
 
@@ -149,12 +140,50 @@ void Gui::ScreenMoves(pair<int,int> movement) {
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 		{
-			if (it._Ptr->_Myval->enabled == true)
 				it._Ptr->_Myval->Movement(movement);
 		}
 	}
 }
+void Gui::SetPriority()
+{
+	list<UIElement*> Priority1;
+	list<UIElement*> Priority0;
+	int i = 0;
+	for (list<UIElement*>::iterator it = Elements.begin(); i < Elements.size(); ++it)
+	{
+		switch (it._Ptr->_Myval->priority) {
+		case 0:
+			Priority0.push_back(it._Ptr->_Myval);
+			break;
+		case 1:
+			Priority1.push_back(it._Ptr->_Myval);
+			break;
+		}
+		++i;
+	}
 
+	Priority1.merge(Priority0);
+	Priority1.unique();
+	Elements = Priority1;
+}
+
+void Gui::Focus(SDL_Rect rect)
+{
+	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+	{
+		if (it._Ptr->_Myval->pos.first < rect.x || it._Ptr->_Myval->pos.first > rect.x + rect.w ||
+			it._Ptr->_Myval->pos.second < rect.y || it._Ptr->_Myval->pos.second > rect.y + rect.h)
+			it._Ptr->_Myval->focused = false;
+	}
+}
+
+void Gui::Unfocus()
+{
+	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+	{
+		it._Ptr->_Myval->focused = true;
+	}
+}
 // UI ELEMENT
 // methods:
 
@@ -742,4 +771,43 @@ void Cursor::Draw() {
 }
 void Cursor::SetCursor(int id) {
 	this->id = id;
+}
+
+// WINDOW
+void WindowUI::WindowOn()
+{
+	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
+	{
+		it._Ptr->_Myval->enabled = true;
+	}
+	enabled = true;
+}
+
+void WindowUI::WindowOff()
+{
+	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
+	{
+		it._Ptr->_Myval->enabled = false;
+	}
+	enabled = false;
+}
+
+SDL_Rect WindowUI::FocusArea()
+{
+	SDL_Rect ret;
+	ret.x = *x;
+	ret.y = *y;
+	ret.w = width;
+	ret.h = height;
+	return ret;
+}
+void WindowUI::SetFocus(int& x, int& y, int width, int height)
+{
+	this->x = &x;
+	this->y = &y;
+	this->width = width;
+	this->height = height;
+}
+bool WindowUI::IsEnabled() {
+	return enabled;
 }

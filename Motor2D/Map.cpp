@@ -50,7 +50,11 @@ void Map::Draw()
 					SDL_Rect r = tileset->GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 
-					App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+					SDL_Rect cam = App->render->culling_cam;
+
+					if (pos.x + data.tile_width >= cam.x && pos.x <= cam.x + cam.w)
+						if (pos.y + data.tile_height * 2 > cam.y && pos.y < cam.y + cam.h)		
+							App->render->Blit(tileset->texture, pos.x, pos.y, &r);					
 				}
 			}
 		}
