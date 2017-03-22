@@ -168,7 +168,7 @@ int PathFinding::CreatePath(iPoint& origin, iPoint& destination, list<iPoint>& p
 		return ret;
 	}
 
-	if (!IsWalkable(destination)) {
+	if (!IsWalkable(destination) || App->entityManager->IsOccupied(destination)) {
 		FindAvailableDestination(destination, origin);
 	}
 
@@ -255,7 +255,7 @@ void PathFinding::FindAvailableDestination(iPoint& destination, iPoint& origin)
 			{
 				newDestination.x = destination.x + x;
 				newDestination.y = destination.y + y;
-				if (IsWalkable(newDestination) && newDestination != origin) {
+				if (IsWalkable(newDestination) && newDestination != origin && !App->entityManager->IsOccupied(newDestination)) {
 					newDestinationList.push_back(newDestination);
 				}
 			}
