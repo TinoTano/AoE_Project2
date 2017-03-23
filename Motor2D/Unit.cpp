@@ -179,6 +179,10 @@ void Unit::Move(float dt)
 		fPoint vel = (velocity * (unitMovementSpeed + 100)) * dt;
 		roundf(vel.x);
 		roundf(vel.y);
+
+		if (vel.x > 5 || vel.y > 5)
+			int a = 4;
+
 		entityPosition.x += int(vel.x);
 		entityPosition.y += int(vel.y);
 
@@ -186,6 +190,7 @@ void Unit::Move(float dt)
 			if (path.size() > 0) {
 				destinationTile = path.front();
 				path.erase(path.begin());
+				LOG("%d %d", destinationTile.x, destinationTile.y);
 			}
 			else {
 				destinationReached = true;
@@ -202,7 +207,8 @@ void Unit::CalculateVelocity()
 	velocity.x = destinationTileWorld.x - entityPosition.x;
 	velocity.y = destinationTileWorld.y - entityPosition.y;
 
-	velocity.Normalize();
+	if(velocity.x != 0 || velocity.y != 0)
+		velocity.Normalize();
 }
 
 void Unit::LookAt()
