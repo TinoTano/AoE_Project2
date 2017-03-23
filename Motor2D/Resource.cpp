@@ -1,12 +1,13 @@
 #include "Resource.h"
 #include "Render.h"
 #include "Application.h"
+#include "p2Log.h"
 
 Resource::Resource()
 {
 }
 
-Resource::Resource(int posX, int posY, Resource* resource)
+Resource::Resource(int posX, int posY, Resource* resource, int resourceRectIndex)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
@@ -15,7 +16,13 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	resourceLife = resource->resourceLife;
 	resourceIdleTexture = resource->resourceIdleTexture;
 	resourceGatheringTexture = resource->resourceGatheringTexture;
-	resourceRect = resource->resourceRect;
+	resourceRectVector = resource->resourceRectVector;
+	if (resourceRectIndex < resourceRectVector.size()) {
+		resourceRect = resourceRectVector[resourceRectIndex];
+	}
+	else {
+		LOG("Wrong resourceRectIndex");
+	}
 
 	entityTexture = resourceIdleTexture;
 }

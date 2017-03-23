@@ -50,12 +50,12 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
 
 	isSelected = false;
-	if (!isEnemy) {
+	/*if (!isEnemy) {
 		isVisible = true;
 	}
 	else {
 		isVisible = false;
-	}
+	}*/
 
 	hpBarWidth = 50;
 }

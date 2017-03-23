@@ -141,14 +141,11 @@ void Unit::SetSpeed(int amount)
 	unitMovementSpeed = amount;
 }
 
-void Unit::SetDestination()
+void Unit::SetDestination(iPoint destination)
 {
-	iPoint target;
-	App->input->GetMousePosition(target.x, target.y);
-	target = App->map->WorldToMap(target.x - App->render->camera.x, target.y - App->render->camera.y);
 
 	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
-	App->pathfinding->CreatePath(origin, target, path);
+	App->pathfinding->CreatePath(origin, destination, path);
 
 	if (path.size() > 0) {
 		SetState(UNIT_MOVING);
@@ -323,16 +320,6 @@ void Unit::SetState(unitState newState)
 	}
 }
 
-bool Unit::Load(pugi::xml_node & node)
-{
-	return true;
-}
-
-bool Unit::Save(pugi::xml_node & node) const
-{
-	return true;
-}
-
 void Unit::SetAnim(unitDirection currentDirection) {
 
 	switch (state) {
@@ -349,11 +336,4 @@ void Unit::SetAnim(unitDirection currentDirection) {
 		currentAnim = &dyingAnimations[currentDirection];
 		break;
 	}
-}
-
-pugi::xml_node Unit::LoadUnitInfo(unitType type)
-{
-
-	
-	return pugi::xml_node();
 }

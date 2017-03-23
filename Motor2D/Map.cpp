@@ -485,7 +485,6 @@ bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 				if(tileset != NULL)
 				{
 					map[i] = (tile_id - tileset->firstgid) > 0 ? 0 : 1;
-					LOG("%d", tile_id);
 					/*TileType* ts = tileset->GetTileType(tile_id);
 					if(ts != NULL)
 					{

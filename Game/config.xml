@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <config>
 	<app framerate_cap="">
-		<title>Pathfinding Test</title>
-		<organization>UPC</organization>
+		<title>Age Of The Ring</title>
+		<organization>Nemesis Studio</organization>
 	</app>
 	<renderer>
 		<vsync value="true" />
@@ -27,6 +27,6 @@
 		<folder>maps/</folder>
 	</map>
 	<console>
-		<test />
+		
 	</console>
 </config>

@@ -1325,10 +1325,15 @@
 		</Building>
 	</Buildings>
 
+<!-- Resources -->
+    
   <Resources>
     
     <Trees>
-      <BlackTrees>
+      <TreeType value="BlackTrees">
+        <Info>
+          <ID value="0"/>
+        </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/BlackTrees.png"/>
           <Gathering value="textures/Resources/"/>
@@ -1336,57 +1341,28 @@
         <Stats>
           <Life value ="100"/>
         </Stats>
-        <Different_trees>
-          <Tree>
-            <ID value="0"/>
-            <Rect x="0" y="0" w="125" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="1"/>
-            <Rect x="177" y="0" w="175" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="2"/>
-            <Rect x="422" y="0" w="67" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="3"/>
-            <Rect x="551" y="0" w="181" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="4"/>
-            <Rect x="798" y="0" w="93" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="5"/>
-            <Rect x="965" y="0" w="125" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="6"/>
-            <Rect x="1182" y="0" w="121" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="7"/>
-            <Rect x="1389" y="0" w="135" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="8"/>
-            <Rect x="1596" y="0" w="71" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="9"/>
-            <Rect x="1782" y="0" w="79" h="195"/>
-          </Tree>
-          <Tree>
-            <ID value="9"/>
-            <Rect x="1782" y="0" w="79" h="195"/>
-          </Tree>
+        <Rects>
+          <Rect x="0" y="0" w="125" h="195"/>
+          <Rect x="177" y="0" w="175" h="195"/>
+          <Rect x="422" y="0" w="67" h="195"/>
+          <Rect x="551" y="0" w="181" h="195"/>
+          <Rect x="798" y="0" w="93" h="195"/>
+          <Rect x="965" y="0" w="125" h="195"/>
+          <Rect x="1182" y="0" w="121" h="195"/>
+          <Rect x="1389" y="0" w="135" h="195"/>
+          <Rect x="1596" y="0" w="71" h="195"/>
+          <Rect x="1782" y="0" w="79" h="195"/>
+          <Rect x="1782" y="0" w="79" h="195"/>
           <Rect x="2000" y="0" w="89" h="195"/>
           <Rect x="2193" y="0" w="71" h="195"/>
           <Rect x="2384" y="0" w="76" h="195"/>
-        </Different_trees>
-      </BlackTrees>
-      <GreenTrees>
+        </Rects>
+      </TreeType>
+      
+      <TreeType value ="GreenTrees">
+        <Info>
+          <ID value="1"/>
+        </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/GreenTrees.png"/>
           <Gathering value="textures/Resources/"/>
@@ -1410,13 +1386,13 @@
           <Rect x="2310" y="0" w="93" h="192"/>
           <Rect x="2502" y="0" w="108" h="192"/>
         </Rects>
-      </GreenTrees>
+      </TreeType>
     </Trees>
 
-    <Resouce>
+    <GoldMines>
       <Info>
         <Name value ="GOLD_MINE"/>
-        <ID value ="1"/>
+        <ID value ="2"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/"/>
@@ -1425,12 +1401,12 @@
       <Stats>
         <Life value ="800"/>
       </Stats>
-    </Resouce>
+    </GoldMines>
 
-    <Resouce>
+    <Animals>
       <Info>
         <Name value ="FOOD"/>
-        <ID value ="2"/>
+        <ID value ="3"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/"/>
@@ -1439,12 +1415,12 @@
       <Stats>
         <Life value ="100"/>
       </Stats>
-    </Resouce>
+    </Animals>
 
-    <Resouce>
+    <StoneMines>
       <Info>
         <Name value ="STONE"/>
-        <ID value ="3"/>
+        <ID value ="4"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/"/>
@@ -1453,7 +1429,7 @@
       <Stats>
         <Life value ="350"/>
       </Stats>
-    </Resouce>
+    </StoneMines>
     
   </Resources>
 </GameData>

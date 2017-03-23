@@ -45,7 +45,7 @@ public:
 	int GetLife() const;
 	void SetPos(int posX, int posY);
 	void SetSpeed(int amount);
-	void SetDestination();
+	void SetDestination(iPoint destination);
 	void Move(float dt);
 	void CalculateVelocity();
 	void LookAt();
@@ -54,10 +54,6 @@ public:
 	void AttackEnemyBuilding(float dt);
 	void Dead();
 	void SetState(unitState state);
-	pugi::xml_node LoadUnitInfo(unitType type);
-
-	bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&) const;
 
 private:
 

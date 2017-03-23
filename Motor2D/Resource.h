@@ -2,9 +2,10 @@
 #define _RESOURCE_H_
 
 #include "Entity.h"
+#include <vector>
 
 enum resourceType {
-	WOOD, GOLD_MINE, FOOD, STONE
+	BLACK_TREE, GREEN_TREE, GOLD_MINE, FOOD, STONE
 };
 
 enum resourceState {
@@ -15,7 +16,7 @@ class Resource : public Entity
 {
 public:
 	Resource();
-	Resource(int posX, int posY, Resource* resource);
+	Resource(int posX, int posY, Resource* resource, int resourceRectIndex);
 	~Resource();
 
 	bool Update(float dt);
@@ -25,12 +26,13 @@ private:
 
 public:
 	resourceState state = RESOURCE_IDLE;
-	resourceType type = WOOD;
+	resourceType type = BLACK_TREE;
 	int resourceLife = 0;
 	SDL_Texture* resourceIdleTexture = nullptr;
 	SDL_Texture* resourceGatheringTexture = nullptr;
 	bool isVisible = true;
 	bool isSelected = false;
+	vector<SDL_Rect> resourceRectVector;
 	SDL_Rect resourceRect;
 };
 

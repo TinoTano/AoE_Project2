@@ -83,9 +83,10 @@ bool EntityManager::Update(float dt)
 			}
 		}
 
+		iPoint destination = App->map->WorldToMap(mouseX, mouseY);
 		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 			if ((*it)->isSelected) {
-				(*it)->SetDestination();
+				(*it)->SetDestination(destination);
 				if (clickedUnit != nullptr) {
 					(*it)->attackUnitTarget = clickedUnit;
 				}
@@ -126,6 +127,12 @@ bool EntityManager::Update(float dt)
 					(*it)->isSelected = true;
 					selectedCount++;
 					selectedUnitList.push_back((*it));
+				}
+				else {
+					if ((*it)->isSelected) {
+						(*it)->isSelected = false;
+						selectedUnitList.remove(*it);
+					}
 				}
 			}
 			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
@@ -489,7 +496,7 @@ bool EntityManager::LoadGameData()
 			buildingsDB.insert(pair<int, Building*>(buildingTemplate->type, buildingTemplate));
 		}
 
-		for (resourceNodeInfo = gameData.child("Resources").child("Trees"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resouce")) {
+		for (resourceNodeInfo = gameData.child("Resources").child("Trees").child("TreeType"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("TreeType")) {
 
 			Resource* resourceTemplate = new Resource();
 
@@ -497,7 +504,10 @@ bool EntityManager::LoadGameData()
 			string gatheringTexturePath = resourceNodeInfo.child("Textures").child("Gathering").attribute("value").as_string();
 
 			resourceTemplate->resourceLife = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-			resourceTemplate->resourceRect = { 0,0,121,195 };
+
+			for (pugi::xml_node rectsNode = resourceNodeInfo.child("Rects").child("Rect"); rectsNode; rectsNode = rectsNode.next_sibling("Rect")) {
+				resourceTemplate->resourceRectVector.push_back({ rectsNode.attribute("x").as_int(), rectsNode.attribute("y").as_int(), rectsNode.attribute("w").as_int(), rectsNode.attribute("h").as_int() });
+			}
 
 			resourceTemplate->resourceIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			resourceTemplate->resourceGatheringTexture = App->tex->Load(gatheringTexturePath.c_str());
@@ -543,9 +553,9 @@ Building* EntityManager::CreateBuilding(int posX, int posY, bool isEnemy, buildi
 	return building;
 }
 
-Resource* EntityManager::CreateResource(int posX, int posY, resourceType type)
+Resource* EntityManager::CreateResource(int posX, int posY, resourceType type, int resourceRectIndex)
 {
-	Resource* resource = new Resource(posX, posY, resourcesDB[type]);
+	Resource* resource = new Resource(posX, posY, resourcesDB[type], resourceRectIndex);
 	resource->entityID = nextID;
 	nextID++;
 	resourceList.push_back(resource);

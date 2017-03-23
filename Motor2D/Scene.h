@@ -36,6 +36,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void LoadScene();
+	void SaveScene();
+
 private:
 	SDL_Texture* debug_tex;
 	bool debug = false;
