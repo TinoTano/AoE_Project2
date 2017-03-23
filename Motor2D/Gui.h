@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 #include <vector>
+#include "EntityManager.h"
 
 using namespace std;
 
@@ -50,6 +51,11 @@ enum ScrollBarModel {
 	//WHich we use for command window
 };
 
+enum HUDType {
+	MULTIPLESELECTION,
+	SINGLEINFO,
+	NONE
+};
 
 class UIElement {
 public:
@@ -232,6 +238,25 @@ public:
 	SDL_Rect FocusArea();
 
 };
+
+class HUD {
+private:
+	bool enabled = true;
+public:
+	HUDType type;
+	// MULTIPLESELECTION
+	list<Image*> multiple;
+	//SINGLEINFO
+	Image* single;
+	Label* name;
+	Label* armor;
+	Label* damage;
+
+	void GetSelection(list<Unit*> units);
+	void HUDOn();
+	void HUDOff();
+	bool IsEnabled();
+};
 // ---------------------------------------------------
 
 class Gui : public Module
@@ -283,7 +308,11 @@ private:
 	SDL_Texture* atlas = nullptr;
 	string atlas_file_name;
 	list<UIElement*> Elements;
+	class EntitySprite {
+		SDL_Rect rectangle;
 
+	};
+	list<SDL_Rect> SpriteRects;
 public:
 	Cursor* cursor = nullptr;
 };

@@ -830,3 +830,29 @@ void WindowUI::SetFocus(int& x, int& y, int width, int height)
 bool WindowUI::IsEnabled() {
 	return enabled;
 }
+
+bool HUD::IsEnabled()
+{
+	return enabled;
+}
+
+
+//HUD
+void HUD::GetSelection(list<Unit*> units) {
+	
+	switch (units.size()) {
+	case 0: type = NONE;
+		break;
+	case 1: type = SINGLEINFO;
+		break;
+	default: type = MULTIPLESELECTION;
+		break;
+	}
+
+	switch (type) {
+	case NONE:
+		break;
+	//case SINGLEINFO:
+
+	}
+}
