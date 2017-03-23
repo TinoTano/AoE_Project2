@@ -62,6 +62,11 @@ bool Gui::Start()
 
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
 
+	UnitSprite ElvenArcher(ELVEN_ARCHER, { 0,0,33,32 });
+	SpriteRects.push_back(ElvenArcher);
+	UnitSprite EvenLongBlade(ELVEN_LONGBLADE, { 0,33,33,32 });
+	SpriteRects.push_back(EvenLongBlade);
+
 	return true;
 }
 

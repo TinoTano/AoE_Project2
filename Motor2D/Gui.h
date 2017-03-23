@@ -308,11 +308,22 @@ private:
 	SDL_Texture* atlas = nullptr;
 	string atlas_file_name;
 	list<UIElement*> Elements;
-	class EntitySprite {
-		SDL_Rect rectangle;
 
+	class UnitSprite {
+		SDL_Rect rectangle;
+		unitType type;
+
+	public:
+		UnitSprite(unitType argtype, SDL_Rect argrectangle) : type(argtype), rectangle(argrectangle) {}
+		SDL_Rect GetRect() {
+			return rectangle;
+		}
+		unitType GetType() {
+			return type;
+		}
 	};
-	list<SDL_Rect> SpriteRects;
+
+	list<UnitSprite> SpriteRects;
 public:
 	Cursor* cursor = nullptr;
 };
