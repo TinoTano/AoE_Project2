@@ -34,6 +34,7 @@ public:
 	bool isSelected = false;
 	vector<SDL_Rect> resourceRectVector;
 	SDL_Rect resourceRect;
+	int rectIndex;
 };
 
 #endif

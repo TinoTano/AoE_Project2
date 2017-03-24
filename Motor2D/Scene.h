@@ -42,10 +42,6 @@ public:
 private:
 	SDL_Texture* debug_tex;
 	bool debug = false;
-	Unit* elvenArcher;
-	Unit* troll;
-	Building* testBuilding;
-	Resource* tree;
 };
 
 #endif // __SCENE_H__

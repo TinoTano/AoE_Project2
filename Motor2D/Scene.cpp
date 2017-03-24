@@ -50,15 +50,15 @@ bool Scene::Start()
 	debug_tex = App->tex->Load("maps/path2.png");
 
 	//Test
-	elvenArcher = App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(100, 500, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(320, 350, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(100, 520, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(380, 350, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(140, 500, false, ELVEN_ARCHER);
-	troll = App->entityManager->CreateUnit(600, 400, true, TROLL_MAULER);
-	testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
-	tree = App->entityManager->CreateResource(400, 400, BLACK_TREE,5);
+	App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(100, 500, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(320, 350, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(100, 520, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(380, 350, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(140, 500, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(600, 400, true, TROLL_MAULER);
+	App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
+	App->entityManager->CreateResource(400, 400, BLACK_TREE, 5);
 
 	App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 	return true;
@@ -141,6 +141,66 @@ void Scene::SaveScene()
 		}
 	}
 
+	for (list<Unit*>::iterator it = App->entityManager->enemyUnitList.begin(); it != App->entityManager->enemyUnitList.end(); it++) {
+		if ((*it)->state != UNIT_DEAD) {
+			pugi::xml_node unitNodeInfo = unitsNode.append_child("Unit");
+			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
+			positionNode.append_attribute("x") = (*it)->entityPosition.x;
+			positionNode.append_attribute("y") = (*it)->entityPosition.y;
+			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->unitLife;
+			unitNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
+			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
+			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			unitNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
+			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
+			destTileNode.append_attribute("x") = (*it)->path.back().x;
+			destTileNode.append_attribute("y") = (*it)->path.back().y;
+		}
+	}
+
+	pugi::xml_node buildingNode = rootNode.append_child("Buildings");
+	for (list<Building*>::iterator it = App->entityManager->friendlyBuildingList.begin(); it != App->entityManager->friendlyBuildingList.end(); it++) {
+		if ((*it)->state != BUILDING_DESTROYING) {
+			pugi::xml_node buildingNodeInfo = buildingNode.append_child("Building");
+			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
+			positionNode.append_attribute("x") = (*it)->entityPosition.x;
+			positionNode.append_attribute("y") = (*it)->entityPosition.y;
+			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->buildingLife;
+			buildingNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
+			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			buildingNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
+		}
+	}
+
+	for (list<Building*>::iterator it = App->entityManager->enemyBuildingList.begin(); it != App->entityManager->enemyBuildingList.end(); it++) {
+		if ((*it)->state != BUILDING_DESTROYING) {
+			pugi::xml_node buildingNodeInfo = buildingNode.append_child("Building");
+			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
+			positionNode.append_attribute("x") = (*it)->entityPosition.x;
+			positionNode.append_attribute("y") = (*it)->entityPosition.y;
+			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->buildingLife;
+			buildingNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
+			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			buildingNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
+		}
+	}
+
+	pugi::xml_node resourcesNode = rootNode.append_child("Resources");
+	for (list<Resource*>::iterator it = App->entityManager->resourceList.begin(); it != App->entityManager->resourceList.end(); it++) {
+			pugi::xml_node resourceNodeInfo = resourcesNode.append_child("Resource");
+			resourceNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			pugi::xml_node positionNode = resourceNodeInfo.append_child("Position");
+			positionNode.append_attribute("x") = (*it)->entityPosition.x;
+			positionNode.append_attribute("y") = (*it)->entityPosition.y;
+			resourceNodeInfo.append_child("Life").append_attribute("value") = (*it)->resourceLife;
+			resourceNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			resourceNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
+			resourceNodeInfo.append_child("IndexRect").append_attribute("value") = (*it)->rectIndex;
+	}
+
 	stringstream stream;
 	saveFile.save(stream);
 
@@ -177,10 +237,37 @@ void Scene::LoadScene() {
 			unitTemplate->direction = (unitDirection)unitNodeInfo.child("Direction").attribute("value").as_int();
 			unitTemplate->unitLife = unitNodeInfo.child("Life").attribute("value").as_int();
 			unitTemplate->isVisible = unitNodeInfo.child("IsVisible").attribute("value").as_bool();
-			int bla = unitNodeInfo.child("State").attribute("value").as_int();
 			if (unitNodeInfo.child("State").attribute("value").as_int() == UNIT_MOVING) {
 				unitTemplate->SetDestination({ unitNodeInfo.child("DestinationTile").attribute("x").as_int(), unitNodeInfo.child("DestinationTile").attribute("y").as_int() });
 			}
+		}
+
+		for (pugi::xml_node buildingNodeInfo = scene.child("Buildings").child("Building"); buildingNodeInfo; buildingNodeInfo = buildingNodeInfo.next_sibling("Building")) {
+
+			Building* buildingTemplate = App->entityManager->CreateBuilding(buildingNodeInfo.child("Position").attribute("x").as_int(),
+				buildingNodeInfo.child("Position").attribute("y").as_int(),
+				buildingNodeInfo.child("IsEnemy").attribute("value").as_bool(),
+				(buildingType)buildingNodeInfo.child("Type").attribute("value").as_int());
+
+			buildingTemplate->buildingLife = buildingNodeInfo.child("Life").attribute("value").as_int();
+			buildingTemplate->isVisible = buildingNodeInfo.child("IsVisible").attribute("value").as_bool();
+			//if (buildingNodeInfo.child("State").attribute("value").as_int() == BUILDING_DESTROYING) {
+			//	buildingTemplate->
+			//}
+		}
+
+		for (pugi::xml_node resourceNodeInfo = scene.child("Resources").child("Resource"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resource")) {
+
+			Resource* resourceTemplate = App->entityManager->CreateResource(resourceNodeInfo.child("Position").attribute("x").as_int(),
+				resourceNodeInfo.child("Position").attribute("y").as_int(),
+				(resourceType)resourceNodeInfo.child("Type").attribute("value").as_int(),
+				resourceNodeInfo.child("IndexRect").attribute("value").as_int());
+
+			resourceTemplate->resourceLife = resourceNodeInfo.child("Life").attribute("value").as_int();
+			resourceTemplate->isVisible = resourceNodeInfo.child("IsVisible").attribute("value").as_bool();
+			//if (resourceNodeInfo.child("State").attribute("value").as_int() == RESOURCE_GATHERING) {
+			//	resourceTemplate->
+			//}
 		}
 	}
 

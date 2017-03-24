@@ -18,7 +18,8 @@ Resource::Resource(int posX, int posY, Resource* resource, int resourceRectIndex
 	resourceGatheringTexture = resource->resourceGatheringTexture;
 	resourceRectVector = resource->resourceRectVector;
 	if (resourceRectIndex < resourceRectVector.size()) {
-		resourceRect = resourceRectVector[resourceRectIndex];
+		rectIndex = resource->rectIndex;
+		resourceRect = resourceRectVector[rectIndex];
 	}
 	else {
 		LOG("Wrong resourceRectIndex");
