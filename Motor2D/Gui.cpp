@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "Window.h"
 #include "Gui.h"
+#include <stdlib.h>  
 
 Gui::Gui() : Module()
 {
@@ -873,6 +874,9 @@ bool HUD::IsEnabled()
 
 
 //HUD
+HUD::HUD()
+{
+}
 
 void HUD::Update() {
 	switch (App->entityManager->selectedUnitList.size()) {
@@ -895,8 +899,16 @@ void HUD::Update() {
 				if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
 				{
 					name->str = it._Ptr->_Myval.GetName();
+					defense = App->entityManager->selectedUnitList.front()->unitDefense;
+					attack = App->entityManager->selectedUnitList.front()->unitDefense;
 				}
 			}
+			char armor[65], damage[65];
+			_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
+			_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
+
+			damage_val->str = damage;
+			armor_val->str = armor;
 		}
 		break;
 	default:
@@ -913,11 +925,15 @@ void HUD::ClearSingle()
 {
 	App->gui->DestroyUIElement(single);
 	App->gui->DestroyUIElement(name);
+	App->gui->DestroyUIElement(sword_img);
+	App->gui->DestroyUIElement(armor_img);
+	App->gui->DestroyUIElement(damage_val);
+	App->gui->DestroyUIElement(armor_val);
 }
 
 
 void HUD::GetSelection() {
-
+	char armor[65], damage[65];
 	switch (type) {
 	case NONE:
 		break;
@@ -930,6 +946,17 @@ void HUD::GetSelection() {
 				name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), 310 - App->render->camera.x, 650 - App->render->camera.y, nullptr);
 			}
 		}
+		
+		_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
+		_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
+
+		sword_img = (Image*)App->gui->CreateImage("gui/game_scene_ui.png", 310 - App->render->camera.x, 720 - App->render->camera.y, SDL_Rect{ 0,19, 38, 22 });
+		armor_img = (Image*)App->gui->CreateImage("gui/game_scene_ui.png", 310 - App->render->camera.x, 750 - App->render->camera.y, SDL_Rect{ 0,63, 37, 19 });
+
+		damage_val = (Label*)App->gui->CreateLabel(damage, 350 - App->render->camera.x, 720 - App->render->camera.y, nullptr);
+		armor_val = (Label*)App->gui->CreateLabel(armor, 350 - App->render->camera.x, 750 - App->render->camera.y, nullptr);
+
+		int a = 5;
 	}
 	// X = 500 Y = 650
 }

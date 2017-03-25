@@ -259,10 +259,17 @@ public:
 	//SINGLEINFO
 	Image* single;
 	Label* name;
-	Label* armor;
-	Label* damage;
+	Label* armor_val;
+	Label* damage_val;
 	
+	Image* sword_img;
+	Image* armor_img;
+	Image* arrow_img;
 
+	uint attack;
+	uint defense;
+
+	HUD();
 	void GetSelection();
 	void HUDOn();
 	void HUDOff();
