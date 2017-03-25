@@ -105,8 +105,6 @@ bool SceneTest::PreUpdate()
 bool SceneTest::Update(float dt)
 {
 
-	App->gui->hud.GetSelection(App->entityManager->selectedUnitList);
-
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
 
 

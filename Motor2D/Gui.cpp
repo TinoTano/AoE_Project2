@@ -100,6 +100,7 @@ bool Gui::PostUpdate()
 	}
 
 	cursor->Update();
+	hud.Update();
 
 	return true;
 }
@@ -113,7 +114,7 @@ bool Gui::CleanUp()
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 		{
-			delete it._Ptr->_Myval;
+			RELEASE((*it));
 		}
 	}
 
@@ -244,6 +245,12 @@ UIElement * Gui::CreateLabel(char * text, int x, int y, _TTF_Font * font)
 	return ret;
 }
 
+UIElement* Gui::CreateLabel(string text, int x, int y, _TTF_Font* font) {
+	UIElement* ret = new Label(text, x, y, font);
+	Elements.push_back(ret);
+	return ret;
+}
+
 UIElement * Gui::CreateLabel(char * text, SDL_Rect area, _TTF_Font * font)
 {
 	UIElement* ret = new Label(text, area, font);
@@ -295,6 +302,23 @@ UIElement * Gui::CreateCursor(char* path, vector<SDL_Rect> cursor_list)
 	ret = new Cursor(tex, cursor_list);
 	Elements.push_back(ret);
 	return ret;
+}
+
+void Gui::DestroyUIElement(UIElement* element)
+{
+
+	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+	{
+		if (element == it._Ptr->_Myval)
+		{
+			int a = Elements.size();
+			Elements.remove(it._Ptr->_Myval);
+			int b = Elements.size();
+		//	it._Ptr->_Prev->_Next->_Myval = it._Ptr->_Next->_Myval;
+			RELEASE((element));
+		}
+	}
+
 }
 
 // IMAGE
@@ -349,13 +373,22 @@ void Image::DebugMode() {
 // LABEL 
 
 Label::Label(char* text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {
-	texture = App->font->Print(str.c_str());
+	color = { 0,0,0,250 };
+	texture = App->font->Print(str.c_str(), color);
+	App->font->CalcSize(str.c_str(), width, height);
+}
+
+Label::Label(string text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {
+	color = { 0,0,0,250 };
+	texture = App->font->Print(str.c_str(), color);
 	App->font->CalcSize(str.c_str(), width, height);
 }
 
 Label::Label(char * text, SDL_Rect area, _TTF_Font* font) : UIElement(true, area.x, area.y, LABEL, nullptr), str(text), font(font) {
-	texture = App->font->Print(str.c_str());
+	color = { 0,0,0,250 };
+	texture = App->font->Print(str.c_str(), color);
 	App->font->CalcSize(str.c_str(), width, height);
+	
 }
 
 void Label::Update()
@@ -840,16 +873,50 @@ bool HUD::IsEnabled()
 
 
 //HUD
-void HUD::GetSelection(list<Unit*> units) {
-	
-	switch (units.size()) {
-	case 0: type = NONE;
+
+void HUD::Update() {
+	switch (App->entityManager->selectedUnitList.size()) {
+	case 0: 
+		if (type != NONE)
+		{
+			ClearSingle();
+			type = NONE;
+		}
 		break;
-	case 1: type = SINGLEINFO;
+	case 1:
+		if (type != SINGLEINFO)
+		{
+			type = SINGLEINFO;
+			GetSelection();
+		}
+		else {
+			for (list<UnitSprite>::iterator it = App->gui->SpriteRects.begin(); it != App->gui->SpriteRects.end(); ++it)
+			{
+				if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
+				{
+					name->str = it._Ptr->_Myval.GetName();
+				}
+			}
+		}
 		break;
-	default: type = MULTIPLESELECTION;
+	default:
+		if (type != MULTIPLESELECTION)
+		{
+			type = MULTIPLESELECTION;
+		}
 		break;
 	}
+
+}
+
+void HUD::ClearSingle()
+{
+	App->gui->DestroyUIElement(single);
+	App->gui->DestroyUIElement(name);
+}
+
+
+void HUD::GetSelection() {
 
 	switch (type) {
 	case NONE:
@@ -857,15 +924,14 @@ void HUD::GetSelection(list<Unit*> units) {
 	case SINGLEINFO:
 		for (list<UnitSprite>::iterator it = App->gui->SpriteRects.begin(); it != App->gui->SpriteRects.end(); ++it)
 		{
-			if (it._Ptr->_Myval.GetID() == units.front()->GetEntityID())
+			if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
 			{
-				int a = it._Ptr->_Myval.GetRect().w;
-				int b = it._Ptr->_Myval.GetRect().h;
-				single = (Image*)App->gui->CreateImage("gui/EntityMiniatures.png", 0 , 0 , it._Ptr->_Myval.GetRect());
+				single = (Image*)App->gui->CreateImage("gui/EntityMiniatures.png", 310 - App->render->camera.x, 670 - App->render->camera.y, it._Ptr->_Myval.GetRect());
+				name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), 310 - App->render->camera.x, 650 - App->render->camera.y, nullptr);
 			}
 		}
-
 	}
+	// X = 500 Y = 650
 }
 
 bool Gui::LoadHUDData()
@@ -883,19 +949,21 @@ bool Gui::LoadHUDData()
 	{
 		SDL_Rect proportions;
 		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
-		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("wheight").as_uint();
+		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("height").as_uint();
 
 		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit")) {
 			EntityType type = UNIT;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
 
 			int id = unitNodeInfo.child("ID").attribute("value").as_int();
 			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
 			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
 
-			UnitSprite unit(type, proportions, id);
+			UnitSprite unit(type, proportions, id, name);
 			SpriteRects.push_back(unit);
 		}
-
+	}
+		/*
 		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building")) {
 			EntityType type = BUILDING;
 
@@ -906,7 +974,6 @@ bool Gui::LoadHUDData()
 			UnitSprite unit(type, proportions, id);
 			SpriteRects.push_back(unit);
 		}
-	}
-
+	}*/
 	return ret;
 }

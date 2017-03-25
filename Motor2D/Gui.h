@@ -16,6 +16,7 @@ using namespace std;
 #define BAR_COLOR {200,0,100,100}
 #define THUMB_COLOR {0,50,200, 200}
 #define BLIT_SQUARE_COLOR {200,0,100,100}
+#define LABEL_COLOR {0,0,0 250}
 struct _TTF_Font;
 
 
@@ -108,6 +109,7 @@ public:
 class Label : public UIElement {
 public:
 	Label(char * text, int x, int y, _TTF_Font* font);
+	Label(string text, int x, int y, _TTF_Font* font);
 	Label(char * text, SDL_Rect area, _TTF_Font* font);
 	void Movement(pair<int, int> movement);
 
@@ -251,7 +253,7 @@ class HUD {
 private:
 	bool enabled = true;
 public:
-	HUDType type;
+	HUDType type = NONE;
 	// MULTIPLESELECTION
 	list<Image*> multiple;
 	//SINGLEINFO
@@ -259,11 +261,15 @@ public:
 	Label* name;
 	Label* armor;
 	Label* damage;
+	
 
-	void GetSelection(list<Unit*> units);
+	void GetSelection();
 	void HUDOn();
 	void HUDOff();
 	bool IsEnabled();
+	void Update();
+	void ClearMultiple();
+	void ClearSingle();
 };
 
 
@@ -305,11 +311,14 @@ public:
 	UIElement* CreateImage(char* path, int x, int y, SDL_Rect section);
 	UIElement* CreateImage(char* path, int x, int y);
 	UIElement* CreateLabel(char* text, int x, int y, _TTF_Font* font);
+	UIElement* CreateLabel(string text, int x, int y, _TTF_Font* font);
 	UIElement* CreateLabel(char* text, SDL_Rect area, _TTF_Font* font);
 	UIElement* CreateInput(int x, int y, SDL_Rect detect_section, _TTF_Font* font);
 	UIElement* CreateScrollBar(int x, int y, ScrollBarModel model);
 	UIElement* CreateQuad(SDL_Rect size, SDL_Color color);
 	UIElement* CreateCursor(char* path, vector<SDL_Rect> cursor_list);
+	void DestroyUIElement(UIElement* element);
+
 	SDL_Texture* GetAtlas() const;
 	void ScreenMoves(pair<int,int> movement);
 	void	SetPriority();
@@ -335,9 +344,10 @@ class UnitSprite {
 	SDL_Rect rectangle;
 	uint ID;
 	EntityType type;
-
+	string name;
 public:
-	UnitSprite(EntityType argtype, SDL_Rect argrectangle, uint argID) : type(argtype), rectangle(argrectangle), ID(argID) {}
+	UnitSprite(EntityType argtype, SDL_Rect argrectangle, uint argID, string argname) : type(argtype), rectangle(argrectangle), ID(argID), name(argname) {
+	}
 	SDL_Rect GetRect() {
 		return rectangle;
 	}
@@ -346,6 +356,9 @@ public:
 	}
 	EntityType GetType() {
 		return type;
+	}
+	string GetName() {
+		return name;
 	}
 };
 

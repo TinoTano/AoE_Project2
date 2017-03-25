@@ -6,45 +6,45 @@
 
 	<Units>
 		<Unit>
-        <Name value = "ELVEN_LONGBLADE"/>
+        <Name value = "ELVEN LONGBLADE"/>
         <ID value = "0"/>
 	<Position x="33" y ="0"/>
 		</Unit>
 		<Unit>
-        <Name value = "DWARVEN_MAULER"/>
+        <Name value = "DWARVEN MAULER"/>
         <ID value = "1"/>
 		</Unit>
 		<Unit>
-        <Name value = "GONDOR_SPEARMAN"/>
+        <Name value = "GONDOR SPEARMAN"/>
         <ID value = "2"/>
 		</Unit>
 		<Unit>
-        <Name value = "ELVEN_ARCHER"/>
+        <Name value = "ELVEN ARCHER"/>
         <ID value = "3"/>
 	<Position x = "0" y = "0"/>
 		</Unit>
 		<Unit>
-        <Name value = "DUNEDAIN_RANGE"/>
+        <Name value = "DUNEDAIN RANGE"/>
         <ID value = "4"/>
 		</Unit>
 		<Unit>
-        <Name value = "ELVEN_CAVALRYE"/>
+        <Name value = "ELVEN CAVALRYE"/>
         <ID value = "5"/>
 		</Unit>
 		<Unit>
-        <Name value = "GONDOR_KNIGHT"/>
+        <Name value = "GONDOR KNIGHT"/>
         <ID value = "6"/>
 		</Unit>
 		<Unit>
-        <Name value = "ROHAN_KNIGHT"/>
+        <Name value = "ROHAN KNIGHT"/>
         <ID value = "7"/>
 		</Unit>
 		<Unit>
-        <Name value = "MOUNTED_DUNEDAIN"/>
+        <Name value = "MOUNTED DUNEDAIN"/>
         <ID value = "4"/>
 		</Unit>
 		<Unit>
-        <Name value = "SIEGE_TOWER"/>
+        <Name value = "SIEGE TOWER"/>
         <ID value = "9"/>
 		</Unit>
 		<Unit>
@@ -52,23 +52,23 @@
         <ID value = "10"/>
 		</Unit>
 		<Unit>
-        <Name value = "ORC_SOLDIER"/>
+        <Name value = "ORC SOLDIER"/>
         <ID value = "12"/>
 		</Unit>
 		<Unit>
-        <Name value = "URUK_HAI_SOLDIER"/>
+        <Name value = "URUK HAI SOLDIER"/>
         <ID value = "13"/>
 		</Unit>
 		<Unit>
-        <Name value = "ORC_ARCHER"/>
+        <Name value = "ORC ARCHER"/>
         <ID value = "14"/>
 		</Unit>
 		<Unit>
-        <Name value = "VENOMOUS_SPIDER"/>
+        <Name value = "VENOMOUS SPIDER"/>
         <ID value = "15"/>
 		</Unit>
 		<Unit>
-        <Name value = "HARADRIM_OLIFANT"/>
+        <Name value = "HARADRIM OLIFANT"/>
         <ID value = "16"/>
 		</Unit>
 		<Unit>
@@ -76,7 +76,7 @@
         <ID value = "17"/>
 		</Unit>
 		<Unit>
-        <Name value = "TROLL_MAULER"/>
+        <Name value = "TROLL MAULER"/>
         <ID value = "18"/>
 		</Unit>
 	</Units>
