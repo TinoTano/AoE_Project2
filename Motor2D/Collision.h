@@ -3,6 +3,10 @@
 
 #include "Module.h"
 
+class Unit;
+class Entity;
+class Building;
+
 enum COLLIDER_TYPE
 {
 	COLLIDER_NONE = -1,
@@ -21,12 +25,14 @@ struct Collider
 	SDL_Rect rect;
 	bool to_delete = false;
 	COLLIDER_TYPE type;
-	Module* callback = nullptr;
+	Entity* entity;
+	Module* callback;
 
-	Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = nullptr) :
+	Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr) :
 		rect(rectangle),
 		type(type),
-		callback(callback)
+		callback(callback),
+		entity(entity)
 	{}
 
 	void SetPos(int x, int y)
@@ -36,6 +42,8 @@ struct Collider
 	}
 
 	bool CheckCollision(const SDL_Rect& r) const;
+	Unit* GetUnit();
+	Building* GetBuilding();
 };
 
 class Collision : public Module
@@ -60,7 +68,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	Collider* AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module* callback = nullptr);
+	Collider* AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
 	void DeleteCollider(Collider* collider);
 	void DebugDraw();
 

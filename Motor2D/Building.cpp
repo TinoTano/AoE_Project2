@@ -47,7 +47,7 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 	else {
 		colliderType = COLLIDER_FRIENDLY_BUILDING;
 	}
-	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
+	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager, (Entity*)this);
 
 	isSelected = false;
 	/*if (!isEnemy) {

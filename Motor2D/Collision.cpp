@@ -104,9 +104,9 @@ bool Collision::CleanUp()
 	return true;
 }
 
-Collider * Collision::AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module * callback)
+Collider * Collision::AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module * callback, Entity* entity)
 {
-	Collider* ret = new Collider(rect, type, callback);
+	Collider* ret = new Collider(rect, type, callback, entity);
 	colliders.push_back(ret);
 
 	return ret;
@@ -121,6 +121,28 @@ bool Collider::CheckCollision(const SDL_Rect& r) const
 {
 	return (bool)SDL_HasIntersection(&rect, &r);
 }
+
+Unit* Collider::GetUnit() {
+
+	Unit* unit = nullptr;
+
+	if (type == COLLIDER_FRIENDLY_UNIT || type == COLLIDER_ENEMY_UNIT)
+		unit = (Unit*)entity;
+
+	return unit;
+}
+
+Building* Collider::GetBuilding() {
+
+	Building* building = nullptr;
+
+	if (type == COLLIDER_FRIENDLY_BUILDING || type == COLLIDER_ENEMY_BUILDING)
+		building = (Building*)entity;
+
+	return building;
+}
+
+// GetResource could be implemented if necessary
 
 void Collision::DebugDraw()
 {

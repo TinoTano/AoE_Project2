@@ -58,7 +58,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 	else {
 		colliderType = COLLIDER_FRIENDLY_UNIT;
 	}
-	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
+	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager, (Entity*)this);
 
 	/*if (!isEnemy) {
 		isVisible = true;
@@ -140,6 +140,7 @@ void Unit::SetSpeed(int amount)
 {
 	unitMovementSpeed = amount;
 }
+
 
 void Unit::SetDestination(iPoint destination)
 {

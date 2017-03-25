@@ -600,115 +600,100 @@ void EntityManager::DeleteResource(Resource* resource)
 void EntityManager::OnCollision(Collider * c1, Collider * c2)
 {
 	//Uncomment for combat
+	Unit* friendly_unit1 = nullptr;
+	Unit* enemy_unit1 = nullptr;
+	
 
-	//What about creating a var in collider class that stores the unit or buildings?
-	//and we take out all these for
+	switch (c1->type) {
 
-	if (c1->type == COLLIDER_FRIENDLY_UNIT) {
-		if (c2->type == COLLIDER_ENEMY_UNIT || c2->type == COLLIDER_ENEMY_BUILDING) {
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if ((*it)->collider == c1 && (*it)->attackUnitTarget != nullptr) {
-					(*it)->SetState(UNIT_ATTACKING);
-					/*if (c2->type == COLLIDER_ENEMY_UNIT) {
-						for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
-							if ((*it2)->collider == c2) {
-								(*it)->attackUnitTarget = (*it2);
-								break;
-							}
-						}
-					}
-					if (c2->type == COLLIDER_ENEMY_BUILDING) {
-						for (list<Building*>::iterator it2 = enemyBuildingList.begin(); it2 != enemyBuildingList.end(); it2++) {
-							if ((*it2)->collider == c2) {
-								(*it)->attackBuildingTarget = (*it2);
-								break;
-							}
-						}
-					}*/
-					break;
-				}
+	case COLLIDER_FRIENDLY_UNIT:
+		friendly_unit1 = c1->GetUnit();
+
+		switch (c2->type) {
+
+		case COLLIDER_ENEMY_UNIT:
+
+			if (friendly_unit1->attackUnitTarget == nullptr) {
+				friendly_unit1->attackUnitTarget = c2->GetUnit();
+				friendly_unit1->SetState(UNIT_ATTACKING);
 			}
-		}
-		else if (c2->type == COLLIDER_FRIENDLY_UNIT) {
-			for (list<Unit*>::iterator unit1 = friendlyUnitList.begin(); unit1 != friendlyUnitList.end(); unit1++) {
-				if ((*unit1)->collider == c1) {
-					for (list<Unit*>::iterator unit2 = friendlyUnitList.begin(); unit2 != friendlyUnitList.end(); unit2++) {
-						if ((*unit2)->collider == c2) {
 
-							if ((*unit1)->state == UNIT_MOVING && (*unit2)->state == UNIT_IDLE) {
-
-								if (!(*unit1)->path.empty())
-									(*unit1)->path.pop_front();
-
-								(*unit1)->path.push_front(App->pathfinding->FindNearestAvailable((*unit1)));
-								(*unit1)->SetState(UNIT_MOVING);
-							}
-						}
-					}
-				}
+			if(c2->GetUnit()->attackUnitTarget == nullptr){
+				c2->GetUnit()->attackUnitTarget = friendly_unit1;
+				c2->GetUnit()->SetState(UNIT_ATTACKING);
 			}
+
+			break;
+
+		case COLLIDER_ENEMY_BUILDING:
+
+			if (friendly_unit1->attackBuildingTarget == nullptr) {
+				friendly_unit1->attackBuildingTarget = c2->GetBuilding();
+				friendly_unit1->SetState(UNIT_ATTACKING);
+			}
+
+			if (c2->GetBuilding()->canAttack && c2->GetBuilding()->attackUnitTarget == nullptr) {
+				c2->GetBuilding()->attackUnitTarget = friendly_unit1;
+				c2->GetBuilding()->state = BUILDING_ATTACKING;
+			}
+
+			break;
+
+		case COLLIDER_FRIENDLY_UNIT:
+
+			if (friendly_unit1->state == UNIT_MOVING && c2->GetUnit()->state == UNIT_IDLE) {
+
+				if (!friendly_unit1->path.empty())
+					friendly_unit1->path.pop_front();
+
+				friendly_unit1->path.push_front(App->pathfinding->FindNearestAvailable(friendly_unit1));
+				friendly_unit1->SetState(UNIT_MOVING);
+			}
+
+			break;
+
+		default:
+			break;
 		}
+
+		break;
+
+	case COLLIDER_FRIENDLY_BUILDING:
+
+		if (c2->type == COLLIDER_ENEMY_UNIT && c2->GetUnit()->attackBuildingTarget == nullptr) {
+
+			c2->GetUnit()->attackBuildingTarget = c1->GetBuilding();
+			c2->GetUnit()->SetState(UNIT_ATTACKING);
+
+			if (c1->GetBuilding()->canAttack && c1->GetBuilding()->attackUnitTarget == nullptr) {
+				c1->GetBuilding()->attackUnitTarget = c2->GetUnit();
+				c1->GetBuilding()->state = BUILDING_ATTACKING;
+			}
+
+		}
+		break;
+
+	case COLLIDER_ENEMY_UNIT:
+		enemy_unit1 = c1->GetUnit();
+
+		if (c2->type == COLLIDER_ENEMY_UNIT) {
+
+			if (enemy_unit1->state == UNIT_MOVING && c2->GetUnit()->state == UNIT_IDLE) {
+
+				if (!enemy_unit1->path.empty())
+					enemy_unit1->path.pop_front();
+
+				enemy_unit1->path.push_front(App->pathfinding->FindNearestAvailable(enemy_unit1));
+				enemy_unit1->SetState(UNIT_MOVING);
+			}
+
+		}
+			break;
+
+	default: 
+		break;
 	}
-	//if (c1->type == COLLIDER_FRIENDLY_BUILDING && c2->type == COLLIDER_ENEMY_UNIT) {
-	//	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
-	//		if ((*it)->collider == c1) {
-	//			if ((*it)->canAttack) {
-	//				(*it)->state = BUILDING_ATTACKING;
-	//				/*for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
-	//					if ((*it2)->collider == c2) {
-	//						(*it)->attackUnitTarget = (*it2);
-	//						break;
-	//					}
-	//				}*/
-	//			}
-	//			break;
-	//		}
-	//	}
-	//}
-
-	////Enemy
-	//if (c2->type == COLLIDER_ENEMY_UNIT) {
-	//	if (c1->type == COLLIDER_FRIENDLY_UNIT || c1->type == COLLIDER_FRIENDLY_BUILDING) {
-	//		for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-	//			if ((*it)->collider == c2 && (*it)->attackUnitTarget != nullptr) {
-	//				(*it)->SetState(UNIT_ATTACKING);
-	//				/*if (c1->type == COLLIDER_FRIENDLY_UNIT) {
-	//					for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
-	//						if ((*it2)->collider == c1) {
-	//							(*it)->attackUnitTarget = (*it2);
-	//							break;
-	//						}
-	//					}
-	//				}
-	//				if (c1->type == COLLIDER_FRIENDLY_BUILDING) {
-	//					for (list<Building*>::iterator it2 = friendlyBuildingList.begin(); it2 != friendlyBuildingList.end(); it2++) {
-	//						if ((*it2)->collider == c1) {
-	//							(*it)->attackBuildingTarget = (*it2); 
-	//							break;
-	//						}
-	//					}
-	//				}*/
-	//				break;
-	//			}
-	//		}
-	//	}
-	//}
-	//if (c2->type == COLLIDER_ENEMY_BUILDING && c1->type == COLLIDER_FRIENDLY_UNIT) {
-	//	for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
-	//		if ((*it)->collider == c2 && (*it)->attackUnitTarget != nullptr) {
-	//			if ((*it)->canAttack) {
-	//				(*it)->state = BUILDING_ATTACKING;
-	//				/*for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
-	//					if ((*it2)->collider == c1) {
-	//						(*it)->attackUnitTarget = (*it2);
-	//						break;
-	//					}
-	//				}*/
-	//			}
-	//			break;
-	//		}
-	//	}
-	//}
+	
 }
 
 
