@@ -57,6 +57,14 @@ enum HUDType {
 	NONE
 };
 
+enum EntityType {
+	UNIT,
+	BUILDING,
+	RESOURCE
+};
+
+class UnitSprite;
+
 class UIElement {
 public:
 	UIElement(bool argenabled, int argx, int argy, ElementType argtype, SDL_Texture* argtexture);
@@ -257,6 +265,8 @@ public:
 	void HUDOff();
 	bool IsEnabled();
 };
+
+
 // ---------------------------------------------------
 
 class Gui : public Module
@@ -288,6 +298,8 @@ public:
 	bool Save(pugi::xml_node&) const;
 	bool Load(pugi::xml_node&);
 
+	bool	LoadHUDData();
+
 	UIElement* CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier Tier);
 	// Blit_Sections contains de rects from the image. Tier 1 must have 3 and Tier 2 must have 2;
 	UIElement* CreateImage(char* path, int x, int y, SDL_Rect section);
@@ -304,30 +316,37 @@ public:
 	void	Focus(SDL_Rect rect);
 	void	Unfocus();
 
+
 private:
 	SDL_Texture* atlas = nullptr;
 	string atlas_file_name;
 	list<UIElement*> Elements;
 
-	class UnitSprite {
-		SDL_Rect rectangle;
-		unitType type;
-
-	public:
-		UnitSprite(unitType argtype, SDL_Rect argrectangle) : type(argtype), rectangle(argrectangle) {}
-		SDL_Rect GetRect() {
-			return rectangle;
-		}
-		unitType GetType() {
-			return type;
-		}
-	};
-
-	list<UnitSprite> SpriteRects;
+	// ----- UNIT CLASS ----- //
+	// -------------------- //
 public:
 	Cursor* cursor = nullptr;
+	list<UnitSprite> SpriteRects;
+	HUD hud;
 };
 
 
+class UnitSprite {
+	SDL_Rect rectangle;
+	uint ID;
+	EntityType type;
+
+public:
+	UnitSprite(EntityType argtype, SDL_Rect argrectangle, uint argID) : type(argtype), rectangle(argrectangle), ID(argID) {}
+	SDL_Rect GetRect() {
+		return rectangle;
+	}
+	uint GetID() {
+		return ID;
+	}
+	EntityType GetType() {
+		return type;
+	}
+};
 
 #endif // __j1GUI_H__

@@ -62,6 +62,7 @@ public:
 	void GetSaveGames(list<string>& list_to_fill) const;
 
 	pugi::xml_node LoadGameDataFile(pugi::xml_document&) const;
+	pugi::xml_node LoadHUDDataFile(pugi::xml_document&) const;
 
 private:
 

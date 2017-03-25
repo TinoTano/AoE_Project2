@@ -205,6 +205,23 @@ pugi::xml_node Application::LoadGameDataFile(pugi::xml_document & gameDatafile) 
 	return ret;
 }
 
+pugi::xml_node Application::LoadHUDDataFile(pugi::xml_document &HUDDatafile) const
+{
+	pugi::xml_node ret;
+
+	char* buf = NULL;
+	int size = App->fs->Load("HUDData.xml", &buf);
+	pugi::xml_parse_result result = HUDDatafile.load_buffer(buf, size);
+	RELEASE(buf);
+
+	if (result == NULL)
+		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
+	else
+		ret = HUDDatafile.child("HUDData");
+
+	return ret;
+}
+
 // ---------------------------------------------
 void Application::PrepareUpdate()
 {

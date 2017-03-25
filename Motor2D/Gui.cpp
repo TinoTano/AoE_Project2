@@ -62,10 +62,7 @@ bool Gui::Start()
 
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
 
-	UnitSprite ElvenArcher(ELVEN_ARCHER, { 0,0,33,32 });
-	SpriteRects.push_back(ElvenArcher);
-	UnitSprite EvenLongBlade(ELVEN_LONGBLADE, { 0,33,33,32 });
-	SpriteRects.push_back(EvenLongBlade);
+	LoadHUDData();
 
 	return true;
 }
@@ -857,7 +854,59 @@ void HUD::GetSelection(list<Unit*> units) {
 	switch (type) {
 	case NONE:
 		break;
-	//case SINGLEINFO:
+	case SINGLEINFO:
+		for (list<UnitSprite>::iterator it = App->gui->SpriteRects.begin(); it != App->gui->SpriteRects.end(); ++it)
+		{
+			if (it._Ptr->_Myval.GetID() == units.front()->GetEntityID())
+			{
+				int a = it._Ptr->_Myval.GetRect().w;
+				int b = it._Ptr->_Myval.GetRect().h;
+				single = (Image*)App->gui->CreateImage("gui/EntityMiniatures.png", 0 , 0 , it._Ptr->_Myval.GetRect());
+			}
+		}
 
 	}
+}
+
+bool Gui::LoadHUDData()
+{
+	bool ret = false;
+	pugi::xml_document HUDDataFile;
+	pugi::xml_node HUDData;
+	pugi::xml_node unitNodeInfo;
+	pugi::xml_node buildingNodeInfo;
+	pugi::xml_node resourceNodeInfo;
+
+	HUDData = App->LoadHUDDataFile(HUDDataFile);
+
+	if (HUDData.empty() == false)
+	{
+		SDL_Rect proportions;
+		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
+		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("wheight").as_uint();
+
+		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit")) {
+			EntityType type = UNIT;
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id);
+			SpriteRects.push_back(unit);
+		}
+
+		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building")) {
+			EntityType type = BUILDING;
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id);
+			SpriteRects.push_back(unit);
+		}
+	}
+
+	return ret;
 }

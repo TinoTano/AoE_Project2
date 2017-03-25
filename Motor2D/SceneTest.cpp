@@ -10,6 +10,7 @@
 #include "PathFinding.h"
 #include "Gui.h"
 #include "SceneTest.h"
+#include "EntityManager.h"
 #include <stdlib.h>  
 
 
@@ -103,6 +104,8 @@ bool SceneTest::PreUpdate()
 
 bool SceneTest::Update(float dt)
 {
+
+	App->gui->hud.GetSelection(App->entityManager->selectedUnitList);
 
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
 
