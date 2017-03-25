@@ -34,10 +34,10 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 	unitMoveTexture = unit->unitMoveTexture;
 	unitAttackTexture = unit->unitAttackTexture;
 	unitDieTexture = unit->unitDieTexture;
-	unitLife = unit->unitLife;
-	unitMaxLife = unit->unitMaxLife;
-	unitAttack = unit->unitAttack;
-	unitDefense = unit->unitDefense;
+	Life = unit->Life;
+	MaxLife = unit->MaxLife;
+	Attack = unit->Attack;
+	Defense = unit->Defense;
 
 	//Animations
 	idleAnimations = unit->idleAnimations;
@@ -80,11 +80,8 @@ bool Unit::Update(float dt)
 		Move(dt);
 		break;
 	case UNIT_ATTACKING:
-		if (attackUnitTarget != nullptr) {
-			AttackEnemyUnit(dt);
-		}
-		if (attackBuildingTarget != nullptr) {
-			AttackEnemyBuilding(dt);
+		if (attackTarget != nullptr) {
+			AttackEnemy(dt);
 		}
 		break;
 	case UNIT_DEAD:
@@ -105,7 +102,7 @@ bool Unit::Draw()
 		collider->rect.y = entityPosition.y - (r.h / 3);
 
 		if (isSelected) {
-			int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
+			int percent = ((MaxLife - Life) * 100) / MaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
 			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
 			App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
@@ -127,7 +124,7 @@ unitType Unit::GetType() const
 
 int Unit::GetLife() const
 {
-	return unitLife;
+	return Life;
 }
 
 void Unit::SetPos(int posX, int posY)
@@ -162,8 +159,8 @@ void Unit::SetDestination(iPoint destination)
 		}
 		path.erase(path.begin());
 	}
-	if (attackUnitTarget != nullptr) {
-		attackUnitTarget = nullptr;
+	if (attackTarget != nullptr) {
+		attackTarget = nullptr;
 	}
 }
 
@@ -214,15 +211,12 @@ void Unit::LookAt()
 
 	if (state == UNIT_ATTACKING)
 	{
-		if (attackUnitTarget != nullptr)
+		if (attackTarget != nullptr)
 		{
-			velocity.x = attackUnitTarget->entityPosition.x - entityPosition.x;
-			velocity.y = attackUnitTarget->entityPosition.y - entityPosition.y;
+			velocity.x = attackTarget->entityPosition.x - entityPosition.x;
+			velocity.y = attackTarget->entityPosition.y - entityPosition.y;
 		}
-		if (attackBuildingTarget != nullptr) {
-			velocity.x = attackBuildingTarget->entityPosition.x - entityPosition.x;
-			velocity.y = attackBuildingTarget->entityPosition.y - entityPosition.y;
-		}
+
 		velocity.Normalize();
 	}
 
@@ -252,16 +246,16 @@ void Unit::LookAt()
 	}
 }
 
-void Unit::AttackEnemyUnit(float dt)
+void Unit::AttackEnemy(float dt)
 {
 	LookAt();
 	if (timer >= attackSpeed) {
-		attackUnitTarget->unitLife -= unitAttack - attackUnitTarget->unitDefense;
-		if (attackUnitTarget->unitLife <= 0) {
-			attackUnitTarget->Dead();
-			if (unitLife > 0) {
+		attackTarget->Life -= Attack - attackTarget->Defense;
+		if (attackTarget->Life <= 0) {
+			attackTarget->Dead();
+			if (Life > 0) {
 				SetState(UNIT_IDLE);
-				attackUnitTarget = nullptr;
+				attackTarget = nullptr;
 			}
 		}
 		timer = 0;
@@ -271,24 +265,6 @@ void Unit::AttackEnemyUnit(float dt)
 	}
 }
 
-void Unit::AttackEnemyBuilding(float dt)
-{
-	LookAt();
-	if (timer >= attackSpeed) {
-		attackBuildingTarget->buildingLife -= unitAttack - attackBuildingTarget->buildingDefense;
-		if (attackBuildingTarget->buildingLife <= 0) {
-			attackBuildingTarget->Dead();
-			if (unitLife > 0) {
-				SetState(UNIT_IDLE);
-				attackBuildingTarget = nullptr;
-			}
-		}
-		timer = 0;
-	}
-	else {
-		timer += dt;
-	}
-}
 
 void Unit::Dead() {
 	SetState(UNIT_DEAD);

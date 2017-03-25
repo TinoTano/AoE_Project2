@@ -30,10 +30,10 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 	buildingBuildTime = building->buildingBuildTime;
 	buildingIdleTexture = building->buildingIdleTexture;
 	buildingDieTexture = building->buildingDieTexture;
-	buildingLife = building->buildingLife;
-	buildingMaxLife = building->buildingMaxLife;
-	buildingAttack = building->buildingAttack;
-	buildingDefense = building->buildingDefense;
+	Life = building->Life;
+	MaxLife = building->MaxLife;
+	Attack = building->Attack;
+	Defense = building->Defense;
 	canAttack = building->canAttack;
 
 	entityTexture = buildingIdleTexture;
@@ -68,7 +68,7 @@ bool Building::Update(float dt)
 {
 	switch (state) {
 	case BUILDING_ATTACKING:
-		Attack(dt);
+		AttackEnemy(dt);
 		break;
 	case BUILDING_DESTROYING:
 		//if (currentAnim->Finished()) {
@@ -106,7 +106,7 @@ bool Building::Draw()
 	if (isVisible) {
 		if (isSelected) {
 			App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
-			int percent = ((buildingMaxLife - buildingLife) * 100) / buildingMaxLife;
+			int percent = ((MaxLife - Life) * 100) / MaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
 			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), hpBarWidth, 5 }, 255, 0, 0);
 			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), min(hpBarWidth, max(hpBarWidth - barPercent, 0)), 5 }, 0, 255, 0);
@@ -119,13 +119,13 @@ bool Building::Draw()
 	return true;
 }
 
-void Building::Attack(float dt)
+void Building::AttackEnemy(float dt)
 {
 	if (timer >= buildingAttackSpeed) {
-		attackUnitTarget->unitLife -= buildingAttack - attackUnitTarget->unitDefense;
-		if (attackUnitTarget->unitLife <= 0) {
-			attackUnitTarget->Dead();
-			if (buildingLife > 0) {
+		attackTarget->Life -= Attack - attackTarget->Defense;
+		if (attackTarget->Life <= 0) {
+			attackTarget->Dead();
+			if (Life > 0) {
 				state = BUILDING_IDLE;
 			}
 		}

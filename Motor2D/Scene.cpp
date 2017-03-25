@@ -130,7 +130,7 @@ void Scene::SaveScene()
 			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->unitLife;
+			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			unitNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
@@ -148,7 +148,7 @@ void Scene::SaveScene()
 			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->unitLife;
+			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			unitNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
@@ -167,7 +167,7 @@ void Scene::SaveScene()
 			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->buildingLife;
+			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			buildingNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
 			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			buildingNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
@@ -181,7 +181,7 @@ void Scene::SaveScene()
 			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->buildingLife;
+			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			buildingNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
 			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			buildingNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
@@ -195,7 +195,7 @@ void Scene::SaveScene()
 			pugi::xml_node positionNode = resourceNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			resourceNodeInfo.append_child("Life").append_attribute("value") = (*it)->resourceLife;
+			resourceNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			resourceNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			resourceNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 			resourceNodeInfo.append_child("IndexRect").append_attribute("value") = (*it)->rectIndex;
@@ -235,7 +235,7 @@ void Scene::LoadScene() {
 				(unitType)unitNodeInfo.child("Type").attribute("value").as_int());
 
 			unitTemplate->direction = (unitDirection)unitNodeInfo.child("Direction").attribute("value").as_int();
-			unitTemplate->unitLife = unitNodeInfo.child("Life").attribute("value").as_int();
+			unitTemplate->Life = unitNodeInfo.child("Life").attribute("value").as_int();
 			unitTemplate->isVisible = unitNodeInfo.child("IsVisible").attribute("value").as_bool();
 			if (unitNodeInfo.child("State").attribute("value").as_int() == UNIT_MOVING) {
 				unitTemplate->SetDestination({ unitNodeInfo.child("DestinationTile").attribute("x").as_int(), unitNodeInfo.child("DestinationTile").attribute("y").as_int() });
@@ -249,7 +249,7 @@ void Scene::LoadScene() {
 				buildingNodeInfo.child("IsEnemy").attribute("value").as_bool(),
 				(buildingType)buildingNodeInfo.child("Type").attribute("value").as_int());
 
-			buildingTemplate->buildingLife = buildingNodeInfo.child("Life").attribute("value").as_int();
+			buildingTemplate->Life = buildingNodeInfo.child("Life").attribute("value").as_int();
 			buildingTemplate->isVisible = buildingNodeInfo.child("IsVisible").attribute("value").as_bool();
 			//if (buildingNodeInfo.child("State").attribute("value").as_int() == BUILDING_DESTROYING) {
 			//	buildingTemplate->
@@ -263,7 +263,7 @@ void Scene::LoadScene() {
 				(resourceType)resourceNodeInfo.child("Type").attribute("value").as_int(),
 				resourceNodeInfo.child("IndexRect").attribute("value").as_int());
 
-			resourceTemplate->resourceLife = resourceNodeInfo.child("Life").attribute("value").as_int();
+			resourceTemplate->Life = resourceNodeInfo.child("Life").attribute("value").as_int();
 			resourceTemplate->isVisible = resourceNodeInfo.child("IsVisible").attribute("value").as_bool();
 			//if (resourceNodeInfo.child("State").attribute("value").as_int() == RESOURCE_GATHERING) {
 			//	resourceTemplate->

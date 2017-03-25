@@ -29,7 +29,7 @@ public:
 
 	bool Update(float dt);
 	bool Draw();
-	void Attack(float dt);
+	void AttackEnemy(float dt);
 	void Dead();
 	pugi::xml_node LoadBuildingInfo(buildingType type);
 
@@ -55,11 +55,7 @@ public:
 	SDL_Texture* buildingDieTexture = nullptr;
 	uint imageWidth = 0;
 	uint imageHeight = 0;
-	Unit* attackUnitTarget = nullptr;
-	int buildingLife = 0;
-	int buildingMaxLife = 0;
-	int buildingAttack = 0;
-	int buildingDefense = 0;
+	Unit* attackTarget = nullptr;
 	bool isVisible = true;
 	bool isSelected = false;
 	bool canAttack = false;

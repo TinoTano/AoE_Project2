@@ -50,8 +50,7 @@ public:
 	void CalculateVelocity();
 	void LookAt();
 	void SetAnim(unitDirection currentDirection);
-	void AttackEnemyUnit(float dt);
-	void AttackEnemyBuilding(float dt);
+	void AttackEnemy(float dt);
 	void Dead();
 	void SetState(unitState state);
 
@@ -79,12 +78,7 @@ public:
 	SDL_Texture* unitAttackTexture = nullptr;
 	SDL_Texture* unitDieTexture = nullptr;
 	unitState state = UNIT_IDLE;
-	Unit* attackUnitTarget = nullptr;
-	Building* attackBuildingTarget = nullptr;
-	int unitLife = 0;
-	int unitMaxLife= 0;
-	int unitAttack = 0;
-	int unitDefense = 0;
+	Entity* attackTarget = nullptr;
 	bool isVisible = true;
 	bool isSelected = false;
 

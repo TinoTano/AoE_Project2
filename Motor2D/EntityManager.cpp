@@ -88,7 +88,7 @@ bool EntityManager::Update(float dt)
 			if ((*it)->isSelected) {
 				(*it)->SetDestination(destination);
 				if (clickedUnit != nullptr) {
-					(*it)->attackUnitTarget = clickedUnit;
+					(*it)->attackTarget = clickedUnit;
 				}
 			}
 		}
@@ -376,10 +376,10 @@ bool EntityManager::LoadGameData()
 
 			unitTemplate->faction = (unitFaction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			unitTemplate->attackSpeed = 1 / unitNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
-			unitTemplate->unitLife = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-			unitTemplate->unitMaxLife = unitTemplate->unitLife;
-			unitTemplate->unitAttack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
-			unitTemplate->unitDefense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
+			unitTemplate->Life = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
+			unitTemplate->MaxLife = unitTemplate->Life;
+			unitTemplate->Attack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
+			unitTemplate->Defense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
 			unitTemplate->unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
 			unitTemplate->unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
 
@@ -482,7 +482,7 @@ bool EntityManager::LoadGameData()
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
-			buildingTemplate->buildingLife = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
+			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			buildingTemplate->buildingWoodCost = buildingNodeInfo.child("Stats").child("WoodCost").attribute("value").as_int();
 			buildingTemplate->buildingStoneCost = buildingNodeInfo.child("Stats").child("StoneCost").attribute("value").as_int();
 			buildingTemplate->buildingBuildTime = buildingNodeInfo.child("Stats").child("BuildTime").attribute("value").as_int();
@@ -503,7 +503,7 @@ bool EntityManager::LoadGameData()
 			string idleTexturePath = resourceNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string gatheringTexturePath = resourceNodeInfo.child("Textures").child("Gathering").attribute("value").as_string();
 
-			resourceTemplate->resourceLife = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
+			resourceTemplate->Life = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 
 			for (pugi::xml_node rectsNode = resourceNodeInfo.child("Rects").child("Rect"); rectsNode; rectsNode = rectsNode.next_sibling("Rect")) {
 				resourceTemplate->resourceRectVector.push_back({ rectsNode.attribute("x").as_int(), rectsNode.attribute("y").as_int(), rectsNode.attribute("w").as_int(), rectsNode.attribute("h").as_int() });
@@ -613,13 +613,13 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 
 		case COLLIDER_ENEMY_UNIT:
 
-			if (friendly_unit1->attackUnitTarget == nullptr) {
-				friendly_unit1->attackUnitTarget = c2->GetUnit();
+			if (friendly_unit1->attackTarget == nullptr) {
+				friendly_unit1->attackTarget = c2->GetUnit();
 				friendly_unit1->SetState(UNIT_ATTACKING);
 			}
 
-			if(c2->GetUnit()->attackUnitTarget == nullptr){
-				c2->GetUnit()->attackUnitTarget = friendly_unit1;
+			if(c2->GetUnit()->attackTarget == nullptr){
+				c2->GetUnit()->attackTarget = friendly_unit1;
 				c2->GetUnit()->SetState(UNIT_ATTACKING);
 			}
 
@@ -627,13 +627,13 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 
 		case COLLIDER_ENEMY_BUILDING:
 
-			if (friendly_unit1->attackBuildingTarget == nullptr) {
-				friendly_unit1->attackBuildingTarget = c2->GetBuilding();
+			if (friendly_unit1->attackTarget == nullptr) {
+				friendly_unit1->attackTarget = c2->GetBuilding();
 				friendly_unit1->SetState(UNIT_ATTACKING);
 			}
 
-			if (c2->GetBuilding()->canAttack && c2->GetBuilding()->attackUnitTarget == nullptr) {
-				c2->GetBuilding()->attackUnitTarget = friendly_unit1;
+			if (c2->GetBuilding()->canAttack && c2->GetBuilding()->attackTarget == nullptr) {
+				c2->GetBuilding()->attackTarget = friendly_unit1;
 				c2->GetBuilding()->state = BUILDING_ATTACKING;
 			}
 
@@ -660,13 +660,13 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 
 	case COLLIDER_FRIENDLY_BUILDING:
 
-		if (c2->type == COLLIDER_ENEMY_UNIT && c2->GetUnit()->attackBuildingTarget == nullptr) {
+		if (c2->type == COLLIDER_ENEMY_UNIT && c2->GetUnit()->attackTarget == nullptr) {
 
-			c2->GetUnit()->attackBuildingTarget = c1->GetBuilding();
+			c2->GetUnit()->attackTarget = c1->GetBuilding();
 			c2->GetUnit()->SetState(UNIT_ATTACKING);
 
-			if (c1->GetBuilding()->canAttack && c1->GetBuilding()->attackUnitTarget == nullptr) {
-				c1->GetBuilding()->attackUnitTarget = c2->GetUnit();
+			if (c1->GetBuilding()->canAttack && c1->GetBuilding()->attackTarget == nullptr) {
+				c1->GetBuilding()->attackTarget = c2->GetUnit();
 				c1->GetBuilding()->state = BUILDING_ATTACKING;
 			}
 
