@@ -38,12 +38,12 @@ public:
 
 	bool LoadGameData();
 
-	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type);
-	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type);
+	Unit* CreateUnit(int posX, int posY, unitType type);
+	Building* CreateBuilding(int posX, int posY,  buildingType type);
 	Resource* CreateResource(int posX, int posY, resourceType type, int resourceRectIndex);
 
-	void DeleteUnit(Unit* unit, bool isEnemy);
-	void DeleteBuilding(Building* building, bool isEnemy);
+	void DeleteUnit(Unit* unit);
+	void DeleteBuilding(Building* building);
 	void DeleteResource(Resource* resource);
 	void OnCollision(Collider* c1, Collider* c2);
 

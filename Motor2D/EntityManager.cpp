@@ -374,7 +374,7 @@ bool EntityManager::LoadGameData()
 			string attackTexturePath = unitNodeInfo.child("Textures").child("Attack").attribute("value").as_string();
 			string dieTexturePath = unitNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
-			unitTemplate->faction = (unitFaction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
+			unitTemplate->faction = (Faction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			unitTemplate->attackSpeed = 1 / unitNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
 			unitTemplate->Life = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			unitTemplate->MaxLife = unitTemplate->Life;
@@ -482,6 +482,8 @@ bool EntityManager::LoadGameData()
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
+
+			buildingTemplate->faction = (Faction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			buildingTemplate->buildingWoodCost = buildingNodeInfo.child("Stats").child("WoodCost").attribute("value").as_int();
 			buildingTemplate->buildingStoneCost = buildingNodeInfo.child("Stats").child("StoneCost").attribute("value").as_int();
@@ -521,12 +523,12 @@ bool EntityManager::LoadGameData()
 	return ret;
 }
 
-Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type)
+Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 {
-	Unit* unit = new Unit(posX, posY, isEnemy, unitsDB[type]);
+	Unit* unit = new Unit(posX, posY, unitsDB[type]);
 	unit->entityID = nextID;
 	nextID++;
-	if (!isEnemy) {
+	if (!unit->faction) {
 		friendlyUnitList.push_back(unit);
 	}
 	else {
@@ -537,12 +539,12 @@ Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type)
 	return unit;
 }
 
-Building* EntityManager::CreateBuilding(int posX, int posY, bool isEnemy, buildingType type)
+Building* EntityManager::CreateBuilding(int posX, int posY, buildingType type)
 {
-	Building* building = new Building(posX, posY, isEnemy, buildingsDB[type]);
+	Building* building = new Building(posX, posY, buildingsDB[type]);
 	building->entityID = nextID;
 	nextID++;
-	if (!isEnemy) {
+	if (!building->faction) {
 		friendlyBuildingList.push_back(building);
 	}
 	else {
@@ -563,11 +565,11 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceType type, i
 	return resource;
 }
 
-void EntityManager::DeleteUnit(Unit* unit, bool isEnemy)
+void EntityManager::DeleteUnit(Unit* unit)
 {
 	if (unit != nullptr) {
 		removeUnitList.push_back(unit);
-		if (isEnemy) {
+		if (unit->IsEnemy()) {
 			enemyUnitList.remove(unit);
 		}
 		else {
@@ -576,11 +578,11 @@ void EntityManager::DeleteUnit(Unit* unit, bool isEnemy)
 	}
 }
 
-void EntityManager::DeleteBuilding(Building* building, bool isEnemy)
+void EntityManager::DeleteBuilding(Building* building)
 {
 	if (building != nullptr) {
 		removeBuildingList.push_back(building);
-		if (isEnemy) {
+		if (building->IsEnemy()) {
 			enemyBuildingList.remove(building);
 		}
 		else {
@@ -600,58 +602,62 @@ void EntityManager::DeleteResource(Resource* resource)
 void EntityManager::OnCollision(Collider * c1, Collider * c2)
 {
 	//Uncomment for combat
-	Unit* friendly_unit1 = nullptr;
-	Unit* enemy_unit1 = nullptr;
+	Unit* unit1 = nullptr;
 
 	c1->colliding = true;
 	c2->colliding = true;
 	
+	if (c1->type == COLLIDER_UNIT) {
 
-	switch (c1->type) {
-
-	case COLLIDER_FRIENDLY_UNIT:
-		friendly_unit1 = c1->GetUnit();
+		unit1 = c1->GetUnit();
 
 		switch (c2->type) {
 
-		case COLLIDER_ENEMY_UNIT:
+		case COLLIDER_UNIT:
 
-			if (friendly_unit1->attackTarget == nullptr) {
-				friendly_unit1->attackTarget = c2->GetUnit();
-				friendly_unit1->SetState(UNIT_ATTACKING);
+			if (c2->GetUnit()->faction != unit1->faction) {
+				if (unit1->attackTarget == nullptr) {
+					unit1->attackTarget = c2->GetUnit();
+					unit1->SetState(UNIT_ATTACKING);
+				}
+
+				if (c2->GetUnit()->attackTarget == nullptr) {
+					c2->GetUnit()->attackTarget = unit1;
+					c2->GetUnit()->SetState(UNIT_ATTACKING);
+				}
 			}
+			else {
 
-			if(c2->GetUnit()->attackTarget == nullptr){
-				c2->GetUnit()->attackTarget = friendly_unit1;
-				c2->GetUnit()->SetState(UNIT_ATTACKING);
+				if (unit1->state == UNIT_MOVING && c2->GetUnit()->state == UNIT_IDLE) {
+
+					if (!unit1->path.empty())
+						unit1->path.pop_front();
+
+					unit1->path.push_front(App->pathfinding->FindNearestAvailable(unit1));
+					unit1->SetState(UNIT_MOVING);
+				}
+
 			}
 
 			break;
 
-		case COLLIDER_ENEMY_BUILDING:
+		case COLLIDER_BUILDING:
 
-			if (friendly_unit1->attackTarget == nullptr) {
-				friendly_unit1->attackTarget = c2->GetBuilding();
-				friendly_unit1->SetState(UNIT_ATTACKING);
-			}
+			if (c2->GetBuilding()->faction != unit1->faction) {
+				if (unit1->attackTarget == nullptr) {
+					unit1->attackTarget = c2->GetBuilding();
+					unit1->SetState(UNIT_ATTACKING);
+				}
 
-			if (c2->GetBuilding()->canAttack && c2->GetBuilding()->attackTarget == nullptr) {
-				c2->GetBuilding()->attackTarget = friendly_unit1;
-				c2->GetBuilding()->state = BUILDING_ATTACKING;
+				if (c2->GetBuilding()->canAttack && c2->GetBuilding()->attackTarget == nullptr) {
+					c2->GetBuilding()->attackTarget = unit1;
+					c2->GetBuilding()->state = BUILDING_ATTACKING;
+				}
 			}
 
 			break;
 
-		case COLLIDER_FRIENDLY_UNIT:
-
-			if (friendly_unit1->state == UNIT_MOVING && c2->GetUnit()->state == UNIT_IDLE) {
-
-				if (!friendly_unit1->path.empty())
-					friendly_unit1->path.pop_front();
-
-				friendly_unit1->path.push_front(App->pathfinding->FindNearestAvailable(friendly_unit1));
-				friendly_unit1->SetState(UNIT_MOVING);
-			}
+		case COLLIDER_RESOURCE:
 
 			break;
 
@@ -659,42 +665,6 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 			break;
 		}
 
-		break;
-
-	case COLLIDER_FRIENDLY_BUILDING:
-
-		if (c2->type == COLLIDER_ENEMY_UNIT && c2->GetUnit()->attackTarget == nullptr) {
-
-			c2->GetUnit()->attackTarget = c1->GetBuilding();
-			c2->GetUnit()->SetState(UNIT_ATTACKING);
-
-			if (c1->GetBuilding()->canAttack && c1->GetBuilding()->attackTarget == nullptr) {
-				c1->GetBuilding()->attackTarget = c2->GetUnit();
-				c1->GetBuilding()->state = BUILDING_ATTACKING;
-			}
-
-		}
-		break;
-
-	case COLLIDER_ENEMY_UNIT:
-		enemy_unit1 = c1->GetUnit();
-
-		if (c2->type == COLLIDER_ENEMY_UNIT) {
-
-			if (enemy_unit1->state == UNIT_MOVING && c2->GetUnit()->state == UNIT_IDLE) {
-
-				if (!enemy_unit1->path.empty())
-					enemy_unit1->path.pop_front();
-
-				enemy_unit1->path.push_front(App->pathfinding->FindNearestAvailable(enemy_unit1));
-				enemy_unit1->SetState(UNIT_MOVING);
-			}
-
-		}
-			break;
-
-	default: 
-		break;
 	}
 	
 }

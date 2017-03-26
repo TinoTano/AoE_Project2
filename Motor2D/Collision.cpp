@@ -8,23 +8,17 @@ Collision::Collision() : Module()
 {
 	name = "collision";
 
-	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_ENEMY_UNIT] = true;
-	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_FRIENDLY_BUILDING] = true;
-	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_ENEMY_BUILDING] = true;
-	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_RESOURCE] = true;
-	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_FRIENDLY_UNIT] = true;
+	matrix[COLLIDER_UNIT][COLLIDER_UNIT] = true;
+	matrix[COLLIDER_UNIT][COLLIDER_BUILDING] = true;
+	matrix[COLLIDER_UNIT][COLLIDER_RESOURCE] = true;
 
-	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_FRIENDLY_UNIT] = true;
-	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_ENEMY_BUILDING] = true;
-	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_FRIENDLY_BUILDING] = true;
-	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_RESOURCE] = true;
-	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_ENEMY_UNIT] = false;
+	matrix[COLLIDER_BUILDING][COLLIDER_UNIT] = true;
+	matrix[COLLIDER_BUILDING][COLLIDER_BUILDING] = false;
+	matrix[COLLIDER_BUILDING][COLLIDER_RESOURCE] = false;
 
-	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_FRIENDLY_UNIT] = true;
-	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_ENEMY_UNIT] = true;
-	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_ENEMY_BUILDING] = false;
-	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_RESOURCE] = false;
-	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_FRIENDLY_BUILDING] = false;
+	matrix[COLLIDER_RESOURCE][COLLIDER_UNIT] = true;
+	matrix[COLLIDER_RESOURCE][COLLIDER_BUILDING] = false;
+	matrix[COLLIDER_RESOURCE][COLLIDER_RESOURCE] = false;
 
 }
 
@@ -45,6 +39,9 @@ bool Collision::Start()
 
 bool Collision::PreUpdate()
 {
+	for (list<Collider*>::iterator col = colliders.begin(); col != colliders.end(); col++)
+		(*col)->colliding = false;
+
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
 		if ((*it)->to_delete == true)
 		{
@@ -56,9 +53,6 @@ bool Collision::PreUpdate()
 	Collider *c1;
 	Collider *c2;
 
-	for (list<Collider*>::iterator col = colliders.begin(); col != colliders.end(); col++) 
-		(*col)->colliding = false;
-
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
 		c1 = (*col1);
 
@@ -66,13 +60,30 @@ bool Collision::PreUpdate()
 			c2 = (*col2);
 
 			if (c1->CheckCollision(c2) == true) {
-				if (matrix[c1->type][c2->type] && c1->callback)
-					c1->callback->OnCollision(c1, c2);
 
-				if (matrix[c2->type][c1->type] && c2->callback)
+				if ((matrix[c1->type][c2->type] && c1->callback) || (matrix[c2->type][c1->type] && c2->callback)) {
+
 					c2->callback->OnCollision(c2, c1);
+
+					if (!FindCollision(c1, c2)) {
+						Collision_data* collision = nullptr;
+
+						if (c1->GetUnit())      // c1 MUST be the unit
+							collision = new Collision_data(c1, c2);
+						else
+							collision = new Collision_data(c2, c1);
+
+						collision_list.push_back(collision);
+					}
+				}
 			}
 		}
+	}
+
+	for (list<Collision_data*>::iterator collisions = collision_list.begin(); collisions != collision_list.end(); collisions++) {
+		(*collisions)->c1->callback->OnCollision((*collisions)->c1, (*collisions)->c2);
+		collision_list.remove((*collisions));
+		delete (*collisions);
 	}
 
 	return true;
@@ -129,7 +140,7 @@ Unit* Collider::GetUnit() {
 
 	Unit* unit = nullptr;
 
-	if (type == COLLIDER_FRIENDLY_UNIT || type == COLLIDER_ENEMY_UNIT)
+	if (type == COLLIDER_UNIT)
 		unit = (Unit*)entity;
 
 	return unit;
@@ -139,7 +150,7 @@ Building* Collider::GetBuilding() {
 
 	Building* building = nullptr;
 
-	if (type == COLLIDER_FRIENDLY_BUILDING || type == COLLIDER_ENEMY_BUILDING)
+	if (type == COLLIDER_BUILDING)
 		building = (Building*)entity;
 
 	return building;
@@ -161,4 +172,16 @@ void Collision::DebugDraw()
 		else
 			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255, false);
 	}
+}
+
+bool Collision::FindCollision(Collider* col1, Collider* col2) {
+
+	for (list<Collision_data*>::iterator it = collision_list.begin(); it != collision_list.end(); it++) {
+
+		if (((*it)->c1 == col1 && (*it)->c2 == col2) || ((*it)->c2 == col1 && (*it)->c1 == col2))
+			return true;
+	}
+
+	return false;
+
 }

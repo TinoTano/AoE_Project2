@@ -23,9 +23,6 @@ enum unitState
 	UNIT_IDLE, UNIT_MOVING, UNIT_ATTACKING, UNIT_DEAD
 };
 
-enum unitFaction {
-	FREE_MEN_UNIT, SAURON_ARMY_UNIT
-};
 
 enum unitDirection {
 	RIGHT, DOWN_RIGHT, DOWN,DOWN_LEFT, LEFT, UP_LEFT, UP, UP_RIGHT
@@ -35,7 +32,7 @@ class Unit : public Entity
 {
 public:
 	Unit();
-	Unit(int posX, int posY, bool isEnemy, Unit* unit);
+	Unit(int posX, int posY, Unit* unit);
 	~Unit();
 
 	bool Update(float dt);
@@ -43,6 +40,7 @@ public:
 
 	unitType GetType()const;
 	int GetLife() const;
+	bool IsEnemy() const;
 	void SetPos(int posX, int posY);
 	void SetSpeed(int amount);
 	void SetDestination(iPoint destination);
@@ -58,12 +56,11 @@ private:
 
 public:
 	unitType type = ELVEN_ARCHER;
-	unitFaction faction;
+	Faction faction;
 	unitDirection direction = RIGHT;
 	float unitAttackSpeed = 0;
 	int unitPiercingDamage = 0;
 	float unitMovementSpeed = 0;
-	bool isEnemy = false;
 	list<iPoint> path;
 	bool destinationReached = true;
 	fPoint velocity = { 0,0 };

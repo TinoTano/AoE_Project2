@@ -16,19 +16,17 @@ enum buildingState
 	BUILDING_IDLE, BUILDING_ATTACKING, BUILDING_DESTROYING
 };
 
-enum buildingFaction {
-	FREE_MEN_BUILDING, SAURON_ARMY_BUILDING
-};
 
 class Building : public Entity
 {
 public:
 	Building();
-	Building(int posX, int posY, bool isEnemy, Building* building);
+	Building(int posX, int posY, Building* building);
 	~Building();
 
 	bool Update(float dt);
 	bool Draw();
+	bool IsEnemy() const;
 	void AttackEnemy(float dt);
 	void Dead();
 	pugi::xml_node LoadBuildingInfo(buildingType type);
@@ -40,10 +38,9 @@ private:
 
 public:
 	buildingType type = ORC_BARRACKS;
-	buildingFaction faction;
+	Faction faction;
 	float buildingAttackSpeed = 0;
 	int buildingPiercingDamage = 0;
-	bool isEnemy = false;
 	float timer = 0;
 	list<Unit*> availableUnitsToCreateList;
 	bool isDamaged = false;

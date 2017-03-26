@@ -15,11 +15,10 @@ Building::Building()
 {
 }
 
-Building::Building(int posX, int posY, bool isEnemy, Building* building)
+Building::Building(int posX, int posY, Building* building)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
-	this->isEnemy = isEnemy;
 	this->type = type;
 
 	faction = building->faction;
@@ -40,12 +39,8 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 
 	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
 	COLLIDER_TYPE colliderType;
-	if (isEnemy) {
-		colliderType = COLLIDER_ENEMY_BUILDING;
-	}
-	else {
-		colliderType = COLLIDER_FRIENDLY_BUILDING;
-	}
+	colliderType = COLLIDER_BUILDING;
+	
 	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, colliderType, App->entityManager, (Entity*)this);
 
 	isSelected = false;
@@ -63,6 +58,11 @@ Building::~Building()
 {
 }
 
+bool Building::IsEnemy() const
+{
+	return (bool)faction;
+}
+
 bool Building::Update(float dt)
 {
 	switch (state) {
@@ -71,7 +71,7 @@ bool Building::Update(float dt)
 		break;
 	case BUILDING_DESTROYING:
 		//if (currentAnim->Finished()) {
-		App->entityManager->DeleteBuilding(this, isEnemy);
+		App->entityManager->DeleteBuilding(this);
 		//}
 		break;
 	}
@@ -141,7 +141,6 @@ void Building::Dead()
 
 pugi::xml_node Building::LoadBuildingInfo(buildingType type)
 {
-	
 	return pugi::xml_node();
 }
 

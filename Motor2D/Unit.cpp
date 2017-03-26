@@ -17,11 +17,10 @@ Unit::Unit()
 {
 }
 
-Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
+Unit::Unit(int posX, int posY, Unit* unit)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
-	this->isEnemy = isEnemy;
 	this->type = unit->type;
 	faction = unit->faction;
 	direction = unit->direction;
@@ -51,12 +50,8 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 
 	SDL_Rect r = currentAnim->GetCurrentFrame();
 	COLLIDER_TYPE colliderType;
-	if (isEnemy) {
-		colliderType = COLLIDER_ENEMY_UNIT;
-	}
-	else {
-		colliderType = COLLIDER_FRIENDLY_UNIT;
-	}
+	colliderType = COLLIDER_UNIT;
+	
 
 	uint w = 0, h = 0;
 
@@ -88,7 +83,7 @@ bool Unit::Update(float dt)
 		break;
 	case UNIT_DEAD:
 		if (currentAnim->Finished()) {
-			App->entityManager->DeleteUnit(this, isEnemy);
+			App->entityManager->DeleteUnit(this);
 		}
 		break;
 	}
@@ -122,6 +117,11 @@ bool Unit::Draw()
 unitType Unit::GetType() const
 {
 	return type;
+}
+
+bool Unit::IsEnemy() const
+{
+	return (bool)faction;
 }
 
 int Unit::GetLife() const

@@ -11,14 +11,31 @@ class Building;
 enum COLLIDER_TYPE
 {
 	COLLIDER_NONE = -1,
-	COLLIDER_FRIENDLY_UNIT,
-	COLLIDER_ENEMY_UNIT,
-	COLLIDER_FRIENDLY_BUILDING,
-	COLLIDER_ENEMY_BUILDING,
+	COLLIDER_UNIT,
+	COLLIDER_BUILDING,
 	COLLIDER_RESOURCE,
 
 
 	COLLIDER_MAX
+};
+
+enum Collision_state {
+
+	UNSOLVED,
+	SOLVING,
+	SOLVED
+
+};
+
+struct Collision_data {
+
+	Collider* c1; 
+	Collider* c2;
+	Collision_state state = UNSOLVED;
+
+	Collision_data(Collider* c1, Collider* c2) : c1(c1), c2(c2)
+	{}
+
 };
 
 struct Collider
@@ -74,6 +91,7 @@ public:
 
 	Collider* AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
 	void DeleteCollider(Collider* collider);
+	bool FindCollision(Collider* col1, Collider* col2);
 	void DebugDraw();
 
 private:
@@ -83,6 +101,7 @@ private:
 
 public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
+	list<Collision_data*> collision_list;
 };
 
 #endif // __ModuleCollision_H__

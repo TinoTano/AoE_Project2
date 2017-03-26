@@ -9,6 +9,10 @@ using namespace std;
 
 struct Collider;
 
+enum Faction {
+	FREE_MEN_BUILDING, SAURON_ARMY_BUILDING
+};
+
 class Entity
 {
 public:
