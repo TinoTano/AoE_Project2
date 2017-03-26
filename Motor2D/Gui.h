@@ -256,24 +256,26 @@ public:
 	HUDType type = NONE;
 	// MULTIPLESELECTION
 	list<Image*> multiple;
+	int max_width;
+
 	//SINGLEINFO
 	Image* single;
 	Label* name;
 	Label* armor_val;
 	Label* damage_val;
-	
+	Label* life;
+
 	Image* sword_img;
 	Image* armor_img;
 	Image* arrow_img;
 
 	uint attack;
 	uint defense;
-
+	uint max_life;
+	uint curr_life;
 	HUD();
-	void GetSelection();
-	void HUDOn();
-	void HUDOff();
 	bool IsEnabled();
+	void GetSelection();
 	void Update();
 	void ClearMultiple();
 	void ClearSingle();

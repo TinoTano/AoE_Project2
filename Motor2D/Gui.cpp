@@ -883,13 +883,20 @@ void HUD::Update() {
 	case 0: 
 		if (type != NONE)
 		{
-			ClearSingle();
+			if (type == SINGLEINFO)
+				ClearSingle();
+			else if (type == MULTIPLESELECTION)
+				ClearMultiple();
+
 			type = NONE;
 		}
 		break;
 	case 1:
 		if (type != SINGLEINFO)
 		{
+			if (type == MULTIPLESELECTION)
+				ClearMultiple();
+
 			type = SINGLEINFO;
 			GetSelection();
 		}
@@ -903,22 +910,51 @@ void HUD::Update() {
 					attack = App->entityManager->selectedUnitList.front()->unitDefense;
 				}
 			}
-			char armor[65], damage[65];
+			char armor[65], damage[65], currlife[65], maxlife[65];
 			_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
 			_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
 
 			damage_val->str = damage;
 			armor_val->str = armor;
+
+			max_life = App->entityManager->selectedUnitList.front()->unitMaxLife;
+			curr_life = App->entityManager->selectedUnitList.front()->unitLife;
+
+			string life_str;
+			_itoa_s(curr_life, currlife, 65, 10);
+			life_str += currlife;
+			life_str += "/";
+			_itoa_s(max_life, maxlife, 65, 10);
+			life_str += maxlife;
+
+			life->str = maxlife;
+
+			int percent = ((max_life - curr_life) * 100) / max_life;
+			int barPercent = (percent * App->gui->SpriteRects.front().GetRect().w) / 100;
+
+			App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h, App->gui->SpriteRects.front().GetRect().w, 5 }, 255, 0, 0);
+			App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h, min(App->gui->SpriteRects.front().GetRect().w, max(App->gui->SpriteRects.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
 		}
 		break;
 	default:
 		if (type != MULTIPLESELECTION)
 		{
+			if (type == SINGLEINFO)
+				ClearSingle();
 			type = MULTIPLESELECTION;
+			GetSelection();
 		}
 		break;
 	}
 
+}
+
+void HUD::ClearMultiple()
+{
+	for (list<Image*>::iterator it = multiple.begin(); it != multiple.end(); ++it)
+	{
+		App->gui->DestroyUIElement(it._Ptr->_Myval);
+	}
 }
 
 void HUD::ClearSingle()
@@ -929,11 +965,14 @@ void HUD::ClearSingle()
 	App->gui->DestroyUIElement(armor_img);
 	App->gui->DestroyUIElement(damage_val);
 	App->gui->DestroyUIElement(armor_val);
+	App->gui->DestroyUIElement(life);
 }
 
 
 void HUD::GetSelection() {
-	char armor[65], damage[65];
+	char armor[65], damage[65], currlife[65], maxlife[65];
+	string life_str;
+
 	switch (type) {
 	case NONE:
 		break;
@@ -956,7 +995,41 @@ void HUD::GetSelection() {
 		damage_val = (Label*)App->gui->CreateLabel(damage, 350 - App->render->camera.x, 720 - App->render->camera.y, nullptr);
 		armor_val = (Label*)App->gui->CreateLabel(armor, 350 - App->render->camera.x, 750 - App->render->camera.y, nullptr);
 
-		int a = 5;
+		max_life = App->entityManager->selectedUnitList.front()->unitMaxLife;
+		curr_life = App->entityManager->selectedUnitList.front()->unitLife;
+
+		
+		_itoa_s(curr_life, currlife, 65, 10);
+		life_str += currlife;
+		life_str += "/";
+		_itoa_s(max_life, maxlife, 65, 10);
+		life_str += maxlife;
+
+		life = (Label*)App->gui->CreateLabel(life_str, 350 - App->render->camera.x, 700 - App->render->camera.y, nullptr);
+		break;
+	case MULTIPLESELECTION:
+		int x = 0, y=0;
+		int max_width = 400;
+		for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteRects.begin(); it_sprite != App->gui->SpriteRects.end(); ++it_sprite)
+		{
+			for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
+			{
+				if (x >= max_width)
+				{
+					x = 0;
+					y += App->gui->SpriteRects.front().GetRect().h;
+				}
+				if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType())
+				{
+					Image* unit = (Image*)App->gui->CreateImage("gui/EntityMiniatures.png", 310 - App->render->camera.x + x, 650 - App->render->camera.y + y, it_sprite._Ptr->_Myval.GetRect());
+					x += App->gui->SpriteRects.front().GetRect().w;
+					multiple.push_back(unit);
+				}
+			}
+			
+		}
+		
+		break;
 	}
 	// X = 500 Y = 650
 }
