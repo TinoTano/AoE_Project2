@@ -75,8 +75,8 @@ bool EntityManager::Update(float dt)
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {
 		Unit* clickedUnit = nullptr;
 		for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-			if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
-				mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+			if (mouseX > (*it)->collider->pos.x - (*it)->collider->r  && mouseX < (*it)->collider->pos.x + (*it)->collider->r &&
+				mouseY >(*it)->collider->pos.y + (*it)->collider->r  && mouseX < (*it)->collider->pos.y - (*it)->collider->r) {
 				//if ((*it)->isVisible) {
 					clickedUnit = (*it);
 				//}
@@ -168,8 +168,8 @@ bool EntityManager::Update(float dt)
 		}
 		else {
 			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
-					mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+				if (mouseX > (*it)->collider->pos.x - (*it)->collider->r  && mouseX < (*it)->collider->pos.x + (*it)->collider->r &&
+					mouseY >(*it)->collider->pos.y + (*it)->collider->r  && mouseX < (*it)->collider->pos.y - (*it)->collider->r){
 					if (selectedUnitList.empty() || selectedUnitList.front() != (*it)) {
 						(*it)->isSelected = true;
 						selectedUnitList.push_back(*it);
@@ -195,8 +195,8 @@ bool EntityManager::Update(float dt)
 				}
 			}
 			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-				if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
-					mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+				if (mouseX > (*it)->collider->pos.x - (*it)->collider->r  && mouseX < (*it)->collider->pos.x + (*it)->collider->r &&
+					mouseY > (*it)->collider->pos.y + (*it)->collider->r  && mouseX < (*it)->collider->pos.y - (*it)->collider->r) {
 					(*it)->isSelected = true;
 					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
 						if (*it != *it2) {
@@ -602,6 +602,9 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 	//Uncomment for combat
 	Unit* friendly_unit1 = nullptr;
 	Unit* enemy_unit1 = nullptr;
+
+	c1->colliding = true;
+	c2->colliding = true;
 	
 
 	switch (c1->type) {

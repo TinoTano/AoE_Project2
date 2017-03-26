@@ -28,7 +28,7 @@ enum unitFaction {
 };
 
 enum unitDirection {
-	DOWN, DOWN_LEFT, DOWN_RIGHT, LEFT, RIGHT, UP_LEFT, UP_RIGHT, UP
+	RIGHT, DOWN_RIGHT, DOWN,DOWN_LEFT, LEFT, UP_LEFT, UP, UP_RIGHT
 };
 
 class Unit : public Entity
@@ -81,6 +81,7 @@ public:
 	Entity* attackTarget = nullptr;
 	bool isVisible = true;
 	bool isSelected = false;
+	iPoint next_step = { 0,0 };
 
 	//Animations
 	vector<Animation> idleAnimations;

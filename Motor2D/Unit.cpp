@@ -50,7 +50,6 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 	SetAnim(currentDirection);
 
 	SDL_Rect r = currentAnim->GetCurrentFrame();
-	SDL_Rect colliderRect = { entityPosition.x - (r.w / 4), entityPosition.y - (r.h / 3), r.w / 2, r.h / 1.25f};
 	COLLIDER_TYPE colliderType;
 	if (isEnemy) {
 		colliderType = COLLIDER_ENEMY_UNIT;
@@ -58,7 +57,10 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 	else {
 		colliderType = COLLIDER_FRIENDLY_UNIT;
 	}
-	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager, (Entity*)this);
+
+	uint w = 0, h = 0;
+
+	collider = App->collision->AddCollider(entityPosition, r.w / 4, colliderType, App->entityManager, (Entity*)this);
 
 	/*if (!isEnemy) {
 		isVisible = true;
@@ -98,20 +100,20 @@ bool Unit::Draw()
 {
 	if (isVisible) {
 		SDL_Rect r = currentAnim->GetCurrentFrame();
-		collider->rect.x = entityPosition.x - (r.w / 4);
-		collider->rect.y = entityPosition.y - (r.h / 3);
+		iPoint col_pos(entityPosition.x, entityPosition.y + (r.h / 2));    // an offset var in collider should be implemented for big units
+		collider->pos = col_pos;
 
 		if (isSelected) {
 			int percent = ((MaxLife - Life) * 100) / MaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
-			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
+			App->render->DrawCircle(col_pos.x, col_pos.y, 15, 255, 255, 255, 255);
 			App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(r.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(r.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
 		}
-		else {
-			App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
-		}
+
+		App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
+		
 	}
 	
 	return true;
@@ -174,9 +176,6 @@ void Unit::Move(float dt)
 		fPoint vel = (velocity * (unitMovementSpeed + 100)) * dt;
 		roundf(vel.x);
 		roundf(vel.y);
-
-		if (vel.x > 5 || vel.y > 5)
-			int a = 4;
 
 		entityPosition.x += int(vel.x);
 		entityPosition.y += int(vel.y);

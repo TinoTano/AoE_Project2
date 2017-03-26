@@ -2,6 +2,7 @@
 #define __Collision_H__
 
 #include "Module.h"
+#include "p2Point.h"
 
 class Unit;
 class Entity;
@@ -22,26 +23,29 @@ enum COLLIDER_TYPE
 
 struct Collider
 {
-	SDL_Rect rect;
+	iPoint pos;
+	int r;
 	bool to_delete = false;
+	bool colliding = false;
 	COLLIDER_TYPE type;
 	Entity* entity;
 	Module* callback;
 
-	Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr) :
-		rect(rectangle),
+	Collider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback, Entity* entity) :
+		pos(position),
 		type(type),
+		r(radius),
 		callback(callback),
 		entity(entity)
 	{}
 
 	void SetPos(int x, int y)
 	{
-		rect.x = x;
-		rect.y = y;
+		pos.x = x;
+		pos.y = y;
 	}
 
-	bool CheckCollision(const SDL_Rect& r) const;
+	bool CheckCollision(Collider* c2) const;
 	Unit* GetUnit();
 	Building* GetBuilding();
 };
@@ -68,7 +72,7 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	Collider* AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
+	Collider* AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
 	void DeleteCollider(Collider* collider);
 	void DebugDraw();
 

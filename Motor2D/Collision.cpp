@@ -56,13 +56,16 @@ bool Collision::PreUpdate()
 	Collider *c1;
 	Collider *c2;
 
+	for (list<Collider*>::iterator col = colliders.begin(); col != colliders.end(); col++) 
+		(*col)->colliding = false;
+
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
 		c1 = (*col1);
 
 		for (list<Collider*>::iterator col2 = next(col1); col2 != colliders.end(); col2++) {
 			c2 = (*col2);
 
-			if (c1->CheckCollision(c2->rect) == true) {
+			if (c1->CheckCollision(c2) == true) {
 				if (matrix[c1->type][c2->type] && c1->callback)
 					c1->callback->OnCollision(c1, c2);
 
@@ -104,9 +107,9 @@ bool Collision::CleanUp()
 	return true;
 }
 
-Collider * Collision::AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module * callback, Entity* entity)
+Collider * Collision::AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback, Entity* entity)
 {
-	Collider* ret = new Collider(rect, type, callback, entity);
+	Collider* ret = new Collider(position, radius, type, callback, entity);
 	colliders.push_back(ret);
 
 	return ret;
@@ -117,9 +120,9 @@ void Collision::DeleteCollider(Collider * collider)
 	collider->to_delete = true;
 }
 
-bool Collider::CheckCollision(const SDL_Rect& r) const
+bool Collider::CheckCollision(Collider* c2) const
 {
-	return (bool)SDL_HasIntersection(&rect, &r);
+	return (pos.DistanceTo(c2->pos) < (r + c2->r));
 }
 
 Unit* Collider::GetUnit() {
@@ -153,6 +156,9 @@ void Collision::DebugDraw()
 			continue;
 		}
 
-		App->render->DrawQuad((*it)->rect, 255, 255, 255, 255, false);
+		if((*it)->colliding)
+			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255, false);
+		else
+			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255, false);
 	}
 }
