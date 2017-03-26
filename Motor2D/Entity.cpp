@@ -39,6 +39,9 @@ bool Entity::HandleInput()
 	return true;
 }
 
+void Entity::Dead() 
+{}
+
 bool Entity::Load(pugi::xml_node &)
 {
 	return true;

@@ -1082,6 +1082,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="2400"/>
 				<WoodCost value="275"/>
 				<StoneCost value="100"/>
@@ -1100,6 +1101,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="550"/>
 				<WoodCost value="25"/>
 				<StoneCost value="0"/>
@@ -1118,6 +1120,7 @@
 				<Die value="textures/Buildings/barracksOrcs.png"/>
 			</Textures>
 			<Stats>
+				<Faction value="1"/>
 				<Life value="1200"/>
 				<WoodCost value="155"/>
 				<StoneCost value="0"/>
@@ -1136,6 +1139,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="1500"/>
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
@@ -1154,6 +1158,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="1500"/>
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
@@ -1172,6 +1177,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="1800"/>
 				<WoodCost value="200"/>
 				<StoneCost value="0"/>
@@ -1190,6 +1196,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="1800"/>
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
@@ -1208,6 +1215,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="1800"/>
 				<WoodCost value="150"/>
 				<StoneCost value="0"/>
@@ -1226,6 +1234,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="600"/>
 				<WoodCost value="100"/>
 				<StoneCost value="0"/>
@@ -1244,6 +1253,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value=""/>
 				<WoodCost value=""/>
 				<StoneCost value=""/>
@@ -1262,6 +1272,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value=""/>
 				<WoodCost value=""/>
 				<StoneCost value=""/>
@@ -1280,6 +1291,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="1020"/>
 				<WoodCost value="25"/>
 				<StoneCost value="125"/>
@@ -1298,6 +1310,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="2100"/>
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
@@ -1316,6 +1329,7 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
+				<Faction value="0"/>
 				<Life value="4800"/>
 				<WoodCost value="0"/>
 				<StoneCost value="650"/>
