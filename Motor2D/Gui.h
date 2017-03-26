@@ -259,6 +259,8 @@ public:
 	int max_width;
 
 	//SINGLEINFO
+	Unit* selected_unit;
+
 	Image* single;
 	Label* name;
 	Label* armor_val;

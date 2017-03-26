@@ -100,9 +100,10 @@ bool Gui::PostUpdate()
 		}
 	}
 
-	cursor->Update();
-	hud.Update();
 
+	hud.Update();
+	// CURSOR ALWAYS GOES LAST!!!!!
+	cursor->Update();
 	return true;
 }
 
@@ -330,6 +331,11 @@ Image::Image(int x, int y, SDL_Texture* argtexture) : UIElement(true, x, y, IMAG
 void Image::Update()
 {
 	Draw();
+	if (!App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+		current = MouseDetect();
+
+	current = MouseDetect();
+
 	if (debug) DebugMode();
 }
 
@@ -879,6 +885,8 @@ HUD::HUD()
 }
 
 void HUD::Update() {
+	int size = App->entityManager->selectedUnitList.size();
+
 	switch (App->entityManager->selectedUnitList.size()) {
 	case 0: 
 		if (type != NONE)
@@ -943,6 +951,46 @@ void HUD::Update() {
 				ClearSingle();
 			type = MULTIPLESELECTION;
 			GetSelection();
+		}
+		else 
+		{
+			int x = 0, y = 0;
+			for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteRects.begin(); it_sprite != App->gui->SpriteRects.end(); ++it_sprite)
+			{
+				for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
+				{
+					if (x >= max_width)
+					{
+						x = 0;
+						y += App->gui->SpriteRects.front().GetRect().h + 5;
+					}
+					if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType()) {
+						int percent = ((it_unit._Ptr->_Myval->unitMaxLife - it_unit._Ptr->_Myval->unitLife) * 100) / it_unit._Ptr->_Myval->unitMaxLife;
+						int barPercent = (percent * App->gui->SpriteRects.front().GetRect().w) / 100;
+
+						App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h + y, App->gui->SpriteRects.front().GetRect().w, 5 }, 255, 0, 0);
+						App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h + y, min(App->gui->SpriteRects.front().GetRect().w, max(App->gui->SpriteRects.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
+						x += App->gui->SpriteRects.front().GetRect().w;
+					}
+				}
+			}
+			// CODE TO SELECT ONE UNIT FROM THE PANEL NOT FUNCTIONAL FOR NOW
+			/*
+			list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin();
+			for (list<Image*>::iterator it = multiple.begin(); it != multiple.end(); ++it) {
+				if (it._Ptr->_Myval->current == CLICKIN){
+					App->entityManager->selectedUnitList.clear();
+					App->entityManager->selectedUnitList.push_back(it_unit._Ptr->_Myval);
+					type = SINGLEINFO;
+					GetSelection();
+					ClearMultiple();
+					
+					int size = App->entityManager->selectedUnitList.size();
+					int a = 9381741;
+				}
+				if (it_unit != App->entityManager->selectedUnitList.end()) ++it_unit;
+			}*/
+
 		}
 		break;
 	}
@@ -1009,7 +1057,7 @@ void HUD::GetSelection() {
 		break;
 	case MULTIPLESELECTION:
 		int x = 0, y=0;
-		int max_width = 400;
+		max_width = 700;
 		for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteRects.begin(); it_sprite != App->gui->SpriteRects.end(); ++it_sprite)
 		{
 			for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
@@ -1017,7 +1065,7 @@ void HUD::GetSelection() {
 				if (x >= max_width)
 				{
 					x = 0;
-					y += App->gui->SpriteRects.front().GetRect().h;
+					y += App->gui->SpriteRects.front().GetRect().h + 5;
 				}
 				if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType())
 				{
