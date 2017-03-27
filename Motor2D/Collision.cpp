@@ -81,9 +81,19 @@ bool Collision::PreUpdate()
 	}
 
 	for (list<Collision_data*>::iterator collisions = collision_list.begin(); collisions != collision_list.end(); collisions++) {
-		(*collisions)->c1->callback->OnCollision((*collisions)->c1, (*collisions)->c2);
-		collision_list.remove((*collisions));
-		delete (*collisions);
+
+		if ((*collisions)->state == UNSOLVED) {
+			(*collisions)->c1->callback->OnCollision((*collisions)->c1, (*collisions)->c2);
+			(*collisions)->state = SOLVING;
+			continue;
+		}
+
+		if ((*collisions)->state == SOLVING) {
+			if ((*collisions)->c1->CheckCollision((*collisions)->c2) == false) {
+				collision_list.remove((*collisions));
+				delete (*collisions);
+			}
+		}
 	}
 
 	return true;

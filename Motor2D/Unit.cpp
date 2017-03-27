@@ -145,7 +145,8 @@ void Unit::SetDestination(iPoint destination)
 {
 
 	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
-	App->pathfinding->CreatePath(origin, destination, path);
+	App->pathfinding->CreatePath(origin, destination);
+	path = App->pathfinding->GetPath();
 
 	if (path.size() > 0) {
 		SetState(UNIT_MOVING);

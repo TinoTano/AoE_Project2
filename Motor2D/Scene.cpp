@@ -87,15 +87,17 @@ bool Scene::Update(float dt)
 
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
+	
+	list<iPoint> path = App->pathfinding->GetPath();
 
-	if (debug) {
-		const list<iPoint>* path = App->pathfinding->GetLastPath();
+	if (debug && !path.empty()) {
 
-		for (list<iPoint>::const_iterator it = path->begin(); it != path->end(); it++) {
+		for (list<iPoint>::const_iterator it = path.begin(); it != path.end(); it++) {
 			iPoint pos = App->map->MapToWorld((*it).x, (*it).y);
 			App->render->Blit(debug_tex, pos.x, pos.y);
 		}
 	}
+	
 
 	return true;
 }
