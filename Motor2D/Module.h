@@ -84,6 +84,23 @@ public:
 	virtual void OnCollision(Collider* c1, Collider* c2)
 	{}
 
+	void Enable()
+	{
+		if (active == false)
+		{
+			active = true;
+			Start();
+		}
+	}
+
+	void Disable()
+	{
+		if (active == true)
+		{
+			active = false;
+			CleanUp();
+		}
+	}
 
 public:
 

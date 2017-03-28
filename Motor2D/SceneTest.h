@@ -2,13 +2,14 @@
 #define __j1SCENE_H__
 
 #include "Module.h"
+#include "SceneManager.h"
 #include "Gui.h"
 #include <string>
 
 class GuiImage;
 class GuiText;
 
-class SceneTest : public Module
+class SceneTest : public SceneManager
 {
 public:
 

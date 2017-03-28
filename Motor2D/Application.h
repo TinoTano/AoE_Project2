@@ -24,6 +24,7 @@ class Collision;
 class Gui;
 class FogOfWar;
 class Console;
+class SceneManager;
 
 class Application
 {
@@ -107,6 +108,7 @@ public:
 	SceneTest*			scenetest = NULL;
 	FogOfWar*			fog = NULL;
 	Console*			console = NULL;
+	SceneManager*		sceneManager = NULL;
 	bool				quit = false;
 
 private:

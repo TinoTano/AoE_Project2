@@ -13,7 +13,7 @@
 #include "FogOfWar.h"
 #include "Gui.h"
 
-Scene::Scene() : Module()
+Scene::Scene() : SceneManager()
 {
 	name = "scene";
 }

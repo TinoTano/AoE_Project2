@@ -19,6 +19,7 @@
 #include "SceneTest.h"
 #include "FogOfWar.h"
 #include "Console.h"
+#include "SceneManager.h"
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -41,6 +42,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	scenetest = new SceneTest();
 	fog = new FogOfWar();
 	console = new Console();
+	sceneManager = new SceneManager();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -54,6 +56,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(gui);
 	AddModule(console);
+	AddModule(sceneManager);
 
 	// scene last
 	AddModule(scene);
@@ -150,6 +153,7 @@ bool Application::Start()
 // Called each loop iteration
 bool Application::Update()
 {
+
 	bool ret = true;
 	PrepareUpdate();
 

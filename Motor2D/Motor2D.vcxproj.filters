@@ -79,6 +79,7 @@
     <ClCompile Include="Console.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="SceneManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -174,6 +175,7 @@
     <ClInclude Include="Console.h">
       <Filter>Project 2\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="SceneManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">

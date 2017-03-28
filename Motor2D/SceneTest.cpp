@@ -14,7 +14,7 @@
 #include <stdlib.h>  
 
 
-SceneTest::SceneTest() : Module()
+SceneTest::SceneTest() : SceneManager()
 {
 	name = "scene";
 }
