@@ -138,8 +138,8 @@ void Scene::SaveScene()
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			unitNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			destTileNode.append_attribute("x") = (*it)->path.back().x;
-			destTileNode.append_attribute("y") = (*it)->path.back().y;
+			destTileNode.append_attribute("x") = (*it)->path->back().x;
+			destTileNode.append_attribute("y") = (*it)->path->back().y;
 		}
 	}
 
@@ -156,8 +156,8 @@ void Scene::SaveScene()
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			unitNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			destTileNode.append_attribute("x") = (*it)->path.back().x;
-			destTileNode.append_attribute("y") = (*it)->path.back().y;
+			destTileNode.append_attribute("x") = (*it)->path->back().x;
+			destTileNode.append_attribute("y") = (*it)->path->back().y;
 		}
 	}
 

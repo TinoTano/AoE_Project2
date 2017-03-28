@@ -145,22 +145,21 @@ void Unit::SetDestination(iPoint destination)
 {
 
 	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
-	App->pathfinding->CreatePath(origin, destination);
-	path = App->pathfinding->GetPath();
+	path = App->pathfinding->CreatePath(origin, destination);
 
-	if (path.size() > 0) {
+	if (path != nullptr) {
 		SetState(UNIT_MOVING);
 		destinationReached = false;
-		if (path.front() == origin) {
-			if (path.size() > 1) {
-				destinationTile = path.begin()._Ptr->_Next->_Myval;
-				path.remove(path.begin()._Ptr->_Next->_Myval);
+		if (path->front() == origin) {
+			if (path->size() > 1) {
+				destinationTile = path->begin()._Ptr->_Next->_Myval;
+				path->remove(path->begin()._Ptr->_Next->_Myval);
 			}
 		}
 		else {
-			destinationTile = path.front();
+			destinationTile = path->front();
 		}
-		path.erase(path.begin());
+		path->erase(path->begin());
 	}
 	if (attackTarget != nullptr) {
 		attackTarget = nullptr;
@@ -182,13 +181,14 @@ void Unit::Move(float dt)
 		entityPosition.y += int(vel.y);
 
 		if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
-			if (path.size() > 0) {
-				destinationTile = path.front();
-				path.erase(path.begin());
+			if (path->size() > 0) {
+				destinationTile = path->front();
+				path->erase(path->begin());
 				LOG("%d %d", destinationTile.x, destinationTile.y);
 			}
 			else {
 				destinationReached = true;
+				App->pathfinding->DeletePath(path);
 				SetState(UNIT_IDLE);
 			}
 		}

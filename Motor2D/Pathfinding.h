@@ -29,8 +29,6 @@ public:
 	// Destructor
 	virtual ~PathFinding();
 
-	bool PreUpdate();
-
 	// Called before quitting
 	bool CleanUp();
 
@@ -38,13 +36,13 @@ public:
 	void SetMap(uint width, uint height, uchar* data);
 
 	// Main function to request a path from A to B
-	list<iPoint> CreatePath(const iPoint& origin, const iPoint& destination);
+	list<iPoint>* CreatePath(const iPoint& origin, const iPoint& destination);
 
 	// To request all tiles involved in the last generated path
 	const list<iPoint>* GetLastPath() const;
 
 	list<iPoint> GetPath() const;
-	std::list<Path*> GetPaths() const;
+	list<Path*> GetPaths() const;
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries(const iPoint& pos) const;
@@ -61,6 +59,7 @@ public:
 	iPoint FindNearestAvailable(Unit* unit) const;
 	void CalculatePath(Path* path);
 	iPoint FindNearestWalkable(const iPoint& origin);
+	bool DeletePath(list<iPoint>* path_to_delete);
 
 private:
 

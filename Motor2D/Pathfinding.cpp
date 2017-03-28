@@ -22,7 +22,7 @@ bool PathFinding::CleanUp()
 
 	lastPath.clear();
 
-	for (std::list<Path*>::iterator it = paths.begin(); it != paths.end();) {
+	for (list<Path*>::iterator it = paths.begin(); it != paths.end();) {
 		RELEASE(*it);
 		std::list<Path*>::iterator tmp = it;
 		++it;
@@ -171,25 +171,6 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 
 
-bool PathFinding::PreUpdate()
-{
-	for (std::list<Path*>::iterator it = paths.begin(); it != paths.end();)
-	{
-		if ((*it)->completed == true)
-		{
-			RELEASE(*it);
-			std::list<Path*>::iterator tmp = it;
-			++it;
-			paths.erase(tmp);
-
-		}
-		++it;
-	}
-
-	return true;
-}
-
-
 void PathNode::IdentifySuccessors(PathList & list_to_fill, iPoint startNode, iPoint endNode, PathFinding* pathfinder) const
 {
 	PathList neighbours;
@@ -314,13 +295,7 @@ void PathFinding::CalculatePath(Path * path)
 				path_node = path_node->parent;
 			}
 
-			iPoint* start = &(*path->finished_path.begin());
-			iPoint* end = &(*path->finished_path.begin());
-
-			while (start < end)
-				SWAP(*start++, *end--);
-
-			path->completed = true;
+			path->finished_path.reverse();
 
 			break;	// As the path is completed we exit the loop
 		}
@@ -353,10 +328,10 @@ void PathFinding::CalculatePath(Path * path)
 }
 
 
-list<iPoint> PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
+list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
 	iPoint current_origin = origin;
-	list<iPoint> ret(0);
+	list<iPoint>* ret = nullptr;
 
 	if (!IsWalkable(destination))
 		return ret;
@@ -373,13 +348,28 @@ list<iPoint> PathFinding::CreatePath(const iPoint& origin, const iPoint& destina
 
 	paths.push_back(path); // push the path to a list where there will be all the paths that need to be calculated
 	CalculatePath(path);
-	ret = path->finished_path;
-	if (ret.size() > 0)
-		ret.erase(ret.begin());
+	ret = &path->finished_path;
+	if (ret->size() > 0)
+		ret->erase(ret->begin());
 	return ret;
 }
 
+bool PathFinding::DeletePath(list<iPoint>* path_to_delete) {
 
+	for (list<Path*>::iterator it = paths.begin(); it != paths.end(); it++) {
+
+		if (&(*it)->finished_path == path_to_delete) {
+
+			RELEASE(*it);
+			paths.erase(it);
+
+			return true;
+		}
+	}
+
+	return false;
+
+}
 
 
 void PathFinding::FindAvailableDestination(iPoint& destination, iPoint& origin)
@@ -442,12 +432,12 @@ iPoint PathFinding::FindNearestAvailable(Unit* unit) const {
 
 				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj)) {
 
-					if (unit->path.empty()) {
+					if (unit->path->empty()) {
 
 						ret = adj;
 						found = true;
 					}
-					else if (adj.DistanceManhattan(unit->path.front()) < ret.DistanceManhattan(unit->path.front())) {
+					else if (adj.DistanceManhattan(unit->path->front()) < ret.DistanceManhattan(unit->path->front())) {
 						ret = adj;
 						found = true;
 					}

@@ -630,10 +630,10 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 
 				if (unit1->state == UNIT_MOVING && c2->GetUnit()->state == UNIT_IDLE) {
 
-					if (!unit1->path.empty())
-						unit1->path. pop_front();
+					if (!unit1->path->empty())
+						unit1->path->pop_front();
 
-					unit1->path.push_front(App->pathfinding->FindNearestAvailable(unit1));
+					unit1->path->push_front(App->pathfinding->FindNearestAvailable(unit1));
 					unit1->SetState(UNIT_MOVING);
 				}
 
