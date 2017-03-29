@@ -72,175 +72,122 @@ bool EntityManager::Update(float dt)
 		(*it)->Draw();
 	}
 
+	
+
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {
-		Unit* clickedUnit = nullptr;
-		for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-			if (mouseX > (*it)->collider->pos.x - (*it)->collider->r  && mouseX < (*it)->collider->pos.x + (*it)->collider->r &&
-				mouseY >(*it)->collider->pos.y + (*it)->collider->r  && mouseX < (*it)->collider->pos.y - (*it)->collider->r) {
-				//if ((*it)->isVisible) {
-					clickedUnit = (*it);
-				//}
-			}
-		}
 
 		iPoint destination = App->map->WorldToMap(mouseX, mouseY);
-		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-			if ((*it)->isSelected) {
-				(*it)->SetDestination(destination);
-				if (clickedUnit != nullptr) {
-					(*it)->attackTarget = clickedUnit;
-				}
-			}
-		}
-	}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+		Unit* commander = selectedUnitList.front();
+		commander->SetDestination(destination);
+
+		if (selectedUnitList.size() > 1) {
+
+			selectedUnitList.pop_front();
+			App->pathfinding->SharePath(commander, selectedUnitList);
+			selectedUnitList.push_front(commander);
+
+		}
+
+		for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
+			(*it)->SetState(UNIT_MOVING);
+			(*it)->destinationReached = false;
+			(*it)->destinationTile = (*it)->path->front();
+			(*it)->path->erase((*it)->path->begin());
+
+			if ((*it)->attackTarget != nullptr) {
+				(*it)->attackTarget = nullptr;
+			}
+		
+		}
+		
+	}
+	
+	switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)) 
+	{
+
+	case KEY_DOWN:
 		multiSelectionRect.x = mouseX;
 		multiSelectionRect.y = mouseY;
-	}
+		break;
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+	case KEY_REPEAT:
 		multiSelectionRect.w = mouseX - multiSelectionRect.x;
 		multiSelectionRect.h = mouseY - multiSelectionRect.y;
-	}
+		break;
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-		if (multiSelectionRect.w != 0) {
+	case KEY_UP:
+
+		selectedUnitList.clear();
+
+		bool selectedCount = 0;
+
+		if (multiSelectionRect.w < 0) {
+			multiSelectionRect.x += multiSelectionRect.w;
+			multiSelectionRect.w *= -1;
+		}
+		if (multiSelectionRect.h < 0) {
+			multiSelectionRect.y += multiSelectionRect.h;
+			multiSelectionRect.h *= -1;
+		}
+
+		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+			SDL_Point pos;
+			pos.x = (*it)->entityPosition.x;
+			pos.y = (*it)->entityPosition.y;
+
+			if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+				selectedCount++;
+				selectedUnitList.push_back((*it));
+			}
 			
-			bool selectedCount = 0;
+		}
 
-			if (multiSelectionRect.w < 0) {
-				multiSelectionRect.x += multiSelectionRect.w;
-				multiSelectionRect.w *= -1;
-			}
-			if (multiSelectionRect.h < 0) {
-				multiSelectionRect.y += multiSelectionRect.h;
-				multiSelectionRect.h *= -1;
-			}
+		if (selectedCount == 0) {
 
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 				SDL_Point pos;
 				pos.x = (*it)->entityPosition.x;
 				pos.y = (*it)->entityPosition.y;
 
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-					(*it)->isSelected = true;
-					selectedCount++;
+				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
 					selectedUnitList.push_back((*it));
-				}
-				else {
-					if ((*it)->isSelected) {
-						(*it)->isSelected = false;
-						selectedUnitList.remove(*it);
-					}
-				}
-			}
-			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-				if ((*it)->isSelected) {
-					(*it)->isSelected = false;
-					selectedUnitList.remove(*it);
-				}
-			}
-			if (selectedCount == 0) {
-				for (list<Unit*>::iterator it2 = selectedUnitList.begin(); it2 != selectedUnitList.end(); it2++) {
-					if ((*it2)->isSelected) {
-						(*it2)->isSelected = false;
-						selectedUnitList.remove(*it2);
-					}
-				}
-				for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-					SDL_Point pos;
-					pos.x = (*it)->entityPosition.x;
-					pos.y = (*it)->entityPosition.y;
 
-					if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-						(*it)->isSelected = true;
-					}
-					else {
-						if ((*it)->isSelected) {
-							(*it)->isSelected = false;
-							selectedUnitList.remove(*it);
-						}
-					}
-				}
-			}
-			multiSelectionRect = { 0,0,0,0 };
-		}
-		else {
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if (mouseX > (*it)->collider->pos.x - (*it)->collider->r  && mouseX < (*it)->collider->pos.x + (*it)->collider->r &&
-					mouseY >(*it)->collider->pos.y + (*it)->collider->r  && mouseX < (*it)->collider->pos.y - (*it)->collider->r){
-					if (selectedUnitList.empty() || selectedUnitList.front() != (*it)) {
-						(*it)->isSelected = true;
-						selectedUnitList.push_back(*it);
-						timesClicked = 0;
-					}
-					for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
-						if (*it != *it2) {
-							if ((*it2)->isSelected) {
-								(*it2)->isSelected = false;
-								selectedUnitList.remove(*it2);
-							}
-						}
-					}
-					timesClicked++;
-					doubleClickTimer = 0;
-					break;
-				}
-				else {
-					if ((*it)->isSelected) {
-						(*it)->isSelected = false;
-						selectedUnitList.remove(*it);
-					}
-				}
-			}
-			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-				if (mouseX > (*it)->collider->pos.x - (*it)->collider->r  && mouseX < (*it)->collider->pos.x + (*it)->collider->r &&
-					mouseY > (*it)->collider->pos.y + (*it)->collider->r  && mouseX < (*it)->collider->pos.y - (*it)->collider->r) {
-					(*it)->isSelected = true;
-					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
-						if (*it != *it2) {
-							if ((*it2)->isSelected) {
-								(*it2)->isSelected = false;
-								selectedUnitList.remove(*it2);
-							}
-						}
-					}
-					break;
-				}
-				else {
-					if ((*it)->isSelected) {
-						(*it)->isSelected = false;
-						selectedUnitList.remove(*it);
-					}
-				}
 			}
 		}
-	}
 
-	if (multiSelectionRect.w != 0) {
-		App->render->DrawQuad(multiSelectionRect, 255, 255, 255, 255, false);
-	}
-
-	if (doubleClickTimer <= 0.5f) {
-		if (timesClicked == 2) {
+		if (doubleClickTimer <= 0.5f) {
 			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 				if (!selectedUnitList.empty()) {
 					if ((*it) != selectedUnitList.front()) {
-						if ((*it)->GetType() == selectedUnitList.front()->GetType()) {
-							(*it)->isSelected = true;
+
+						if ((*it)->GetType() == selectedUnitList.front()->GetType()) 
 							selectedUnitList.push_back((*it));
-						}
+						
 					}
 				}
 			}
-			timesClicked = 0;
+			doubleClickTimer = 0;
 		}
-		doubleClickTimer += dt;
+
+		multiSelectionRect = { 0,0,0,0 };
+		break;
 	}
-	else {
-		timesClicked = 0;
+
+	for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
+		Unit* unit = (*it);
+		int percent = ((unit->MaxLife - unit->Life) * 100) / unit->MaxLife;
+		int barPercent = (percent * unit->hpBarWidth) / 100;
+		int hpbar_y_position = unit->entityPosition.y - ((unit->collider->pos.y - unit->entityPosition.y)* 1.5f) ;
+		App->render->DrawCircle(unit->collider->pos.x, unit->collider->pos.y, 15, 255, 255, 255, 255);
+		App->render->DrawQuad({ unit->entityPosition.x - (unit->hpBarWidth / 2), hpbar_y_position, unit->hpBarWidth, 5 }, 255, 0, 0);
+		App->render->DrawQuad({ unit->entityPosition.x - (unit->hpBarWidth / 2), hpbar_y_position, min(unit->hpBarWidth, max(unit->hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
 	}
+
+	if (multiSelectionRect.w != 0) 
+		App->render->DrawQuad(multiSelectionRect, 255, 255, 255, 255, false);
+	
+	doubleClickTimer += dt;
 
 	return true;
 }
@@ -628,14 +575,13 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 			}
 			else {
 
-				if (unit1->state == UNIT_MOVING && c2->GetUnit()->state == UNIT_IDLE) {
+				/*if (unit1->state == UNIT_MOVING) {
 
-					if (!unit1->path->empty())
-						unit1->path->pop_front();
+					iPoint unit_pos = App->map->WorldToMap(unit1->entityPosition.x, unit1->entityPosition.y);
 
-					unit1->path->push_front(App->pathfinding->FindNearestAvailable(unit1));
+					unit1->path->push_front(App->pathfinding->FindNearestAvailableTarget(unit_pos, unit1->path->front()));
 					unit1->SetState(UNIT_MOVING);
-				}
+				}*/
 
 			}
 

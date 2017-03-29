@@ -22,9 +22,10 @@ bool PathFinding::CleanUp()
 
 	lastPath.clear();
 
-	for (list<Path*>::iterator it = paths.begin(); it != paths.end();) {
-		RELEASE(*it);
-		std::list<Path*>::iterator tmp = it;
+	for (list<list<iPoint>>::iterator it = paths.begin(); it != paths.end();) {
+		list<iPoint>* to_erase = &(*it);
+		RELEASE(to_erase);
+		list<list<iPoint>>::iterator tmp = it;
 		++it;
 		paths.erase(tmp);
 	}
@@ -330,37 +331,89 @@ void PathFinding::CalculatePath(Path * path)
 
 list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
-	iPoint current_origin = origin;
+	iPoint adjusted_orig = origin;
+	iPoint adjusted_dest = destination;
 	list<iPoint>* ret = nullptr;
 
-	if (!IsWalkable(destination))
-		return ret;
-	if (!IsWalkable(origin)) {
-		current_origin = FindNearestWalkable(origin);
-		if (current_origin.x == -1 && current_origin.y == -1) {
-			return ret;
-		}
-	}
-	Path* path = new Path();
-	path->open.pathNodeList.push_back(PathNode(0, 0, current_origin, NULL));
-	path->origin = current_origin;
-	path->destination = destination;
+	if (!IsWalkable(origin) || App->entityManager->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
+		adjusted_orig = FindNearestAvailable(origin);    
 
-	paths.push_back(path); // push the path to a list where there will be all the paths that need to be calculated
+	if (!IsWalkable(destination) || App->entityManager->IsOccupied(destination))
+		adjusted_dest = FindNearestAvailable(destination);
+	
+	if (adjusted_orig.x == -1 || adjusted_dest.x == -1 || adjusted_dest == adjusted_orig)
+		return ret;
+
+	Path* path = new Path();
+	path->open.pathNodeList.push_back(PathNode(0, 0, adjusted_orig, NULL));
+	path->origin = adjusted_orig;
+	path->destination = adjusted_dest;
+ // push the path to a list where there will be all the paths that need to be calculated
+
 	CalculatePath(path);
+	paths.push_back(path->finished_path);
 	ret = &path->finished_path;
-	if (ret->size() > 0)
+
+	if (!ret->empty())
 		ret->erase(ret->begin());
+
 	return ret;
 }
 
+void PathFinding::SharePath(Unit* commander, list<Unit*> followers) {
+
+	iPoint no_space(-1, -1);
+
+
+	list<list<iPoint>*> new_paths;
+	for (list<Unit*>::iterator it0 = followers.begin(); it0 != followers.end(); it0++) {
+		list<iPoint>* new_path = new list<iPoint>;
+		new_paths.push_back(new_path);
+	}
+
+	for (list<iPoint>::iterator it1 = commander->path->begin(); it1 != commander->path->end(); it1++) {
+
+		for(int repetitions = 0; (repetitions * 9) < followers.size(); repetitions++){
+
+			if (FindNearestAvailable((*it1), repetitions + 1) == no_space) {
+				for (list<list<iPoint>*>::iterator it2= new_paths.begin(); it2 != new_paths.end(); it2++)
+					(*it2)->push_back((*it1));
+				
+				break;
+			}
+			else {
+				list<iPoint> cells_in_use;
+				cells_in_use.push_back((*it1));
+
+				for (list<list<iPoint>*>::iterator it3 = new_paths.begin(); it3 != new_paths.end(); it3++) {
+					cells_in_use.push_back(FindNearestAvailable((*it1), repetitions + 1, &cells_in_use));
+					(*it3)->push_back(cells_in_use.back());
+				}
+
+				cells_in_use.clear();
+
+			}
+		}
+	}
+
+	list<list<iPoint>*>::iterator it4 = new_paths.begin();
+	for (list<Unit*>::iterator it5 = followers.begin(); it5 != followers.end(); it5++) {
+		(*it5)->path = (*it4);
+		paths.push_back(*(*it4));
+		it4++;
+	}
+
+}
+
+
 bool PathFinding::DeletePath(list<iPoint>* path_to_delete) {
 
-	for (list<Path*>::iterator it = paths.begin(); it != paths.end(); it++) {
 
-		if (&(*it)->finished_path == path_to_delete) {
+	for (list<list<iPoint>>::iterator it = paths.begin(); it != paths.end(); it++) {
 
-			RELEASE(*it);
+		if (&(*it) == path_to_delete) {
+
+			RELEASE(path_to_delete);
 			paths.erase(it);
 
 			return true;
@@ -372,134 +425,95 @@ bool PathFinding::DeletePath(list<iPoint>* path_to_delete) {
 }
 
 
-void PathFinding::FindAvailableDestination(iPoint& destination, iPoint& origin)
-{
-	iPoint newDestination(destination);
-	list<iPoint> newDestinationList;
-	int distance = 1;
+iPoint PathFinding::FindNearestAvailableTarget(const iPoint& tile, const iPoint& target) const {
 
-	while (newDestinationList.size() == 0)
-	{
-		for (int x = -distance; x < distance; x++)
-		{
-			for (int y = -distance; y < distance; y++)
-			{
-				newDestination.x = destination.x + x;
-				newDestination.y = destination.y + y;
-				if (IsWalkable(newDestination) && newDestination != origin && !App->entityManager->IsOccupied(newDestination)) {
-					newDestinationList.push_back(newDestination);
-				}
-			}
-		}
-		++distance;
-	}
-
-	if (newDestinationList.size() == 1) {
-		destination = newDestinationList.front();
-	}
-	else {
-		for (list<iPoint>::iterator it = newDestinationList.begin(); it != newDestinationList.end(); it++) {
-			if (it._Ptr->_Next != nullptr) {
-				if ((*it).DistanceTo(origin) < it._Ptr->_Next->_Myval.DistanceTo(origin)) {
-					destination = (*it);
-				}
-				else {
-					destination = it._Ptr->_Myval;
-				}
-			}
-		}
-	}
-}
-
-iPoint PathFinding::FindNearestAvailable(Unit* unit) const {
-
-	iPoint pos = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
-	iPoint ret = pos;
+	iPoint ret;
 	iPoint adj;
-
 	bool found = false;
 
-	int dist = 0;
+	int radius = 1;
 
 	while (!found) {
 
-		dist++;
+		for (int i = -radius; i <= radius; i++) {
+			for (int j = -radius; j <= radius; j++) {
 
-		for (int i = -dist; i < (dist + 1); i++) {
-			for (int j = -dist; j < (dist + 1); j++) {
-
-				adj.create(pos.x + i, pos.y + j);
+				adj.create(tile.x + i, tile.y + j);
 
 				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj)) {
 
-					if (unit->path->empty()) {
+					found = true;
 
+					if (adj.DistanceManhattan(target) < ret.DistanceManhattan(target)) 
 						ret = adj;
-						found = true;
-					}
-					else if (adj.DistanceManhattan(unit->path->front()) < ret.DistanceManhattan(unit->path->front())) {
-						ret = adj;
-						found = true;
-					}
+					
 				}
 			}
 		}
 
-		if (dist > 5)
-			return pos;
+		radius++;
+
+		if (radius > 5)
+			return ret.create(-1, -1);
 	}
 
 	return ret;
 }
 
-iPoint PathFinding::FindNearestWalkable(const iPoint & origin)
-{
-	iPoint ret(origin);
+iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, list<iPoint>* cells_to_ignore) const {
 
-	// dx -> direction x  | dy -> direction y  
-	// search_in_radius -> finds the nearest walkable tile in a radius (max radius in FIND_RADIUS) 
+	iPoint adj;
 
-	int search_in_radius = 1;
-	while (search_in_radius != 5)
-	{
-		for (int dx = -search_in_radius; dx < search_in_radius; dx++)
-		{
-			for (int dy = -search_in_radius; dy < search_in_radius; dy++)
-			{
-				ret.x = origin.x + dx;
-				ret.y = origin.y + dy;
-				if (IsWalkable(ret))
-					return ret; // Found the nearest walkable tile
+	for (int radius = 1; radius <= max_radius; radius++) {
+
+		// Possible optimization: Searchs in already searched tiles when expanding, can be fix?
+
+		for (int i = -radius; i <= radius; i++) {
+			for (int j = -radius; j <= radius; j++) {
+
+				adj.create(tile.x + i, tile.y + j);
+
+				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj)) {
+
+					if(cells_to_ignore == nullptr)
+						return adj;
+					else {
+
+						bool found = false;
+
+						for (list<iPoint>::iterator it = cells_to_ignore->begin(); it != cells_to_ignore->end(); it++) {
+							if (adj == (*it)) {
+								found = true;
+								break;
+							}
+						}
+
+						if (!found)
+							return adj;
+					}
+				}
+					
 			}
 		}
 
-		++search_in_radius;
 	}
+	return adj.create(-1, -1);
 
-
-	return ret.create(-1, -1);
 }
 
 list<iPoint> PathFinding::GetPath() const
 {
 	list<iPoint> ret;
-	std::list<Path*>::const_iterator it = paths.begin();
 
-	if (it == paths.end())
-	{
-		LOG("PathFinding ERROR: wrong id to get Path");
-	}
-	else
-	{
-		ret = (*it)->finished_path;
-	}
-
+	if (!paths.empty())
+		ret = paths.front();
+	
 	return ret;
 }
 
-list<Path*> PathFinding::GetPaths() const
+list<list<iPoint>>* PathFinding::GetPaths() 
 {
-	return paths;
+	return &paths;
 }
 
 

@@ -98,15 +98,6 @@ bool Unit::Draw()
 		iPoint col_pos(entityPosition.x, entityPosition.y + (r.h / 2));    // an offset var in collider should be implemented for big units
 		collider->pos = col_pos;
 
-		if (isSelected) {
-			int percent = ((MaxLife - Life) * 100) / MaxLife;
-			int barPercent = (percent * hpBarWidth) / 100;
-			App->render->DrawCircle(col_pos.x, col_pos.y, 15, 255, 255, 255, 255);
-			App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(r.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(r.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
-		}
-
 		App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
 		
 	}
@@ -148,17 +139,12 @@ void Unit::SetDestination(iPoint destination)
 	path = App->pathfinding->CreatePath(origin, destination);
 
 	if (path != nullptr) {
+
 		SetState(UNIT_MOVING);
 		destinationReached = false;
-		if (path->front() == origin) {
-			if (path->size() > 1) {
-				destinationTile = path->begin()._Ptr->_Next->_Myval;
-				path->remove(path->begin()._Ptr->_Next->_Myval);
-			}
-		}
-		else {
-			destinationTile = path->front();
-		}
+
+		destinationTile = path->front();
+
 		path->erase(path->begin());
 	}
 	if (attackTarget != nullptr) {

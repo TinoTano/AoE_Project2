@@ -77,7 +77,6 @@ public:
 	unitState state = UNIT_IDLE;
 	Entity* attackTarget = nullptr;
 	bool isVisible = true;
-	bool isSelected = false;
 	iPoint next_step = { 0,0 };
 
 	//Animations

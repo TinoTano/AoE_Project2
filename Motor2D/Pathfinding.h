@@ -42,7 +42,7 @@ public:
 	const list<iPoint>* GetLastPath() const;
 
 	list<iPoint> GetPath() const;
-	list<Path*> GetPaths() const;
+	list<list<iPoint>>* GetPaths();
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries(const iPoint& pos) const;
@@ -55,15 +55,13 @@ public:
 
 	bool Jump(int current_x, int current_y, int dx, int dy, iPoint start, iPoint end, PathNode& new_node);
 
-	void FindAvailableDestination(iPoint& destination, iPoint& origin);
-	iPoint FindNearestAvailable(Unit* unit) const;
+	iPoint FindNearestAvailableTarget(const iPoint& tile, const iPoint& target) const;
+	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 5, list<iPoint>* cells_to_ignore = nullptr) const;
 	void CalculatePath(Path* path);
-	iPoint FindNearestWalkable(const iPoint& origin);
+	void SharePath(Unit* commander, list<Unit*> followers);
 	bool DeletePath(list<iPoint>* path_to_delete);
 
 private:
-
-
 
 	// size of the map
 	uint width;
@@ -72,7 +70,7 @@ private:
 	uchar* map;
 	// we store the created path here
 	list<iPoint> lastPath;
-	list<Path*> paths;
+	list<list<iPoint>> paths;
 };
 
 // forward declaration
