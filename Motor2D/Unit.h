@@ -61,7 +61,7 @@ public:
 	float unitAttackSpeed = 0;
 	int unitPiercingDamage = 0;
 	float unitMovementSpeed = 0;
-	list<iPoint> path;
+	list<iPoint>* path;
 	bool destinationReached = true;
 	fPoint velocity = { 0,0 };
 	iPoint destinationTile = { 0,0 };
@@ -77,7 +77,6 @@ public:
 	unitState state = UNIT_IDLE;
 	Entity* attackTarget = nullptr;
 	bool isVisible = true;
-	bool isSelected = false;
 	iPoint next_step = { 0,0 };
 
 	//Animations

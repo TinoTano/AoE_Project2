@@ -87,15 +87,17 @@ bool Scene::Update(float dt)
 
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
+	
+	list<iPoint> path = App->pathfinding->GetPath();
 
-	if (debug) {
-		const list<iPoint>* path = App->pathfinding->GetLastPath();
+	if (debug && !path.empty()) {
 
-		for (list<iPoint>::const_iterator it = path->begin(); it != path->end(); it++) {
+		for (list<iPoint>::const_iterator it = path.begin(); it != path.end(); it++) {
 			iPoint pos = App->map->MapToWorld((*it).x, (*it).y);
 			App->render->Blit(debug_tex, pos.x, pos.y);
 		}
 	}
+	
 
 	return true;
 }
@@ -136,8 +138,8 @@ void Scene::SaveScene()
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			unitNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			destTileNode.append_attribute("x") = (*it)->path.back().x;
-			destTileNode.append_attribute("y") = (*it)->path.back().y;
+			destTileNode.append_attribute("x") = (*it)->path->back().x;
+			destTileNode.append_attribute("y") = (*it)->path->back().y;
 		}
 	}
 
@@ -154,8 +156,8 @@ void Scene::SaveScene()
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			unitNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			destTileNode.append_attribute("x") = (*it)->path.back().x;
-			destTileNode.append_attribute("y") = (*it)->path.back().y;
+			destTileNode.append_attribute("x") = (*it)->path->back().x;
+			destTileNode.append_attribute("y") = (*it)->path->back().y;
 		}
 	}
 
