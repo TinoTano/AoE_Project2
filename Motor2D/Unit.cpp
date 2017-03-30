@@ -144,10 +144,8 @@ void Unit::SetDestination(iPoint destination)
 	path = App->pathfinding->CreatePath(origin, destination);
 
 	SetState(UNIT_MOVING);
-	destinationReached = false;
 
 	destinationTile = path->front();
-
 	path->erase(path->begin());
 	
 	if (attackTarget != nullptr) {
@@ -160,29 +158,26 @@ void Unit::Move(float dt)
 	CalculateVelocity();
 	LookAt();
 
-	if (!destinationReached) {
+	fPoint vel = (velocity * (unitMovementSpeed + 100)) * dt;
+	roundf(vel.x);
+	roundf(vel.y);
 
-		fPoint vel = (velocity * (unitMovementSpeed + 100)) * dt;
-		roundf(vel.x);
-		roundf(vel.y);
+	entityPosition.x += int(vel.x);
+	entityPosition.y += int(vel.y);
 
-		entityPosition.x += int(vel.x);
-		entityPosition.y += int(vel.y);
-
-		if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
-			if (path->size() > 0) {
-				destinationTile = path->front();
-				path->erase(path->begin());
-				LOG("%d %d", destinationTile.x, destinationTile.y);
-			}
-			else {
-				destinationReached = true;
-				App->pathfinding->DeletePath(path);
-				SetState(UNIT_IDLE);
-			}
+	if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
+		if (path->size() > 0) {
+			destinationTile = path->front();
+			path->erase(path->begin());
+			LOG("%d %d", destinationTile.x, destinationTile.y);
+		}
+		else {
+			App->pathfinding->DeletePath(path);
+			SetState(UNIT_IDLE);
 		}
 	}
 }
+
 
 void Unit::CalculateVelocity()
 {

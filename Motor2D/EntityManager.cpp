@@ -95,7 +95,6 @@ bool EntityManager::Update(float dt)
 
 			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
 				(*it)->SetState(UNIT_MOVING);
-				(*it)->destinationReached = false;
 				(*it)->destinationTile = (*it)->path->front();
 
 				if ((*it)->attackTarget != nullptr) 
