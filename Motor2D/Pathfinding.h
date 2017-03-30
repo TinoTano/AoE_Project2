@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Unit.h"
+#include "Collision.h"
 #include "p2Point.h"
 
 #include <vector>
@@ -60,7 +61,7 @@ public:
 	void CalculatePath(Path* path);
 	void SharePath(Unit* commander, list<Unit*> followers);
 	bool DeletePath(list<iPoint>* path_to_delete);
-	void SolveCollision(Unit* unit1, Unit* unit2);
+	Collision_state SolveCollision(Unit* unit1, Unit* unit2);
 
 private:
 

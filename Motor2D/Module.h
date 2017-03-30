@@ -18,7 +18,7 @@
 using namespace std;
 
 class App;
-struct Collider;
+struct Collision_data;
 
 class Module
 {
@@ -81,7 +81,7 @@ public:
 		return true;
 	}
 
-	virtual void OnCollision(Collider* c1, Collider* c2)
+	virtual void OnCollision(Collision_data& col_data)
 	{}
 
 

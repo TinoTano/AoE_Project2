@@ -513,8 +513,9 @@ iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, lis
 
 }
 
-void PathFinding::SolveCollision(Unit* unit1, Unit* unit2) {
+Collision_state PathFinding::SolveCollision(Unit* unit1, Unit* unit2) {
 	
+	Collision_state col_state = UNSOLVED;
 	iPoint nearest_tile;
 	switch (unit1->state) {
 
@@ -553,11 +554,17 @@ void PathFinding::SolveCollision(Unit* unit1, Unit* unit2) {
 				if (unit2->attackTarget != nullptr)
 					unit2->attackTarget = nullptr;
 
+				col_state = SOLVING;
 			}
 			break;
 
 		case UNIT_MOVING:
 
+			
+			if (unit1->collider->CheckCollision(unit2->collider))
+				unit2->next_step = unit2->entityPosition;
+			else
+				col_state = SOLVED;
 			break;
 
 		}
@@ -565,6 +572,7 @@ void PathFinding::SolveCollision(Unit* unit1, Unit* unit2) {
 
 	}
 
+	return col_state;
 }
 
 

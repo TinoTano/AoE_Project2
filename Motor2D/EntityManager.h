@@ -45,7 +45,7 @@ public:
 	void DeleteUnit(Unit* unit);
 	void DeleteBuilding(Building* building);
 	void DeleteResource(Resource* resource);
-	void OnCollision(Collider* c1, Collider* c2);
+	void OnCollision(Collision_data& col_data);
 
 private:
 	void DestroyEntity(Entity* entity);

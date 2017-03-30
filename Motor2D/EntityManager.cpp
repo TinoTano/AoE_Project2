@@ -74,7 +74,7 @@ bool EntityManager::Update(float dt)
 
 	
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedUnitList.empty()) {
 
 		iPoint destination = App->map->WorldToMap(mouseX, mouseY);
 
@@ -552,61 +552,55 @@ void EntityManager::DeleteResource(Resource* resource)
 	}
 }
 
-void EntityManager::OnCollision(Collider * c1, Collider * c2)
+void EntityManager::OnCollision(Collision_data& col_data)
 {
 	//Uncomment for combat
-	Unit* unit1 = nullptr;
+	Unit* unit = nullptr;
+	Unit* unit2 = nullptr;
+	Building* building = nullptr;
 
-	c1->colliding = true;
-	c2->colliding = true;
+	col_data.c1->colliding = true;
+	col_data.c2->colliding = true;
 	
-	if (c1->type == COLLIDER_UNIT) {
+	if (col_data.c1->type == COLLIDER_UNIT) {
 
-		unit1 = c1->GetUnit();
+		unit = col_data.c1->GetUnit();
 
-		switch (c2->type) {
+		switch (col_data.c2->type) {
 
 		case COLLIDER_UNIT:
 
-			if (c2->GetUnit()->faction != unit1->faction) {
-				if (unit1->attackTarget == nullptr) {
-					unit1->attackTarget = c2->GetUnit();
-					unit1->SetState(UNIT_ATTACKING);
+			unit2 = col_data.c2->GetUnit();
+
+			if (unit2->faction != unit->faction) {
+				if (unit->attackTarget == nullptr) {
+					unit->attackTarget = unit2;
+					unit->SetState(UNIT_ATTACKING);
 				}
 
-				if (c2->GetUnit()->attackTarget == nullptr) {
-					c2->GetUnit()->attackTarget = unit1;
-					c2->GetUnit()->SetState(UNIT_ATTACKING);
+				if (unit2->attackTarget == nullptr) {
+					unit2->attackTarget = unit;
+					unit2->SetState(UNIT_ATTACKING);
 				}
 			}
-			else {
-
-				App->pathfinding->SolveCollision(unit1, c2->GetUnit());
-				//unit1->next_step = unit1->entityPosition;
-
-				/*if (unit1->state == UNIT_MOVING) {
-
-					iPoint unit_pos = App->map->WorldToMap(unit1->entityPosition.x, unit1->entityPosition.y);
-
-					unit1->path->push_front(App->pathfinding->FindNearestAvailableTarget(unit_pos, unit1->path->front()));
-					unit1->SetState(UNIT_MOVING);
-				}*/
-
-			}
-
+			else 
+				col_data.state = App->pathfinding->SolveCollision(unit, unit2);
+			
 			break;
 
 		case COLLIDER_BUILDING:
 
-			if (c2->GetBuilding()->faction != unit1->faction) {
-				if (unit1->attackTarget == nullptr) {
-					unit1->attackTarget = c2->GetBuilding();
-					unit1->SetState(UNIT_ATTACKING);
+			building = col_data.c2->GetBuilding();
+
+			if (building->faction != unit->faction) {
+				if (unit->attackTarget == nullptr) {
+					unit->attackTarget = building;
+					unit->SetState(UNIT_ATTACKING);
 				}
 
-				if (c2->GetBuilding()->canAttack && c2->GetBuilding()->attackTarget == nullptr) {
-					c2->GetBuilding()->attackTarget = unit1;
-					c2->GetBuilding()->state = BUILDING_ATTACKING;
+				if (building->canAttack && building->attackTarget == nullptr) {
+					building->attackTarget = unit;
+					building->state = BUILDING_ATTACKING;
 				}
 			}
 
