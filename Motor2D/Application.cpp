@@ -16,10 +16,8 @@
 #include "EntityManager.h"
 #include "Collision.h"
 #include "Gui.h"
-#include "SceneTest.h"
 #include "FogOfWar.h"
 #include "Console.h"
-#include "SceneTest.h"
 
 
 
@@ -41,7 +39,6 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	entityManager = new EntityManager();
 	collision = new Collision();
 	gui = new Gui();
-	scenetest = new SceneTest();
 	fog = new FogOfWar();
 	console = new Console();
 	
@@ -62,7 +59,6 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 
 	// scene last
 	AddModule(sceneManager);
-	AddModule(scenetest);
 	AddModule(entityManager);
 
 	

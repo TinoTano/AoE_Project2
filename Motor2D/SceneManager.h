@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Scene.h"
-#include "SceneTest.h"
 #include "MenuScene.h"
 
 class SceneManager;
@@ -36,7 +35,6 @@ public:
 	void ChangeScene(SceneElement* last_scene, SceneElement* new_scene);
 
 	Scene*		level1_scene = nullptr;
-	SceneTest*		UI_scene = nullptr;
 	MenuScene*		menu_scene = nullptr;
 
 	list<SceneElement*>	scenes;

@@ -246,6 +246,7 @@ public:
 	void WindowOn();
 	void WindowOff();
 	SDL_Rect FocusArea();
+	void CleanUp();
 
 };
 
@@ -269,7 +270,7 @@ public:
 
 	Image* sword_img;
 	Image* armor_img;
-	Image* arrow_img;
+	//Image* arrow_img;
 
 	uint attack;
 	uint defense;
@@ -281,6 +282,7 @@ public:
 	void Update();
 	void ClearMultiple();
 	void ClearSingle();
+	void CleanUp();
 };
 
 

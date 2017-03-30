@@ -97,7 +97,6 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneElement.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="SceneTest.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Textures.cpp" />
@@ -128,7 +127,6 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneElement.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="SceneTest.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Input.h" />

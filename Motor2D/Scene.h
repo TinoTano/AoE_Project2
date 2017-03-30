@@ -4,6 +4,9 @@
 
 #include "SceneElement.h"
 #include "Timer.h"
+#include "Gui.h"
+#include <string>
+
 
 struct SDL_Texture;
 class Unit;
@@ -44,6 +47,16 @@ private:
 	Unit* troll;
 	Building* testBuilding;
 	Resource* tree;
+
+// UI ELEMENTS
+	Image* top, *bottom;
+	Button* menu_bt;
+	WindowUI ui_menu;
+	Image* menu_bg_img;
+	Button* quit_game_bt;
+	Button* back_to_menu_bt;
+	Button* save_game_bt;
+	Button* cancel_bt;
 };
 
 #endif // __SCENE_H__

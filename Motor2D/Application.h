@@ -15,7 +15,6 @@ class Textures;
 class Audio;
 class FileSystem;
 class SceneManager;
-class SceneTest;
 class Map;
 class PathFinding;
 class Fonts;
@@ -105,7 +104,6 @@ public:
 	EntityManager*		entityManager = NULL;
 	Collision*			collision = NULL;
 	Gui*				gui = NULL;
-	SceneTest*			scenetest = NULL;
 	FogOfWar*			fog = NULL;
 	Console*			console = NULL;
 

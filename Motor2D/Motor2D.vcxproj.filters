@@ -61,9 +61,6 @@
     <ClCompile Include="Collision.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="SceneTest.cpp">
-      <Filter>Project 2\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="Building.cpp">
       <Filter>Project 2\Entities</Filter>
     </ClCompile>
@@ -82,8 +79,12 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="SceneElement.cpp" />
-    <ClCompile Include="MenuScene.cpp" />
+    <ClCompile Include="SceneElement.cpp">
+      <Filter>Project 2\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>Project 2\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -161,9 +162,6 @@
     <ClInclude Include="Gui.h">
       <Filter>Project 2\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="SceneTest.h">
-      <Filter>Project 2\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Building.h">
       <Filter>Project 2\Entities</Filter>
     </ClInclude>
@@ -185,7 +183,9 @@
     <ClInclude Include="SceneElement.h">
       <Filter>Project 2\Scenes</Filter>
     </ClInclude>
-    <ClInclude Include="MenuScene.h" />
+    <ClInclude Include="MenuScene.h">
+      <Filter>Project 2\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">

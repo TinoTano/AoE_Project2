@@ -862,6 +862,15 @@ SDL_Rect WindowUI::FocusArea()
 	ret.h = height;
 	return ret;
 }
+void WindowUI::CleanUp()
+{
+	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
+	{
+			//RELEASE((*it));
+		App->gui->DestroyUIElement(*it);
+	}
+}
+
 void WindowUI::SetFocus(int& x, int& y, int width, int height)
 {
 	this->x = &x;
@@ -1001,19 +1010,33 @@ void HUD::ClearMultiple()
 {
 	for (list<Image*>::iterator it = multiple.begin(); it != multiple.end(); ++it)
 	{
+		if (it._Ptr->_Myval != nullptr)
 		App->gui->DestroyUIElement(it._Ptr->_Myval);
 	}
 }
 
 void HUD::ClearSingle()
 {
+	if (single != nullptr)
 	App->gui->DestroyUIElement(single);
+	if (name != nullptr)
 	App->gui->DestroyUIElement(name);
+	if (sword_img != nullptr)
 	App->gui->DestroyUIElement(sword_img);
+	if (armor_img != nullptr)
 	App->gui->DestroyUIElement(armor_img);
+	if (damage_val != nullptr)
 	App->gui->DestroyUIElement(damage_val);
+	if (armor_val != nullptr)
 	App->gui->DestroyUIElement(armor_val);
+	if (life != nullptr)
 	App->gui->DestroyUIElement(life);
+}
+
+void HUD::CleanUp()
+{
+	ClearMultiple();
+	ClearSingle();
 }
 
 

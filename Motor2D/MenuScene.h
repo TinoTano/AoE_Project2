@@ -4,7 +4,7 @@
 
 #include "SceneElement.h"
 #include "Timer.h"
-
+#include "Gui.h"
 struct SDL_Texture;
 class Unit;
 class Building;
@@ -37,6 +37,8 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+
+	Image* background;
 };
 
 #endif // __SCENE_H__#pragma once
