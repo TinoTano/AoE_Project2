@@ -364,7 +364,6 @@ void PathFinding::SharePath(Unit* commander, list<Unit*> followers) {
 
 	iPoint no_space(-1, -1);
 
-
 	list<list<iPoint>*> new_paths;
 	for (list<Unit*>::iterator it0 = followers.begin(); it0 != followers.end(); it0++) {
 		list<iPoint>* new_path = new list<iPoint>;
@@ -398,10 +397,18 @@ void PathFinding::SharePath(Unit* commander, list<Unit*> followers) {
 
 	list<list<iPoint>*>::iterator it4 = new_paths.begin();
 	for (list<Unit*>::iterator it5 = followers.begin(); it5 != followers.end(); it5++) {
+
+		if ((*it5)->path != nullptr) {
+			App->pathfinding->DeletePath((*it5)->path);
+			(*it5)->path = nullptr;
+		}
+
 		(*it5)->path = (*it4);
 		paths.push_back(*(*it4));
 		it4++;
 	}
+
+	
 
 }
 

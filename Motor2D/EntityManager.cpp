@@ -81,24 +81,28 @@ bool EntityManager::Update(float dt)
 		Unit* commander = selectedUnitList.front();
 		commander->SetDestination(destination);
 
-		if (selectedUnitList.size() > 1) {
+		if (commander->path != nullptr && commander->path->size() > 0) {
 
-			selectedUnitList.pop_front();
-			App->pathfinding->SharePath(commander, selectedUnitList);
-			selectedUnitList.push_front(commander);
+			if (selectedUnitList.size() > 1) {
 
-		}
+				selectedUnitList.pop_front();
 
-		for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
-			(*it)->SetState(UNIT_MOVING);
-			(*it)->destinationReached = false;
-			(*it)->destinationTile = (*it)->path->front();
-			(*it)->path->erase((*it)->path->begin());
+				App->pathfinding->SharePath(commander, selectedUnitList);
 
-			if ((*it)->attackTarget != nullptr) {
-				(*it)->attackTarget = nullptr;
+				selectedUnitList.push_front(commander);
+
 			}
-		
+
+			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
+				(*it)->SetState(UNIT_MOVING);
+				(*it)->destinationReached = false;
+				(*it)->destinationTile = (*it)->path->front();
+
+				if ((*it)->attackTarget != nullptr) 
+					(*it)->attackTarget = nullptr;
+				
+
+			}
 		}
 		
 	}
