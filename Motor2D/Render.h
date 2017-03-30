@@ -11,10 +11,14 @@
 
 struct Sprite 
 {
-	SDL_Rect rect;
-	SDL_Texture* texture;
-	iPoint pos;
-	int priority;
+	SDL_Rect rect = { 0, 0, 0, 0 };
+	SDL_Texture* texture = nullptr;
+	iPoint pos = { 0, 0 };
+	int priority = 0;
+	SDL_RendererFlip flip = SDL_FLIP_NONE;
+	int r = 0;
+	int g = 0;
+	int b = 0;
 };
 
 // --------------------------------------------

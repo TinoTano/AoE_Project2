@@ -594,7 +594,7 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 					if ((*enemy_unit)->collider == c2)
 					{
 						(*enemy_unit)->SetState(UNIT_ATTACKING);
-						if ((*friendly_unit)->attackUnitTarget == nullptr)(*friendly_unit)->attackUnitTarget = (*enemy_unit);
+						if ((*friendly_unit)->attackUnitTarget == nullptr) (*friendly_unit)->attackUnitTarget = (*enemy_unit);
 						if ((*enemy_unit)->attackUnitTarget == nullptr) (*enemy_unit)->attackUnitTarget = (*friendly_unit);
 					}
 				}

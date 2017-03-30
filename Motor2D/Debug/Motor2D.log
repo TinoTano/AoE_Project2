@@ -1,12 +1,12 @@
 ﻿  Unit.cpp
 c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(53): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
 c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(53): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(147): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(222): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(223): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(235): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(236): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(239): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(240): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(195): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(270): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(271): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(283): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(284): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(287): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(288): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
   Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
   Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

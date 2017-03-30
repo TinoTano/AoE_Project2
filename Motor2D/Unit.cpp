@@ -108,14 +108,62 @@ bool Unit::Draw()
 		aux.pos.x = entityPosition.x - (r.w / 2);
 		aux.pos.y = entityPosition.y - (r.h / 2);
 		aux.priority = entityPosition.y - (r.h / 2) + r.h;
+		aux.flip = currentAnim->flip;
 
 		if (isSelected) 
 		{
+			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
+
+			Sprite bar;
+
 			int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
-			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
+
+			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar.rect.w = hpBarWidth;
+			bar.rect.h = 5;
+			bar.priority = entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+
+			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar.rect.h = 5;
+			bar.priority = entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 0;
+			bar.g = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+		}
+
+		if (attackUnitTarget != nullptr)
+		{
+			Sprite bar;
+
+			int percent = ((attackUnitTarget->unitMaxLife - attackUnitTarget->unitLife) * 100) / attackUnitTarget->unitMaxLife;
+			int barPercent = (percent * hpBarWidth) / 100;
+
+			bar.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
+			bar.rect.w = hpBarWidth;
+			bar.rect.h = 5;
+			bar.priority = attackUnitTarget->entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+			
+			bar.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
+			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar.rect.h = 5;
+			bar.priority = attackUnitTarget->entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 0;
+			bar.g = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
 		}
 
 		 if (collider != nullptr) App->render->sprites_toDraw.push_back(aux);
