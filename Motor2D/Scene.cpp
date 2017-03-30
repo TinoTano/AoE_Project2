@@ -12,6 +12,7 @@
 #include "Unit.h"
 #include "FogOfWar.h"
 #include "Gui.h"
+#include "SceneManager.h"
 
 Scene::Scene() : SceneElement("scene")
 {
@@ -87,6 +88,9 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	
+
+
 	return true;
 }
 
@@ -94,6 +98,10 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate()
 {
 	bool ret = true;
+	if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN) {
+		App->entityManager->CleanUp();
+		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
+	}
 	return ret;
 }
 

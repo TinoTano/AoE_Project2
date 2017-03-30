@@ -16,7 +16,8 @@ bool MenuScene::Awake(pugi::xml_node & config)
 
 bool MenuScene::Start()
 {
-	return true;
+	bool ret = true;
+	return ret;
 }
 
 bool MenuScene::PreUpdate()

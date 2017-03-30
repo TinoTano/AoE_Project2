@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Scene.h"
 #include "SceneTest.h"
+#include "MenuScene.h"
 
 class SceneManager;
 
@@ -32,13 +33,13 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	void ChangeScene(SceneElement* new_scene);
+	void ChangeScene(SceneElement* last_scene, SceneElement* new_scene);
 
 	Scene*		level1_scene = nullptr;
 	SceneTest*		UI_scene = nullptr;
+	MenuScene*		menu_scene = nullptr;
 
-
-	list<Scene*>	scenes;
+	list<SceneElement*>	scenes;
 	SceneElement*	current_scene = nullptr;
 };
 
