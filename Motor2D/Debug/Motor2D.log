@@ -1,6 +1,12 @@
-﻿  Render.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\render.cpp(85): warning C4018: '<': signed/unsigned mismatch
-     Creating library C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
-physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
-  Motor2D.vcxproj -> C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
+﻿  Unit.cpp
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(53): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(53): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(147): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(222): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(223): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(235): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(236): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(239): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(240): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

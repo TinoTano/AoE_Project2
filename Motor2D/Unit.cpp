@@ -107,7 +107,7 @@ bool Unit::Draw()
 		aux.texture = entityTexture;
 		aux.pos.x = entityPosition.x - (r.w / 2);
 		aux.pos.y = entityPosition.y - (r.h / 2);
-		aux.priority = entityPosition.y + r.h;
+		aux.priority = entityPosition.y - (r.h / 2) + r.h;
 
 		if (isSelected) 
 		{
