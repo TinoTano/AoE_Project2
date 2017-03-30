@@ -513,6 +513,62 @@ iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, lis
 
 }
 
+void PathFinding::SolveCollision(Unit* unit1, Unit* unit2) {
+	
+	iPoint nearest_tile;
+	switch (unit1->state) {
+
+	case UNIT_MOVING:
+
+		switch (unit2->state) {
+
+		case UNIT_IDLE:
+
+			nearest_tile = FindNearestAvailable(App->map->WorldToMap(unit2->entityPosition.x, unit2->entityPosition.y));
+
+			if (nearest_tile.x != -1) {
+
+				list<iPoint>* path = new list<iPoint>;
+				path->push_back(nearest_tile);
+				paths.push_back(path);
+
+				if (unit1->path != nullptr && unit1->path->size() == 0) {
+
+					iPoint unit1_dest = App->map->WorldToMap(unit1->destinationTileWorld.x, unit1->destinationTileWorld.y);
+					iPoint unit2_pos = App->map->WorldToMap(unit1->entityPosition.x, unit1->entityPosition.y);
+
+					if (unit1_dest != unit2_pos)
+						path->push_back(App->map->WorldToMap(unit2->entityPosition.x, unit2->entityPosition.y));
+				}
+				else
+					path->push_back(App->map->WorldToMap(unit2->entityPosition.x, unit2->entityPosition.y));
+
+				unit2->path = path;
+				unit2->SetState(UNIT_MOVING);
+				unit2->destinationTileWorld = App->map->MapToWorld(unit2->path->front().x, unit2->path->front().y);
+
+				if (unit2->path->size() > 1)
+					unit2->path->erase(unit2->path->begin());
+
+				if (unit2->attackTarget != nullptr)
+					unit2->attackTarget = nullptr;
+
+			}
+			break;
+
+		case UNIT_MOVING:
+
+			break;
+
+		}
+
+
+	}
+
+}
+
+
+
 list<iPoint>* PathFinding::GetPath() const
 {
 	list<iPoint>* ret = nullptr;

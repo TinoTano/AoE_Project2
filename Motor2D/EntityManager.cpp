@@ -95,7 +95,10 @@ bool EntityManager::Update(float dt)
 
 			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
 				(*it)->SetState(UNIT_MOVING);
-				(*it)->destinationTile = (*it)->path->front();
+				(*it)->destinationTileWorld = App->map->MapToWorld((*it)->path->front().x, (*it)->path->front().y);
+
+				if((*it)->path->size() > 1)
+					(*it)->path->erase((*it)->path->begin());
 
 				if ((*it)->attackTarget != nullptr) 
 					(*it)->attackTarget = nullptr;
@@ -577,6 +580,9 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 				}
 			}
 			else {
+
+				App->pathfinding->SolveCollision(unit1, c2->GetUnit());
+				//unit1->next_step = unit1->entityPosition;
 
 				/*if (unit1->state == UNIT_MOVING) {
 

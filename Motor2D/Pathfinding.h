@@ -60,6 +60,7 @@ public:
 	void CalculatePath(Path* path);
 	void SharePath(Unit* commander, list<Unit*> followers);
 	bool DeletePath(list<iPoint>* path_to_delete);
+	void SolveCollision(Unit* unit1, Unit* unit2);
 
 private:
 

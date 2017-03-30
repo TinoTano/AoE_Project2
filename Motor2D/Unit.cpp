@@ -95,9 +95,13 @@ bool Unit::Draw()
 {
 	if (isVisible) {
 		SDL_Rect r = currentAnim->GetCurrentFrame();
-		iPoint col_pos(entityPosition.x, entityPosition.y + (r.h / 2));    // an offset var in collider should be implemented for big units
-		collider->pos = col_pos;
+		iPoint col_pos;
+		if(state == UNIT_MOVING)
+			col_pos.create(next_step.x, next_step.y + (r.h / 2));    // an offset var in collider should be implemented for big units
+		else
+			col_pos.create(entityPosition.x, entityPosition.y + (r.h / 2));
 
+		collider->pos = col_pos;
 		App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
 		
 	}
@@ -145,16 +149,29 @@ void Unit::SetDestination(iPoint destination)
 
 	SetState(UNIT_MOVING);
 
-	destinationTile = path->front();
+	destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
 	path->erase(path->begin());
 	
-	if (attackTarget != nullptr) {
+	if (attackTarget != nullptr) 
 		attackTarget = nullptr;
-	}
+	
 }
 
 void Unit::Move(float dt)
 {
+	entityPosition = next_step;
+
+	if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
+		if (path->size() > 0) {
+			destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
+			path->erase(path->begin());
+		}
+		else {
+			App->pathfinding->DeletePath(path);
+			SetState(UNIT_IDLE);
+		}
+	}
+
 	CalculateVelocity();
 	LookAt();
 
@@ -162,27 +179,15 @@ void Unit::Move(float dt)
 	roundf(vel.x);
 	roundf(vel.y);
 
-	entityPosition.x += int(vel.x);
-	entityPosition.y += int(vel.y);
+	next_step.x = entityPosition.x + int(vel.x);
+	next_step.y = entityPosition.y + int(vel.y);
 
-	if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
-		if (path->size() > 0) {
-			destinationTile = path->front();
-			path->erase(path->begin());
-			LOG("%d %d", destinationTile.x, destinationTile.y);
-		}
-		else {
-			App->pathfinding->DeletePath(path);
-			SetState(UNIT_IDLE);
-		}
-	}
 }
 
 
 void Unit::CalculateVelocity()
 {
 
-	destinationTileWorld = App->map->MapToWorld(destinationTile.x + 1, destinationTile.y);
 	velocity.x = destinationTileWorld.x - entityPosition.x;
 	velocity.y = destinationTileWorld.y - entityPosition.y;
 
@@ -249,7 +254,6 @@ void Unit::AttackEnemy(float dt)
 	}
 }
 
-
 void Unit::Dead() {
 	SetState(UNIT_DEAD);
 	App->collision->DeleteCollider(collider);
@@ -265,6 +269,7 @@ void Unit::SetState(unitState newState)
 		break;
 	case UNIT_MOVING:
 		this->state = UNIT_MOVING;
+		next_step = entityPosition;
 		SetAnim(currentDirection);
 		entityTexture = unitMoveTexture;
 		break;
