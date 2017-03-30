@@ -70,6 +70,12 @@ public:
 	SDL_Rect		viewport;
 	SDL_Color		background;
 
+	// My changes --------------------------------
+
+	std::deque<Sprite> sprites_toDraw;
+
+	// --------------------------------------------
+
 private:
 
 	bool			vsync = false;

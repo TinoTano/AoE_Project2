@@ -91,6 +91,7 @@ public:
 	int unitDefense = 0;
 	bool isVisible = true;
 	bool isSelected = false;
+	bool to_delete = false;
 
 	//Animations
 	vector<Animation> idleAnimations;

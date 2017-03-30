@@ -74,6 +74,8 @@ public:
 	list<Unit*> selectedUnitList;
 	list<Building*> selectedBuildingtList;
 	Resource* selectedResource = nullptr;
+
+
 };
 
 #endif // !__ENTITY_MANAGER__

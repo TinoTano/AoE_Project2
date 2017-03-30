@@ -77,9 +77,8 @@ bool Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
 	}
-
-	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
+	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 
 	if (debug) {
 		const list<iPoint>* path = App->pathfinding->GetLastPath();

@@ -641,3 +641,5 @@ void EntityManager::DestroyEntity(Entity * entity)
 		}
 	}
 }
+
+

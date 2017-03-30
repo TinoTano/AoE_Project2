@@ -72,6 +72,24 @@ bool Render::PreUpdate()
 
 bool Render::PostUpdate()
 {
+	// My changes --------------------------------------------------
+
+	/*if (sprites_toDraw.size() > 1) {
+		for (int it = 0; it < sprites_toDraw.size() - 1; it++) {
+			if (sprites_toDraw[it].priority > sprites_toDraw[it + 1].priority) {
+				SWAP(sprites_toDraw[it], sprites_toDraw[it + 1]);
+			}
+		}
+	}*/
+
+	for (int it = 0; it < sprites_toDraw.size(); it++) {
+		App->render->Blit(sprites_toDraw[it].texture, sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, &sprites_toDraw[it].rect, SDL_FLIP_HORIZONTAL);
+	}
+
+	sprites_toDraw.clear();
+
+	// ----------------------------------------------------------------
+
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);
 	return true;

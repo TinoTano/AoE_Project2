@@ -82,7 +82,7 @@ bool Unit::Update(float dt)
 	case UNIT_DEAD:
 		if (currentAnim->Finished()) {
 			App->entityManager->DeleteUnit(this, isEnemy);
-
+			App->collision->DeleteCollider(collider);
 		}
 		break;
 	}
@@ -95,22 +95,34 @@ bool Unit::Draw()
 {
 	// My changes ---------------------------------------------------------
 
-	if (isVisible) {
+	Sprite aux;
+
+	if (isVisible) 
+	{
 		SDL_Rect r = currentAnim->GetCurrentFrame();
 		collider->rect.x = entityPosition.x - (r.w / 4);
 		collider->rect.y = entityPosition.y - (r.h / 3);
 
-		if (isSelected) {
+		aux.rect = r;
+		aux.texture = entityTexture;
+		aux.pos.x = entityPosition.x - (r.w / 2);
+		aux.pos.y = entityPosition.y - (r.h / 2);
+		aux.priority = entityPosition.y + r.h;
+
+		if (isSelected) 
+		{
 			int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
 			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
 			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
 			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
 		}
-		App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
+
+		 if (collider != nullptr) App->render->sprites_toDraw.push_back(aux);
 	}
 
 	// ---------------------------------------------------------------------
+
 	return true;
 }
 
@@ -297,7 +309,7 @@ void Unit::AttackEnemyBuilding(float dt)
 
 void Unit::Dead() {
 	SetState(UNIT_DEAD);
-	App->collision->DeleteCollider(collider);
+	collider->rect = { 0, 0, 0, 0 };
 }
 
 void Unit::SetState(unitState newState)
