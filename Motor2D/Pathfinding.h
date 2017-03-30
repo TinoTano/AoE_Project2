@@ -41,8 +41,8 @@ public:
 	// To request all tiles involved in the last generated path
 	const list<iPoint>* GetLastPath() const;
 
-	list<iPoint> GetPath() const;
-	list<list<iPoint>>* GetPaths();
+	list<iPoint>* GetPath() const;
+	list<list<iPoint>*>* GetPaths();
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries(const iPoint& pos) const;
@@ -70,7 +70,7 @@ private:
 	uchar* map;
 	// we store the created path here
 	list<iPoint> lastPath;
-	list<list<iPoint>> paths;
+	list<list<iPoint>*> paths;
 };
 
 // forward declaration

@@ -22,10 +22,10 @@ bool PathFinding::CleanUp()
 
 	lastPath.clear();
 
-	for (list<list<iPoint>>::iterator it = paths.begin(); it != paths.end();) {
-		list<iPoint>* to_erase = &(*it);
+	for (list<list<iPoint>*>::iterator it = paths.begin(); it != paths.end();) {
+		list<iPoint>* to_erase = (*it);
 		RELEASE(to_erase);
-		list<list<iPoint>>::iterator tmp = it;
+		list<list<iPoint>*>::iterator tmp = it;
 		++it;
 		paths.erase(tmp);
 	}
@@ -333,7 +333,7 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 {
 	iPoint adjusted_orig = origin;
 	iPoint adjusted_dest = destination;
-	list<iPoint>* ret = nullptr;
+	list<iPoint>* ret = new list<iPoint>;
 
 	if (!IsWalkable(origin) || App->entityManager->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
 		adjusted_orig = FindNearestAvailable(origin);    
@@ -341,18 +341,23 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	if (!IsWalkable(destination) || App->entityManager->IsOccupied(destination))
 		adjusted_dest = FindNearestAvailable(destination);
 	
-	if (adjusted_orig.x == -1 || adjusted_dest.x == -1 || adjusted_dest == adjusted_orig)
+	if (adjusted_orig.x == -1 || adjusted_dest.x == -1 || adjusted_dest == adjusted_orig) {
+		ret->push_back(origin);
 		return ret;
+	}
 
-	Path* path = new Path();
-	path->open.pathNodeList.push_back(PathNode(0, 0, adjusted_orig, NULL));
-	path->origin = adjusted_orig;
-	path->destination = adjusted_dest;
+	Path path;
+	path.open.pathNodeList.push_back(PathNode(0, 0, adjusted_orig, NULL));
+	path.origin = adjusted_orig;
+	path.destination = adjusted_dest;
  // push the path to a list where there will be all the paths that need to be calculated
 
-	CalculatePath(path);
-	paths.push_back(path->finished_path);
-	ret = &path->finished_path;
+	CalculatePath(&path);
+
+	for (list<iPoint>::iterator it = path.finished_path.begin(); it != path.finished_path.end(); it++)
+		ret->push_back((*it));
+
+	paths.push_back(ret);
 
 	if (!ret->empty())
 		ret->erase(ret->begin());
@@ -404,7 +409,7 @@ void PathFinding::SharePath(Unit* commander, list<Unit*> followers) {
 		}
 
 		(*it5)->path = (*it4);
-		paths.push_back(*(*it4));
+		paths.push_back((*it4));
 		it4++;
 	}
 
@@ -416,9 +421,9 @@ void PathFinding::SharePath(Unit* commander, list<Unit*> followers) {
 bool PathFinding::DeletePath(list<iPoint>* path_to_delete) {
 
 
-	for (list<list<iPoint>>::iterator it = paths.begin(); it != paths.end(); it++) {
+	for (list<list<iPoint>*>::iterator it = paths.begin(); it != paths.end(); it++) {
 
-		if (&(*it) == path_to_delete) {
+		if ((*it) == path_to_delete) {
 
 			RELEASE(path_to_delete);
 			paths.erase(it);
@@ -508,9 +513,9 @@ iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, lis
 
 }
 
-list<iPoint> PathFinding::GetPath() const
+list<iPoint>* PathFinding::GetPath() const
 {
-	list<iPoint> ret;
+	list<iPoint>* ret = nullptr;
 
 	if (!paths.empty())
 		ret = paths.front();
@@ -518,7 +523,7 @@ list<iPoint> PathFinding::GetPath() const
 	return ret;
 }
 
-list<list<iPoint>>* PathFinding::GetPaths() 
+list<list<iPoint>*>* PathFinding::GetPaths() 
 {
 	return &paths;
 }

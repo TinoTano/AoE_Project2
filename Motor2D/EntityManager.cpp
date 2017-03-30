@@ -81,7 +81,7 @@ bool EntityManager::Update(float dt)
 		Unit* commander = selectedUnitList.front();
 		commander->SetDestination(destination);
 
-		if (commander->path != nullptr && commander->path->size() > 0) {
+		if (commander->path->size() > 0) {
 
 			if (selectedUnitList.size() > 1) {
 

@@ -74,8 +74,7 @@ bool Unit::Update(float dt)
 {
 	switch (state) {
 	case UNIT_MOVING:
-		if(path != nullptr)
-			Move(dt);
+		Move(dt);
 		break;
 	case UNIT_ATTACKING:
 		if (attackTarget != nullptr) {
@@ -144,15 +143,13 @@ void Unit::SetDestination(iPoint destination)
 	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
 	path = App->pathfinding->CreatePath(origin, destination);
 
-	if (path != nullptr) {
+	SetState(UNIT_MOVING);
+	destinationReached = false;
 
-		SetState(UNIT_MOVING);
-		destinationReached = false;
+	destinationTile = path->front();
 
-		destinationTile = path->front();
-
-		path->erase(path->begin());
-	}
+	path->erase(path->begin());
+	
 	if (attackTarget != nullptr) {
 		attackTarget = nullptr;
 	}
@@ -174,13 +171,9 @@ void Unit::Move(float dt)
 
 		if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
 			if (path->size() > 0) {
-				if (path->size() > 1000)
-					int a = 5;
-				else {
-					destinationTile = path->front();
-					path->erase(path->begin());
-					LOG("%d %d", destinationTile.x, destinationTile.y);
-				}
+				destinationTile = path->front();
+				path->erase(path->begin());
+				LOG("%d %d", destinationTile.x, destinationTile.y);
 			}
 			else {
 				destinationReached = true;
