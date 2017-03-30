@@ -9,6 +9,7 @@
 #include "Textures.h"
 #include "Resource.h"
 #include "SceneManager.h"
+
 EntityManager::EntityManager() : Module()
 {
 	name = "entityManager";

@@ -83,6 +83,7 @@
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
     <ClCompile Include="SceneElement.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -184,6 +185,7 @@
     <ClInclude Include="SceneElement.h">
       <Filter>Project 2\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="MenuScene.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">
