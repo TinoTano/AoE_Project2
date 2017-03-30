@@ -14,7 +14,7 @@ class Render;
 class Textures;
 class Audio;
 class FileSystem;
-class Scene;
+class SceneManager;
 class SceneTest;
 class Map;
 class PathFinding;
@@ -24,7 +24,7 @@ class Collision;
 class Gui;
 class FogOfWar;
 class Console;
-class SceneManager;
+
 
 class Application
 {
@@ -97,7 +97,7 @@ public:
 	Render*				render = NULL;
 	Textures*			tex = NULL;
 	Audio*				audio = NULL;
-	Scene*				scene = NULL;
+	SceneManager*		sceneManager = NULL;
 	FileSystem*			fs = NULL;
 	Map*				map = NULL;
 	PathFinding*		pathfinding = NULL;
@@ -108,7 +108,7 @@ public:
 	SceneTest*			scenetest = NULL;
 	FogOfWar*			fog = NULL;
 	Console*			console = NULL;
-	SceneManager*		sceneManager = NULL;
+
 	bool				quit = false;
 
 private:

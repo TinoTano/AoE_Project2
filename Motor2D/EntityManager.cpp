@@ -2,14 +2,13 @@
 #include "p2Log.h"
 #include "Collision.h"
 #include "Application.h"
-#include "Scene.h"
 #include "Unit.h"
 #include "Pathfinding.h"
 #include "FogOfWar.h"
 #include "Render.h"
 #include "Textures.h"
 #include "Resource.h"
-
+#include "SceneManager.h"
 EntityManager::EntityManager() : Module()
 {
 	name = "entityManager";
@@ -32,7 +31,8 @@ bool EntityManager::Start()
 	
 	bool ret = LoadGameData();
 	if (ret) {
-		App->scene->Start();
+		if (App->sceneManager->current_scene->name == "scene")
+			App->sceneManager->current_scene->Start();
 	}
 	
 	return ret;

@@ -2,14 +2,11 @@
 #define __j1SCENE_H__
 
 #include "Module.h"
-#include "SceneManager.h"
 #include "Gui.h"
 #include <string>
 
-class GuiImage;
-class GuiText;
 
-class SceneTest : public SceneManager
+class SceneTest : public Module
 {
 public:
 
@@ -37,8 +34,6 @@ public:
 	bool CleanUp();
 private:
 	SDL_Texture* debug_tex;
-	GuiImage* banner;
-	//GuiText* text;
 
 
 	char mierda;

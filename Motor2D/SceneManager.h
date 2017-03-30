@@ -2,7 +2,8 @@
 #define __SCENE_MANAGER__H
 
 #include "Module.h"
-
+#include "Scene.h"
+#include "SceneTest.h"
 
 class SceneManager;
 
@@ -31,9 +32,14 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void ChangeScene(SceneElement* new_scene);
+
+	Scene*		level1_scene = nullptr;
+	SceneTest*		UI_scene = nullptr;
 
 
-	list<Module*>	scenes;
+	list<Scene*>	scenes;
+	SceneElement*	current_scene = nullptr;
 };
 
 #endif // !__SCENE_MANAGER__

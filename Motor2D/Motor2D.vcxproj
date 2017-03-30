@@ -94,6 +94,7 @@
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneElement.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneTest.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -123,6 +124,7 @@
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneElement.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="SceneTest.h" />
     <ClInclude Include="Timer.h" />

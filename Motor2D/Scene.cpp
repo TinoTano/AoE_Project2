@@ -13,9 +13,8 @@
 #include "FogOfWar.h"
 #include "Gui.h"
 
-Scene::Scene() : SceneManager()
+Scene::Scene() : SceneElement("scene")
 {
-	name = "scene";
 }
 
 // Destructor
@@ -27,7 +26,7 @@ bool Scene::Awake(pugi::xml_node & config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
-	active = false;
+	active = true;
 	return ret;
 }
 
@@ -65,6 +64,7 @@ bool Scene::Start()
 // Called each loop iteration
 bool Scene::PreUpdate()
 {
+	
 	return true;
 }
 
@@ -74,9 +74,9 @@ bool Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
 	}
-
-	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
+	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
+	
 
 	if (debug) {
 		const list<iPoint>* path = App->pathfinding->GetLastPath();

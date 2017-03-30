@@ -6,7 +6,7 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Audio.h"
-#include "Scene.h"
+#include "SceneManager.h"
 #include "FileSystem.h"
 #include "Map.h"
 #include "Pathfinding.h"
@@ -19,7 +19,9 @@
 #include "SceneTest.h"
 #include "FogOfWar.h"
 #include "Console.h"
-#include "SceneManager.h"
+#include "SceneTest.h"
+
+
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -31,7 +33,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	render = new Render();
 	tex = new Textures();
 	audio = new Audio();
-	scene = new Scene();
+	sceneManager = new SceneManager();
 	fs = new FileSystem();
 	map = new Map();
 	pathfinding = new PathFinding();
@@ -42,7 +44,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	scenetest = new SceneTest();
 	fog = new FogOfWar();
 	console = new Console();
-	sceneManager = new SceneManager();
+	
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -56,14 +58,14 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(gui);
 	AddModule(console);
-	AddModule(sceneManager);
+
 
 	// scene last
-	AddModule(scene);
+	AddModule(sceneManager);
 	AddModule(scenetest);
-
-
 	AddModule(entityManager);
+
+	
 	AddModule(collision);
 	//AddModule(fog);
 	

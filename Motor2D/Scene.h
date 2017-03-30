@@ -1,8 +1,8 @@
 #ifndef __SCENE_H__
 #define __SCENE_H__
 
-#include "Module.h"
-#include "SceneManager.h"
+
+#include "SceneElement.h"
 #include "Timer.h"
 
 struct SDL_Texture;
@@ -10,7 +10,7 @@ class Unit;
 class Building;
 class Resource;
 
-class Scene : public SceneManager
+class Scene : public SceneElement
 {
 public:
 
