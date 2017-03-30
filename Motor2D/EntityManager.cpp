@@ -4,11 +4,9 @@
 #include "Application.h"
 #include "Scene.h"
 #include "Unit.h"
-#include "Pathfinding.h"
 #include "FogOfWar.h"
 #include "Render.h"
 #include "Textures.h"
-#include "Resource.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -49,14 +47,10 @@ bool EntityManager::Update(float dt)
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;
 
-	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-		(*it)->Update(dt);
-		(*it)->Draw();
-	}
 	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
-		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
+		App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
 		(*it)->Update(dt);
@@ -65,129 +59,185 @@ bool EntityManager::Update(float dt)
 	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
-		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
+		App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
 	}
 
-	
+	// My changes --------------------------------------------------------------
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {
-
-		iPoint destination = App->map->WorldToMap(mouseX, mouseY);
-
-		Unit* commander = selectedUnitList.front();
-		commander->SetDestination(destination);
-
-		if (selectedUnitList.size() > 1) {
-
-			selectedUnitList.pop_front();
-			App->pathfinding->SharePath(commander, selectedUnitList);
-			selectedUnitList.push_front(commander);
-
-		}
-
-		for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
-			(*it)->SetState(UNIT_MOVING);
-			(*it)->destinationReached = false;
-			(*it)->destinationTile = (*it)->path->front();
-			(*it)->path->erase((*it)->path->begin());
-
-			if ((*it)->attackTarget != nullptr) {
-				(*it)->attackTarget = nullptr;
-			}
-		
-		}
-		
-	}
-	
-	switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)) 
+	// Enemies
+	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++)
 	{
+		if ((*it)->state == UNIT_IDLE)
+			(*it)->SetDestination();
+	}
 
-	case KEY_DOWN:
+	// Allies
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) 
+	{
+		Unit* clickedUnit = nullptr;
+		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) 
+		{
+			if (selectedUnitList.size() == 1) 
+			{
+				if ((*it)->isSelected) 
+				{
+					(*it)->SetDestination();
+					if (clickedUnit != nullptr) 
+					{
+						(*it)->attackUnitTarget = clickedUnit;
+					}
+				}
+			}
+		}
+	}
+
+	// ------------------------------------------------------------------------
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
 		multiSelectionRect.x = mouseX;
 		multiSelectionRect.y = mouseY;
-		break;
+	}
 
-	case KEY_REPEAT:
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 		multiSelectionRect.w = mouseX - multiSelectionRect.x;
 		multiSelectionRect.h = mouseY - multiSelectionRect.y;
-		break;
+	}
 
-	case KEY_UP:
-
-		selectedUnitList.clear();
-
-		bool selectedCount = 0;
-
-		if (multiSelectionRect.w < 0) {
-			multiSelectionRect.x += multiSelectionRect.w;
-			multiSelectionRect.w *= -1;
-		}
-		if (multiSelectionRect.h < 0) {
-			multiSelectionRect.y += multiSelectionRect.h;
-			multiSelectionRect.h *= -1;
-		}
-
-		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-			SDL_Point pos;
-			pos.x = (*it)->entityPosition.x;
-			pos.y = (*it)->entityPosition.y;
-
-			if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-				selectedCount++;
-				selectedUnitList.push_back((*it));
-			}
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+		if (multiSelectionRect.w != 0) {
 			
-		}
+			bool selectedCount = 0;
 
-		if (selectedCount == 0) {
+			if (multiSelectionRect.w < 0) {
+				multiSelectionRect.x += multiSelectionRect.w;
+				multiSelectionRect.w *= -1;
+			}
+			if (multiSelectionRect.h < 0) {
+				multiSelectionRect.y += multiSelectionRect.h;
+				multiSelectionRect.h *= -1;
+			}
 
-			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 				SDL_Point pos;
 				pos.x = (*it)->entityPosition.x;
 				pos.y = (*it)->entityPosition.y;
 
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
+				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+					(*it)->isSelected = true;
+					selectedCount++;
 					selectedUnitList.push_back((*it));
-
+				}
 			}
-		}
+			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+				if ((*it)->isSelected) {
+					(*it)->isSelected = false;
+					selectedUnitList.remove(*it);
+				}
+			}
+			if (selectedCount == 0) {
+				for (list<Unit*>::iterator it2 = selectedUnitList.begin(); it2 != selectedUnitList.end(); it2++) {
+					if ((*it2)->isSelected) {
+						(*it2)->isSelected = false;
+						selectedUnitList.remove(*it2);
+					}
+				}
+				for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+					SDL_Point pos;
+					pos.x = (*it)->entityPosition.x;
+					pos.y = (*it)->entityPosition.y;
 
-		if (doubleClickTimer <= 0.5f) {
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if (!selectedUnitList.empty()) {
-					if ((*it) != selectedUnitList.front()) {
-
-						if ((*it)->GetType() == selectedUnitList.front()->GetType()) 
-							selectedUnitList.push_back((*it));
-						
+					if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+						(*it)->isSelected = true;
+					}
+					else {
+						if ((*it)->isSelected) {
+							(*it)->isSelected = false;
+							selectedUnitList.remove(*it);
+						}
 					}
 				}
 			}
-			doubleClickTimer = 0;
+			multiSelectionRect = { 0,0,0,0 };
 		}
-
-		multiSelectionRect = { 0,0,0,0 };
-		break;
+		else {
+			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+				if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
+					mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+					if (selectedUnitList.empty() || selectedUnitList.front() != (*it)) {
+						(*it)->isSelected = true;
+						selectedUnitList.push_back(*it);
+						timesClicked = 0;
+					}
+					for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
+						if (*it != *it2) {
+							if ((*it2)->isSelected) {
+								(*it2)->isSelected = false;
+								selectedUnitList.remove(*it2);
+							}
+						}
+					}
+					timesClicked++;
+					doubleClickTimer = 0;
+					break;
+				}
+				else {
+					if ((*it)->isSelected) {
+						(*it)->isSelected = false;
+						selectedUnitList.remove(*it);
+					}
+				}
+			}
+			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+				if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
+					mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+					(*it)->isSelected = true;
+					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
+						if (*it != *it2) {
+							if ((*it2)->isSelected) {
+								(*it2)->isSelected = false;
+								selectedUnitList.remove(*it2);
+							}
+						}
+					}
+					break;
+				}
+				else {
+					if ((*it)->isSelected) {
+						(*it)->isSelected = false;
+						selectedUnitList.remove(*it);
+					}
+				}
+			}
+		}
 	}
 
-	for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
-		Unit* unit = (*it);
-		int percent = ((unit->MaxLife - unit->Life) * 100) / unit->MaxLife;
-		int barPercent = (percent * unit->hpBarWidth) / 100;
-		int hpbar_y_position = unit->entityPosition.y - ((unit->collider->pos.y - unit->entityPosition.y)* 1.5f) ;
-		App->render->DrawCircle(unit->collider->pos.x, unit->collider->pos.y, 15, 255, 255, 255, 255);
-		App->render->DrawQuad({ unit->entityPosition.x - (unit->hpBarWidth / 2), hpbar_y_position, unit->hpBarWidth, 5 }, 255, 0, 0);
-		App->render->DrawQuad({ unit->entityPosition.x - (unit->hpBarWidth / 2), hpbar_y_position, min(unit->hpBarWidth, max(unit->hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
-	}
-
-	if (multiSelectionRect.w != 0) 
+	if (multiSelectionRect.w != 0) {
 		App->render->DrawQuad(multiSelectionRect, 255, 255, 255, 255, false);
-	
-	doubleClickTimer += dt;
+	}
+
+	if (doubleClickTimer <= 0.5f) {
+		if (timesClicked == 2) {
+			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+				if (!selectedUnitList.empty()) {
+					if ((*it) != selectedUnitList.front()) {
+						if ((*it)->GetType() == selectedUnitList.front()->GetType()) {
+							(*it)->isSelected = true;
+							selectedUnitList.push_back((*it));
+						}
+					}
+				}
+			}
+			timesClicked = 0;
+		}
+		doubleClickTimer += dt;
+	}
+	else {
+		timesClicked = 0;
+	}
 
 	return true;
 }
@@ -283,19 +333,6 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-bool EntityManager::IsOccupied(iPoint tile, Unit* ignore_unit) {
-
-	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-		if ((*it) != ignore_unit) {
-			if (tile == App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y) && (*it)->state == UNIT_IDLE)
-				return true;
-		}
-	}
-
-	return false;
-
-}
-
 bool EntityManager::LoadGameData()
 {
 	bool ret = false;
@@ -321,12 +358,12 @@ bool EntityManager::LoadGameData()
 			string attackTexturePath = unitNodeInfo.child("Textures").child("Attack").attribute("value").as_string();
 			string dieTexturePath = unitNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
-			unitTemplate->faction = (Faction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
+			unitTemplate->faction = (unitFaction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			unitTemplate->attackSpeed = 1 / unitNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
-			unitTemplate->Life = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-			unitTemplate->MaxLife = unitTemplate->Life;
-			unitTemplate->Attack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
-			unitTemplate->Defense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
+			unitTemplate->unitLife = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
+			unitTemplate->unitMaxLife = unitTemplate->unitLife;
+			unitTemplate->unitAttack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
+			unitTemplate->unitDefense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
 			unitTemplate->unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
 			unitTemplate->unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
 
@@ -429,9 +466,7 @@ bool EntityManager::LoadGameData()
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
-
-			buildingTemplate->faction = (Faction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
-			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
+			buildingTemplate->buildingLife = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			buildingTemplate->buildingWoodCost = buildingNodeInfo.child("Stats").child("WoodCost").attribute("value").as_int();
 			buildingTemplate->buildingStoneCost = buildingNodeInfo.child("Stats").child("StoneCost").attribute("value").as_int();
 			buildingTemplate->buildingBuildTime = buildingNodeInfo.child("Stats").child("BuildTime").attribute("value").as_int();
@@ -445,18 +480,14 @@ bool EntityManager::LoadGameData()
 			buildingsDB.insert(pair<int, Building*>(buildingTemplate->type, buildingTemplate));
 		}
 
-		for (resourceNodeInfo = gameData.child("Resources").child("Trees").child("TreeType"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("TreeType")) {
+		for (resourceNodeInfo = gameData.child("Resources").child("Resouce"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resouce")) {
 
 			Resource* resourceTemplate = new Resource();
 
 			string idleTexturePath = resourceNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string gatheringTexturePath = resourceNodeInfo.child("Textures").child("Gathering").attribute("value").as_string();
 
-			resourceTemplate->Life = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-
-			for (pugi::xml_node rectsNode = resourceNodeInfo.child("Rects").child("Rect"); rectsNode; rectsNode = rectsNode.next_sibling("Rect")) {
-				resourceTemplate->resourceRectVector.push_back({ rectsNode.attribute("x").as_int(), rectsNode.attribute("y").as_int(), rectsNode.attribute("w").as_int(), rectsNode.attribute("h").as_int() });
-			}
+			resourceTemplate->resourceLife = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 
 			resourceTemplate->resourceIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			resourceTemplate->resourceGatheringTexture = App->tex->Load(gatheringTexturePath.c_str());
@@ -470,12 +501,12 @@ bool EntityManager::LoadGameData()
 	return ret;
 }
 
-Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
+Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type)
 {
-	Unit* unit = new Unit(posX, posY, unitsDB[type]);
+	Unit* unit = new Unit(posX, posY, isEnemy, unitsDB[type]);
 	unit->entityID = nextID;
 	nextID++;
-	if (!unit->faction) {
+	if (!isEnemy) {
 		friendlyUnitList.push_back(unit);
 	}
 	else {
@@ -486,12 +517,12 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	return unit;
 }
 
-Building* EntityManager::CreateBuilding(int posX, int posY, buildingType type)
+Building* EntityManager::CreateBuilding(int posX, int posY, bool isEnemy, buildingType type)
 {
-	Building* building = new Building(posX, posY, buildingsDB[type]);
+	Building* building = new Building(posX, posY, isEnemy, buildingsDB[type]);
 	building->entityID = nextID;
 	nextID++;
-	if (!building->faction) {
+	if (!isEnemy) {
 		friendlyBuildingList.push_back(building);
 	}
 	else {
@@ -502,9 +533,9 @@ Building* EntityManager::CreateBuilding(int posX, int posY, buildingType type)
 	return building;
 }
 
-Resource* EntityManager::CreateResource(int posX, int posY, resourceType type, int resourceRectIndex)
+Resource* EntityManager::CreateResource(int posX, int posY, resourceType type)
 {
-	Resource* resource = new Resource(posX, posY, resourcesDB[type], resourceRectIndex);
+	Resource* resource = new Resource(posX, posY, resourcesDB[type]);
 	resource->entityID = nextID;
 	nextID++;
 	resourceList.push_back(resource);
@@ -512,11 +543,11 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceType type, i
 	return resource;
 }
 
-void EntityManager::DeleteUnit(Unit* unit)
+void EntityManager::DeleteUnit(Unit* unit, bool isEnemy)
 {
 	if (unit != nullptr) {
 		removeUnitList.push_back(unit);
-		if (unit->IsEnemy()) {
+		if (isEnemy) {
 			enemyUnitList.remove(unit);
 		}
 		else {
@@ -525,11 +556,11 @@ void EntityManager::DeleteUnit(Unit* unit)
 	}
 }
 
-void EntityManager::DeleteBuilding(Building* building)
+void EntityManager::DeleteBuilding(Building* building, bool isEnemy)
 {
 	if (building != nullptr) {
 		removeBuildingList.push_back(building);
-		if (building->IsEnemy()) {
+		if (isEnemy) {
 			enemyBuildingList.remove(building);
 		}
 		else {
@@ -548,73 +579,50 @@ void EntityManager::DeleteResource(Resource* resource)
 
 void EntityManager::OnCollision(Collider * c1, Collider * c2)
 {
-	//Uncomment for combat
-	Unit* unit1 = nullptr;
+	// My changes -----------------------------------------------------------------------------
 
-	c1->colliding = true;
-	c2->colliding = true;
-	
-	if (c1->type == COLLIDER_UNIT) {
+	if (c1->type == COLLIDER_FRIENDLY_UNIT && c2->type == COLLIDER_ENEMY_UNIT)
+	{
+		for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
+		{
+			if ((*friendly_unit)->collider == c1)
+			{
+				(*friendly_unit)->SetState(UNIT_ATTACKING);
 
-		unit1 = c1->GetUnit();
-
-		switch (c2->type) {
-
-		case COLLIDER_UNIT:
-
-			if (c2->GetUnit()->faction != unit1->faction) {
-				if (unit1->attackTarget == nullptr) {
-					unit1->attackTarget = c2->GetUnit();
-					unit1->SetState(UNIT_ATTACKING);
-				}
-
-				if (c2->GetUnit()->attackTarget == nullptr) {
-					c2->GetUnit()->attackTarget = unit1;
-					c2->GetUnit()->SetState(UNIT_ATTACKING);
+				for (list<Unit*>::iterator enemy_unit = enemyUnitList.begin(); enemy_unit != enemyUnitList.end(); enemy_unit++)
+				{
+					if ((*enemy_unit)->collider == c2)
+					{
+						(*enemy_unit)->SetState(UNIT_ATTACKING);
+						if ((*friendly_unit)->attackUnitTarget == nullptr)(*friendly_unit)->attackUnitTarget = (*enemy_unit);
+						if ((*enemy_unit)->attackUnitTarget == nullptr) (*enemy_unit)->attackUnitTarget = (*friendly_unit);
+					}
 				}
 			}
-			else {
-
-				/*if (unit1->state == UNIT_MOVING) {
-
-					iPoint unit_pos = App->map->WorldToMap(unit1->entityPosition.x, unit1->entityPosition.y);
-
-					unit1->path->push_front(App->pathfinding->FindNearestAvailableTarget(unit_pos, unit1->path->front()));
-					unit1->SetState(UNIT_MOVING);
-				}*/
-
-			}
-
-			break;
-
-		case COLLIDER_BUILDING:
-
-			if (c2->GetBuilding()->faction != unit1->faction) {
-				if (unit1->attackTarget == nullptr) {
-					unit1->attackTarget = c2->GetBuilding();
-					unit1->SetState(UNIT_ATTACKING);
-				}
-
-				if (c2->GetBuilding()->canAttack && c2->GetBuilding()->attackTarget == nullptr) {
-					c2->GetBuilding()->attackTarget = unit1;
-					c2->GetBuilding()->state = BUILDING_ATTACKING;
-				}
-			}
-
-			break;
-
-		case COLLIDER_RESOURCE:
-
-			break;
-
-		default:
-			break;
 		}
-
 	}
-	
-}
 
+	if (c1->type == COLLIDER_ENEMY_UNIT && c2->type == COLLIDER_FRIENDLY_BUILDING)
+	{
+		for (list<Unit*>::iterator enemy_unit = enemyUnitList.begin(); enemy_unit != enemyUnitList.end(); enemy_unit++)
+		{
+			if ((*enemy_unit)->collider == c1 && (*enemy_unit)->attackUnitTarget == nullptr)
+			{
+				for (list<Building*>::iterator friendly_building = friendlyBuildingList.begin(); friendly_building != friendlyBuildingList.end(); friendly_building++)
+				{
+					if ((*friendly_building)->collider == c2)
+					{
+						(*enemy_unit)->SetState(UNIT_ATTACKING);
+						(*enemy_unit)->attackBuildingTarget = (*friendly_building);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	// ----------------------------------------------------------------------------------------
+}
 
 void EntityManager::DestroyEntity(Entity * entity)
 {

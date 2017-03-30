@@ -17,10 +17,11 @@ Unit::Unit()
 {
 }
 
-Unit::Unit(int posX, int posY, Unit* unit)
+Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
+	this->isEnemy = isEnemy;
 	this->type = unit->type;
 	faction = unit->faction;
 	direction = unit->direction;
@@ -33,10 +34,10 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	unitMoveTexture = unit->unitMoveTexture;
 	unitAttackTexture = unit->unitAttackTexture;
 	unitDieTexture = unit->unitDieTexture;
-	Life = unit->Life;
-	MaxLife = unit->MaxLife;
-	Attack = unit->Attack;
-	Defense = unit->Defense;
+	unitLife = unit->unitLife;
+	unitMaxLife = unit->unitMaxLife;
+	unitAttack = unit->unitAttack;
+	unitDefense = unit->unitDefense;
 
 	//Animations
 	idleAnimations = unit->idleAnimations;
@@ -49,21 +50,15 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	SetAnim(currentDirection);
 
 	SDL_Rect r = currentAnim->GetCurrentFrame();
+	SDL_Rect colliderRect = { entityPosition.x - (r.w / 4), entityPosition.y - (r.h / 3), r.w / 2, r.h / 1.25f};
 	COLLIDER_TYPE colliderType;
-	colliderType = COLLIDER_UNIT;
-	
-
-	uint w = 0, h = 0;
-
-	collider = App->collision->AddCollider(entityPosition, r.w / 4, colliderType, App->entityManager, (Entity*)this);
-
-	/*if (!isEnemy) {
-		isVisible = true;
+	if (isEnemy) {
+		colliderType = COLLIDER_ENEMY_UNIT;
 	}
 	else {
-		isVisible = false;
-	}*/
-
+		colliderType = COLLIDER_FRIENDLY_UNIT;
+	}
+	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
 }
 
 Unit::~Unit()
@@ -77,31 +72,45 @@ bool Unit::Update(float dt)
 		Move(dt);
 		break;
 	case UNIT_ATTACKING:
-		if (attackTarget != nullptr) {
-			AttackEnemy(dt);
+		if (attackUnitTarget != nullptr) {
+			AttackEnemyUnit(dt);
+		}
+		if (attackBuildingTarget != nullptr) {
+			AttackEnemyBuilding(dt);
 		}
 		break;
 	case UNIT_DEAD:
 		if (currentAnim->Finished()) {
-			App->entityManager->DeleteUnit(this);
+			App->entityManager->DeleteUnit(this, isEnemy);
+
 		}
 		break;
 	}
+
 
 	return true;
 }
 
 bool Unit::Draw()
 {
+	// My changes ---------------------------------------------------------
+
 	if (isVisible) {
 		SDL_Rect r = currentAnim->GetCurrentFrame();
-		iPoint col_pos(entityPosition.x, entityPosition.y + (r.h / 2));    // an offset var in collider should be implemented for big units
-		collider->pos = col_pos;
+		collider->rect.x = entityPosition.x - (r.w / 4);
+		collider->rect.y = entityPosition.y - (r.h / 3);
 
+		if (isSelected) {
+			int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
+			int barPercent = (percent * hpBarWidth) / 100;
+			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
+		}
 		App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
-		
 	}
-	
+
+	// ---------------------------------------------------------------------
 	return true;
 }
 
@@ -110,14 +119,9 @@ unitType Unit::GetType() const
 	return type;
 }
 
-bool Unit::IsEnemy() const
-{
-	return (bool)faction;
-}
-
 int Unit::GetLife() const
 {
-	return Life;
+	return unitLife;
 }
 
 void Unit::SetPos(int posX, int posY)
@@ -131,24 +135,45 @@ void Unit::SetSpeed(int amount)
 	unitMovementSpeed = amount;
 }
 
-
-void Unit::SetDestination(iPoint destination)
+void Unit::SetDestination()
 {
+	// My changes ----------------------------------------------------
+
+	iPoint target;
+
+	if (!isEnemy) {
+		App->input->GetMousePosition(target.x, target.y);
+		target = App->map->WorldToMap(target.x - App->render->camera.x, target.y - App->render->camera.y);
+	}
+	else {
+		target = App->scene->troll->GetPosition();
+		target = App->map->WorldToMap(target.x, target.y);
+	}
 
 	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
-	path = App->pathfinding->CreatePath(origin, destination);
+	App->pathfinding->CreatePath(origin, target, path);
 
-	if (path != nullptr) {
+	// ----------------------------------------------------------------
 
+	if (path.size() > 0) {
 		SetState(UNIT_MOVING);
 		destinationReached = false;
 
-		destinationTile = path->front();
+		if (path.front() == origin) {
+			if (path.size() > 1) {
+				destinationTile = path.begin()._Ptr->_Next->_Myval;
+				path.remove(path.begin()._Ptr->_Next->_Myval);
+			}
+		}
+		else {
+			destinationTile = path.front();
+		}
 
-		path->erase(path->begin());
+		path.erase(path.begin());
 	}
-	if (attackTarget != nullptr) {
-		attackTarget = nullptr;
+
+	if (attackUnitTarget != nullptr) {
+		attackUnitTarget = nullptr;
 	}
 }
 
@@ -162,19 +187,16 @@ void Unit::Move(float dt)
 		fPoint vel = (velocity * (unitMovementSpeed + 100)) * dt;
 		roundf(vel.x);
 		roundf(vel.y);
-
 		entityPosition.x += int(vel.x);
 		entityPosition.y += int(vel.y);
 
 		if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
-			if (path->size() > 0) {
-				destinationTile = path->front();
-				path->erase(path->begin());
-				LOG("%d %d", destinationTile.x, destinationTile.y);
+			if (path.size() > 0) {
+				destinationTile = path.front();
+				path.erase(path.begin());
 			}
 			else {
 				destinationReached = true;
-				App->pathfinding->DeletePath(path);
 				SetState(UNIT_IDLE);
 			}
 		}
@@ -188,8 +210,7 @@ void Unit::CalculateVelocity()
 	velocity.x = destinationTileWorld.x - entityPosition.x;
 	velocity.y = destinationTileWorld.y - entityPosition.y;
 
-	if(velocity.x != 0 || velocity.y != 0)
-		velocity.Normalize();
+	velocity.Normalize();
 }
 
 void Unit::LookAt()
@@ -197,12 +218,15 @@ void Unit::LookAt()
 
 	if (state == UNIT_ATTACKING)
 	{
-		if (attackTarget != nullptr)
+		if (attackUnitTarget != nullptr)
 		{
-			velocity.x = attackTarget->entityPosition.x - entityPosition.x;
-			velocity.y = attackTarget->entityPosition.y - entityPosition.y;
+			velocity.x = attackUnitTarget->entityPosition.x - entityPosition.x;
+			velocity.y = attackUnitTarget->entityPosition.y - entityPosition.y;
 		}
-
+		if (attackBuildingTarget != nullptr) {
+			velocity.x = attackBuildingTarget->entityPosition.x - entityPosition.x;
+			velocity.y = attackBuildingTarget->entityPosition.y - entityPosition.y;
+		}
 		velocity.Normalize();
 	}
 
@@ -232,16 +256,36 @@ void Unit::LookAt()
 	}
 }
 
-void Unit::AttackEnemy(float dt)
+void Unit::AttackEnemyUnit(float dt)
+{
+	// My changes ---------------------------------------------------------------------------
+
+	LookAt();
+
+	if (currentAnim->Finished()) {
+		attackUnitTarget->unitLife -= unitAttack - attackUnitTarget->unitDefense;
+		if (attackUnitTarget->unitLife <= 0) {
+			attackUnitTarget->Dead();
+			if (unitLife > 0) {
+				SetState(UNIT_IDLE);
+				attackUnitTarget = nullptr;
+			}
+		}
+	}
+
+	// -----------------------------------------------------------------------------------------
+}
+
+void Unit::AttackEnemyBuilding(float dt)
 {
 	LookAt();
 	if (timer >= attackSpeed) {
-		attackTarget->Life -= Attack - attackTarget->Defense;
-		if (attackTarget->Life <= 0) {
-			attackTarget->Dead();
-			if (Life > 0) {
+		attackBuildingTarget->buildingLife -= unitAttack - attackBuildingTarget->buildingDefense;
+		if (attackBuildingTarget->buildingLife <= 0) {
+			attackBuildingTarget->Dead();
+			if (unitLife > 0) {
 				SetState(UNIT_IDLE);
-				attackTarget = nullptr;
+				attackBuildingTarget = nullptr;
 			}
 		}
 		timer = 0;
@@ -250,7 +294,6 @@ void Unit::AttackEnemy(float dt)
 		timer += dt;
 	}
 }
-
 
 void Unit::Dead() {
 	SetState(UNIT_DEAD);
@@ -283,6 +326,16 @@ void Unit::SetState(unitState newState)
 	}
 }
 
+bool Unit::Load(pugi::xml_node & node)
+{
+	return true;
+}
+
+bool Unit::Save(pugi::xml_node & node) const
+{
+	return true;
+}
+
 void Unit::SetAnim(unitDirection currentDirection) {
 
 	switch (state) {
@@ -299,4 +352,9 @@ void Unit::SetAnim(unitDirection currentDirection) {
 		currentAnim = &dyingAnimations[currentDirection];
 		break;
 	}
+}
+
+pugi::xml_node Unit::LoadUnitInfo(unitType type)
+{
+	return pugi::xml_node();
 }

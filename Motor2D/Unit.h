@@ -23,16 +23,19 @@ enum unitState
 	UNIT_IDLE, UNIT_MOVING, UNIT_ATTACKING, UNIT_DEAD
 };
 
+enum unitFaction {
+	FREE_MEN_UNIT, SAURON_ARMY_UNIT
+};
 
 enum unitDirection {
-	RIGHT, DOWN_RIGHT, DOWN,DOWN_LEFT, LEFT, UP_LEFT, UP, UP_RIGHT
+	DOWN, DOWN_LEFT, DOWN_RIGHT, LEFT, RIGHT, UP_LEFT, UP_RIGHT, UP
 };
 
 class Unit : public Entity
 {
 public:
 	Unit();
-	Unit(int posX, int posY, Unit* unit);
+	Unit(int posX, int posY, bool isEnemy, Unit* unit);
 	~Unit();
 
 	bool Update(float dt);
@@ -40,28 +43,33 @@ public:
 
 	unitType GetType()const;
 	int GetLife() const;
-	bool IsEnemy() const;
 	void SetPos(int posX, int posY);
 	void SetSpeed(int amount);
-	void SetDestination(iPoint destination);
+	void SetDestination();
 	void Move(float dt);
 	void CalculateVelocity();
 	void LookAt();
 	void SetAnim(unitDirection currentDirection);
-	void AttackEnemy(float dt);
+	void AttackEnemyUnit(float dt);
+	void AttackEnemyBuilding(float dt);
 	void Dead();
 	void SetState(unitState state);
+	pugi::xml_node LoadUnitInfo(unitType type);
+
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
 
 private:
 
 public:
 	unitType type = ELVEN_ARCHER;
-	Faction faction;
+	unitFaction faction;
 	unitDirection direction = RIGHT;
 	float unitAttackSpeed = 0;
 	int unitPiercingDamage = 0;
 	float unitMovementSpeed = 0;
-	list<iPoint>* path;
+	bool isEnemy = false;
+	list<iPoint> path;
 	bool destinationReached = true;
 	fPoint velocity = { 0,0 };
 	iPoint destinationTile = { 0,0 };
@@ -75,9 +83,14 @@ public:
 	SDL_Texture* unitAttackTexture = nullptr;
 	SDL_Texture* unitDieTexture = nullptr;
 	unitState state = UNIT_IDLE;
-	Entity* attackTarget = nullptr;
+	Unit* attackUnitTarget = nullptr;
+	Building* attackBuildingTarget = nullptr;
+	int unitLife = 0;
+	int unitMaxLife= 0;
+	int unitAttack = 0;
+	int unitDefense = 0;
 	bool isVisible = true;
-	iPoint next_step = { 0,0 };
+	bool isSelected = false;
 
 	//Animations
 	vector<Animation> idleAnimations;

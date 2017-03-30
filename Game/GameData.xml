@@ -1042,7 +1042,7 @@
 					<Columns value="10"/>
 					<Width value="139"/>
 					<Height value="115"/>
-					<Speed value="0.2f"/>
+					<Speed value="0.15f"/>
 				</Idle>
 				<Move>
 					<Rows value="5"/>
@@ -1082,7 +1082,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="2400"/>
 				<WoodCost value="275"/>
 				<StoneCost value="100"/>
@@ -1101,7 +1100,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="550"/>
 				<WoodCost value="25"/>
 				<StoneCost value="0"/>
@@ -1120,7 +1118,6 @@
 				<Die value="textures/Buildings/barracksOrcs.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
 				<Life value="1200"/>
 				<WoodCost value="155"/>
 				<StoneCost value="0"/>
@@ -1139,7 +1136,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="1500"/>
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
@@ -1158,7 +1154,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="1500"/>
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
@@ -1177,7 +1172,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="1800"/>
 				<WoodCost value="200"/>
 				<StoneCost value="0"/>
@@ -1196,7 +1190,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="1800"/>
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
@@ -1215,7 +1208,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="1800"/>
 				<WoodCost value="150"/>
 				<StoneCost value="0"/>
@@ -1234,7 +1226,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="600"/>
 				<WoodCost value="100"/>
 				<StoneCost value="0"/>
@@ -1253,7 +1244,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value=""/>
 				<WoodCost value=""/>
 				<StoneCost value=""/>
@@ -1272,7 +1262,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value=""/>
 				<WoodCost value=""/>
 				<StoneCost value=""/>
@@ -1291,7 +1280,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="1020"/>
 				<WoodCost value="25"/>
 				<StoneCost value="125"/>
@@ -1310,7 +1298,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="2100"/>
 				<WoodCost value="175"/>
 				<StoneCost value="0"/>
@@ -1329,7 +1316,6 @@
 				<Die value="textures/Buildings/"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
 				<Life value="4800"/>
 				<WoodCost value="0"/>
 				<StoneCost value="650"/>
@@ -1339,73 +1325,39 @@
 		</Building>
 	</Buildings>
 
-<!-- Resources -->
-    
   <Resources>
     
-    <Trees>
-      <TreeType value="BlackTrees">
-        <Info>
-          <ID value="0"/>
-        </Info>
-        <Textures>
-          <Idle value="textures/Resources/Trees/BlackTrees.png"/>
-          <Gathering value="textures/Resources/"/>
-        </Textures>
-        <Stats>
-          <Life value ="100"/>
-        </Stats>
-        <Rects>
-          <Rect x="0" y="0" w="125" h="195"/>
-          <Rect x="177" y="0" w="175" h="195"/>
-          <Rect x="422" y="0" w="67" h="195"/>
-          <Rect x="551" y="0" w="181" h="195"/>
-          <Rect x="798" y="0" w="93" h="195"/>
-          <Rect x="965" y="0" w="125" h="195"/>
-          <Rect x="1182" y="0" w="121" h="195"/>
-          <Rect x="1389" y="0" w="135" h="195"/>
-          <Rect x="1596" y="0" w="71" h="195"/>
-          <Rect x="1782" y="0" w="79" h="195"/>
-          <Rect x="1782" y="0" w="79" h="195"/>
-          <Rect x="2000" y="0" w="89" h="195"/>
-          <Rect x="2193" y="0" w="71" h="195"/>
-          <Rect x="2384" y="0" w="76" h="195"/>
-        </Rects>
-      </TreeType>
-      
-      <TreeType value ="GreenTrees">
-        <Info>
-          <ID value="1"/>
-        </Info>
-        <Textures>
-          <Idle value="textures/Resources/Trees/GreenTrees.png"/>
-          <Gathering value="textures/Resources/"/>
-        </Textures>
-        <Stats>
-          <Life value ="100"/>
-        </Stats>
-        <Rects>
-          <Rect x="0" y="0" w="118" h="192"/>
-          <Rect x="191" y="0" w="107" h="192"/>
-          <Rect x="394" y="0" w="106" h="192"/>
-          <Rect x="574" y="0" w="124" h="192"/>
-          <Rect x="764" y="0" w="125" h="192"/>
-          <Rect x="964" y="0" w="105" h="192"/>
-          <Rect x="1110" y="0" w="120" h="192"/>
-          <Rect x="1337" y="0" w="127" h="192"/>
-          <Rect x="1553" y="0" w="99" h="192"/>
-          <Rect x="1701" y="0" w="175" h="192"/>
-          <Rect x="1922" y="0" w="105" h="192"/>
-          <Rect x="2110" y="0" w="124" h="192"/>
-          <Rect x="2310" y="0" w="93" h="192"/>
-          <Rect x="2502" y="0" w="108" h="192"/>
-        </Rects>
-      </TreeType>
-    </Trees>
+    <Resouce>
+      <Info>
+        <Name value ="WOOD"/>
+        <ID value ="0"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="100"/>
+      </Stats>
+    </Resouce>
 
-    <GoldMines>
+    <Resouce>
       <Info>
         <Name value ="GOLD_MINE"/>
+        <ID value ="1"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="100"/>
+      </Stats>
+    </Resouce>
+
+    <Resouce>
+      <Info>
+        <Name value ="FOOD"/>
         <ID value ="2"/>
       </Info>
       <Textures>
@@ -1413,13 +1365,13 @@
         <Gathering value="textures/Resources/"/>
       </Textures>
       <Stats>
-        <Life value ="800"/>
+        <Life value ="100"/>
       </Stats>
-    </GoldMines>
+    </Resouce>
 
-    <Animals>
+    <Resouce>
       <Info>
-        <Name value ="FOOD"/>
+        <Name value ="STONE"/>
         <ID value ="3"/>
       </Info>
       <Textures>
@@ -1429,21 +1381,7 @@
       <Stats>
         <Life value ="100"/>
       </Stats>
-    </Animals>
-
-    <StoneMines>
-      <Info>
-        <Name value ="STONE"/>
-        <ID value ="4"/>
-      </Info>
-      <Textures>
-        <Idle value="textures/Resources/"/>
-        <Gathering value="textures/Resources/"/>
-      </Textures>
-      <Stats>
-        <Life value ="350"/>
-      </Stats>
-    </StoneMines>
+    </Resouce>
     
   </Resources>
 </GameData>

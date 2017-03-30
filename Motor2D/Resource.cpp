@@ -1,29 +1,20 @@
 #include "Resource.h"
 #include "Render.h"
 #include "Application.h"
-#include "p2Log.h"
 
 Resource::Resource()
 {
 }
 
-Resource::Resource(int posX, int posY, Resource* resource, int resourceRectIndex)
+Resource::Resource(int posX, int posY, Resource* resource)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
 	this->type = type;
 
-	Life = resource->Life;
+	resourceLife = resource->resourceLife;
 	resourceIdleTexture = resource->resourceIdleTexture;
 	resourceGatheringTexture = resource->resourceGatheringTexture;
-	resourceRectVector = resource->resourceRectVector;
-	if (resourceRectIndex < resourceRectVector.size()) {
-		rectIndex = resource->rectIndex;
-		resourceRect = resourceRectVector[rectIndex];
-	}
-	else {
-		LOG("Wrong resourceRectIndex");
-	}
 
 	entityTexture = resourceIdleTexture;
 }
@@ -40,6 +31,6 @@ bool Resource::Update(float dt)
 
 bool Resource::Draw()
 {
-	App->render->Blit(entityTexture, entityPosition.x, entityPosition.y, &resourceRect);
+	App->render->Blit(entityTexture, entityPosition.x, entityPosition.y);
 	return true;
 }

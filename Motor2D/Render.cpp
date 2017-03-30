@@ -50,7 +50,7 @@ bool Render::Awake(pugi::xml_node& config)
 		camera.x = 0;
 		camera.y = 0;
 	}
-	culling_cam = camera;
+
 	return ret;
 }
 
@@ -152,10 +152,6 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 			movement.second = -5;
 		}
 	}
-
-	culling_cam.x = -camera.x;
-	culling_cam.y = -camera.y;
-
 	return movement;
 }
 
@@ -301,8 +297,8 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 
 	for(uint i = 0; i < 360; ++i)
 	{
-		points[i].x = (int)(camera.x + x + radius * cos(i * factor));
-		points[i].y = (int)(camera.y + y + radius * sin(i * factor));
+		points[i].x = (int)(x + radius * cos(i * factor));
+		points[i].y = (int)(y + radius * sin(i * factor));
 	}
 
 	result = SDL_RenderDrawPoints(renderer, points, 360);
