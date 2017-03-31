@@ -3,8 +3,9 @@
 SceneManager::SceneManager()
 {
 	name = "sceneManager";
-	level1_scene = new Scene(); scenes.push_back(level1_scene);
 	menu_scene = new MenuScene(); scenes.push_back(menu_scene);
+	level1_scene = new Scene(); scenes.push_back(level1_scene);
+	
 }
 
 SceneManager::~SceneManager()
@@ -22,7 +23,7 @@ bool SceneManager::Start()
 	bool ret = true;
 	
 	
-	current_scene = level1_scene;
+	current_scene = menu_scene;
 
 	
 	if (current_scene != nullptr && current_scene != level1_scene)

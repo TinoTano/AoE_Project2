@@ -39,6 +39,8 @@ public:
 
 
 	Image* background;
+	Image* menu_bg_img;
+	Button*	campaign_bt, *skirmish_bt, *options_bt, *quit_bt;
 };
 
 #endif // __SCENE_H__#pragma once
