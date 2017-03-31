@@ -112,7 +112,7 @@ bool Unit::Draw()
 
 		if (isSelected) 
 		{
-			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
+			//App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
 
 			Sprite bar;
 
@@ -166,6 +166,33 @@ bool Unit::Draw()
 			App->render->sprites_toDraw.push_back(bar);
 		}
 
+		if (attackBuildingTarget != nullptr)
+		{
+			Sprite bar;
+
+			int percent = ((attackBuildingTarget->buildingMaxLife - attackBuildingTarget->buildingLife) * 100) / attackBuildingTarget->buildingMaxLife;
+			int barPercent = (percent * hpBarWidth) / 100;
+
+			bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
+			bar.rect.w = hpBarWidth;
+			bar.rect.h = 5;
+			bar.priority = attackBuildingTarget->entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+
+			bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
+			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar.rect.h = 5;
+			bar.priority = attackBuildingTarget->entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 0;
+			bar.g = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+		}
+
 		 if (collider != nullptr) App->render->sprites_toDraw.push_back(aux);
 	}
 
@@ -206,7 +233,7 @@ void Unit::SetDestination()
 		target = App->map->WorldToMap(target.x - App->render->camera.x, target.y - App->render->camera.y);
 	}
 	else {
-		target = App->scene->troll->GetPosition();
+		target = App->scene->my_townCenter->GetPosition();
 		target = App->map->WorldToMap(target.x, target.y);
 	}
 
@@ -333,13 +360,15 @@ void Unit::AttackEnemyUnit(float dt)
 		}
 	}
 
-	// -----------------------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------------------
 }
 
 void Unit::AttackEnemyBuilding(float dt)
 {
+	// My changes -----------------------------------------------------------------------------
+
 	LookAt();
-	if (timer >= attackSpeed) {
+	if (currentAnim->Finished()) {
 		attackBuildingTarget->buildingLife -= unitAttack - attackBuildingTarget->buildingDefense;
 		if (attackBuildingTarget->buildingLife <= 0) {
 			attackBuildingTarget->Dead();
@@ -348,11 +377,9 @@ void Unit::AttackEnemyBuilding(float dt)
 				attackBuildingTarget = nullptr;
 			}
 		}
-		timer = 0;
 	}
-	else {
-		timer += dt;
-	}
+
+	// ------------------------------------------------------------------------------------------
 }
 
 void Unit::Dead() {

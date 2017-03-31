@@ -471,13 +471,16 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->buildingStoneCost = buildingNodeInfo.child("Stats").child("StoneCost").attribute("value").as_int();
 			buildingTemplate->buildingBuildTime = buildingNodeInfo.child("Stats").child("BuildTime").attribute("value").as_int();
 			buildingTemplate->canAttack = buildingNodeInfo.child("Stats").child("CanAttack").attribute("value").as_bool();
-
 			buildingTemplate->buildingIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			buildingTemplate->buildingDieTexture = App->tex->Load(dieTexturePath.c_str());
-
 			buildingTemplate->type = (buildingType)buildingNodeInfo.child("Info").child("ID").attribute("value").as_int();
-
 			buildingsDB.insert(pair<int, Building*>(buildingTemplate->type, buildingTemplate));
+
+			// My changes ------------------------
+
+			buildingTemplate->buildingMaxLife = buildingTemplate->buildingLife;
+
+			// -----------------------------------
 		}
 
 		for (resourceNodeInfo = gameData.child("Resources").child("Resouce"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resouce")) {

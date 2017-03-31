@@ -103,17 +103,46 @@ bool Building::Update(float dt)
 
 bool Building::Draw()
 {
-	if (isVisible) {
-		if (isSelected) {
-			App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
+	if (isVisible) 
+	{
+		Sprite aux;
+
+		aux.texture = entityTexture;
+		aux.pos.x = entityPosition.x - (imageWidth / 2);
+		aux.pos.y = entityPosition.y - (imageHeight / 2);
+		aux.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
+		aux.rect.w = imageWidth;
+		aux.rect.h = imageHeight;
+		aux.flip = SDL_FLIP_HORIZONTAL;
+
+		if (isSelected) 
+		{
+			Sprite bar;
+
 			int percent = ((buildingMaxLife - buildingLife) * 100) / buildingMaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), hpBarWidth, 5 }, 255, 0, 0);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), min(hpBarWidth, max(hpBarWidth - barPercent, 0)), 5 }, 0, 255, 0);
+
+			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar.rect.w = hpBarWidth;
+			bar.rect.h = 5;
+			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
+			bar.r = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+
+			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar.rect.h = 5;
+			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
+			bar.r = 0;
+			bar.g = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
 		}
-		else {
-			App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
-		}
+
+		App->render->sprites_toDraw.push_back(aux);
 	}
 	
 	return true;

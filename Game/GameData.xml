@@ -1078,8 +1078,8 @@
         <ID value = "0"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/TownHall.png"/>
+				<Die value="textures/Buildings/TownHall.png"/>
 			</Textures>
 			<Stats>
 				<Life value="2400"/>

@@ -43,7 +43,7 @@ private:
 	// My changes -------------------
 
 public:
-	Building* testBuilding;
+	Building* my_townCenter;
 	Unit* troll;
 
 	// -----------------------------
