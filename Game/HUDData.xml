@@ -30,18 +30,22 @@
 		<Unit>
         <Name value = "ELVEN CAVALRYE"/>
         <ID value = "5"/>
+	<Position x = "66" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "GONDOR KNIGHT"/>
         <ID value = "6"/>
+	<Position x = "99" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "ROHAN KNIGHT"/>
         <ID value = "7"/>
+	<Position x = "132" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "MOUNTED DUNEDAIN"/>
         <ID value = "4"/>
+	<Position x = "165" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "SIEGE TOWER"/>
@@ -85,11 +89,12 @@
 		<Building>
         <Name value = "TOWN_CENTER"/>
         <ID value = "0"/>
-	<Position x = "66" y = "0"/>
+	<Position x = "0" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "HOUSE"/>
         <ID value = "1"/>
+	<Position x = "33" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "ORC_BARRACKS"/>

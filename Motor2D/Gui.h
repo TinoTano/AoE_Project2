@@ -55,6 +55,7 @@ enum ScrollBarModel {
 enum HUDType {
 	MULTIPLESELECTION,
 	SINGLEINFO,
+	BUILDINGINFO,
 	NONE
 };
 
@@ -348,7 +349,8 @@ private:
 	// -------------------- //
 public:
 	Cursor* cursor = nullptr;
-	list<UnitSprite> SpriteRects;
+	list<UnitSprite> SpriteUnits;
+	list<UnitSprite> SpriteBuildings;
 	HUD hud;
 };
 

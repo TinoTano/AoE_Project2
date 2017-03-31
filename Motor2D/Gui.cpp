@@ -894,118 +894,123 @@ HUD::HUD()
 }
 
 void HUD::Update() {
-	int size = App->entityManager->selectedUnitList.size();
 
-	switch (App->entityManager->selectedUnitList.size()) {
-	case 0: 
-		if (type != NONE)
-		{
-			if (type == SINGLEINFO)
-				ClearSingle();
-			else if (type == MULTIPLESELECTION)
-				ClearMultiple();
+	if (App->entityManager->selectedBuildingtList.size() > 0)
+	{
 
-			type = NONE;
-		}
-		break;
-	case 1:
-		if (type != SINGLEINFO)
-		{
-			if (type == MULTIPLESELECTION)
-				ClearMultiple();
-
-			type = SINGLEINFO;
-			GetSelection();
-		}
-		else {
-			for (list<UnitSprite>::iterator it = App->gui->SpriteRects.begin(); it != App->gui->SpriteRects.end(); ++it)
+	}
+	else {
+		switch (App->entityManager->selectedUnitList.size()) {
+		case 0:
+			if (type != NONE)
 			{
-				if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
-				{
-					name->str = it._Ptr->_Myval.GetName();
-					defense = App->entityManager->selectedUnitList.front()->unitDefense;
-					attack = App->entityManager->selectedUnitList.front()->unitDefense;
-				}
+				if (type == SINGLEINFO)
+					ClearSingle();
+				else if (type == MULTIPLESELECTION)
+					ClearMultiple();
+
+				type = NONE;
 			}
-			char armor[65], damage[65], currlife[65], maxlife[65];
-			_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
-			_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
+			break;
+		case 1:
+			if (type != SINGLEINFO)
+			{
+				if (type == MULTIPLESELECTION)
+					ClearMultiple();
 
-			damage_val->str = damage;
-			armor_val->str = armor;
-
-			max_life = App->entityManager->selectedUnitList.front()->unitMaxLife;
-			curr_life = App->entityManager->selectedUnitList.front()->unitLife;
-
-			string life_str;
-			_itoa_s(curr_life, currlife, 65, 10);
-			life_str += currlife;
-			life_str += "/";
-			_itoa_s(max_life, maxlife, 65, 10);
-			life_str += maxlife;
-
-			life->str = maxlife;
-
-			int percent = ((max_life - curr_life) * 100) / max_life;
-			int barPercent = (percent * App->gui->SpriteRects.front().GetRect().w) / 100;
-
-			App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h, App->gui->SpriteRects.front().GetRect().w, 5 }, 255, 0, 0);
-			App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h, min(App->gui->SpriteRects.front().GetRect().w, max(App->gui->SpriteRects.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
-		}
-		break;
-	default:
-		if (type != MULTIPLESELECTION)
-		{
-			if (type == SINGLEINFO)
-				ClearSingle();
-			type = MULTIPLESELECTION;
-			GetSelection();
-		}
-		else 
-		{
-			int x = 0, y = 0;
-			if (multiple.size() != App->entityManager->selectedUnitList.size()) {
+				type = SINGLEINFO;
 				GetSelection();
 			}
-				for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteRects.begin(); it_sprite != App->gui->SpriteRects.end(); ++it_sprite)
+			else {
+				for (list<UnitSprite>::iterator it = App->gui->SpriteUnits.begin(); it != App->gui->SpriteUnits.end(); ++it)
+				{
+					if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
+					{
+						name->str = it._Ptr->_Myval.GetName();
+						defense = App->entityManager->selectedUnitList.front()->unitDefense;
+						attack = App->entityManager->selectedUnitList.front()->unitDefense;
+					}
+				}
+				char armor[65], damage[65], currlife[65], maxlife[65];
+				_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
+				_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
+
+				damage_val->str = damage;
+				armor_val->str = armor;
+
+				max_life = App->entityManager->selectedUnitList.front()->unitMaxLife;
+				curr_life = App->entityManager->selectedUnitList.front()->unitLife;
+
+				string life_str;
+				_itoa_s(curr_life, currlife, 65, 10);
+				life_str += currlife;
+				life_str += "/";
+				_itoa_s(max_life, maxlife, 65, 10);
+				life_str += maxlife;
+
+				life->str = maxlife;
+
+				int percent = ((max_life - curr_life) * 100) / max_life;
+				int barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
+
+				App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteUnits.front().GetRect().h, App->gui->SpriteUnits.front().GetRect().w, 5 }, 255, 0, 0);
+				App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteUnits.front().GetRect().h, min(App->gui->SpriteUnits.front().GetRect().w, max(App->gui->SpriteUnits.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
+			}
+			break;
+		default:
+			if (type != MULTIPLESELECTION)
+			{
+				if (type == SINGLEINFO)
+					ClearSingle();
+				type = MULTIPLESELECTION;
+				GetSelection();
+			}
+			else
+			{
+				int x = 0, y = 0;
+				if (multiple.size() != App->entityManager->selectedUnitList.size()) {
+					GetSelection();
+				}
+				for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteUnits.begin(); it_sprite != App->gui->SpriteUnits.end(); ++it_sprite)
 				{
 					for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
 					{
 						if (x >= max_width)
 						{
 							x = 0;
-							y += App->gui->SpriteRects.front().GetRect().h + 5;
+							y += App->gui->SpriteUnits.front().GetRect().h + 5;
 						}
 						if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType()) {
 							int percent = ((it_unit._Ptr->_Myval->unitMaxLife - it_unit._Ptr->_Myval->unitLife) * 100) / it_unit._Ptr->_Myval->unitMaxLife;
-							int barPercent = (percent * App->gui->SpriteRects.front().GetRect().w) / 100;
+							int barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
 
-							App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h + y, App->gui->SpriteRects.front().GetRect().w, 5 }, 255, 0, 0);
-							App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h + y, min(App->gui->SpriteRects.front().GetRect().w, max(App->gui->SpriteRects.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
-							x += App->gui->SpriteRects.front().GetRect().w;
+							App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteUnits.front().GetRect().h + y, App->gui->SpriteUnits.front().GetRect().w, 5 }, 255, 0, 0);
+							App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteUnits.front().GetRect().h + y, min(App->gui->SpriteUnits.front().GetRect().w, max(App->gui->SpriteUnits.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
+							x += App->gui->SpriteUnits.front().GetRect().w;
 						}
 					}
 				}
 
-			// CODE TO SELECT ONE UNIT FROM THE PANEL NOT FUNCTIONAL FOR NOW
-			/*
-			list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin();
-			for (list<Image*>::iterator it = multiple.begin(); it != multiple.end(); ++it) {
-				if (it._Ptr->_Myval->current == CLICKIN){
-					App->entityManager->selectedUnitList.clear();
-					App->entityManager->selectedUnitList.push_back(it_unit._Ptr->_Myval);
-					type = SINGLEINFO;
-					GetSelection();
-					ClearMultiple();
-					
-					int size = App->entityManager->selectedUnitList.size();
-					int a = 9381741;
-				}
-				if (it_unit != App->entityManager->selectedUnitList.end()) ++it_unit;
-			}*/
+				// CODE TO SELECT ONE UNIT FROM THE PANEL NOT FUNCTIONAL FOR NOW
+				/*
+				list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin();
+				for (list<Image*>::iterator it = multiple.begin(); it != multiple.end(); ++it) {
+					if (it._Ptr->_Myval->current == CLICKIN){
+						App->entityManager->selectedUnitList.clear();
+						App->entityManager->selectedUnitList.push_back(it_unit._Ptr->_Myval);
+						type = SINGLEINFO;
+						GetSelection();
+						ClearMultiple();
 
+						int size = App->entityManager->selectedUnitList.size();
+						int a = 9381741;
+					}
+					if (it_unit != App->entityManager->selectedUnitList.end()) ++it_unit;
+				}*/
+
+			}
+			break;
 		}
-		break;
 	}
 
 }
@@ -1052,7 +1057,7 @@ void HUD::GetSelection() {
 	case NONE:
 		break;
 	case SINGLEINFO:
-		for (list<UnitSprite>::iterator it = App->gui->SpriteRects.begin(); it != App->gui->SpriteRects.end(); ++it)
+		for (list<UnitSprite>::iterator it = App->gui->SpriteUnits.begin(); it != App->gui->SpriteUnits.end(); ++it)
 		{
 			if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
 			{
@@ -1085,19 +1090,19 @@ void HUD::GetSelection() {
 	case MULTIPLESELECTION:
 		int x = 0, y=0;
 		max_width = 700;
-		for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteRects.begin(); it_sprite != App->gui->SpriteRects.end(); ++it_sprite)
+		for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteUnits.begin(); it_sprite != App->gui->SpriteUnits.end(); ++it_sprite)
 		{
 			for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
 			{
 				if (x >= max_width)
 				{
 					x = 0;
-					y += App->gui->SpriteRects.front().GetRect().h + 5;
+					y += App->gui->SpriteUnits.front().GetRect().h + 5;
 				}
 				if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType())
 				{
 					Image* unit = (Image*)App->gui->CreateImage("gui/EntityMiniatures.png", 310 - App->render->camera.x + x, 650 - App->render->camera.y + y, it_sprite._Ptr->_Myval.GetRect());
-					x += App->gui->SpriteRects.front().GetRect().w;
+					x += App->gui->SpriteUnits.front().GetRect().w;
 					multiple.push_back(unit);
 				}
 			}
@@ -1126,7 +1131,8 @@ bool Gui::LoadHUDData()
 		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
 		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("height").as_uint();
 
-		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit")) {
+		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit")) 
+		{
 			EntityType type = UNIT;
 			string name(unitNodeInfo.child("Name").attribute("value").as_string());
 
@@ -1135,20 +1141,20 @@ bool Gui::LoadHUDData()
 			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
 
 			UnitSprite unit(type, proportions, id, name);
-			SpriteRects.push_back(unit);
+			SpriteUnits.push_back(unit);
 		}
-	}
-		/*
-		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building")) {
+		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building")) 
+		{
 			EntityType type = BUILDING;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
 
 			int id = unitNodeInfo.child("ID").attribute("value").as_int();
 			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
 			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
 
-			UnitSprite unit(type, proportions, id);
-			SpriteRects.push_back(unit);
+			UnitSprite unit(type, proportions, id, name);
+			SpriteBuildings.push_back(unit);
 		}
-	}*/
+	}
 	return ret;
 }
