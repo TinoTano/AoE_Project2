@@ -49,12 +49,15 @@ bool Scene::Start()
 
 	// My changes --------------------------------------------------------------
 
-	App->entityManager->CreateUnit(350, 300, false, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(-350, 300, true, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(400, 250, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(370, 300, false, ELVEN_ARCHER);
 	App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(-100, 550, true, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(-150, 350, false, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(-50, 750, true, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(350, 400, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(370, 500, false, ELVEN_ARCHER);
+
+	App->entityManager->CreateUnit(-350, 300, true, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(-350, 500, true, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(-50, 700, true, ELVEN_ARCHER);
 
 	troll = App->entityManager->CreateUnit(50, 150, false, TROLL_MAULER);
 	troll->isHero = true;
