@@ -964,25 +964,29 @@ void HUD::Update() {
 		else 
 		{
 			int x = 0, y = 0;
-			for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteRects.begin(); it_sprite != App->gui->SpriteRects.end(); ++it_sprite)
-			{
-				for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
+			if (multiple.size() != App->entityManager->selectedUnitList.size()) {
+				GetSelection();
+			}
+				for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteRects.begin(); it_sprite != App->gui->SpriteRects.end(); ++it_sprite)
 				{
-					if (x >= max_width)
+					for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
 					{
-						x = 0;
-						y += App->gui->SpriteRects.front().GetRect().h + 5;
-					}
-					if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType()) {
-						int percent = ((it_unit._Ptr->_Myval->unitMaxLife - it_unit._Ptr->_Myval->unitLife) * 100) / it_unit._Ptr->_Myval->unitMaxLife;
-						int barPercent = (percent * App->gui->SpriteRects.front().GetRect().w) / 100;
+						if (x >= max_width)
+						{
+							x = 0;
+							y += App->gui->SpriteRects.front().GetRect().h + 5;
+						}
+						if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType()) {
+							int percent = ((it_unit._Ptr->_Myval->unitMaxLife - it_unit._Ptr->_Myval->unitLife) * 100) / it_unit._Ptr->_Myval->unitMaxLife;
+							int barPercent = (percent * App->gui->SpriteRects.front().GetRect().w) / 100;
 
-						App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h + y, App->gui->SpriteRects.front().GetRect().w, 5 }, 255, 0, 0);
-						App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h + y, min(App->gui->SpriteRects.front().GetRect().w, max(App->gui->SpriteRects.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
-						x += App->gui->SpriteRects.front().GetRect().w;
+							App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h + y, App->gui->SpriteRects.front().GetRect().w, 5 }, 255, 0, 0);
+							App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteRects.front().GetRect().h + y, min(App->gui->SpriteRects.front().GetRect().w, max(App->gui->SpriteRects.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
+							x += App->gui->SpriteRects.front().GetRect().w;
+						}
 					}
 				}
-			}
+
 			// CODE TO SELECT ONE UNIT FROM THE PANEL NOT FUNCTIONAL FOR NOW
 			/*
 			list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin();
