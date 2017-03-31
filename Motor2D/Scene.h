@@ -47,7 +47,7 @@ private:
 	Unit* troll;
 	Building* testBuilding;
 	Resource* tree;
-
+	Building* build;
 // UI ELEMENTS
 	Image* top, *bottom;
 	Button* menu_bt;

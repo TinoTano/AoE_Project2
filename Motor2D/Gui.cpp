@@ -893,13 +893,22 @@ HUD::HUD()
 {
 }
 
+void HUD::ClearBuilding() {
+		App->gui->DestroyUIElement(single);
+		App->gui->DestroyUIElement(name);
+		App->gui->DestroyUIElement(life);
+}
 void HUD::Update() {
-
-	if (App->entityManager->selectedBuildingtList.size() > 0)
+	
+	if (App->entityManager->selectedBuildingtList.size() == 1)
 	{
-
+		ClearSingle();
+		ClearMultiple();
+		type = BUILDINGINFO;
+		StartBuildingInfo();
 	}
 	else {
+
 		switch (App->entityManager->selectedUnitList.size()) {
 		case 0:
 			if (type != NONE)
@@ -908,6 +917,8 @@ void HUD::Update() {
 					ClearSingle();
 				else if (type == MULTIPLESELECTION)
 					ClearMultiple();
+				else if (type == BUILDINGINFO)
+					ClearBuilding();
 
 				type = NONE;
 			}
@@ -917,6 +928,8 @@ void HUD::Update() {
 			{
 				if (type == MULTIPLESELECTION)
 					ClearMultiple();
+				else if (type == BUILDINGINFO)
+					ClearBuilding();
 
 				type = SINGLEINFO;
 				GetSelection();
@@ -962,8 +975,12 @@ void HUD::Update() {
 			{
 				if (type == SINGLEINFO)
 					ClearSingle();
+				else if (type == BUILDINGINFO)
+					ClearBuilding();
+
 				type = MULTIPLESELECTION;
 				GetSelection();
+				
 			}
 			else
 			{
@@ -1113,6 +1130,35 @@ void HUD::GetSelection() {
 	}
 	// X = 500 Y = 650
 }
+
+
+void HUD::StartBuildingInfo()
+{
+	char currlife[65], maxlife[65];
+	string life_str;
+
+	for (list<UnitSprite>::iterator it = App->gui->SpriteBuildings.begin(); it != App->gui->SpriteBuildings.end(); ++it)
+	{
+		if (it._Ptr->_Myval.GetID() == App->entityManager->selectedBuildingtList.front()->GetType())
+		{
+			single = (Image*)App->gui->CreateImage("gui/BuildingMiniatures.png", 310 - App->render->camera.x, 670 - App->render->camera.y, it._Ptr->_Myval.GetRect());
+			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), 310 - App->render->camera.x, 650 - App->render->camera.y, nullptr);
+		}
+	}
+
+	max_life = App->entityManager->selectedBuildingtList.front()->buildingMaxLife;
+	curr_life = App->entityManager->selectedBuildingtList.front()->buildingLife;
+
+
+	_itoa_s(curr_life, currlife, 65, 10);
+	life_str += currlife;
+	life_str += "/";
+	_itoa_s(max_life, maxlife, 65, 10);
+	life_str += maxlife;
+
+	life = (Label*)App->gui->CreateLabel(life_str, 350 - App->render->camera.x, 700 - App->render->camera.y, nullptr);
+}
+
 
 bool Gui::LoadHUDData()
 {

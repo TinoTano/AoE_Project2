@@ -36,10 +36,15 @@ public:
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
 
+
+
+	buildingType GetType()const;
+
+
 private:
 
 public:
-	buildingType type = ORC_BARRACKS;
+	buildingType type;
 	buildingFaction faction;
 	float buildingAttackSpeed = 0;
 	int buildingPiercingDamage = 0;

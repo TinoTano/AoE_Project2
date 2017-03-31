@@ -117,8 +117,10 @@ bool Scene::Start()
 	elvenArcher = App->entityManager->CreateUnit(380, 350, false, ELVEN_ARCHER);
 	elvenArcher = App->entityManager->CreateUnit(140, 500, false, ELVEN_ARCHER);
 	troll = App->entityManager->CreateUnit(600, 400, true, TROLL_MAULER);
-	testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
+	//testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
 	tree = App->entityManager->CreateResource(400, 400, WOOD);
+
+	build = App->entityManager->CreateBuilding(100, 100, false, TOWN_CENTER);
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 	return true;

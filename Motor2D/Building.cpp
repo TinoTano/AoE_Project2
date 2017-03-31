@@ -31,7 +31,8 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 	buildingIdleTexture = building->buildingIdleTexture;
 	buildingDieTexture = building->buildingDieTexture;
 	buildingLife = building->buildingLife;
-	buildingMaxLife = building->buildingMaxLife;
+	//buildingMaxLife = building->buildingMaxLife; Had to comment this becaus it was 0 and caused a breakpoint while bliting the life bar :S
+	buildingMaxLife = building->buildingLife;
 	buildingAttack = building->buildingAttack;
 	buildingDefense = building->buildingDefense;
 	canAttack = building->canAttack;
@@ -89,6 +90,7 @@ bool Building::Update(float dt)
 			y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
 			if (isVisible) {
 				isSelected = true;
+				App->entityManager->selectedBuildingtList.push_back(this);
 			}
 		}
 		else {
@@ -156,5 +158,10 @@ bool Building::Load(pugi::xml_node &)
 bool Building::Save(pugi::xml_node &) const
 {
 	return true;
+}
+
+buildingType Building::GetType() const
+{
+	return type;
 }
 

@@ -273,6 +273,15 @@ public:
 	Image* armor_img;
 	//Image* arrow_img;
 
+
+	//BUILDINGINFO
+
+	Building* selected_building;
+	//Image* single;
+	//Label* name;
+	//Label* life;
+	Button* create_unit;
+
 	uint attack;
 	uint defense;
 	uint max_life;
@@ -280,9 +289,13 @@ public:
 	HUD();
 	bool IsEnabled();
 	void GetSelection();
+	void StartBuildingInfo();
+
 	void Update();
+
 	void ClearMultiple();
 	void ClearSingle();
+	void ClearBuilding();
 	void CleanUp();
 };
 
