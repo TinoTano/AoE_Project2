@@ -166,7 +166,13 @@ bool EntityManager::Update(float dt)
 	}
 
 	for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
+
 		Unit* unit = (*it);
+
+		if (unit->state == UNIT_DEAD) {
+			selectedUnitList.erase(it);
+			continue;
+		}
 		int percent = ((unit->MaxLife - unit->Life) * 100) / unit->MaxLife;
 		int barPercent = (percent * unit->hpBarWidth) / 100;
 		int hpbar_y_position = unit->entityPosition.y - ((unit->collider->pos.y - unit->entityPosition.y)* 1.5f) ;
@@ -274,11 +280,11 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-bool EntityManager::IsOccupied(iPoint tile, Unit* ignore_unit) {
+bool EntityManager::IsOccupied(iPoint tile, iPoint ignore_tile) {
 
 	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-		if ((*it) != ignore_unit) {
-			if (tile == App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y) && (*it)->state == UNIT_IDLE)
+		if (tile == App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y)){
+			if(ignore_tile != tile)
 				return true;
 		}
 	}

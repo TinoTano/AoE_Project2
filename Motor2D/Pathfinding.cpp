@@ -338,7 +338,7 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	//if (!IsWalkable(origin) || App->entityManager->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
 	//	adjusted_orig = FindNearestAvailable(origin);    
 
-	if (!IsWalkable(destination))
+	if (!IsWalkable(destination) || App->entityManager->IsOccupied(destination, origin));
 		adjusted_dest = FindNearestAvailable(destination);
 	
 	if (adjusted_orig.x == -1 || adjusted_dest.x == -1 || adjusted_dest == adjusted_orig) {
@@ -350,7 +350,6 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	path.open.pathNodeList.push_back(PathNode(0, 0, adjusted_orig, NULL));
 	path.origin = adjusted_orig;
 	path.destination = adjusted_dest;
- // push the path to a list where there will be all the paths that need to be calculated
 
 	CalculatePath(&path);
 
@@ -441,28 +440,28 @@ iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, con
 
 	iPoint adj;
 	iPoint ret { -1, -1 };
-	bool found = false;
+	bool must_ignore = false;
 
 	for (int radius = 1; radius <= max_radius; radius++) {
 
 		for (int i = -radius; i <= radius; i++) {
 			for (int j = -radius; j <= radius; j++) {
-				found = false;
+				must_ignore = false;
 
 				adj.create(tile.x + i, tile.y + j);
 
-				if (App->pathfinding->IsWalkable(adj)) {
+				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj, tile)) {
 
 					if (cells_to_ignore != nullptr) {
 						for (list<iPoint>::iterator it = cells_to_ignore->begin(); it != cells_to_ignore->end(); it++) {
 							if (adj == (*it)) {
-								found = true;
+								must_ignore = true;
 								break;
 							}
 						}
 					}
 
-					if (!found) {
+					if (!must_ignore) {
 						if (target.x != -1) {
 							if (adj.DistanceTo(target) < ret.DistanceTo(target))
 								ret = adj;

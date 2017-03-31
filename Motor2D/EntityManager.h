@@ -34,7 +34,6 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	bool IsOccupied(iPoint tile, Unit* ignore_unit = nullptr);
 
 	bool LoadGameData();
 
@@ -45,6 +44,8 @@ public:
 	void DeleteUnit(Unit* unit);
 	void DeleteBuilding(Building* building);
 	void DeleteResource(Resource* resource);
+
+	bool IsOccupied(iPoint tile, iPoint ignore_tile = { -1,-1 });
 	void OnCollision(Collision_data& col_data);
 
 private:

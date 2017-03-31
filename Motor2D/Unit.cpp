@@ -55,7 +55,7 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	uint w = 0, h = 0;
 
-	collider = App->collision->AddCollider(entityPosition, r.w / 4, colliderType, App->entityManager, (Entity*)this);
+	collider = App->collision->AddCollider(entityPosition, r.w / 6, colliderType, App->entityManager, (Entity*)this);
 
 	/*if (!isEnemy) {
 		isVisible = true;
