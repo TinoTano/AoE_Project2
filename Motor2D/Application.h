@@ -21,7 +21,7 @@ class Fonts;
 class EntityManager;
 class Collision;
 class Gui;
-class FogOfWar;
+//class FogOfWar;
 class Console;
 
 
@@ -104,7 +104,7 @@ public:
 	EntityManager*		entityManager = NULL;
 	Collision*			collision = NULL;
 	Gui*				gui = NULL;
-	FogOfWar*			fog = NULL;
+	//FogOfWar*			fog = NULL;
 	Console*			console = NULL;
 
 	bool				quit = false;

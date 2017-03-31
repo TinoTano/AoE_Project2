@@ -53,6 +53,8 @@ void FogOfWar::DrawFog()
 void FogOfWar::CreateFog(int width, int height)
 {
 	//High fog creation
+	/*
+	*/
 	highFogSurface = SDL_CreateRGBSurface(0, width, height, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 	SDL_FillRect(highFogSurface, NULL, 0xFF000000);
 	highFogTexture = App->tex->LoadStreamingTextureFromSurface(highFogSurface);

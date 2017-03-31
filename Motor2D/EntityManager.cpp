@@ -57,7 +57,7 @@ bool EntityManager::Update(float dt)
 	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
-		App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
+		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
 		(*it)->Update(dt);
@@ -66,7 +66,7 @@ bool EntityManager::Update(float dt)
 	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
-		App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
+		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);

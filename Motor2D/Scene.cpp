@@ -120,7 +120,7 @@ bool Scene::Start()
 	testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
 	tree = App->entityManager->CreateResource(400, 400, WOOD);
 
-	App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
+	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 	return true;
 }
 

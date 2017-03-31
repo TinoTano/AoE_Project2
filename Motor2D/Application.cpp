@@ -16,7 +16,7 @@
 #include "EntityManager.h"
 #include "Collision.h"
 #include "Gui.h"
-#include "FogOfWar.h"
+//#include "FogOfWar.h"
 #include "Console.h"
 
 
@@ -39,7 +39,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	entityManager = new EntityManager();
 	collision = new Collision();
 	gui = new Gui();
-	fog = new FogOfWar();
+	//fog = new FogOfWar();
 	console = new Console();
 	
 
