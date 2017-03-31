@@ -81,33 +81,18 @@ bool EntityManager::Update(float dt)
 		Unit* commander = selectedUnitList.front();
 		commander->SetDestination(destination);
 
-		if (commander->path->size() > 0) {
+		if (selectedUnitList.size() > 1) {
 
-			if (selectedUnitList.size() > 1) {
+			selectedUnitList.pop_front();
+			App->pathfinding->SharePath(commander, selectedUnitList);
+			selectedUnitList.push_front(commander);
 
-				selectedUnitList.pop_front();
-
-				App->pathfinding->SharePath(commander, selectedUnitList);
-
-				selectedUnitList.push_front(commander);
-
-			}
-
-			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
-				(*it)->SetState(UNIT_MOVING);
-				(*it)->destinationTileWorld = App->map->MapToWorld((*it)->path->front().x, (*it)->path->front().y);
-
-				if((*it)->path->size() > 1)
-					(*it)->path->erase((*it)->path->begin());
-
-				if ((*it)->attackTarget != nullptr) 
-					(*it)->attackTarget = nullptr;
-				
-
-			}
 		}
-		
+
+		for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
+			(*it)->SetState(UNIT_MOVING);
 	}
+	
 	
 	switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)) 
 	{
@@ -582,9 +567,11 @@ void EntityManager::OnCollision(Collision_data& col_data)
 					unit2->attackTarget = unit;
 					unit2->SetState(UNIT_ATTACKING);
 				}
+
+				col_data.state = SOLVING;
 			}
-			else 
-				col_data.state = App->pathfinding->SolveCollision(unit, unit2);
+			else             
+				col_data.state = App->pathfinding->SolveCollision(unit, unit2);// first parameter should be the higher priority unit!
 			
 			break;
 
@@ -603,10 +590,13 @@ void EntityManager::OnCollision(Collision_data& col_data)
 					building->state = BUILDING_ATTACKING;
 				}
 			}
+			col_data.state = SOLVING;
 
 			break;
 
 		case COLLIDER_RESOURCE:
+
+			col_data.state = SOLVED;
 
 			break;
 

@@ -103,7 +103,6 @@ bool Unit::Draw()
 
 		collider->pos = col_pos;
 		App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
-		
 	}
 	
 	return true;
@@ -144,16 +143,8 @@ void Unit::SetDestination(iPoint destination)
 		path = nullptr;
 	}
 
-	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
+	iPoint origin = App->map->WorldToMap(collider->pos.x, collider->pos.y);
 	path = App->pathfinding->CreatePath(origin, destination);
-
-	SetState(UNIT_MOVING);
-
-	destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
-	path->erase(path->begin());
-	
-	if (attackTarget != nullptr) 
-		attackTarget = nullptr;
 	
 }
 
@@ -272,6 +263,13 @@ void Unit::SetState(unitState newState)
 		next_step = entityPosition;
 		SetAnim(currentDirection);
 		entityTexture = unitMoveTexture;
+		destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
+
+		if (path->size() > 1)
+			path->erase(path->begin());
+
+		if (attackTarget != nullptr)
+			attackTarget = nullptr;
 		break;
 	case UNIT_ATTACKING:
 		this->state = UNIT_ATTACKING;

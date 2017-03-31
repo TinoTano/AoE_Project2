@@ -39,8 +39,6 @@ bool Collision::Start()
 
 bool Collision::PreUpdate()
 {
-	for (list<Collider*>::iterator col = colliders.begin(); col != colliders.end(); col++)
-		(*col)->colliding = false;
 
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
 		if ((*it)->to_delete == true)
@@ -91,8 +89,10 @@ bool Collision::PreUpdate()
 		}
 
 		if ((*collisions)->state == SOLVED) {
-			collision_list.remove((*collisions));
-			delete (*collisions);
+			(*collisions)->c1->colliding = false;
+			(*collisions)->c2->colliding = false;
+			RELEASE(*collisions);
+			collisions = collision_list.erase(collisions);
 		}
 	}
 
@@ -178,9 +178,9 @@ void Collision::DebugDraw()
 		}
 
 		if((*it)->colliding)
-			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255, false);
+			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255);
 		else
-			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255, false);
+			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255);
 	}
 }
 

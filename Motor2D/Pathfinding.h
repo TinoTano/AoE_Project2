@@ -56,12 +56,12 @@ public:
 
 	bool Jump(int current_x, int current_y, int dx, int dy, iPoint start, iPoint end, PathNode& new_node);
 
-	iPoint FindNearestAvailableTarget(const iPoint& tile, const iPoint& target) const;
-	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 5, list<iPoint>* cells_to_ignore = nullptr) const;
+	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 1, const iPoint& target = { -1, -1 }, list<iPoint>* cells_to_ignore = nullptr) const;
 	void CalculatePath(Path* path);
 	void SharePath(Unit* commander, list<Unit*> followers);
 	bool DeletePath(list<iPoint>* path_to_delete);
 	Collision_state SolveCollision(Unit* unit1, Unit* unit2);
+	bool PushUnit(Unit* pushing_unit, Unit* pushed_unit);
 
 private:
 

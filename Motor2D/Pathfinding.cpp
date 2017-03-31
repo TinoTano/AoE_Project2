@@ -390,7 +390,7 @@ void PathFinding::SharePath(Unit* commander, list<Unit*> followers) {
 				cells_in_use.push_back((*it1));
 
 				for (list<list<iPoint>*>::iterator it3 = new_paths.begin(); it3 != new_paths.end(); it3++) {
-					cells_in_use.push_back(FindNearestAvailable((*it1), repetitions + 1, &cells_in_use));
+					cells_in_use.push_back(FindNearestAvailable((*it1), repetitions + 1, (*it1), &cells_in_use));
 					(*it3)->push_back(cells_in_use.back());
 				}
 
@@ -437,143 +437,116 @@ bool PathFinding::DeletePath(list<iPoint>* path_to_delete) {
 }
 
 
-iPoint PathFinding::FindNearestAvailableTarget(const iPoint& tile, const iPoint& target) const {
+iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, const iPoint& target, list<iPoint>* cells_to_ignore) const {
 
-	iPoint ret;
 	iPoint adj;
+	iPoint ret { -1, -1 };
 	bool found = false;
-
-	int radius = 1;
-
-	while (!found) {
-
-		for (int i = -radius; i <= radius; i++) {
-			for (int j = -radius; j <= radius; j++) {
-
-				adj.create(tile.x + i, tile.y + j);
-
-				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj)) {
-
-					found = true;
-
-					if (adj.DistanceManhattan(target) < ret.DistanceManhattan(target)) 
-						ret = adj;
-					
-				}
-			}
-		}
-
-		radius++;
-
-		if (radius > 5)
-			return ret.create(-1, -1);
-	}
-
-	return ret;
-}
-
-iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, list<iPoint>* cells_to_ignore) const {
-
-	iPoint adj;
 
 	for (int radius = 1; radius <= max_radius; radius++) {
 
-		// Possible optimization: Searchs in already searched tiles when expanding, can be fix?
-
 		for (int i = -radius; i <= radius; i++) {
 			for (int j = -radius; j <= radius; j++) {
+				found = false;
 
 				adj.create(tile.x + i, tile.y + j);
 
 				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj)) {
 
-					if(cells_to_ignore == nullptr)
-						return adj;
-					else {
-
-						bool found = false;
-
+					if (cells_to_ignore != nullptr) {
 						for (list<iPoint>::iterator it = cells_to_ignore->begin(); it != cells_to_ignore->end(); it++) {
 							if (adj == (*it)) {
 								found = true;
 								break;
 							}
 						}
+					}
 
-						if (!found)
-							return adj;
+					if (!found) {
+						if (target.x != -1) {
+							if (adj.DistanceTo(target) < ret.DistanceTo(target))
+								ret = adj;
+						}
+						else
+							ret = adj;
 					}
 				}
-					
+				else {
+					if(cells_to_ignore != nullptr)
+						cells_to_ignore->push_back(adj);
+				}	
 			}
 		}
-
 	}
-	return adj.create(-1, -1);
+	return ret;
 
 }
 
 Collision_state PathFinding::SolveCollision(Unit* unit1, Unit* unit2) {
 	
 	Collision_state col_state = UNSOLVED;
-	iPoint nearest_tile;
-	switch (unit1->state) {
 
-	case UNIT_MOVING:
+	if (unit2->state != UNIT_ATTACKING || unit1->state != UNIT_ATTACKING) {        // if both are attacking, we do nothing
 
-		switch (unit2->state) {
-
-		case UNIT_IDLE:
-
-			nearest_tile = FindNearestAvailable(App->map->WorldToMap(unit2->entityPosition.x, unit2->entityPosition.y));
-
-			if (nearest_tile.x != -1) {
-
-				list<iPoint>* path = new list<iPoint>;
-				path->push_back(nearest_tile);
-				paths.push_back(path);
-
-				if (unit1->path != nullptr && unit1->path->size() == 0) {
-
-					iPoint unit1_dest = App->map->WorldToMap(unit1->destinationTileWorld.x, unit1->destinationTileWorld.y);
-					iPoint unit2_pos = App->map->WorldToMap(unit1->entityPosition.x, unit1->entityPosition.y);
-
-					if (unit1_dest != unit2_pos)
-						path->push_back(App->map->WorldToMap(unit2->entityPosition.x, unit2->entityPosition.y));
-				}
-				else
-					path->push_back(App->map->WorldToMap(unit2->entityPosition.x, unit2->entityPosition.y));
-
-				unit2->path = path;
-				unit2->SetState(UNIT_MOVING);
-				unit2->destinationTileWorld = App->map->MapToWorld(unit2->path->front().x, unit2->path->front().y);
-
-				if (unit2->path->size() > 1)
-					unit2->path->erase(unit2->path->begin());
-
-				if (unit2->attackTarget != nullptr)
-					unit2->attackTarget = nullptr;
-
+		if (unit2->state == UNIT_ATTACKING && unit1->state != UNIT_ATTACKING) {    // if unit2 is attacking, we push unit 1
+			if (PushUnit(unit2, unit1))
 				col_state = SOLVING;
-			}
-			break;
-
-		case UNIT_MOVING:
-
-			
-			if (unit1->collider->CheckCollision(unit2->collider))
-				unit2->next_step = unit2->entityPosition;
-			else
-				col_state = SOLVED;
-			break;
-
 		}
-
-
+		else {                                                                     // in any other case, we push unit 2
+			if (PushUnit(unit1, unit2))
+				col_state = SOLVING;
+		}
 	}
 
 	return col_state;
 }
+
+
+bool PathFinding::PushUnit(Unit* pushing_unit, Unit* pushed_unit) {
+
+	iPoint nearest_tile;
+
+	if (pushed_unit->state == UNIT_IDLE) {
+
+		nearest_tile = FindNearestAvailable(App->map->WorldToMap(pushed_unit->entityPosition.x, pushed_unit->entityPosition.y));
+
+		if (nearest_tile.x == -1)
+			return false;
+
+		list<iPoint>* path = new list<iPoint>;
+		path->push_back(nearest_tile);
+		paths.push_back(path);
+
+		if (pushing_unit->path != nullptr && pushing_unit->path->size() == 0) {
+
+			iPoint unit1_dest = App->map->WorldToMap(pushing_unit->destinationTileWorld.x, pushing_unit->destinationTileWorld.y);
+			iPoint unit2_pos = App->map->WorldToMap(pushing_unit->entityPosition.x, pushing_unit->entityPosition.y);
+
+			if (unit1_dest != unit2_pos)
+				path->push_back(App->map->WorldToMap(pushed_unit->entityPosition.x, pushed_unit->entityPosition.y));
+		}
+		else
+			path->push_back(App->map->WorldToMap(pushed_unit->entityPosition.x, pushed_unit->entityPosition.y));
+
+		pushed_unit->path = path;
+		pushed_unit->SetState(UNIT_MOVING);
+	}
+	else {
+
+		iPoint next_tile = { pushed_unit->destinationTileWorld.x, pushed_unit->destinationTileWorld.y };
+
+		nearest_tile = FindNearestAvailable(App->map->WorldToMap(pushed_unit->entityPosition.x, pushed_unit->entityPosition.y), 1, next_tile);
+
+		if (nearest_tile.x == -1)
+			return false;
+
+		pushed_unit->path->push_front(App->map->WorldToMap(next_tile.x, next_tile.y));
+		pushed_unit->destinationTileWorld = App->map->MapToWorld(nearest_tile.x, nearest_tile.y);
+	}
+	return true;
+}
+
+
 
 
 
