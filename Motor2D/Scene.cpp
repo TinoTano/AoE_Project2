@@ -54,10 +54,11 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
 	App->entityManager->CreateUnit(-100, 550, true, ELVEN_ARCHER);
 	App->entityManager->CreateUnit(-150, 350, false, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(-400, 500, true, ELVEN_ARCHER);
-	troll = App->entityManager->CreateUnit(50, 150, false, TROLL_MAULER);
-	
+	App->entityManager->CreateUnit(-50, 750, true, ELVEN_ARCHER);
+
+	troll = App->entityManager->CreateUnit(50, 150, true, TROLL_MAULER);
 	my_townCenter = App->entityManager->CreateBuilding(580, 350, false, TOWN_CENTER);
+	enemy_townCenter = App->entityManager->CreateBuilding(-580, 400, true, ORC_BARRACKS);
 
 	// -------------------------------------------------------------------------
 

@@ -624,6 +624,25 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 		}
 	}
 
+	if (c1->type == COLLIDER_FRIENDLY_UNIT && c2->type == COLLIDER_ENEMY_BUILDING)
+	{
+		for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
+		{
+			if ((*friendly_unit)->collider == c1 && (*friendly_unit)->attackUnitTarget == nullptr)
+			{
+				for (list<Building*>::iterator enemy_building = enemyBuildingList.begin(); enemy_building != enemyBuildingList.end(); enemy_building++)
+				{
+					if ((*enemy_building)->collider == c2)
+					{
+						(*friendly_unit)->SetState(UNIT_ATTACKING);
+						(*friendly_unit)->attackBuildingTarget = (*enemy_building);
+						break;
+					}
+				}
+			}
+		}
+	}
+
 	// ----------------------------------------------------------------------------------------
 }
 

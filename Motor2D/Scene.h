@@ -44,6 +44,7 @@ private:
 
 public:
 	Building* my_townCenter;
+	Building* enemy_townCenter;
 	Unit* troll;
 
 	// -----------------------------

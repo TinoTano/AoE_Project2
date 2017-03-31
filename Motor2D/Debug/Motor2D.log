@@ -1,13 +1,5 @@
-﻿  Unit.cpp
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(53): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(53): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(222): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(297): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(298): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(310): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(311): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(314): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcd\documents\github\aoe_project2\motor2d\unit.cpp(315): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
+﻿  EntityManager.cpp
+c:\users\marcd\documents\github\aoe_project2\motor2d\entitymanager.cpp(129): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\marcd\documents\github\aoe_project2\motor2d\entitymanager.cpp(153): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
   Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
   Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
