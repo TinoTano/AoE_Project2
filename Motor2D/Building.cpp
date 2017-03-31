@@ -180,3 +180,5 @@ bool Building::Save(pugi::xml_node &) const
 	return true;
 }
 
+
+

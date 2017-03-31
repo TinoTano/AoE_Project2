@@ -8,6 +8,7 @@
 #include <vector>
 #include "Input.h"
 #include "Map.h"
+#include "Timer.h"
 
 class Building;
 
@@ -75,7 +76,6 @@ public:
 	iPoint destinationTile = { 0,0 };
 	iPoint destinationTileWorld = { 0,0 };
 	float attackSpeed = 0;
-	float timer = 0;
 	int hpBarWidth = 40;
 	unitDirection currentDirection = RIGHT;
 	SDL_Texture* unitIdleTexture = nullptr;
@@ -91,16 +91,23 @@ public:
 	int unitDefense = 0;
 	bool isVisible = true;
 	bool isSelected = false;
-	bool to_delete = false;
 
 	//Animations
 	vector<Animation> idleAnimations;
 	vector<Animation> movingAnimations;
 	vector<Animation> attackingAnimations;
 	vector<Animation> dyingAnimations;
-
 	Animation* currentAnim = nullptr;
 
+	// My changes --------------------------------------------
+
+	bool isHero = false;
+	bool Hero_Special_Attack();
+	Timer time_inactive;
+	Timer time_active;
+	bool clicked = false;
+	
+	// -------------------------------------------------------
 };
 
 #endif // !__UNIT_H__

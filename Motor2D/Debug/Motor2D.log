@@ -1,5 +1,4 @@
-﻿  EntityManager.cpp
-c:\users\marcd\documents\github\aoe_project2\motor2d\entitymanager.cpp(129): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\marcd\documents\github\aoe_project2\motor2d\entitymanager.cpp(153): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+﻿     Creating library C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
+physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
   Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
   Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

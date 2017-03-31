@@ -19,6 +19,12 @@ Unit::Unit()
 
 Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 {
+	// My changes --------------------------
+
+	time_inactive.Start();
+
+	// -------------------------------------
+
 	entityPosition.x = posX;
 	entityPosition.y = posY;
 	this->isEnemy = isEnemy;
@@ -112,6 +118,7 @@ bool Unit::Draw()
 
 		if (isSelected) 
 		{
+	
 			//App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
 
 			Sprite bar;
@@ -195,6 +202,8 @@ bool Unit::Draw()
 
 		 if (collider != nullptr) App->render->sprites_toDraw.push_back(aux);
 	}
+
+	if (isHero) Hero_Special_Attack();
 
 	// ---------------------------------------------------------------------
 
@@ -445,3 +454,28 @@ pugi::xml_node Unit::LoadUnitInfo(unitType type)
 {
 	return pugi::xml_node();
 }
+
+// My changes ---------------------------------------------------
+
+bool Unit::Hero_Special_Attack()
+{
+	int cooldown = 6;
+
+	if (isSelected && time_inactive.ReadSec() >= cooldown && App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && !clicked)
+	{
+		unitAttack *= 10;
+		time_active.Start();		
+		clicked = true;
+	}
+
+	if (time_active.ReadSec() >= 3 && clicked)
+	{
+		unitAttack /= 10;
+		time_inactive.Start();
+		clicked = false;
+	}
+
+	return true;
+}
+
+// -------------------------------------------------------------
