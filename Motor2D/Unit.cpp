@@ -143,7 +143,7 @@ void Unit::SetDestination(iPoint destination)
 		path = nullptr;
 	}
 
-	iPoint origin = App->map->WorldToMap(collider->pos.x, collider->pos.y);
+	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
 	path = App->pathfinding->CreatePath(origin, destination);
 	
 }
@@ -155,6 +155,8 @@ void Unit::Move(float dt)
 	if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
 		if (path->size() > 0) {
 			destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
+			destinationTileWorld.x += 48;             // to center the unit in the tile
+			destinationTileWorld.y += 24;
 			path->erase(path->begin());
 		}
 		else {

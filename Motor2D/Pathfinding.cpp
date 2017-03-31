@@ -136,7 +136,7 @@ uint PathNode::FindWalkableAdjacents(PathList& list_to_fill) const
 			if (!(i == 0 && j == 0)) {
 
 				cell.create(pos.x + i, pos.y + j);
-				if (App->pathfinding->IsWalkable(cell) && !App->entityManager->IsOccupied(cell))
+				if (App->pathfinding->IsWalkable(cell))
 					list_to_fill.pathNodeList.push_back(PathNode(-1, -1, cell, this));
 
 			}
@@ -335,10 +335,10 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	iPoint adjusted_dest = destination;
 	list<iPoint>* ret = new list<iPoint>;
 
-	if (!IsWalkable(origin) || App->entityManager->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
-		adjusted_orig = FindNearestAvailable(origin);    
+	//if (!IsWalkable(origin) || App->entityManager->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
+	//	adjusted_orig = FindNearestAvailable(origin);    
 
-	if (!IsWalkable(destination) || App->entityManager->IsOccupied(destination))
+	if (!IsWalkable(destination))
 		adjusted_dest = FindNearestAvailable(destination);
 	
 	if (adjusted_orig.x == -1 || adjusted_dest.x == -1 || adjusted_dest == adjusted_orig) {
@@ -451,7 +451,7 @@ iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, con
 
 				adj.create(tile.x + i, tile.y + j);
 
-				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj)) {
+				if (App->pathfinding->IsWalkable(adj)) {
 
 					if (cells_to_ignore != nullptr) {
 						for (list<iPoint>::iterator it = cells_to_ignore->begin(); it != cells_to_ignore->end(); it++) {
@@ -488,7 +488,7 @@ Collision_state PathFinding::SolveCollision(Unit* unit1, Unit* unit2) {
 
 	if (unit2->state != UNIT_ATTACKING || unit1->state != UNIT_ATTACKING) {        // if both are attacking, we do nothing
 
-		if (unit2->state == UNIT_ATTACKING && unit1->state != UNIT_ATTACKING) {    // if unit2 is attacking, we push unit 1
+		if ((unit2->state == UNIT_ATTACKING && unit1->state != UNIT_ATTACKING) || unit1->state == UNIT_IDLE) {    // if unit2 is attacking, we push unit 1
 			if (PushUnit(unit2, unit1))
 				col_state = SOLVING;
 		}
