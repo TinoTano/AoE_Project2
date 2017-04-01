@@ -198,6 +198,10 @@ bool Scene::CleanUp()
 	App->gui->DestroyUIElement(back_to_menu_bt);
 	App->gui->DestroyUIElement(save_game_bt);
 	App->gui->DestroyUIElement(cancel_bt);
+	App->gui->DestroyUIElement(back_to_menu_lbl);
+	App->gui->DestroyUIElement(quit_game_lbl);
+	App->gui->DestroyUIElement(save_game_lbl);
+	App->gui->DestroyUIElement(cancel_lbl);
 	ui_menu.CleanUp();
 	App->entityManager->CleanUp();
 

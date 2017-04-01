@@ -57,6 +57,11 @@ private:
 	Button* back_to_menu_bt;
 	Button* save_game_bt;
 	Button* cancel_bt;
+	Label* back_to_menu_lbl;
+	Label* quit_game_lbl;
+	Label* save_game_lbl;
+	Label* cancel_lbl;
+
 };
 
 #endif // __SCENE_H__
