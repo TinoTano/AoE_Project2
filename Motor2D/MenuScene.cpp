@@ -9,7 +9,6 @@ MenuScene::MenuScene() : SceneElement("menu")
 
 MenuScene::~MenuScene()
 {
-	delete this;
 }
 
 bool MenuScene::Awake(pugi::xml_node & config)

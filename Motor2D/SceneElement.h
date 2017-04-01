@@ -11,7 +11,6 @@ using namespace std;
 class SceneElement {
 public:
 	SceneElement(char* _name) { name = _name; };
-	virtual ~SceneElement();
 	virtual bool Start() { return true; };
 	virtual bool PreUpdate() { return true; };
 	virtual bool Update(float dt) { return true; };

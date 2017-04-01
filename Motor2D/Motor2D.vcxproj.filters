@@ -79,9 +79,6 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="SceneElement.cpp">
-      <Filter>Project 2\Scenes</Filter>
-    </ClCompile>
     <ClCompile Include="MenuScene.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>

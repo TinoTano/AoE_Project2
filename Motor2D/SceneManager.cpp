@@ -57,6 +57,11 @@ bool SceneManager::CleanUp()
 {
 	if (current_scene != nullptr)
 		current_scene->CleanUp();
+
+	for (list<SceneElement*>::iterator it = scenes.begin(); it != scenes.end(); ++it)
+	{
+		RELEASE(it._Ptr->_Myval);
+	}
 	return true;
 }
 

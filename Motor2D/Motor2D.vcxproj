@@ -95,7 +95,6 @@
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="SceneElement.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Render.cpp" />
