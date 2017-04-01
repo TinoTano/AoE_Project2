@@ -292,7 +292,7 @@ public:
 	//Image* single;
 	//Label* name;
 	//Label* life;
-	Button* create_unit_bt;
+	
 
 	uint attack;
 	uint defense;
@@ -313,6 +313,23 @@ public:
 	void ClearSingle();
 	void ClearBuilding();
 	void CleanUp();
+	//
+	// HUD MANAGING FUNCTIONS
+	enum HUDBuildingState {
+		BUILDINGMENU,
+		BUILDINGCREATEUNITS
+	};
+	HUDBuildingState building_state;
+
+	// ----- MENU -----
+	Button* create_unit_bt;
+	void HUDBuildingMenu();
+	void HUDClearBuildingMenu();
+
+	// ----- CREATE UNITS ------
+	Button* create_elven_archer_bt, *create_elven_longblade_bt, *cancel_bt;
+	void HUDCreateUnits();
+	void HUDClearCreateUnits();
 };
 
 
