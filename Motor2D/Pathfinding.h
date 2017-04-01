@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Unit.h"
+#include "Collision.h"
 #include "p2Point.h"
 
 #include <vector>
@@ -41,8 +42,8 @@ public:
 	// To request all tiles involved in the last generated path
 	const list<iPoint>* GetLastPath() const;
 
-	list<iPoint> GetPath() const;
-	list<list<iPoint>>* GetPaths();
+	list<iPoint>* GetPath() const;
+	list<list<iPoint>*>* GetPaths();
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries(const iPoint& pos) const;
@@ -55,11 +56,12 @@ public:
 
 	bool Jump(int current_x, int current_y, int dx, int dy, iPoint start, iPoint end, PathNode& new_node);
 
-	iPoint FindNearestAvailableTarget(const iPoint& tile, const iPoint& target) const;
-	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 5, list<iPoint>* cells_to_ignore = nullptr) const;
+	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 1, const iPoint& target = { -1, -1 }, list<iPoint>* cells_to_ignore = nullptr) const;
 	void CalculatePath(Path* path);
 	void SharePath(Unit* commander, list<Unit*> followers);
 	bool DeletePath(list<iPoint>* path_to_delete);
+	Collision_state SolveCollision(Unit* unit1, Unit* unit2);
+	bool PushUnit(Unit* pushing_unit, Unit* pushed_unit);
 
 private:
 
@@ -70,7 +72,7 @@ private:
 	uchar* map;
 	// we store the created path here
 	list<iPoint> lastPath;
-	list<list<iPoint>> paths;
+	list<list<iPoint>*> paths;
 };
 
 // forward declaration

@@ -62,9 +62,7 @@ public:
 	int unitPiercingDamage = 0;
 	float unitMovementSpeed = 0;
 	list<iPoint>* path;
-	bool destinationReached = true;
 	fPoint velocity = { 0,0 };
-	iPoint destinationTile = { 0,0 };
 	iPoint destinationTileWorld = { 0,0 };
 	float attackSpeed = 0;
 	float timer = 0;

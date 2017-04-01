@@ -39,8 +39,6 @@ bool Collision::Start()
 
 bool Collision::PreUpdate()
 {
-	for (list<Collider*>::iterator col = colliders.begin(); col != colliders.end(); col++)
-		(*col)->colliding = false;
 
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
 		if ((*it)->to_delete == true)
@@ -63,8 +61,6 @@ bool Collision::PreUpdate()
 
 				if ((matrix[c1->type][c2->type] && c1->callback) || (matrix[c2->type][c1->type] && c2->callback)) {
 
-					c2->callback->OnCollision(c2, c1);
-
 					if (!FindCollision(c1, c2)) {
 						Collision_data* collision = nullptr;
 
@@ -83,16 +79,20 @@ bool Collision::PreUpdate()
 	for (list<Collision_data*>::iterator collisions = collision_list.begin(); collisions != collision_list.end(); collisions++) {
 
 		if ((*collisions)->state == UNSOLVED) {
-			(*collisions)->c1->callback->OnCollision((*collisions)->c1, (*collisions)->c2);
-			(*collisions)->state = SOLVING;
+			(*collisions)->c1->callback->OnCollision(*(*collisions));
 			continue;
 		}
 
 		if ((*collisions)->state == SOLVING) {
-			if ((*collisions)->c1->CheckCollision((*collisions)->c2) == false) {
-				collision_list.remove((*collisions));
-				delete (*collisions);
-			}
+			if ((*collisions)->c1->CheckCollision((*collisions)->c2) == false)
+				(*collisions)->state = SOLVED;
+		}
+
+		if ((*collisions)->state == SOLVED) {
+			(*collisions)->c1->colliding = false;
+			(*collisions)->c2->colliding = false;
+			RELEASE(*collisions);
+			collisions = collision_list.erase(collisions);
 		}
 	}
 
@@ -178,9 +178,9 @@ void Collision::DebugDraw()
 		}
 
 		if((*it)->colliding)
-			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255, false);
+			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255);
 		else
-			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255, false);
+			App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255);
 	}
 }
 

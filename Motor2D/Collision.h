@@ -27,16 +27,7 @@ enum Collision_state {
 
 };
 
-struct Collision_data {
 
-	Collider* c1; 
-	Collider* c2;
-	Collision_state state = UNSOLVED;
-
-	Collision_data(Collider* c1, Collider* c2) : c1(c1), c2(c2)
-	{}
-
-};
 
 struct Collider
 {
@@ -65,6 +56,17 @@ struct Collider
 	bool CheckCollision(Collider* c2) const;
 	Unit* GetUnit();
 	Building* GetBuilding();
+};
+
+struct Collision_data {
+
+	Collider* c1; 
+	Collider* c2;
+	Collision_state state = UNSOLVED;
+
+	Collision_data(Collider* c1, Collider* c2) : c1(c1), c2(c2)
+	{}
+
 };
 
 class Collision : public Module
