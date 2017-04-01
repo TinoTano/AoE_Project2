@@ -891,21 +891,47 @@ bool HUD::IsEnabled()
 //HUD
 HUD::HUD()
 {
+	buttons_positions.push_back({30, 650, 39,40});
 }
 
 void HUD::ClearBuilding() {
 		App->gui->DestroyUIElement(single);
 		App->gui->DestroyUIElement(name);
 		App->gui->DestroyUIElement(life);
+		App->gui->DestroyUIElement(create_unit_bt);
 }
 void HUD::Update() {
 	
+	char armor[65], damage[65], currlife[65], maxlife[65];
+
 	if (App->entityManager->selectedBuildingtList.size() == 1)
 	{
-		ClearSingle();
-		ClearMultiple();
-		type = BUILDINGINFO;
-		StartBuildingInfo();
+		if (type != BUILDINGINFO)
+		{
+			ClearSingle();
+			ClearMultiple();
+			type = BUILDINGINFO;
+			StartBuildingInfo();
+		}
+		else {
+			max_life = App->entityManager->selectedBuildingtList.front()->buildingMaxLife;
+			curr_life = App->entityManager->selectedBuildingtList.front()->buildingLife;
+
+			string life_str;
+			_itoa_s(curr_life, currlife, 65, 10);
+			life_str += currlife;
+			life_str += "/";
+			_itoa_s(max_life, maxlife, 65, 10);
+			life_str += maxlife;
+
+			life->str = maxlife;
+
+			int percent = ((max_life - curr_life) * 100) / max_life;
+			int barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
+
+			App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h, App->gui->SpriteBuildings.front().GetRect().w, 5 }, 255, 0, 0);
+			App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h, min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
+		}
 	}
 	else {
 
@@ -944,7 +970,7 @@ void HUD::Update() {
 						attack = App->entityManager->selectedUnitList.front()->unitDefense;
 					}
 				}
-				char armor[65], damage[65], currlife[65], maxlife[65];
+				
 				_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
 				_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
 
@@ -1157,6 +1183,13 @@ void HUD::StartBuildingInfo()
 	life_str += maxlife;
 
 	life = (Label*)App->gui->CreateLabel(life_str, 350 - App->render->camera.x, 700 - App->render->camera.y, nullptr);
+
+	vector<SDL_Rect> blit_sections;
+	blit_sections.push_back({ 130, 64, 39, 40 });
+	blit_sections.push_back({ 169, 64, 39, 40 });
+
+
+	create_unit_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x, buttons_positions[0].y, blit_sections, buttons_positions, TIER2);
 }
 
 

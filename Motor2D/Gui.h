@@ -280,12 +280,16 @@ public:
 	//Image* single;
 	//Label* name;
 	//Label* life;
-	Button* create_unit;
+	Button* create_unit_bt;
 
 	uint attack;
 	uint defense;
 	uint max_life;
 	uint curr_life;
+
+	// BUTTONS POSITIONS AND OTHER INFO
+
+	vector<SDL_Rect> buttons_positions;
 	HUD();
 	bool IsEnabled();
 	void GetSelection();
