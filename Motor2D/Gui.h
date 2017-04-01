@@ -78,6 +78,7 @@ public:
 	virtual	void	Draw() {}
 	virtual void	DebugMode() {}
 	virtual void	Movement(pair<int,int>) {}
+	virtual void	CleanUp() {}
 	void			SetPos(int x, int y);
 	void			SetParentPos(int x, int y);
 	void			Move(int x, int y);
@@ -105,6 +106,7 @@ public:
 	void Update();
 	void Draw();
 	void DebugMode();
+	void CleanUp();
 
 
 	SDL_Rect section;
@@ -122,6 +124,7 @@ public:
 	void Draw();
 	void SetText(char* text);
 	void SetSize(int size);
+	void CleanUp();
 
 	int width = 0, height = 0, size = 0;
 	_TTF_Font* font;
@@ -137,6 +140,8 @@ public:
 	Button(int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier tier, SDL_Texture* texture);
 
 	void Update();
+	void CleanUp();
+
 	void Draw(SDL_Rect section);
 	void Movement(pair<int,int> movement);
 	MouseState MouseDetect();
@@ -155,6 +160,7 @@ public:
 	void DebugMode();
 	void Update();
 	void Draw();
+	void CleanUp();
 	MouseState MouseDetect();
 
 
@@ -214,6 +220,7 @@ public:
 class Quad : public UIElement {
 public:
 	Quad(SDL_Rect area, SDL_Color color);
+	void CleanUp();
 	void Update();
 	void Draw();
 	void SetArea(SDL_Rect area);
@@ -229,6 +236,7 @@ public:
 	void Update();
 	void Draw();
 	void SetCursor(int id);
+	void CleanUp();
 	
 private:
 	int id = 0;
@@ -361,7 +369,7 @@ public:
 	void	Unfocus();
 
 
-private:
+
 	SDL_Texture* atlas = nullptr;
 	string atlas_file_name;
 	list<UIElement*> Elements;

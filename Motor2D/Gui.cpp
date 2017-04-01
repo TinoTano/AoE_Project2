@@ -115,14 +115,17 @@ bool Gui::CleanUp()
 {
 	LOG("Freeing GUI");
 
+	cursor->CleanUp();
+
 	if (Elements.empty() != true)
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 		{
-			RELEASE((*it));
+			App->gui->DestroyUIElement(it._Ptr->_Myval);
 		}
 	}
 	Elements.clear();
+
 	hud->CleanUp();
 	delete hud;
 	return true;
@@ -318,10 +321,8 @@ void Gui::DestroyUIElement(UIElement* element)
 	{
 		if (element == it._Ptr->_Myval)
 		{
-			int a = Elements.size();
+			it._Ptr->_Myval->CleanUp();
 			Elements.remove(it._Ptr->_Myval);
-			int b = Elements.size();
-		//	it._Ptr->_Prev->_Next->_Myval = it._Ptr->_Next->_Myval;
 			RELEASE((element));
 		}
 	}
@@ -382,6 +383,11 @@ void Image::Movement(pair<int, int> movement) {
 void Image::DebugMode() {
 	App->render->DrawQuad({ pos.first, pos.second, section.w, section.h }, debug_color.r, debug_color.g, debug_color.b, debug_color.a, true);
 }
+void Image::CleanUp()
+{
+	parent = nullptr;
+	App->tex->UnLoad(texture);
+}
 // LABEL 
 
 Label::Label(char* text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {
@@ -427,6 +433,14 @@ void Label::SetSize(int size) {
 	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
+void Label::CleanUp()
+{
+	parent = nullptr;
+	font = nullptr;
+	App->tex->UnLoad(texture);
+	str.clear();
+}
+
 void Label::Movement(pair<int, int> movement) {
 	pos.first -= movement.first;
 	pos.second -= movement.second;
@@ -462,6 +476,14 @@ void Button::Update()
 	}
 
 	if (debug) DebugMode();
+}
+
+void Button::CleanUp()
+{
+	parent = nullptr;
+	App->tex->UnLoad(texture);
+	blit_sections.clear();
+	detect_sections.clear();
 }
 
 void Button::Draw(SDL_Rect section)
@@ -562,6 +584,16 @@ void InputText::Draw() {
 	App->font->CalcSize(str.c_str(), width, height);
 	SDL_Rect text_size{ 0, 0, width, height };
 	App->render->Blit(texture, pos.first, pos.second, &text_size);
+}
+
+void InputText::CleanUp()
+{
+	parent = nullptr;
+	App->tex->UnLoad(texture);
+	font = nullptr;
+	str.clear();
+	cpy_str.clear();
+	words_lenght.clear();
 }
 
 MouseState InputText::MouseDetect() {
@@ -797,6 +829,12 @@ void ScrollBar::DebugMode() {
 
 Quad::Quad(SDL_Rect area, SDL_Color color) : UIElement(true, area.x, area.y, QUAD, nullptr), color(color), area(area) {
 }
+void Quad::CleanUp()
+{
+	parent = nullptr;
+
+
+}
 void Quad::Update() {
 	Draw();
 
@@ -837,6 +875,11 @@ void Cursor::Draw() {
 }
 void Cursor::SetCursor(int id) {
 	this->id = id;
+}
+
+void Cursor::CleanUp()
+{
+	sprite_list.clear();
 }
 
 // WINDOW

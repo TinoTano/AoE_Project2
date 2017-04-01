@@ -17,7 +17,7 @@
 #include "Collision.h"
 #include "Gui.h"
 //#include "FogOfWar.h"
-#include "Console.h"
+//#include "Console.h"
 
 
 
@@ -40,7 +40,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	collision = new Collision();
 	gui = new Gui();
 	//fog = new FogOfWar();
-	console = new Console();
+	//console = new Console();
 	
 
 	// Ordered for awake / Start / Update
@@ -54,7 +54,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(pathfinding);
 	AddModule(font);
 	AddModule(gui);
-	AddModule(console);
+	//AddModule(console);
 
 
 	// scene last

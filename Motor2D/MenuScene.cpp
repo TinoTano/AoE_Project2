@@ -68,12 +68,18 @@ bool MenuScene::PreUpdate()
 bool MenuScene::Update(float dt)
 {
 	
-
+	for (list<UIElement*>::iterator it = App->gui->Elements.begin(); it != App->gui->Elements.end(); ++it)
+	{
+		it._Ptr->_Myval->type;
+	}
 	return true;
 }
 
 bool MenuScene::PostUpdate()
 {
+	int x = App->gui->Elements.size();
+	int y = App->entityManager->friendlyUnitList.size();
+
 	if (campaign_bt->current == CLICKIN || skirmish_bt->current == CLICKIN)
 	{
 		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);

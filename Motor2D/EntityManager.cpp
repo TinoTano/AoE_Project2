@@ -32,8 +32,7 @@ bool EntityManager::Start()
 	
 	bool ret = LoadGameData();
 	if (ret) {
-		if (App->sceneManager->current_scene->name == "scene"){}
-		//	App->sceneManager->current_scene->Start();
+
 	}
 	
 	return ret;

@@ -160,7 +160,12 @@ bool Scene::Update(float dt)
 	if (menu_bt->current == HOVER || menu_bt->current == CLICKIN) App->gui->cursor->SetCursor(3);
 	else App->gui->cursor->SetCursor(0);
 
-	if (menu_bt->current == CLICKIN) ui_menu.WindowOn();
+	if (menu_bt->current == CLICKIN) { 
+		ui_menu.WindowOn();
+	}
+	if (menu_bt->current == HOVER) {
+		ui_menu.WindowOn();
+	}
 
 	if (quit_game_bt->current == CLICKIN) App->quit = true;
 	else if (cancel_bt->current == CLICKIN) {

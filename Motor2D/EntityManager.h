@@ -54,7 +54,7 @@ public:
 private:
 	void DestroyEntity(Entity* entity);
 
-private:
+public:
 	list<Unit*> friendlyUnitList;
 	list<Unit*> enemyUnitList;
 	list<Unit*> removeUnitList;
