@@ -7,6 +7,10 @@
 #include "Building.h"
 #include "Resource.h"
 
+
+#define NOTHUD SDL_Rect{0, 30, 1920 , 622}
+#define CAMERA_OFFSET_X App->render->camera.x
+#define CAMERA_OFFSET_Y App->render->camera.y
 class Entity;
 
 class EntityManager : public Module {

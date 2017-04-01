@@ -73,6 +73,9 @@ bool EntityManager::Update(float dt)
 		(*it)->Draw();
 	}
 
+	if (mouseY > NOTHUD.y - CAMERA_OFFSET_Y && mouseY < NOTHUD.h - CAMERA_OFFSET_Y)
+	{
+
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN) {
 		Unit* clickedUnit = nullptr;
 		for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
@@ -93,62 +96,114 @@ bool EntityManager::Update(float dt)
 			}
 		}
 	}
+	
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			multiSelectionRect.x = mouseX;
+			multiSelectionRect.y = mouseY;
+		}
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-		multiSelectionRect.x = mouseX;
-		multiSelectionRect.y = mouseY;
-	}
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+			multiSelectionRect.w = mouseX - multiSelectionRect.x;
+			multiSelectionRect.h = mouseY - multiSelectionRect.y;
+		}
+		
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+			if (multiSelectionRect.w != 0) {
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-		multiSelectionRect.w = mouseX - multiSelectionRect.x;
-		multiSelectionRect.h = mouseY - multiSelectionRect.y;
-	}
+				bool selectedCount = 0;
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-		if (multiSelectionRect.w != 0) {
-			
-			bool selectedCount = 0;
-
-			if (multiSelectionRect.w < 0) {
-				multiSelectionRect.x += multiSelectionRect.w;
-				multiSelectionRect.w *= -1;
-			}
-			if (multiSelectionRect.h < 0) {
-				multiSelectionRect.y += multiSelectionRect.h;
-				multiSelectionRect.h *= -1;
-			}
-
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				SDL_Point pos;
-				pos.x = (*it)->entityPosition.x;
-				pos.y = (*it)->entityPosition.y;
-
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-					(*it)->isSelected = true;
-					selectedCount++;
-					selectedUnitList.push_back((*it));
+				if (multiSelectionRect.w < 0) {
+					multiSelectionRect.x += multiSelectionRect.w;
+					multiSelectionRect.w *= -1;
 				}
-			}
-			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-				if ((*it)->isSelected) {
-					(*it)->isSelected = false;
-					selectedUnitList.remove(*it);
-				}
-			}
-			if (selectedCount == 0) {
-				for (list<Unit*>::iterator it2 = selectedUnitList.begin(); it2 != selectedUnitList.end(); it2++) {
-					if ((*it2)->isSelected) {
-						(*it2)->isSelected = false;
-						selectedUnitList.remove(*it2);
-					}
-				}
-				for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+				if (multiSelectionRect.h < 0) {
+					multiSelectionRect.y += multiSelectionRect.h;
+					multiSelectionRect.h *= -1;
+				}				
+
+				for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 					SDL_Point pos;
 					pos.x = (*it)->entityPosition.x;
 					pos.y = (*it)->entityPosition.y;
 
 					if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
 						(*it)->isSelected = true;
+						selectedCount++;
+						selectedUnitList.push_back((*it));
+					}
+				}
+				for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+					if ((*it)->isSelected) {
+						(*it)->isSelected = false;
+						selectedUnitList.remove(*it);
+					}
+				}
+				if (selectedCount == 0) {
+					for (list<Unit*>::iterator it2 = selectedUnitList.begin(); it2 != selectedUnitList.end(); it2++) {
+						if ((*it2)->isSelected) {
+							(*it2)->isSelected = false;
+							selectedUnitList.remove(*it2);
+						}
+					}
+					for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+						SDL_Point pos;
+						pos.x = (*it)->entityPosition.x;
+						pos.y = (*it)->entityPosition.y;
+
+						if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+							(*it)->isSelected = true;
+						}
+						else {
+							if ((*it)->isSelected) {
+								(*it)->isSelected = false;
+								selectedUnitList.remove(*it);
+							}
+						}
+					}
+				}
+				multiSelectionRect = { 0,0,0,0 };
+			}
+			else {
+				for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+					if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
+						mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+						if (selectedUnitList.empty() || selectedUnitList.front() != (*it)) {
+							(*it)->isSelected = true;
+							selectedUnitList.push_back(*it);
+							timesClicked = 0;
+						}
+						for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
+							if (*it != *it2) {
+								if ((*it2)->isSelected) {
+									(*it2)->isSelected = false;
+									selectedUnitList.remove(*it2);
+								}
+							}
+						}
+						timesClicked++;
+						doubleClickTimer = 0;
+						break;
+					}
+					else {
+						if ((*it)->isSelected) {
+							(*it)->isSelected = false;
+							selectedUnitList.remove(*it);
+						}
+					}
+				}
+				for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+					if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
+						mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+						(*it)->isSelected = true;
+						for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
+							if (*it != *it2) {
+								if ((*it2)->isSelected) {
+									(*it2)->isSelected = false;
+									selectedUnitList.remove(*it2);
+								}
+							}
+						}
+						break;
 					}
 					else {
 						if ((*it)->isSelected) {
@@ -158,84 +213,32 @@ bool EntityManager::Update(float dt)
 					}
 				}
 			}
-			multiSelectionRect = { 0,0,0,0 };
+		}
+
+		if (multiSelectionRect.w != 0) {
+			App->render->DrawQuad(multiSelectionRect, 255, 255, 255, 255, false);
+		}
+
+		if (doubleClickTimer <= 0.5f) {
+			if (timesClicked == 2) {
+				for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+					if (!selectedUnitList.empty()) {
+						if ((*it) != selectedUnitList.front()) {
+							if ((*it)->GetType() == selectedUnitList.front()->GetType()) {
+								(*it)->isSelected = true;
+								selectedUnitList.push_back((*it));
+							}
+						}
+					}
+				}
+				timesClicked = 0;
+			}
+			doubleClickTimer += dt;
 		}
 		else {
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
-					mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
-					if (selectedUnitList.empty() || selectedUnitList.front() != (*it)) {
-						(*it)->isSelected = true;
-						selectedUnitList.push_back(*it);
-						timesClicked = 0;
-					}
-					for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
-						if (*it != *it2) {
-							if ((*it2)->isSelected) {
-								(*it2)->isSelected = false;
-								selectedUnitList.remove(*it2);
-							}
-						}
-					}
-					timesClicked++;
-					doubleClickTimer = 0;
-					break;
-				}
-				else {
-					if ((*it)->isSelected) {
-						(*it)->isSelected = false;
-						selectedUnitList.remove(*it);
-					}
-				}
-			}
-			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-				if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
-					mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
-					(*it)->isSelected = true;
-					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
-						if (*it != *it2) {
-							if ((*it2)->isSelected) {
-								(*it2)->isSelected = false;
-								selectedUnitList.remove(*it2);
-							}
-						}
-					}
-					break;
-				}
-				else {
-					if ((*it)->isSelected) {
-						(*it)->isSelected = false;
-						selectedUnitList.remove(*it);
-					}
-				}
-			}
-		}
-	}
-
-	if (multiSelectionRect.w != 0) {
-		App->render->DrawQuad(multiSelectionRect, 255, 255, 255, 255, false);
-	}
-
-	if (doubleClickTimer <= 0.5f) {
-		if (timesClicked == 2) {
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if (!selectedUnitList.empty()) {
-					if ((*it) != selectedUnitList.front()) {
-						if ((*it)->GetType() == selectedUnitList.front()->GetType()) {
-							(*it)->isSelected = true;
-							selectedUnitList.push_back((*it));
-						}
-					}
-				}
-			}
 			timesClicked = 0;
 		}
-		doubleClickTimer += dt;
 	}
-	else {
-		timesClicked = 0;
-	}
-
 	return true;
 }
 
