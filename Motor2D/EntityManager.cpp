@@ -79,18 +79,24 @@ bool EntityManager::Update(float dt)
 		iPoint destination = App->map->WorldToMap(mouseX, mouseY);
 
 		Unit* commander = selectedUnitList.front();
-		commander->SetDestination(destination);
 
-		if (selectedUnitList.size() > 1) {
+		if (((commander->path == nullptr) || (commander->path != nullptr && commander->path->back() != destination))
+			&& (commander->destinationTileWorld.x != mouseX && commander->destinationTileWorld.y != mouseY)) {
 
-			selectedUnitList.pop_front();
-			App->pathfinding->SharePath(commander, selectedUnitList);
-			selectedUnitList.push_front(commander);
+			commander->SetDestination(destination);
+
+			if (selectedUnitList.size() > 1) {
+
+				selectedUnitList.pop_front();
+				App->pathfinding->SharePath(commander, selectedUnitList);
+				selectedUnitList.push_front(commander);
+
+			}
+
+			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
+				(*it)->SetState(UNIT_MOVING);
 
 		}
-
-		for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
-			(*it)->SetState(UNIT_MOVING);
 	}
 	
 	
