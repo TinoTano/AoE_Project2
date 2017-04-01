@@ -330,6 +330,9 @@ bool EntityManager::CleanUp()
 	}
 	removeResourceList.clear();
 
+	selectedBuildingtList.clear();
+	selectedUnitList.clear();
+
 	return true;
 }
 

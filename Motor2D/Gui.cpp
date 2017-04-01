@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "Window.h"
 #include "Gui.h"
+#include "SceneManager.h"
 #include <stdlib.h>  
 
 Gui::Gui() : Module()
@@ -60,7 +61,7 @@ bool Gui::Start()
 	sprites_cursor.push_back({ 420, 50, 70, 50 });
 	sprites_cursor.push_back({ 490, 50, 70, 50 });
 	sprites_cursor.push_back({ 560, 50, 70, 50 });
-
+	hud = new HUD();
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
 
 	LoadHUDData();
@@ -100,8 +101,10 @@ bool Gui::PostUpdate()
 		}
 	}
 
-
-	hud.Update();
+	if (App->sceneManager->current_scene->name == "scene")
+	{
+		hud->Update();
+	}
 	// CURSOR ALWAYS GOES LAST!!!!!
 	cursor->Update();
 	return true;
@@ -119,7 +122,9 @@ bool Gui::CleanUp()
 			RELEASE((*it));
 		}
 	}
-
+	Elements.clear();
+	hud->CleanUp();
+	delete hud;
 	return true;
 }
 
@@ -891,7 +896,7 @@ bool HUD::IsEnabled()
 //HUD
 HUD::HUD()
 {
-	buttons_positions.push_back({30, 650, 39,40});
+	buttons_positions.push_back({30 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40});
 }
 
 void HUD::ClearBuilding() {
@@ -1011,9 +1016,8 @@ void HUD::Update() {
 			else
 			{
 				int x = 0, y = 0;
-				if (multiple.size() != App->entityManager->selectedUnitList.size()) {
-					GetSelection();
-				}
+				
+				
 				for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteUnits.begin(); it_sprite != App->gui->SpriteUnits.end(); ++it_sprite)
 				{
 					for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
@@ -1189,7 +1193,7 @@ void HUD::StartBuildingInfo()
 	blit_sections.push_back({ 169, 64, 39, 40 });
 
 
-	create_unit_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x, buttons_positions[0].y, blit_sections, buttons_positions, TIER2);
+	create_unit_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y , blit_sections, buttons_positions, TIER2);
 }
 
 

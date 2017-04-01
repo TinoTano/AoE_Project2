@@ -17,6 +17,10 @@ using namespace std;
 #define THUMB_COLOR {0,50,200, 200}
 #define BLIT_SQUARE_COLOR {200,0,100,100}
 #define LABEL_COLOR {0,0,0 250}
+#define CAMERA_OFFSET_X App->render->camera.x
+#define CAMERA_OFFSET_Y App->render->camera.y
+
+
 struct _TTF_Font;
 
 
@@ -368,7 +372,7 @@ public:
 	Cursor* cursor = nullptr;
 	list<UnitSprite> SpriteUnits;
 	list<UnitSprite> SpriteBuildings;
-	HUD hud;
+	HUD* hud;
 };
 
 
