@@ -68,6 +68,6 @@ bool SceneManager::CleanUp()
 void SceneManager::ChangeScene(SceneElement* last_scene, SceneElement * new_scene)
 {
 	last_scene->CleanUp();
-	new_scene->Start();
 	current_scene = new_scene;
+	new_scene->Start();
 }
