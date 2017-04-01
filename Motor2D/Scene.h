@@ -50,18 +50,16 @@ private:
 	Building* build;
 // UI ELEMENTS
 	Image* top, *bottom;
-	Button* menu_bt;
+	Button* menu_bt, *quit_game_bt, *back_to_menu_bt, *save_game_bt, *cancel_bt;
 	WindowUI ui_menu;
 	Image* menu_bg_img;
-	Button* quit_game_bt;
-	Button* back_to_menu_bt;
-	Button* save_game_bt;
-	Button* cancel_bt;
-	Label* back_to_menu_lbl;
-	Label* quit_game_lbl;
-	Label* save_game_lbl;
-	Label* cancel_lbl;
+	Label* back_to_menu_lbl, *quit_game_lbl, *save_game_lbl, *cancel_lbl;
 
+	// RESOURCES 
+	Label* wood, *food, *gold, *stone, *villagers;
+
+	void UpdateResources(Label* resource, uint new_val);
+	void UpdateVillagers(uint available_villagers, uint total_villagers);
 };
 
 #endif // __SCENE_H__

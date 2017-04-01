@@ -104,6 +104,22 @@ bool Scene::Start()
 	ui_menu.WindowOff();
 	ui_menu.SetFocus(menu_bg_img->pos.first, menu_bg_img->pos.second, 280, 280);
 
+	// RESOURCE LABELS
+	wood = (Label*)App->gui->CreateLabel("420", 50 , 5, nullptr);
+	wood->SetColor({ 255, 255, 255 ,255 });
+	//*food, *gold, *stone, *villagers
+	food = (Label*)App->gui->CreateLabel("600", 150, 5, nullptr);
+	food->SetColor({ 255, 255, 255 ,255 });
+
+	gold = (Label*)App->gui->CreateLabel("600", 280, 5, nullptr);
+	gold->SetColor({ 255, 255, 255 ,255 });
+
+	stone = (Label*)App->gui->CreateLabel("200", 360, 5, nullptr);
+	stone->SetColor({ 255, 255, 255 ,255 });
+
+	villagers = (Label*)App->gui->CreateLabel("0/0", 480, 5, nullptr);
+	villagers->SetColor({ 255, 255, 255 ,255 });
+
 	// SET UI PRIORITY
 
 	App->gui->SetPriority();
@@ -155,18 +171,15 @@ bool Scene::Update(float dt)
 
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
 
-
+	
 
 	if (menu_bt->current == HOVER || menu_bt->current == CLICKIN) App->gui->cursor->SetCursor(3);
 	else App->gui->cursor->SetCursor(0);
 
 	if (menu_bt->current == CLICKIN) { 
+		UpdateVillagers(5, 10);
 		ui_menu.WindowOn();
 	}
-	if (menu_bt->current == HOVER) {
-		ui_menu.WindowOn();
-	}
-
 	if (quit_game_bt->current == CLICKIN) App->quit = true;
 	else if (cancel_bt->current == CLICKIN) {
 		ui_menu.WindowOff();
@@ -212,4 +225,14 @@ bool Scene::CleanUp()
 
 
 	return true;
+}
+
+void Scene::UpdateResources(Label* resource, uint new_val)
+{
+	resource->SetString(to_string(new_val));
+}
+
+void Scene::UpdateVillagers(uint available_villagers, uint total_villagers)
+{
+	villagers->SetString(to_string(available_villagers) + '/' + to_string(total_villagers));
 }

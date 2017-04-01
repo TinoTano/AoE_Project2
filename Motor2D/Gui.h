@@ -123,12 +123,16 @@ public:
 	void Update();
 	void Draw();
 	void SetText(char* text);
+	void SetString(string text);
 	void SetSize(int size);
+	void SetColor(SDL_Color color);
 	void CleanUp();
+	string str;
 
+private:
 	int width = 0, height = 0, size = 0;
 	_TTF_Font* font;
-	string str;
+
 
 	SDL_Color color;
 	SDL_Rect area;
@@ -267,24 +271,25 @@ class HUD {
 private:
 	bool enabled = true;
 public:
-	HUDType type = NONE;
+	HUDType		type = NONE;
+	HUD();
+	
+	
 	// MULTIPLESELECTION
+private:
 	list<Image*> multiple;
 	int max_width;
 
 	//SINGLEINFO
+private:
 	Unit* selected_unit;
 
-	Image* single;
-	Label* name;
-	Label* armor_val;
-	Label* damage_val;
+	Image* single;			Label* name;
+	Label* armor_val;		Label* damage_val;
 	Label* life;
 
-	Image* sword_img;
-	Image* armor_img;
+	Image* sword_img;		Image* armor_img;
 	//Image* arrow_img;
-
 
 	//BUILDINGINFO
 
@@ -292,17 +297,11 @@ public:
 	//Image* single;
 	//Label* name;
 	//Label* life;
-	
-
-	uint attack;
-	uint defense;
-	uint max_life;
-	uint curr_life;
-
-	// BUTTONS POSITIONS AND OTHER INFO
-
+	uint attack, defense, max_life, curr_life;
+	// BUTTONS POSITIONS
 	vector<SDL_Rect> buttons_positions;
-	HUD();
+	
+public:
 	bool IsEnabled();
 	void GetSelection();
 	void StartBuildingInfo();
@@ -313,8 +312,10 @@ public:
 	void ClearSingle();
 	void ClearBuilding();
 	void CleanUp();
+private:
 	//
 	// HUD MANAGING FUNCTIONS
+
 	enum HUDBuildingState {
 		BUILDINGMENU,
 		BUILDINGCREATEUNITS

@@ -422,13 +422,25 @@ void Label::Draw()
 
 void Label::SetText(char* text) {
 	str = text;
-	texture = App->font->Print(str.c_str());
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height);
+}
+void Label::SetString(string text) {
+	str = text.c_str();
+	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height);
 }
 
 void Label::SetSize(int size) {
 	font = App->font->Load(nullptr, size);
 	this->size = size;
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height, font);
+}
+
+void Label::SetColor(SDL_Color color)
+{
+	this->color = color;
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);
 }
