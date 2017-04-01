@@ -118,10 +118,16 @@ bool Unit::Draw()
 
 		if (isSelected) 
 		{
-	
-			//App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
-
 			Sprite bar;
+
+			bar.pos = { entityPosition.x, entityPosition.y + (r.h / 2) };
+			bar.priority = entityPosition.y - (r.h / 2) + r.h - 1;
+			bar.radius = 15;
+			bar.r = 255;
+			bar.g = 255;
+			bar.b = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
 
 			int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
@@ -132,6 +138,8 @@ bool Unit::Draw()
 			bar.rect.h = 5;
 			bar.priority = entityPosition.y - (r.h / 2) + r.h;
 			bar.r = 255;
+			bar.g = 0;
+			bar.b = 0;
 
 			App->render->sprites_toDraw.push_back(bar);
 
@@ -141,7 +149,9 @@ bool Unit::Draw()
 			bar.rect.h = 5;
 			bar.priority = entityPosition.y - (r.h / 2) + r.h;
 			bar.r = 0;
+			bar.r = 0;
 			bar.g = 255;
+			bar.b = 0;
 
 			App->render->sprites_toDraw.push_back(bar);
 		}
@@ -459,7 +469,10 @@ pugi::xml_node Unit::LoadUnitInfo(unitType type)
 
 bool Unit::Hero_Special_Attack()
 {
-	int cooldown = 6;
+	int cooldown = 10;
+	int time_attacking = 3;
+
+	// Attack
 
 	if (isSelected && time_inactive.ReadSec() >= cooldown && App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && !clicked)
 	{
@@ -468,11 +481,28 @@ bool Unit::Hero_Special_Attack()
 		clicked = true;
 	}
 
-	if (time_active.ReadSec() >= 3 && clicked)
+	else if (time_active.ReadSec() >= time_attacking && clicked)
 	{
 		unitAttack /= 10;
 		time_inactive.Start();
 		clicked = false;
+	}
+
+	// Drawing double circle to show that is doing the special attack
+
+	if (time_inactive.ReadSec() >= cooldown && time_active.ReadSec() <= time_attacking)
+	{
+		SDL_Rect r = currentAnim->GetCurrentFrame();
+		Sprite aux;
+
+		aux.pos = { entityPosition.x, entityPosition.y + (r.h / 2) };
+		aux.priority = entityPosition.y - (r.h / 2) + r.h - 1;
+		aux.radius = 25;
+		aux.r = 255;
+		aux.g = 255;
+		aux.b = 255;
+
+		App->render->sprites_toDraw.push_back(aux);
 	}
 
 	return true;

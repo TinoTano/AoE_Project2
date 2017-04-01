@@ -83,7 +83,8 @@ bool Render::PostUpdate()
 			Blit(sprites_toDraw[it].texture, sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, &sprites_toDraw[it].rect, sprites_toDraw[it].flip);
 		else
 		{
-			DrawQuad(sprites_toDraw[it].rect, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
+			if (sprites_toDraw[it].radius == 0) DrawQuad(sprites_toDraw[it].rect, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
+			else DrawCircle(sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, sprites_toDraw[it].radius, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
 		}
 	}
 
