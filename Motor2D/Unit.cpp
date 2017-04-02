@@ -143,7 +143,7 @@ void Unit::SetDestination(iPoint destination)
 		path = nullptr;
 	}
 
-	iPoint origin = App->map->WorldToMap(collider->pos.x, collider->pos.y);
+	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
 	path = App->pathfinding->CreatePath(origin, destination);
 	
 }
@@ -152,11 +152,11 @@ void Unit::Move(float dt)
 {
 	entityPosition = next_step;
 
-	if (collider->pos.DistanceNoSqrt(destinationTileWorld) < 3) {
+	if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
 		if (path->size() > 0) {
 			destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
 			destinationTileWorld.x += 48;             // to center the unit in the tile
-			destinationTileWorld.y += 48;
+			destinationTileWorld.y += 24;
 			path->erase(path->begin());
 		}
 		else {
@@ -181,8 +181,8 @@ void Unit::Move(float dt)
 void Unit::CalculateVelocity()
 {
 
-	velocity.x = destinationTileWorld.x - collider->pos.x;
-	velocity.y = destinationTileWorld.y - collider->pos.y;
+	velocity.x = destinationTileWorld.x - entityPosition.x;
+	velocity.y = destinationTileWorld.y - entityPosition.y;
 
 	if(velocity.x != 0 || velocity.y != 0)
 		velocity.Normalize();
@@ -263,21 +263,14 @@ void Unit::SetState(unitState newState)
 			entityTexture = unitIdleTexture;
 			break;
 		case UNIT_MOVING:
-
+			this->state = UNIT_MOVING;
+			next_step = entityPosition;
+			SetAnim(currentDirection);
+			entityTexture = unitMoveTexture;
 			destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
-			destinationTileWorld.x += 48;             // to center the unit in the tile
-			destinationTileWorld.y += 48;
 
 			if (path->size() > 0)
 				path->erase(path->begin());
-
-			this->state = UNIT_MOVING;
-			next_step = entityPosition;
-
-			if (collider->pos.DistanceNoSqrt(destinationTileWorld) > 1) {
-				SetAnim(currentDirection);
-				entityTexture = unitMoveTexture;
-			}
 
 			if (attackTarget != nullptr)
 				attackTarget = nullptr;
