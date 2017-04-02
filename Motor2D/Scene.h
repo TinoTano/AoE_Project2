@@ -55,6 +55,9 @@ private:
 	Image* menu_bg_img;
 	Label* back_to_menu_lbl, *quit_game_lbl, *save_game_lbl, *cancel_lbl;
 
+	vector<SDL_Rect> blit_sections;		 vector<SDL_Rect> detect_sections;
+	vector<SDL_Rect> blit_sections_menu; vector<SDL_Rect> detect_sections_menu;
+
 	// RESOURCES 
 	Label* wood, *food, *gold, *stone, *villagers;
 

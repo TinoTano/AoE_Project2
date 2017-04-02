@@ -329,6 +329,17 @@ void Gui::DestroyUIElement(UIElement* element)
 
 }
 
+void Gui::DestroyALLUIElements() {
+
+	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+	{
+			it._Ptr->_Myval->CleanUp();
+			Elements.remove(it._Ptr->_Myval);
+			RELEASE((it._Ptr->_Myval));
+		}
+	}
+
+
 // IMAGE
 Image::Image(SDL_Rect argsection, int x, int y, SDL_Texture* argtexture) : UIElement(true, x, y, IMAGE, argtexture), section(argsection) {}
 Image::Image(int x, int y, SDL_Texture* argtexture) : UIElement(true, x, y, IMAGE, argtexture) {}
@@ -927,8 +938,11 @@ void WindowUI::CleanUp()
 	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
 	{
 			//RELEASE((*it));
-		App->gui->DestroyUIElement(*it);
+		App->gui->DestroyUIElement(it._Ptr->_Myval);
+		in_window.remove(it._Ptr->_Myval);
 	}
+
+	in_window.clear();
 }
 
 void WindowUI::SetFocus(int& x, int& y, int width, int height)

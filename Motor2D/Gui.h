@@ -379,6 +379,7 @@ public:
 	UIElement* CreateQuad(SDL_Rect size, SDL_Color color);
 	UIElement* CreateCursor(char* path, vector<SDL_Rect> cursor_list);
 	void DestroyUIElement(UIElement* element);
+	void DestroyALLUIElements();
 
 	SDL_Texture* GetAtlas() const;
 	void ScreenMoves(pair<int,int> movement);

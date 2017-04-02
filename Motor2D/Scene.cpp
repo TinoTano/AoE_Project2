@@ -16,6 +16,14 @@
 
 Scene::Scene() : SceneElement("scene")
 {
+	blit_sections.push_back({ 0, 0, 220, 30 });
+	blit_sections.push_back({ 0, 30, 220, 30 });
+	detect_sections.push_back({ 0, 0, 220, 30 });
+	blit_sections_menu.push_back({ 0, 0, 50, 19 });
+	blit_sections_menu.push_back({ 50, 0, 50, 19 });
+	detect_sections_menu.push_back({ 1330 , 5, 50, 19 });
+
+	
 }
 
 // Destructor
@@ -50,20 +58,7 @@ bool Scene::Start()
 	// LOADING UI BB
 	// ----------------------------------------
 	// LOADING BUTTONS RECTS
-	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 0, 0, 220, 30 });
-	blit_sections.push_back({ 0, 30, 220, 30 });
 
-	vector<SDL_Rect> detect_sections;
-	detect_sections.push_back({ 0, 0, 220, 30 });
-
-
-	vector<SDL_Rect> blit_sections_menu;
-	blit_sections_menu.push_back({ 0, 0, 50, 19 });
-	blit_sections_menu.push_back({ 50, 0, 50, 19 });
-
-	vector<SDL_Rect> detect_sections_menu;
-	detect_sections_menu.push_back({ 1330 , 5, 50, 19 });
 
 	// LOADING SCENE UI
 
@@ -100,7 +95,7 @@ bool Scene::Start()
 	ui_menu.in_window.push_back(quit_game_lbl);
 	ui_menu.in_window.push_back(save_game_lbl);
 	ui_menu.in_window.push_back(cancel_lbl);
-
+	
 	ui_menu.WindowOff();
 	ui_menu.SetFocus(menu_bg_img->pos.first, menu_bg_img->pos.second, 280, 280);
 
@@ -187,6 +182,7 @@ bool Scene::Update(float dt)
 	}
 	
 
+	int size = App->gui->Elements.size();
 
 	return true;
 }
@@ -208,22 +204,11 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 
-	App->gui->DestroyUIElement(top);
-	App->gui->DestroyUIElement(bottom);
-	App->gui->DestroyUIElement(menu_bt);
-	App->gui->DestroyUIElement(menu_bg_img);
-	App->gui->DestroyUIElement(quit_game_bt);
-	App->gui->DestroyUIElement(back_to_menu_bt);
-	App->gui->DestroyUIElement(save_game_bt);
-	App->gui->DestroyUIElement(cancel_bt);
-	App->gui->DestroyUIElement(back_to_menu_lbl);
-	App->gui->DestroyUIElement(quit_game_lbl);
-	App->gui->DestroyUIElement(save_game_lbl);
-	App->gui->DestroyUIElement(cancel_lbl);
+	App->gui->DestroyALLUIElements();
 	ui_menu.CleanUp();
 	App->entityManager->CleanUp();
 
-
+	int size = App->gui->Elements.size();
 	return true;
 }
 
