@@ -43,7 +43,9 @@ public:
 	void DeleteUnit(Unit* unit, bool isEnemy);
 	void DeleteBuilding(Building* building, bool isEnemy);
 	void DeleteResource(Resource* resource);
-	void OnCollision(Collider* c1, Collider* c2);
+
+	bool IsOccupied(iPoint tile, iPoint ignore_tile = { -1,-1 });
+	void OnCollision(Collision_data& col_data);
 
 private:
 	void DestroyEntity(Entity* entity);

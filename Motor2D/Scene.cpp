@@ -84,14 +84,19 @@ bool Scene::Update(float dt)
 		debug = !debug;
 	}
 	App->map->Draw();
-	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
+	
+	list<list<iPoint>*>* paths = nullptr;
+	paths = App->pathfinding->GetPaths();
 
-	if (debug) {
-		const list<iPoint>* path = App->pathfinding->GetLastPath();
+	if (debug && paths != nullptr) {
 
-		for (list<iPoint>::const_iterator it = path->begin(); it != path->end(); it++) {
-			iPoint pos = App->map->MapToWorld((*it).x, (*it).y);
-			App->render->Blit(debug_tex, pos.x, pos.y);
+		for (list<list<iPoint>*>::const_iterator it = paths->begin(); it != paths->end(); it++) {
+			list<iPoint>* path = (*it);
+
+			for (list<iPoint>::iterator it2 = path->begin(); it2 != path->end(); it2++) {
+				iPoint pos = App->map->MapToWorld((*it2).x, (*it2).y);
+				App->render->Blit(debug_tex, pos.x, pos.y);
+			}
 		}
 	}
 
