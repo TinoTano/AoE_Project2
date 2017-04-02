@@ -80,24 +80,21 @@ bool EntityManager::Update(float dt)
 
 		Unit* commander = selectedUnitList.front();
 
-		if (((commander->path == nullptr) || (commander->path != nullptr && commander->path->back() != destination))
-			&& (commander->destinationTileWorld.x != mouseX && commander->destinationTileWorld.y != mouseY)) {
+		commander->SetDestination(destination);
 
-			commander->SetDestination(destination);
+		if (selectedUnitList.size() > 1) {
 
-			if (selectedUnitList.size() > 1) {
-
-				selectedUnitList.pop_front();
-				App->pathfinding->SharePath(commander, selectedUnitList);
-				selectedUnitList.push_front(commander);
-
-			}
-
-			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
-				(*it)->SetState(UNIT_MOVING);
+			selectedUnitList.pop_front();
+			App->pathfinding->SharePath(commander, selectedUnitList);
+			selectedUnitList.push_front(commander);
 
 		}
+
+		for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
+			(*it)->SetState(UNIT_MOVING);
+
 	}
+	
 	
 	
 	switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)) 

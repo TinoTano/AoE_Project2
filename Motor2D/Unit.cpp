@@ -267,7 +267,7 @@ void Unit::SetState(unitState newState)
 		entityTexture = unitMoveTexture;
 		destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
 
-		if (path->size() > 1)
+		if (path->size() > 0)
 			path->erase(path->begin());
 
 		if (attackTarget != nullptr)
