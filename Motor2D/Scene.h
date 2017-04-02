@@ -48,6 +48,9 @@ private:
 	Building* testBuilding;
 	Resource* tree;
 	Building* build;
+	bool start = false;
+	// TIMER
+
 // UI ELEMENTS
 	Image* top, *bottom;
 	Button* menu_bt, *quit_game_bt, *back_to_menu_bt, *save_game_bt, *cancel_bt;
@@ -63,6 +66,14 @@ private:
 
 	void UpdateResources(Label* resource, uint new_val);
 	void UpdateVillagers(uint available_villagers, uint total_villagers);
+
+
+
+	// TIMER
+
+	Timer timer;
+	Label* Timer_lbl;
+	void UpdateTime(float time);
 };
 
 #endif // __SCENE_H__

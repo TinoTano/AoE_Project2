@@ -43,17 +43,20 @@ bool Scene::Awake(pugi::xml_node & config)
 bool Scene::Start()
 {
 	active = true;
-	if (App->map->Load("rivendell.tmx") == true)
-	{
-		int w, h;
-		uchar* data = NULL;
-		if (App->map->CreateWalkabilityMap(w, h, &data))
-			App->pathfinding->SetMap(w, h, data);
+	if (start == false) {
+		if (App->map->Load("rivendell.tmx") == true)
+		{
+			int w, h;
+			uchar* data = NULL;
+			if (App->map->CreateWalkabilityMap(w, h, &data))
+				App->pathfinding->SetMap(w, h, data);
 
-		RELEASE_ARRAY(data);
+			RELEASE_ARRAY(data);
+		}
+		debug_tex = App->tex->Load("maps/path2.png");
+		start = true;
 	}
-
-	debug_tex = App->tex->Load("maps/path2.png");
+	
 
 	// LOADING UI BB
 	// ----------------------------------------
@@ -136,6 +139,14 @@ bool Scene::Start()
 	build = App->entityManager->CreateBuilding(100, 100, false, TOWN_CENTER);
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
+
+	timer.Start();
+
+	//	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", 665, 40, nullptr );
+	//	Timer_lbl->SetColor({ 255, 255, 255, 255 });
+	//Timer_lbl->SetSize(26);
+
+
 	return true;
 }
 
@@ -182,7 +193,8 @@ bool Scene::Update(float dt)
 	}
 	
 
-	int size = App->gui->Elements.size();
+
+	//UpdateTime(timer.ReadSec());
 
 	return true;
 }
@@ -202,14 +214,16 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
-
-
 	App->gui->DestroyALLUIElements();
 	ui_menu.CleanUp();
 	App->entityManager->CleanUp();
-
-	int size = App->gui->Elements.size();
+	
 	return true;
+}
+
+void Scene::UpdateTime(float time)
+{
+	Timer_lbl->SetString(to_string(0) + to_string(0) + ':' + to_string(0) + to_string((int)time - ((int)time / 60)));
 }
 
 void Scene::UpdateResources(Label* resource, uint new_val)

@@ -125,7 +125,7 @@ bool Gui::CleanUp()
 		}
 	}
 	Elements.clear();
-
+	delete cursor;
 	hud->CleanUp();
 	delete hud;
 	return true;
@@ -310,7 +310,6 @@ UIElement * Gui::CreateCursor(char* path, vector<SDL_Rect> cursor_list)
 	UIElement* ret = nullptr;
 	SDL_Texture * tex = App->tex->Load(path);
 	ret = new Cursor(tex, cursor_list);
-	Elements.push_back(ret);
 	return ret;
 }
 
