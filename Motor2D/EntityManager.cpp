@@ -4,11 +4,9 @@
 #include "Application.h"
 #include "Scene.h"
 #include "Unit.h"
-#include "Pathfinding.h"
 #include "FogOfWar.h"
 #include "Render.h"
 #include "Textures.h"
-#include "Resource.h"
 
 EntityManager::EntityManager() : Module()
 {
@@ -49,14 +47,10 @@ bool EntityManager::Update(float dt)
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;
 
-	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-		(*it)->Update(dt);
-		(*it)->Draw();
-	}
 	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
-		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
+		App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
 		(*it)->Update(dt);
@@ -65,14 +59,12 @@ bool EntityManager::Update(float dt)
 	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
-		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
+		App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
 		(*it)->Draw();
-	}
-
-	
+	}	
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedUnitList.empty()) {
 
@@ -94,8 +86,6 @@ bool EntityManager::Update(float dt)
 			(*it)->SetState(UNIT_MOVING);
 
 	}
-	
-	
 	
 	switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT)) 
 	{
@@ -305,7 +295,6 @@ bool EntityManager::LoadGameData()
 	pugi::xml_node buildingNodeInfo;
 	pugi::xml_node resourceNodeInfo;
 
-
 	gameData = App->LoadGameDataFile(gameDataFile);
 
 	if (gameData.empty() == false)
@@ -321,12 +310,12 @@ bool EntityManager::LoadGameData()
 			string attackTexturePath = unitNodeInfo.child("Textures").child("Attack").attribute("value").as_string();
 			string dieTexturePath = unitNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
-			unitTemplate->faction = (Faction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
+			unitTemplate->faction = (unitFaction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			unitTemplate->attackSpeed = 1 / unitNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
-			unitTemplate->Life = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-			unitTemplate->MaxLife = unitTemplate->Life;
-			unitTemplate->Attack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
-			unitTemplate->Defense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
+			unitTemplate->unitLife = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
+			unitTemplate->unitMaxLife = unitTemplate->unitLife;
+			unitTemplate->unitAttack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
+			unitTemplate->unitDefense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
 			unitTemplate->unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
 			unitTemplate->unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
 
@@ -430,34 +419,31 @@ bool EntityManager::LoadGameData()
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
-
-			buildingTemplate->faction = (Faction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
-			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
+			buildingTemplate->buildingLife = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			buildingTemplate->buildingWoodCost = buildingNodeInfo.child("Stats").child("WoodCost").attribute("value").as_int();
 			buildingTemplate->buildingStoneCost = buildingNodeInfo.child("Stats").child("StoneCost").attribute("value").as_int();
 			buildingTemplate->buildingBuildTime = buildingNodeInfo.child("Stats").child("BuildTime").attribute("value").as_int();
 			buildingTemplate->canAttack = buildingNodeInfo.child("Stats").child("CanAttack").attribute("value").as_bool();
-
 			buildingTemplate->buildingIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			buildingTemplate->buildingDieTexture = App->tex->Load(dieTexturePath.c_str());
-
 			buildingTemplate->type = (buildingType)buildingNodeInfo.child("Info").child("ID").attribute("value").as_int();
-
 			buildingsDB.insert(pair<int, Building*>(buildingTemplate->type, buildingTemplate));
+
+			// My changes ------------------------
+
+			buildingTemplate->buildingMaxLife = buildingTemplate->buildingLife;
+
+			// -----------------------------------
 		}
 
-		for (resourceNodeInfo = gameData.child("Resources").child("Trees").child("TreeType"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("TreeType")) {
+		for (resourceNodeInfo = gameData.child("Resources").child("Resouce"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resouce")) {
 
 			Resource* resourceTemplate = new Resource();
 
 			string idleTexturePath = resourceNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string gatheringTexturePath = resourceNodeInfo.child("Textures").child("Gathering").attribute("value").as_string();
 
-			resourceTemplate->Life = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-
-			for (pugi::xml_node rectsNode = resourceNodeInfo.child("Rects").child("Rect"); rectsNode; rectsNode = rectsNode.next_sibling("Rect")) {
-				resourceTemplate->resourceRectVector.push_back({ rectsNode.attribute("x").as_int(), rectsNode.attribute("y").as_int(), rectsNode.attribute("w").as_int(), rectsNode.attribute("h").as_int() });
-			}
+			resourceTemplate->resourceLife = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 
 			resourceTemplate->resourceIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			resourceTemplate->resourceGatheringTexture = App->tex->Load(gatheringTexturePath.c_str());
@@ -471,12 +457,12 @@ bool EntityManager::LoadGameData()
 	return ret;
 }
 
-Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
+Unit* EntityManager::CreateUnit(int posX, int posY, bool isEnemy, unitType type)
 {
-	Unit* unit = new Unit(posX, posY, unitsDB[type]);
+	Unit* unit = new Unit(posX, posY, isEnemy, unitsDB[type]);
 	unit->entityID = nextID;
 	nextID++;
-	if (!unit->faction) {
+	if (!isEnemy) {
 		friendlyUnitList.push_back(unit);
 	}
 	else {
@@ -487,12 +473,12 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	return unit;
 }
 
-Building* EntityManager::CreateBuilding(int posX, int posY, buildingType type)
+Building* EntityManager::CreateBuilding(int posX, int posY, bool isEnemy, buildingType type)
 {
-	Building* building = new Building(posX, posY, buildingsDB[type]);
+	Building* building = new Building(posX, posY, isEnemy, buildingsDB[type]);
 	building->entityID = nextID;
 	nextID++;
-	if (!building->faction) {
+	if (!isEnemy) {
 		friendlyBuildingList.push_back(building);
 	}
 	else {
@@ -503,9 +489,9 @@ Building* EntityManager::CreateBuilding(int posX, int posY, buildingType type)
 	return building;
 }
 
-Resource* EntityManager::CreateResource(int posX, int posY, resourceType type, int resourceRectIndex)
+Resource* EntityManager::CreateResource(int posX, int posY, resourceType type)
 {
-	Resource* resource = new Resource(posX, posY, resourcesDB[type], resourceRectIndex);
+	Resource* resource = new Resource(posX, posY, resourcesDB[type]);
 	resource->entityID = nextID;
 	nextID++;
 	resourceList.push_back(resource);
@@ -513,11 +499,11 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceType type, i
 	return resource;
 }
 
-void EntityManager::DeleteUnit(Unit* unit)
+void EntityManager::DeleteUnit(Unit* unit, bool isEnemy)
 {
 	if (unit != nullptr) {
 		removeUnitList.push_back(unit);
-		if (unit->IsEnemy()) {
+		if (isEnemy) {
 			enemyUnitList.remove(unit);
 		}
 		else {
@@ -526,11 +512,11 @@ void EntityManager::DeleteUnit(Unit* unit)
 	}
 }
 
-void EntityManager::DeleteBuilding(Building* building)
+void EntityManager::DeleteBuilding(Building* building, bool isEnemy)
 {
 	if (building != nullptr) {
 		removeBuildingList.push_back(building);
-		if (building->IsEnemy()) {
+		if (isEnemy) {
 			enemyBuildingList.remove(building);
 		}
 		else {
@@ -549,7 +535,7 @@ void EntityManager::DeleteResource(Resource* resource)
 
 void EntityManager::OnCollision(Collision_data& col_data)
 {
-	//Uncomment for combat
+
 	Unit* unit = nullptr;
 	Unit* unit2 = nullptr;
 	Building* building = nullptr;
@@ -585,9 +571,8 @@ void EntityManager::OnCollision(Collision_data& col_data)
 			
 			break;
 
-		case COLLIDER_BUILDING:
-
-			building = col_data.c2->GetBuilding();
+		case COLLIDER_BUILDING:			
+       building = col_data.c2->GetBuilding();
 
 			if (building->faction != unit->faction) {
 				if (unit->attackTarget == nullptr) {
@@ -603,8 +588,8 @@ void EntityManager::OnCollision(Collision_data& col_data)
 			col_data.state = SOLVING;
 
 			break;
-
-		case COLLIDER_RESOURCE:
+        
+case COLLIDER_RESOURCE:
 
 			col_data.state = SOLVED;
 
@@ -612,12 +597,10 @@ void EntityManager::OnCollision(Collision_data& col_data)
 
 		default:
 			break;
+
 		}
-
 	}
-	
 }
-
 
 void EntityManager::DestroyEntity(Entity * entity)
 {
@@ -636,3 +619,5 @@ void EntityManager::DestroyEntity(Entity * entity)
 		}
 	}
 }
+
+

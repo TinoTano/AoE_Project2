@@ -50,11 +50,7 @@ void Map::Draw()
 					SDL_Rect r = tileset->GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 
-					SDL_Rect cam = App->render->culling_cam;
-
-					if (pos.x + data.tile_width >= cam.x && pos.x <= cam.x + cam.w)
-						if (pos.y + data.tile_height * 2 > cam.y && pos.y < cam.y + cam.h)		
-							App->render->Blit(tileset->texture, pos.x, pos.y, &r);					
+					App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 				}
 			}
 		}
@@ -485,6 +481,7 @@ bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 				if(tileset != NULL)
 				{
 					map[i] = (tile_id - tileset->firstgid) > 0 ? 0 : 1;
+					LOG("%d", tile_id);
 					/*TileType* ts = tileset->GetTileType(tile_id);
 					if(ts != NULL)
 					{

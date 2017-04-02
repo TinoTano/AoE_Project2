@@ -61,7 +61,7 @@ public:
 	void			SetPos(int x, int y);
 	void			SetParentPos(int x, int y);
 	void			Move(int x, int y);
-	bool			enabled, focused = true, debug = false;
+	bool			enabled, debug = false;
 
 	UIElement* parent = nullptr;
 	pair<int, int> pos, parent_pos;
@@ -100,7 +100,6 @@ public:
 	void Update();
 	void Draw();
 	void SetText(char* text);
-	void SetSize(int size);
 
 	int width = 0, height = 0, size = 0;
 	_TTF_Font* font;
@@ -216,22 +215,6 @@ private:
 	vector<SDL_Rect> sprite_list;
 	
 };
-
-class WindowUI {
-private:
-	bool enabled = true;
-	SDL_Rect size;
-	int* x, *y, width, height;
-public:
-	void SetFocus(int& x, int &y, int width, int height);
-	list<UIElement*> in_window;
-
-	bool IsEnabled();
-	void WindowOn();
-	void WindowOff();
-	SDL_Rect FocusArea();
-
-};
 // ---------------------------------------------------
 
 class Gui : public Module
@@ -250,8 +233,6 @@ public:
 
 	// Called before all Updates
 	bool PreUpdate();
-
-	bool Update(float dt);
 
 	// Called after all Updates
 	bool PostUpdate();
@@ -275,9 +256,6 @@ public:
 	UIElement* CreateCursor(char* path, vector<SDL_Rect> cursor_list);
 	SDL_Texture* GetAtlas() const;
 	void ScreenMoves(pair<int,int> movement);
-	void	SetPriority();
-	void	Focus(SDL_Rect rect);
-	void	Unfocus();
 
 private:
 	SDL_Texture* atlas = nullptr;

@@ -7,7 +7,7 @@
 Collision::Collision() : Module()
 {
 	name = "collision";
-
+  
 	matrix[COLLIDER_UNIT][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_BUILDING] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_RESOURCE] = true;
@@ -39,7 +39,7 @@ bool Collision::Start()
 
 bool Collision::PreUpdate()
 {
-
+  
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
 		if ((*it)->to_delete == true)
 		{
@@ -141,10 +141,11 @@ void Collision::DeleteCollider(Collider * collider)
 	collider->to_delete = true;
 }
 
-bool Collider::CheckCollision(Collider* c2) const
+bool Collider::CheckCollision(const SDL_Rect& r) const
 {
 	return (pos.DistanceTo(c2->pos) < (r + c2->r));
 }
+
 
 Unit* Collider::GetUnit() {
 
@@ -167,6 +168,15 @@ Building* Collider::GetBuilding() {
 }
 
 // GetResource could be implemented if necessary
+
+void Collision::DebugDraw()
+{
+
+	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++)
+	{
+		if ((*it) == nullptr) {
+			continue;
+		}
 
 void Collision::DebugDraw()
 {
