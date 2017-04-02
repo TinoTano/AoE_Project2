@@ -358,9 +358,6 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 
 	paths.push_back(ret);
 
-	if (ret->size() > 1)
-		ret->erase(ret->begin());
-
 	return ret;
 }
 
