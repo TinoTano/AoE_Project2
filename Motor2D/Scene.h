@@ -6,11 +6,7 @@
 #include "Timer.h"
 #include "Gui.h"
 #include <string>
-#include <stdlib.h>
-#include <iostream>
-#include <iomanip>
-#include <cmath>
-#include <limits>
+
 
 struct SDL_Texture;
 class Unit;
@@ -45,9 +41,6 @@ public:
 	bool CleanUp();
 
 private:
-	//START
-	bool start = false;
-
 	SDL_Texture* debug_tex;
 	bool debug = false;
 	Unit* elvenArcher;
@@ -70,12 +63,6 @@ private:
 
 	void UpdateResources(Label* resource, uint new_val);
 	void UpdateVillagers(uint available_villagers, uint total_villagers);
-	void UpdateTime(float time);
-
-	// TIMER
-	
-	Timer timer;
-	Label* Timer_lbl;
 };
 
 #endif // __SCENE_H__
