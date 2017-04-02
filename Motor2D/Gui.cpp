@@ -438,7 +438,7 @@ void Label::SetText(char* text) {
 void Label::SetString(string text) {
 	str = text.c_str();
 	texture = App->font->Print(str.c_str(), color, font);
-	App->font->CalcSize(str.c_str(), width, height);
+	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 void Label::SetSize(int size) {

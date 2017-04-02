@@ -142,9 +142,9 @@ bool Scene::Start()
 
 	timer.Start();
 
-	//	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", 665, 40, nullptr );
-	//	Timer_lbl->SetColor({ 255, 255, 255, 255 });
-	//Timer_lbl->SetSize(26);
+	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", 665, 40, nullptr );
+	Timer_lbl->SetColor({ 255, 255, 255, 255 });
+	Timer_lbl->SetSize(26);
 
 
 	return true;
@@ -194,7 +194,7 @@ bool Scene::Update(float dt)
 	
 
 
-	//UpdateTime(timer.ReadSec());
+	UpdateTime(timer.ReadSec());
 
 	return true;
 }
@@ -223,7 +223,7 @@ bool Scene::CleanUp()
 
 void Scene::UpdateTime(float time)
 {
-	Timer_lbl->SetString(to_string(0) + to_string(0) + ':' + to_string(0) + to_string((int)time - ((int)time / 60)));
+	Timer_lbl->SetString(to_string((int)time / 60 / 10) + to_string((int)time / 60 % 10) + ':' + to_string((int)time % 60 / 10) + to_string((int)time % 60 % 10));
 }
 
 void Scene::UpdateResources(Label* resource, uint new_val)
