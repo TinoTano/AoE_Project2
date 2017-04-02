@@ -254,35 +254,38 @@ void Unit::Dead() {
 
 void Unit::SetState(unitState newState)
 {
-	switch (newState) {
-	case UNIT_IDLE:
-		this->state = UNIT_IDLE;
-		SetAnim(currentDirection);
-		entityTexture = unitIdleTexture;
-		break;
-	case UNIT_MOVING:
-		this->state = UNIT_MOVING;
-		next_step = entityPosition;
-		SetAnim(currentDirection);
-		entityTexture = unitMoveTexture;
-		destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
+	if (state != UNIT_DEAD) {
 
-		if (path->size() > 0)
-			path->erase(path->begin());
+		switch (newState) {
+		case UNIT_IDLE:
+			this->state = UNIT_IDLE;
+			SetAnim(currentDirection);
+			entityTexture = unitIdleTexture;
+			break;
+		case UNIT_MOVING:
+			this->state = UNIT_MOVING;
+			next_step = entityPosition;
+			SetAnim(currentDirection);
+			entityTexture = unitMoveTexture;
+			destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
 
-		if (attackTarget != nullptr)
-			attackTarget = nullptr;
-		break;
-	case UNIT_ATTACKING:
-		this->state = UNIT_ATTACKING;
-		SetAnim(currentDirection);
-		entityTexture = unitAttackTexture;
-		break;
-	case UNIT_DEAD:
-		this->state = UNIT_DEAD;
-		SetAnim(currentDirection);
-		entityTexture = unitDieTexture;
-		break;
+			if (path->size() > 0)
+				path->erase(path->begin());
+
+			if (attackTarget != nullptr)
+				attackTarget = nullptr;
+			break;
+		case UNIT_ATTACKING:
+			this->state = UNIT_ATTACKING;
+			SetAnim(currentDirection);
+			entityTexture = unitAttackTexture;
+			break;
+		case UNIT_DEAD:
+			this->state = UNIT_DEAD;
+			SetAnim(currentDirection);
+			entityTexture = unitDieTexture;
+			break;
+		}
 	}
 }
 

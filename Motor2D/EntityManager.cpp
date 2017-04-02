@@ -411,6 +411,7 @@ bool EntityManager::LoadGameData()
 					unitTemplate->dyingAnimations.push_back(die);
 				}
 			}
+			
 
 			unitTemplate->unitIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			unitTemplate->unitMoveTexture = App->tex->Load(moveTexturePath.c_str());
