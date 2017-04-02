@@ -34,14 +34,15 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+
 	bool LoadGameData();
 
-	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type);
-	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type);
-	Resource* CreateResource(int posX, int posY, resourceType type);
+	Unit* CreateUnit(int posX, int posY, unitType type);
+	Building* CreateBuilding(int posX, int posY,  buildingType type);
+	Resource* CreateResource(int posX, int posY, resourceType type, int resourceRectIndex);
 
-	void DeleteUnit(Unit* unit, bool isEnemy);
-	void DeleteBuilding(Building* building, bool isEnemy);
+	void DeleteUnit(Unit* unit);
+	void DeleteBuilding(Building* building);
 	void DeleteResource(Resource* resource);
 
 	bool IsOccupied(iPoint tile, iPoint ignore_tile = { -1,-1 });
@@ -51,13 +52,8 @@ private:
 	void DestroyEntity(Entity* entity);
 
 private:
-	list<Unit*> friendlyUnitList;
-	list<Unit*> enemyUnitList;
 	list<Unit*> removeUnitList;
-	list<Building*> friendlyBuildingList;
-	list<Building*> enemyBuildingList;
 	list<Building*> removeBuildingList;
-	list<Resource*> resourceList;
 	list<Resource*> removeResourceList;
 
 	SDL_Rect multiSelectionRect = { 0,0,0,0 };
@@ -76,6 +72,11 @@ public:
 	list<Unit*> selectedUnitList;
 	list<Building*> selectedBuildingtList;
 	Resource* selectedResource = nullptr;
+	list<Unit*> friendlyUnitList;
+	list<Unit*> enemyUnitList;
+	list<Building*> friendlyBuildingList;
+	list<Building*> enemyBuildingList;
+	list<Resource*> resourceList;
 };
 
 #endif // !__ENTITY_MANAGER__

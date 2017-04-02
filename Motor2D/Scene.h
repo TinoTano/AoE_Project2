@@ -7,6 +7,7 @@
 struct SDL_Texture;
 class Unit;
 class Building;
+class Resource;
 
 class Scene : public Module
 {
@@ -35,19 +36,12 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void LoadScene();
+	void SaveScene();
+
 private:
 	SDL_Texture* debug_tex;
 	bool debug = false;
-	Unit* elvenArcher;
-
-	// My changes -------------------
-
-public:
-	Building* my_townCenter;
-	Building* enemy_townCenter;
-	Unit* troll;
-
-	// -----------------------------
 };
 
 #endif // __SCENE_H__

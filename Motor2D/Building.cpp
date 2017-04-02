@@ -15,11 +15,10 @@ Building::Building()
 {
 }
 
-Building::Building(int posX, int posY, bool isEnemy, Building* building)
+Building::Building(int posX, int posY, Building* building)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
-	this->isEnemy = isEnemy;
 	this->type = type;
 
 	faction = building->faction;
@@ -30,26 +29,28 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 	buildingBuildTime = building->buildingBuildTime;
 	buildingIdleTexture = building->buildingIdleTexture;
 	buildingDieTexture = building->buildingDieTexture;
-	buildingLife = building->buildingLife;
-	buildingMaxLife = building->buildingMaxLife;
-	buildingAttack = building->buildingAttack;
-	buildingDefense = building->buildingDefense;
+	Life = building->Life;
+	MaxLife = building->MaxLife;
+	Attack = building->Attack;
+	Defense = building->Defense;
 	canAttack = building->canAttack;
 
 	entityTexture = buildingIdleTexture;
 
 	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
-	SDL_Rect colliderRect = { entityPosition.x - (imageWidth / 2), entityPosition.y - (imageHeight / 2), imageWidth, imageHeight};
 	COLLIDER_TYPE colliderType;
-	if (isEnemy) {
-		colliderType = COLLIDER_ENEMY_BUILDING;
-	}
-	else {
-		colliderType = COLLIDER_FRIENDLY_BUILDING;
-	}
-	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
+	colliderType = COLLIDER_BUILDING;
+	
+	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, colliderType, App->entityManager, (Entity*)this);
 
 	isSelected = false;
+	/*if (!isEnemy) {
+		isVisible = true;
+	}
+	else {
+		isVisible = false;
+	}*/
+
 	hpBarWidth = 50;
 }
 
@@ -57,15 +58,20 @@ Building::~Building()
 {
 }
 
+bool Building::IsEnemy() const
+{
+	return (bool)faction;
+}
+
 bool Building::Update(float dt)
 {
 	switch (state) {
 	case BUILDING_ATTACKING:
-		Attack(dt);
+		AttackEnemy(dt);
 		break;
 	case BUILDING_DESTROYING:
 		//if (currentAnim->Finished()) {
-		App->entityManager->DeleteBuilding(this, isEnemy);
+		App->entityManager->DeleteBuilding(this);
 		//}
 		break;
 	}
@@ -78,8 +84,8 @@ bool Building::Update(float dt)
 		int x;
 		int y;
 		App->input->GetMousePosition(x, y);
-		if (x < entityPosition.x + (collider->rect.w / 2) && x > entityPosition.x - (collider->rect.w / 2) &&
-			y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
+		if (x > collider->pos.x - collider->r  && x < collider->pos.x + collider->r &&
+			y > collider->pos.y + collider->r  && y < collider->pos.y - collider->r) {
 			if (isVisible) {
 				isSelected = true;
 			}
@@ -96,58 +102,27 @@ bool Building::Update(float dt)
 
 bool Building::Draw()
 {
-	if (isVisible) 
-	{
-		Sprite aux;
-
-		aux.texture = entityTexture;
-		aux.pos.x = entityPosition.x - (imageWidth / 2);
-		aux.pos.y = entityPosition.y - (imageHeight / 2);
-		aux.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
-		aux.rect.w = imageWidth;
-		aux.rect.h = imageHeight;
-		aux.flip = SDL_FLIP_HORIZONTAL;
-
-		if (isSelected) 
-		{
-			Sprite bar;
-
-			int percent = ((buildingMaxLife - buildingLife) * 100) / buildingMaxLife;
+	if (isVisible) {
+		if (isSelected) {
+			int percent = ((MaxLife - Life) * 100) / MaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
-
-			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
-			bar.rect.w = hpBarWidth;
-			bar.rect.h = 5;
-			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
-			bar.r = 255;
-
-			App->render->sprites_toDraw.push_back(bar);
-
-			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
-			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
-			bar.rect.h = 5;
-			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
-			bar.r = 0;
-			bar.g = 255;
-
-			App->render->sprites_toDraw.push_back(bar);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), hpBarWidth, 5 }, 255, 0, 0);
+			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), min(hpBarWidth, max(hpBarWidth - barPercent, 0)), 5 }, 0, 255, 0);
 		}
-
-		App->render->sprites_toDraw.push_back(aux);
 	}
+
+	App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
 	
 	return true;
 }
 
-void Building::Attack(float dt)
+void Building::AttackEnemy(float dt)
 {
 	if (timer >= buildingAttackSpeed) {
-		attackUnitTarget->unitLife -= buildingAttack - attackUnitTarget->unitDefense;
-		if (attackUnitTarget->unitLife <= 0) {
-			attackUnitTarget->Dead();
-			if (buildingLife > 0) {
+		attackTarget->Life -= Attack - attackTarget->Defense;
+		if (attackTarget->Life <= 0) {
+			attackTarget->Dead();
+			if (Life > 0) {
 				state = BUILDING_IDLE;
 			}
 		}
@@ -166,7 +141,6 @@ void Building::Dead()
 
 pugi::xml_node Building::LoadBuildingInfo(buildingType type)
 {
-	
 	return pugi::xml_node();
 }
 
@@ -179,6 +153,4 @@ bool Building::Save(pugi::xml_node &) const
 {
 	return true;
 }
-
-
 
