@@ -43,17 +43,21 @@ bool Scene::Awake(pugi::xml_node & config)
 bool Scene::Start()
 {
 	active = true;
-	if (App->map->Load("rivendell.tmx") == true)
-	{
-		int w, h;
-		uchar* data = NULL;
-		if (App->map->CreateWalkabilityMap(w, h, &data))
-			App->pathfinding->SetMap(w, h, data);
+	if (start == false) {
+		if (App->map->Load("rivendell.tmx") == true)
+		{
+			int w, h;
+			uchar* data = NULL;
+			if (App->map->CreateWalkabilityMap(w, h, &data))
+				App->pathfinding->SetMap(w, h, data);
 
-		RELEASE_ARRAY(data);
+			RELEASE_ARRAY(data);
+		}
+
+		debug_tex = App->tex->Load("maps/path2.png");
+		start = true;
 	}
-
-	debug_tex = App->tex->Load("maps/path2.png");
+	
 
 	// LOADING UI BB
 	// ----------------------------------------
@@ -136,6 +140,16 @@ bool Scene::Start()
 	build = App->entityManager->CreateBuilding(100, 100, false, TOWN_CENTER);
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
+
+
+	timer.Start();
+
+//	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", 665, 40, nullptr );
+//	Timer_lbl->SetColor({ 255, 255, 255, 255 });
+	//Timer_lbl->SetSize(26);
+
+
+
 	return true;
 }
 
@@ -152,6 +166,7 @@ bool Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
 	}
+
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 
 	if (debug) {
@@ -184,6 +199,8 @@ bool Scene::Update(float dt)
 
 	int size = App->gui->Elements.size();
 
+//	UpdateTime(timer.ReadSec());
+
 	return true;
 }
 
@@ -208,7 +225,6 @@ bool Scene::CleanUp()
 	ui_menu.CleanUp();
 	App->entityManager->CleanUp();
 
-	int size = App->gui->Elements.size();
 	return true;
 }
 
@@ -220,4 +236,9 @@ void Scene::UpdateResources(Label* resource, uint new_val)
 void Scene::UpdateVillagers(uint available_villagers, uint total_villagers)
 {
 	villagers->SetString(to_string(available_villagers) + '/' + to_string(total_villagers));
+}
+
+void Scene::UpdateTime(float time)
+{
+	Timer_lbl->SetString(to_string(0) + to_string(0) + ':' + to_string(0) + to_string((int)time - ((int)time / 60)));
 }

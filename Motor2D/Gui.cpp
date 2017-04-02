@@ -125,6 +125,7 @@ bool Gui::CleanUp()
 		}
 	}
 	Elements.clear();
+	delete cursor;
 
 	hud->CleanUp();
 	delete hud;
@@ -310,7 +311,6 @@ UIElement * Gui::CreateCursor(char* path, vector<SDL_Rect> cursor_list)
 	UIElement* ret = nullptr;
 	SDL_Texture * tex = App->tex->Load(path);
 	ret = new Cursor(tex, cursor_list);
-	Elements.push_back(ret);
 	return ret;
 }
 
@@ -437,12 +437,14 @@ void Label::SetText(char* text) {
 	App->font->CalcSize(str.c_str(), width, height);
 }
 void Label::SetString(string text) {
+	font = App->font->Load(nullptr, size);
 	str = text.c_str();
 	texture = App->font->Print(str.c_str(), color, font);
-	App->font->CalcSize(str.c_str(), width, height);
+	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 void Label::SetSize(int size) {
+
 	font = App->font->Load(nullptr, size);
 	this->size = size;
 	texture = App->font->Print(str.c_str(), color, font);
@@ -902,6 +904,7 @@ void Cursor::SetCursor(int id) {
 
 void Cursor::CleanUp()
 {
+	App->tex->UnLoad(texture);
 	sprite_list.clear();
 }
 
