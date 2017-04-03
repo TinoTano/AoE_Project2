@@ -41,6 +41,8 @@ public:
 	Image* background;
 	Image* menu_bg_img;
 	Button*	campaign_bt, *skirmish_bt, *options_bt, *quit_bt;
+
+	uint fx_button_click;
 };
 
 #endif // __SCENE_H__#pragma once

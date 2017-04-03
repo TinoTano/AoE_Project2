@@ -59,7 +59,9 @@ bool Scene::Start()
 		start = true;
 	}
 
-	//Test
+	// LOADING FX
+
+
 	// LOADING UI BB
 	// ----------------------------------------
 	// LOADING BUTTONS RECTS
@@ -123,6 +125,10 @@ bool Scene::Start()
 	// SET UI PRIORITY
 
 	App->gui->SetPriority();
+
+	// MUSIC
+
+	App->audio->PlayMusic("audio/music/m_scene.ogg");
 	// ---------------------
 	// DONE!
 
@@ -215,6 +221,7 @@ bool Scene::PostUpdate()
 	bool ret = true;
 
 	if (back_to_menu_bt->current == CLICKIN) {
+		App->audio->PlayFx(App->sceneManager->menu_scene->fx_button_click);
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
 	}
 	return ret;

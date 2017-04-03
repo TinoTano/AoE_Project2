@@ -3,6 +3,8 @@
 #include "Application.h"
 #include "Input.h"
 #include "SceneManager.h"
+#include "Audio.h"
+
 MenuScene::MenuScene() : SceneElement("menu")
 {
 }
@@ -23,6 +25,9 @@ bool MenuScene::Start()
 	App->render->camera.y = 0;
 	background = (Image*)App->gui->CreateImage("gui/MenuAtlas.png", 0, 2, { 0,0,1408, 792 });
 	menu_bg_img = (Image*)App->gui->CreateImage("gui/MenuAtlas.png", 800, 200, { 10, 798, 412, 291 });
+
+	//LOAD FX
+	fx_button_click = App->audio->LoadFx("audio/fx/fx_button_click.wav");
 
 	vector<SDL_Rect> blit_sections;
 	blit_sections.push_back({ 462, 811, 391, 64 });
@@ -57,6 +62,8 @@ bool MenuScene::Start()
 
 	quit_bt = (Button*)App->gui->CreateButton("gui/MenuAtlas.png", 810, 420, blit_sections, detect_sections, TIER2);
 
+	App->audio->PlayMusic("audio/music/m_menu.ogg");
+
 	return ret;
 }
 
@@ -82,6 +89,7 @@ bool MenuScene::PostUpdate()
 
 	if (campaign_bt->current == CLICKIN || skirmish_bt->current == CLICKIN)
 	{
+		App->audio->PlayFx(fx_button_click);
 		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
 	}
 
