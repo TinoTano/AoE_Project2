@@ -45,7 +45,7 @@ bool Scene::Start()
 	active = true;
 	if (start == false)
 	{
-		if (App->map->Load("rivendell.tmx") == true)
+		if (App->map->Load("map_1.tmx") == true)
 		{
 			int w, h;
 			uchar* data = NULL;

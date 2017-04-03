@@ -5,6 +5,8 @@
 #include "Map.h"
 #include "p2Log.h"
 #include <math.h>
+#include "EntityManager.h"
+#include "Resource.h"
 
 Map::Map() : Module(), map_loaded(false)
 {
@@ -240,6 +242,8 @@ bool Map::Load(const char* file_name)
 			data.layers.push_back(lay);
 	}
 
+	ret = LoadResources(map_file.child("map"));
+
 	if(ret == true)
 	{
 		LOG("Successfully parsed map XML file: %s", file_name);
@@ -452,6 +456,38 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 			p->value = prop.attribute("value").as_int();
 
 			properties.propertyList.push_back(p);
+		}
+	}
+
+	return ret;
+}
+
+bool Map::LoadResources(pugi::xml_node & node)
+{
+	bool ret = true;
+	data.mapWidth = data.width * data.tile_width;
+	data.mapHeight = data.height * data.tile_height;
+
+	pugi::xml_node resourceNode;
+
+	for (resourceNode = node.child("objectgroup"); resourceNode; resourceNode = resourceNode.next_sibling("objectgroup"))
+	{
+		pugi::xml_node prop;
+
+		for (prop = resourceNode.child("object"); prop; prop = prop.next_sibling("object"))
+		{
+			uint type = 0;
+			string name = prop.attribute("name").as_string();
+			if (name == "Green Tree") {
+				type = GREEN_TREE;
+			}
+			else if (name == "Rock") {
+				type = STONE;
+			}
+			Resource* resource = App->entityManager->CreateResource(prop.attribute("x").as_int(), prop.attribute("y").as_int(), (resourceType)type, 0);
+			if (!resource->isInteractable) {
+				data.noInteractResources.push_back(resource);
+			}
 		}
 	}
 

@@ -1329,8 +1329,7 @@
     
   <Resources>
     
-    <Trees>
-      <TreeType value="BlackTrees">
+    <Resource value="BlackTrees">
         <Info>
           <ID value="0"/>
         </Info>
@@ -1357,9 +1356,9 @@
           <Rect x="2193" y="0" w="71" h="195"/>
           <Rect x="2384" y="0" w="76" h="195"/>
         </Rects>
-      </TreeType>
+	</Resource>
       
-      <TreeType value ="GreenTrees">
+	<Resource value ="GreenTrees">
         <Info>
           <ID value="1"/>
         </Info>
@@ -1386,12 +1385,10 @@
           <Rect x="2310" y="0" w="93" h="192"/>
           <Rect x="2502" y="0" w="108" h="192"/>
         </Rects>
-      </TreeType>
-    </Trees>
+    </Resource>
 
-    <GoldMines>
+    <Resource value ="GOLD_MINE">
       <Info>
-        <Name value ="GOLD_MINE"/>
         <ID value ="2"/>
       </Info>
       <Textures>
@@ -1401,11 +1398,10 @@
       <Stats>
         <Life value ="800"/>
       </Stats>
-    </GoldMines>
+    </Resource>
 
-    <Animals>
+    <Resource value ="FOOD">
       <Info>
-        <Name value ="FOOD"/>
         <ID value ="3"/>
       </Info>
       <Textures>
@@ -1415,21 +1411,20 @@
       <Stats>
         <Life value ="100"/>
       </Stats>
-    </Animals>
+    </Resource>
 
-    <StoneMines>
+    <Resource value ="STONE">
       <Info>
-        <Name value ="STONE"/>
         <ID value ="4"/>
       </Info>
       <Textures>
-        <Idle value="textures/Resources/"/>
+        <Idle value="textures/Resources/Rocks/Rocks.png"/>
         <Gathering value="textures/Resources/"/>
       </Textures>
       <Stats>
         <Life value ="350"/>
       </Stats>
-    </StoneMines>
+    </Resource>
     
   </Resources>
 </GameData>

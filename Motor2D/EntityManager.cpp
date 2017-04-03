@@ -508,7 +508,8 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->buildingMaxLife = buildingTemplate->buildingLife;
 		}
 
-		for (resourceNodeInfo = gameData.child("Resources").child("Trees").child("TreeType"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("TreeType")) {
+		for (resourceNodeInfo = gameData.child("Resources").child("Resource"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resource")) 
+		{
 
 			Resource* resourceTemplate = new Resource();
 

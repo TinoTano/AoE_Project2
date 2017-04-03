@@ -35,6 +35,7 @@ public:
 	vector<SDL_Rect> resourceRectVector;
 	SDL_Rect resourceRect;
 	int rectIndex;
+	bool isInteractable = false;
 };
 
 #endif
