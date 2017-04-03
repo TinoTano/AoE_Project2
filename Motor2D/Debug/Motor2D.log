@@ -1,4 +1,72 @@
-﻿     Creating library C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
+﻿  pugixml.cpp
+  Window.cpp
+  Unit.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\unit.cpp(118): warning C4800: 'const Faction': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\unit.cpp(134): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\unit.cpp(184): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\unit.cpp(185): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\unit.cpp(198): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\unit.cpp(199): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  Textures.cpp
+  Render.cpp
+  Timer.cpp
+  SceneTest.cpp
+  Scene.cpp
+  Resource.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\resource.cpp(20): warning C4018: '<': signed/unsigned mismatch
+  PerfTimer.cpp
+  Pathfinding.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\pathfinding.cpp(341): warning C4390: ';': empty controlled statement found; is this the intent?
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\pathfinding.cpp(376): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\pathfinding.cpp(165): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+  c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\entity.h(38): note: see reference to class template instantiation 'p2Point<int>' being compiled
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  p2Log.cpp
+  Map.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\map.cpp(105): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\map.cpp(106): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Input.cpp
+  Audio.cpp
+  Application.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\application.cpp(246): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\application.cpp(242): warning C4477: 'sprintf_s' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 6 has type 'uint64'
+  c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\application.cpp(242): note: consider using '%llu' in the format string
+  c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\application.cpp(242): note: consider using '%I64u' in the format string
+  Main.cpp
+  Gui.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\gui.cpp(152): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\gui.cpp(429): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\gui.cpp(439): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\gui.cpp(460): warning C4018: '<': signed/unsigned mismatch
+  Fonts.cpp
+  FogOfWar.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\fogofwar.cpp(119): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\fogofwar.cpp(120): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+  Generating Code...
+  Compiling...
+  FileSystem.cpp
+  EntityManager.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\entitymanager.cpp(133): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\entitymanager.cpp(147): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\entitymanager.cpp(181): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+  Entity.cpp
+  Console.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\console.cpp(31): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\console.cpp(37): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\console.cpp(49): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\console.cpp(50): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+  Collision.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\collision.cpp(146): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+  c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\collision.h(34): note: see reference to class template instantiation 'p2Point<int>' being compiled
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  Building.cpp
+c:\users\josephg2\desktop\ui branch\aoe_project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\motor2d\building.cpp(63): warning C4800: 'const Faction': forcing value to bool 'true' or 'false' (performance warning)
+  Generating Code...
+     Creating library C:\Users\josephg2\Desktop\UI BRANCH\AoE_Project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\Debug\AgeOfTheRing.lib and object C:\Users\josephg2\Desktop\UI BRANCH\AoE_Project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\Debug\AgeOfTheRing.exp
 physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
-  Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\marcd\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
+  Motor2D.vcxproj -> C:\Users\josephg2\Desktop\UI BRANCH\AoE_Project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\josephg2\Desktop\UI BRANCH\AoE_Project2-0424580be6c594f9fec8ecd6d081e8ff491d328f\Debug\AgeOfTheRing.pdb (Full PDB)

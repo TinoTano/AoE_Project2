@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <config>
 	<app framerate_cap="">
-		<title>Pathfinding Test</title>
-		<organization>UPC</organization>
+		<title>Age Of The Ring</title>
+		<organization>Nemesis Studio</organization>
 	</app>
 	<renderer>
 		<vsync value="true" />
@@ -14,7 +14,7 @@
 		<atlas file="gui/atlas.png" />
 	</gui>
 	<window>
-		<resolution width="1280" height="720" scale="1" />
+		<resolution width="1408" height="792" scale="1" />
 		<fullscreen value="false" />
 		<borderless value="false" />
 		<resizable value="false" />
@@ -27,6 +27,6 @@
 		<folder>maps/</folder>
 	</map>
 	<console>
-		<test />
+		
 	</console>
 </config>
