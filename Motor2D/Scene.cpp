@@ -128,16 +128,22 @@ bool Scene::Start()
 
 
 	//Test
-	elvenArcher = App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(100, 500, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(320, 350, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(100, 520, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(380, 350, false, ELVEN_ARCHER);
-	elvenArcher = App->entityManager->CreateUnit(140, 500, false, ELVEN_ARCHER);
-	troll = App->entityManager->CreateUnit(600, 400, true, TROLL_MAULER);
-	//testBuilding = App->entityManager->CreateBuilding(150, 100, true, ORC_BARRACKS);
+	/*App->entityManager->CreateUnit(400, 250, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(370, 300, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(350, 400, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(370, 500, false, ELVEN_ARCHER);*/
 
-	build = App->entityManager->CreateBuilding(100, 100, false, TOWN_CENTER);
+	App->entityManager->CreateUnit(-350, 500, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(580, 700, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(680, 700, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(400, 900, true, DWARVEN_MAULER);
+
+	troll = App->entityManager->CreateUnit(50, 150, false, ELVEN_CAVALRY);
+	troll->isHero = true;
+
+	my_townCenter = App->entityManager->CreateBuilding(580, 350, false, TOWN_CENTER);
+	enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 

@@ -18,6 +18,7 @@ private:
 	float current_frame;
 	int last_frame = 0;
 	int loops = 0;
+	int last_loop = 0;
 
 public:
 
@@ -67,9 +68,14 @@ public:
 		if (current_frame < 0)current_frame = (float)last_frame - 1;
 	}
 
-	bool Finished() const
+	bool Finished()
 	{
-		return loops > 0;
+		if (last_loop != loops)
+		{
+			last_loop++;
+			return true;
+		}
+		return false;
 	}
 
 	void Reset()

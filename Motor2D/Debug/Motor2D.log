@@ -1,40 +1,16 @@
-﻿Build started 03/04/2017 15:23:31.
-     1>Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         D:\VisualStudio2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _ITERATOR_DEBUG_LEVEL=0 /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Scene.cpp
-         Scene.cpp
-       Link:
-         D:\VisualStudio2015\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib" /MACHINE:X86 Debug\Building.obj
-         Debug\Collision.obj
-         Debug\Console.obj
-         Debug\Entity.obj
-         Debug\EntityManager.obj
-         Debug\FileSystem.obj
-         Debug\FogOfWar.obj
-         Debug\Fonts.obj
-         Debug\Gui.obj
-         Debug\HUD.obj
-         Debug\Main.obj
-         Debug\Application.obj
-         Debug\Audio.obj
-         Debug\Input.obj
-         Debug\Map.obj
-         Debug\MenuScene.obj
-         Debug\p2Log.obj
-         Debug\Pathfinding.obj
-         Debug\PerfTimer.obj
-         Debug\Resource.obj
-         Debug\Scene.obj
-         Debug\SceneManager.obj
-         Debug\Timer.obj
-         Debug\Render.obj
-         Debug\Textures.obj
-         Debug\Unit.obj
-         Debug\Window.obj
-         Debug\pugixml.obj
-         Motor2D.vcxproj -> C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-     1>Done Building Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:01.47
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (AoE_Project2.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Unit.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(55): warning C4838: la conversión de 'float' en 'int' requiere una conversión de restricción
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(55): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(233): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(295): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(296): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(309): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(310): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(313): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(314): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+  Scene.cpp
+  HUD.cpp
+  Generando código...
+  Motor2D.vcxproj -> C:\Users\Marc\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\Marc\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

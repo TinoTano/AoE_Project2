@@ -45,11 +45,7 @@ public:
 private:
 	SDL_Texture* debug_tex;
 	bool debug = false;
-	Unit* elvenArcher;
-	Unit* troll;
-	Building* testBuilding;
 	Resource* tree;
-	Building* build;
 	bool start = false;
 	// TIMER
 
@@ -74,6 +70,12 @@ private:
 	Timer timer;
 	Label* Timer_lbl;
 	void UpdateTime(float time);
+
+public:
+	///////
+	Building* my_townCenter;
+	Building* enemy_townCenter;
+	Unit* troll;
 };
 
 #endif // __SCENE_H__

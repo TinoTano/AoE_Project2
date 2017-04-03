@@ -5,6 +5,22 @@
 #include "Module.h"
 #include "p2Point.h"
 
+
+#include <deque>
+
+struct Sprite
+{
+	SDL_Rect rect = { 0, 0, 0, 0 };
+	SDL_Texture* texture = nullptr;
+	iPoint pos = { 0, 0 };
+	int priority = 0;
+	SDL_RendererFlip flip = SDL_FLIP_NONE;
+	int r = 0;
+	int g = 0;
+	int b = 0;
+	int radius = 0;
+};
+
 class Render : public Module
 {
 public:
@@ -55,6 +71,8 @@ public:
 	SDL_Rect		viewport;
 	SDL_Color		background;
 	SDL_Rect		culling_cam;
+	std::deque<Sprite> sprites_toDraw;
+
 private:
 
 	bool			vsync = false;

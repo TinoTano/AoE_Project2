@@ -19,6 +19,8 @@ Unit::Unit()
 
 Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 {
+	time_inactive.Start();
+
 	entityPosition.x = posX;
 	entityPosition.y = posY;
 	this->isEnemy = isEnemy;
@@ -59,14 +61,6 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 		colliderType = COLLIDER_FRIENDLY_UNIT;
 	}
 	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
-
-	/*if (!isEnemy) {
-		isVisible = true;
-	}
-	else {
-		isVisible = false;
-	}*/
-
 }
 
 Unit::~Unit()
@@ -90,31 +84,129 @@ bool Unit::Update(float dt)
 	case UNIT_DEAD:
 		if (currentAnim->Finished()) {
 			App->entityManager->DeleteUnit(this, isEnemy);
+			App->collision->DeleteCollider(collider);
 		}
 		break;
 	}
+
+
+	if (isHero) Hero_Special_Attack();
 
 	return true;
 }
 
 bool Unit::Draw()
 {
-	if (isVisible) {
+	Sprite aux;
+
+	if (isVisible)
+	{
 		SDL_Rect r = currentAnim->GetCurrentFrame();
 		collider->rect.x = entityPosition.x - (r.w / 4);
 		collider->rect.y = entityPosition.y - (r.h / 3);
 
-		if (isSelected) {
+		aux.rect = r;
+		aux.texture = entityTexture;
+		aux.pos.x = entityPosition.x - (r.w / 2);
+		aux.pos.y = entityPosition.y - (r.h / 2);
+		aux.priority = entityPosition.y - (r.h / 2) + r.h;
+		aux.flip = currentAnim->flip;
+
+		if (isSelected)
+		{
+			Sprite bar;
+
+			bar.pos = { entityPosition.x, entityPosition.y + (r.h / 2) };
+			bar.priority = entityPosition.y - (r.h / 2) + r.h - 1;
+			bar.radius = 15;
+			bar.r = 255;
+			bar.g = 255;
+			bar.b = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+
 			int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
-			App->render->DrawCircle(entityPosition.x, entityPosition.y + (r.h / 2), 15, 255, 255, 255, 255);
-			App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), hpBarWidth, 5 }, 255, 0, 0);
-			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)(collider->rect.h / 1.5f)), min(hpBarWidth, max(hpBarWidth - barPercent , 0)), 5 }, 0, 255, 0);
+
+			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar.rect.w = hpBarWidth;
+			bar.rect.h = 5;
+			bar.priority = entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 255;
+			bar.g = 0;
+			bar.b = 0;
+
+			App->render->sprites_toDraw.push_back(bar);
+
+			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar.rect.h = 5;
+			bar.priority = entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 0;
+			bar.r = 0;
+			bar.g = 255;
+			bar.b = 0;
+
+			App->render->sprites_toDraw.push_back(bar);
 		}
-		else {
-			App->render->Blit(entityTexture, entityPosition.x - (r.w / 2), entityPosition.y - (r.h / 2), &r, currentAnim->flip);
+
+		if (attackUnitTarget != nullptr)
+		{
+			Sprite bar;
+
+			int percent = ((attackUnitTarget->unitMaxLife - attackUnitTarget->unitLife) * 100) / attackUnitTarget->unitMaxLife;
+			int barPercent = (percent * hpBarWidth) / 100;
+
+			bar.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
+			bar.rect.w = hpBarWidth;
+			bar.rect.h = 5;
+			bar.priority = attackUnitTarget->entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+
+			bar.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
+			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar.rect.h = 5;
+			bar.priority = attackUnitTarget->entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 0;
+			bar.g = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
 		}
+
+		if (attackBuildingTarget != nullptr)
+		{
+			Sprite bar;
+
+			int percent = ((attackBuildingTarget->buildingMaxLife - attackBuildingTarget->buildingLife) * 100) / attackBuildingTarget->buildingMaxLife;
+			int barPercent = (percent * hpBarWidth) / 100;
+
+			bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
+			bar.rect.w = hpBarWidth;
+			bar.rect.h = 5;
+			bar.priority = attackBuildingTarget->entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+
+			bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
+			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar.rect.h = 5;
+			bar.priority = attackBuildingTarget->entityPosition.y - (r.h / 2) + r.h;
+			bar.r = 0;
+			bar.g = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+		}
+
+		if (collider != nullptr) App->render->sprites_toDraw.push_back(aux);
 	}
 	
 	return true;
@@ -143,7 +235,6 @@ void Unit::SetSpeed(int amount)
 
 void Unit::SetDestination(iPoint destination)
 {
-
 	iPoint origin = App->map->WorldToMap(entityPosition.x, entityPosition.y);
 	App->pathfinding->CreatePath(origin, destination, path);
 
@@ -254,7 +345,8 @@ void Unit::LookAt()
 void Unit::AttackEnemyUnit(float dt)
 {
 	LookAt();
-	if (timer >= attackSpeed) {
+
+	if (currentAnim->Finished()) {
 		attackUnitTarget->unitLife -= unitAttack - attackUnitTarget->unitDefense;
 		if (attackUnitTarget->unitLife <= 0) {
 			attackUnitTarget->Dead();
@@ -263,17 +355,13 @@ void Unit::AttackEnemyUnit(float dt)
 				attackUnitTarget = nullptr;
 			}
 		}
-		timer = 0;
-	}
-	else {
-		timer += dt;
 	}
 }
 
 void Unit::AttackEnemyBuilding(float dt)
 {
 	LookAt();
-	if (timer >= attackSpeed) {
+	if (currentAnim->Finished()) {
 		attackBuildingTarget->buildingLife -= unitAttack - attackBuildingTarget->buildingDefense;
 		if (attackBuildingTarget->buildingLife <= 0) {
 			attackBuildingTarget->Dead();
@@ -282,16 +370,12 @@ void Unit::AttackEnemyBuilding(float dt)
 				attackBuildingTarget = nullptr;
 			}
 		}
-		timer = 0;
-	}
-	else {
-		timer += dt;
 	}
 }
 
 void Unit::Dead() {
 	SetState(UNIT_DEAD);
-	App->collision->DeleteCollider(collider);
+	collider->rect = { 0, 0, 0, 0 };
 }
 
 void Unit::SetState(unitState newState)
@@ -336,4 +420,46 @@ void Unit::SetAnim(unitDirection currentDirection) {
 		currentAnim = &dyingAnimations[currentDirection];
 		break;
 	}
+}
+
+bool Unit::Hero_Special_Attack()
+{
+	int cooldown = 10;
+	int time_attacking = 3;
+
+	// Attack
+
+	if (isSelected && time_inactive.ReadSec() >= cooldown && App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && !clicked)
+	{
+		unitAttack += 20;
+		time_active.Start();
+		clicked = true;
+	}
+
+	else if (time_active.ReadSec() >= time_attacking && clicked)
+	{
+		unitAttack -= 20;
+		time_inactive.Start();
+		clicked = false;
+	}
+
+	// Drawing double circle to show that is doing the special attack
+
+	if (time_inactive.ReadSec() >= cooldown && time_active.ReadSec() <= time_attacking)
+	{
+		SDL_Rect r = currentAnim->GetCurrentFrame();
+
+		Sprite aux;
+
+		aux.pos = { entityPosition.x, entityPosition.y + (r.h / 2) };
+		aux.priority = entityPosition.y - (r.h / 2) + r.h - 1;
+		aux.radius = 25;
+		aux.r = 255;
+		aux.g = 255;
+		aux.b = 255;
+
+		App->render->sprites_toDraw.push_back(aux);
+	}
+
+	return true;
 }

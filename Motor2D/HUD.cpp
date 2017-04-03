@@ -91,11 +91,11 @@ void HUD::Update() {
 						HUDBuildingMenu();
 					else if (create_elven_archer_bt->current == CLICKIN)
 					{
-						//Spawn an elven archer
+						App->entityManager->CreateUnit(400, 250, false, ELVEN_ARCHER);
 					}
 					else if (create_elven_longblade_bt->current == CLICKIN)
 					{
-						//Spawn an elven longblade
+						App->entityManager->CreateUnit(400, 350, false, ELVEN_LONGBLADE);
 					}
 				}
 				break;

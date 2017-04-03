@@ -8,11 +8,12 @@
 #include <vector>
 #include "Input.h"
 #include "Map.h"
+#include "Timer.h"
 
 class Building;
 
 enum unitType {
-	ELVEN_LONGBLADE, DWARVEN_MAULER, GONDOR_SPEARMAN, ELVEN_ARCHER, DUNEDAIN_RANGER, ELVEN_CAVALRY, GONDOR_KNIGHT,
+	ELVEN_LONGBLADE, DWARVEN_MAULER, GONDOR_SPEARMAN, ELVEN_ARCHER, DUNEDAIN_RANGE, ELVEN_CAVALRY, GONDOR_KNIGHT,
 	ROHAN_KNIGHT, MOUNTED_DUNEDAIN, SIEGE_TOWER, LIGHT_CATAPULT,
 
 	GOBLIN_SOLDIER, ORC_SOLDIER, URUK_HAI_SOLDIER, ORC_ARCHER, VENOMOUS_SPIDER, HARADRIM_OLIFANT, NAZGUL, TROLL_MAULER
@@ -96,6 +97,12 @@ public:
 
 	Animation* currentAnim = nullptr;
 
+	//////
+	bool isHero = false;
+	bool Hero_Special_Attack();
+	Timer time_inactive;
+	Timer time_active;
+	bool clicked = false;
 };
 
 #endif // !__UNIT_H__
