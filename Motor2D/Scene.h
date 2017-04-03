@@ -41,6 +41,7 @@ public:
 
 	void LoadScene();
 	void SaveScene();
+	uint villagers_curr = 0, villagers_total = 0;
 
 private:
 	SDL_Texture* debug_tex;
@@ -62,15 +63,20 @@ private:
 	// RESOURCES 
 	Label* wood, *food, *gold, *stone, *villagers;
 
+public:
 	void UpdateResources(Label* resource, uint new_val);
 	void UpdateVillagers(uint available_villagers, uint total_villagers);
-
+private:
 	// TIMER
 
 	Timer timer;
 	Label* Timer_lbl;
 	void UpdateTime(float time);
-
+	void TimeEvents();
+	Timer enemy_timer;
+	Timer spawn_timer;
+	uint enemy_timer_val, spawn_timer_val;
+	uint wave = 0, enemies_to_spawn = 0;
 public:
 	///////
 	Building* my_townCenter;

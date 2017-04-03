@@ -324,7 +324,7 @@ private:
 	HUDBuildingState building_state;
 
 	// ----- MENU -----
-	Button* create_unit_bt;
+	Button* create_unit_bt, *create_villager_bt;
 	void HUDBuildingMenu();
 	void HUDClearBuildingMenu();
 

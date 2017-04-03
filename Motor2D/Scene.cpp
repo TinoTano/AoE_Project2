@@ -205,7 +205,7 @@ bool Scene::Update(float dt)
 		App->gui->Unfocus();
 	}
 	UpdateTime(timer.ReadSec());
-
+	TimeEvents();
 	return true;
 }
 
@@ -228,6 +228,34 @@ bool Scene::CleanUp()
 	ui_menu.CleanUp();
 	App->entityManager->CleanUp();
 	return true;
+}
+
+void Scene::TimeEvents() {
+
+	int x = (int)enemy_timer.ReadSec();
+
+	if ((int)timer.ReadSec() > 150) {
+		Timer_lbl->SetColor({ 255, 0,0,255 });
+	}
+
+	if ((int)timer.ReadSec() == 140) {
+		enemy_timer.Start();
+		wave = 2;
+	}
+	else if ((int)timer.ReadSec() < 140) {
+		enemy_timer.Start();
+	}
+	if ((int)enemy_timer.ReadSec() == 40)
+	{
+		enemies_to_spawn = wave;
+		wave++;
+		enemy_timer.Start();
+	}
+	if ((int)enemies_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
+		App->entityManager->CreateUnit(-350, 500, true, DWARVEN_MAULER);
+		enemies_to_spawn--;
+		spawn_timer.Start();
+	}
 }
 void Scene::UpdateTime(float time)
 {

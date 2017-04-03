@@ -81,8 +81,15 @@ void HUD::Update() {
 				}
 				else {
 					if (create_unit_bt->current == CLICKIN)
+					{
 						HUDCreateUnits();
+					}
+					else if (create_villager_bt->current == CLICKIN) {
+						App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
+						create_villager_bt->current == FREE;
+					}
 				}
+
 				break;
 			case BUILDINGCREATEUNITS:
 				if (building_state != BUILDINGCREATEUNITS)
@@ -252,11 +259,19 @@ void HUD::HUDBuildingMenu()
 
 	// THIS MUST BE DONE HERE
 	building_state = BUILDINGMENU;
+
 	vector<SDL_Rect> blit_sections;
 	blit_sections.push_back({ 130, 64, 39, 40 });
 	blit_sections.push_back({ 169, 64, 39, 40 });
 
 	create_unit_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	blit_sections.clear();
+
+
+	blit_sections.push_back({ 52, 24, 39, 40 });
+	blit_sections.push_back({ 91, 24, 39, 40 });
+
+	create_villager_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 	// THIS MUST BE DONE HERE
 	building_state = BUILDINGMENU;
 }
@@ -264,6 +279,7 @@ void HUD::HUDBuildingMenu()
 void HUD::HUDClearBuildingMenu()
 {
 	App->gui->DestroyUIElement(create_unit_bt);
+	App->gui->DestroyUIElement(create_villager_bt);
 }
 
 
