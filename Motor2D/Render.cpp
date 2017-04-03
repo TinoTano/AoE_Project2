@@ -88,6 +88,20 @@ bool Render::PostUpdate()
 
 	sprites_toDraw.clear();
 
+	std::sort(ui_toDraw.begin(), ui_toDraw.end(), [](const Sprite& lhs, const Sprite& rhs) { return lhs.priority < rhs.priority; });
+
+	for (int it = 0; it < ui_toDraw.size(); it++)
+	{
+		if (ui_toDraw[it].texture != nullptr)
+			Blit(ui_toDraw[it].texture, ui_toDraw[it].pos.x, ui_toDraw[it].pos.y, &ui_toDraw[it].rect, ui_toDraw[it].flip);
+		else
+		{
+			if (ui_toDraw[it].radius == 0) DrawQuad(ui_toDraw[it].rect, ui_toDraw[it].r, ui_toDraw[it].g, ui_toDraw[it].b);
+			else DrawCircle(ui_toDraw[it].pos.x, ui_toDraw[it].pos.y, ui_toDraw[it].radius, ui_toDraw[it].r,ui_toDraw[it].g, ui_toDraw[it].b);
+		}
+	}
+
+	ui_toDraw.clear();
 
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);

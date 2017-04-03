@@ -72,6 +72,7 @@ public:
 	SDL_Color		background;
 	SDL_Rect		culling_cam;
 	std::deque<Sprite> sprites_toDraw;
+	std::deque<Sprite> ui_toDraw;
 
 private:
 
