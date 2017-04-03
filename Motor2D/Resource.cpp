@@ -13,7 +13,7 @@ Resource::Resource(int posX, int posY, Resource* resource, int resourceRectIndex
 	entityPosition.y = posY;
 	this->type = type;
 
-	Life = resource->Life;
+	resourceLife = resource->resourceLife;
 	resourceIdleTexture = resource->resourceIdleTexture;
 	resourceGatheringTexture = resource->resourceGatheringTexture;
 	resourceRectVector = resource->resourceRectVector;

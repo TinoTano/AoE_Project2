@@ -27,6 +27,7 @@ private:
 public:
 	resourceState state = RESOURCE_IDLE;
 	resourceType type = BLACK_TREE;
+	int resourceLife = 0;
 	SDL_Texture* resourceIdleTexture = nullptr;
 	SDL_Texture* resourceGatheringTexture = nullptr;
 	bool isVisible = true;

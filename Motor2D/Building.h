@@ -16,18 +16,20 @@ enum buildingState
 	BUILDING_IDLE, BUILDING_ATTACKING, BUILDING_DESTROYING
 };
 
+enum buildingFaction {
+	FREE_MEN_BUILDING, SAURON_ARMY_BUILDING
+};
 
 class Building : public Entity
 {
 public:
 	Building();
-	Building(int posX, int posY, Building* building);
+	Building(int posX, int posY, bool isEnemy, Building* building);
 	~Building();
 
 	bool Update(float dt);
 	bool Draw();
-	bool IsEnemy() const;
-	void AttackEnemy(float dt);
+	void Attack(float dt);
 	void Dead();
 	pugi::xml_node LoadBuildingInfo(buildingType type);
 
@@ -38,9 +40,10 @@ private:
 
 public:
 	buildingType type = ORC_BARRACKS;
-	Faction faction;
+	buildingFaction faction;
 	float buildingAttackSpeed = 0;
 	int buildingPiercingDamage = 0;
+	bool isEnemy = false;
 	float timer = 0;
 	list<Unit*> availableUnitsToCreateList;
 	bool isDamaged = false;
@@ -52,7 +55,11 @@ public:
 	SDL_Texture* buildingDieTexture = nullptr;
 	uint imageWidth = 0;
 	uint imageHeight = 0;
-	Unit* attackTarget = nullptr;
+	Unit* attackUnitTarget = nullptr;
+	int buildingLife = 0;
+	int buildingMaxLife = 0;
+	int buildingAttack = 0;
+	int buildingDefense = 0;
 	bool isVisible = true;
 	bool isSelected = false;
 	bool canAttack = false;

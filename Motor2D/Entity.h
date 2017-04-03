@@ -9,10 +9,6 @@ using namespace std;
 
 struct Collider;
 
-enum Faction {
-	FREE_MEN_BUILDING, SAURON_ARMY_BUILDING
-};
-
 class Entity
 {
 public:
@@ -25,7 +21,6 @@ public:
 	virtual bool Update(float dt);
 	virtual bool Draw();
 	virtual bool HandleInput();
-	virtual void Dead();
 	 
 	virtual bool Load(pugi::xml_node&);
 	virtual bool Save(pugi::xml_node&) const;
@@ -37,12 +32,6 @@ public:
 	SDL_Texture* entityTexture;
 	iPoint entityPosition;
 	Collider* collider;
-
-	int Life = 0;
-	int MaxLife = 0;
-	int Attack = 0;
-	int Defense = 0;
-
 };
 
 #endif // !__ENTITY_H__

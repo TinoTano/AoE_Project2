@@ -15,10 +15,11 @@ Building::Building()
 {
 }
 
-Building::Building(int posX, int posY, Building* building)
+Building::Building(int posX, int posY, bool isEnemy, Building* building)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
+	this->isEnemy = isEnemy;
 	this->type = type;
 
 	faction = building->faction;
@@ -29,19 +30,24 @@ Building::Building(int posX, int posY, Building* building)
 	buildingBuildTime = building->buildingBuildTime;
 	buildingIdleTexture = building->buildingIdleTexture;
 	buildingDieTexture = building->buildingDieTexture;
-	Life = building->Life;
-	MaxLife = building->MaxLife;
-	Attack = building->Attack;
-	Defense = building->Defense;
+	buildingLife = building->buildingLife;
+	buildingMaxLife = building->buildingMaxLife;
+	buildingAttack = building->buildingAttack;
+	buildingDefense = building->buildingDefense;
 	canAttack = building->canAttack;
 
 	entityTexture = buildingIdleTexture;
 
 	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
+	SDL_Rect colliderRect = { entityPosition.x - (imageWidth / 2), entityPosition.y - (imageHeight / 2), imageWidth, imageHeight};
 	COLLIDER_TYPE colliderType;
-	colliderType = COLLIDER_BUILDING;
-	
-	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, colliderType, App->entityManager, (Entity*)this);
+	if (isEnemy) {
+		colliderType = COLLIDER_ENEMY_BUILDING;
+	}
+	else {
+		colliderType = COLLIDER_FRIENDLY_BUILDING;
+	}
+	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
 
 	isSelected = false;
 	/*if (!isEnemy) {
@@ -58,20 +64,15 @@ Building::~Building()
 {
 }
 
-bool Building::IsEnemy() const
-{
-	return (bool)faction;
-}
-
 bool Building::Update(float dt)
 {
 	switch (state) {
 	case BUILDING_ATTACKING:
-		AttackEnemy(dt);
+		Attack(dt);
 		break;
 	case BUILDING_DESTROYING:
 		//if (currentAnim->Finished()) {
-		App->entityManager->DeleteBuilding(this);
+		App->entityManager->DeleteBuilding(this, isEnemy);
 		//}
 		break;
 	}
@@ -84,8 +85,8 @@ bool Building::Update(float dt)
 		int x;
 		int y;
 		App->input->GetMousePosition(x, y);
-		if (x > collider->pos.x - collider->r  && x < collider->pos.x + collider->r &&
-			y > collider->pos.y + collider->r  && y < collider->pos.y - collider->r) {
+		if (x < entityPosition.x + (collider->rect.w / 2) && x > entityPosition.x - (collider->rect.w / 2) &&
+			y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
 			if (isVisible) {
 				isSelected = true;
 			}
@@ -104,25 +105,27 @@ bool Building::Draw()
 {
 	if (isVisible) {
 		if (isSelected) {
-			int percent = ((MaxLife - Life) * 100) / MaxLife;
+			App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
+			int percent = ((buildingMaxLife - buildingLife) * 100) / buildingMaxLife;
 			int barPercent = (percent * hpBarWidth) / 100;
 			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), hpBarWidth, 5 }, 255, 0, 0);
 			App->render->DrawQuad({ entityPosition.x - (hpBarWidth / 2), entityPosition.y - ((int)imageHeight / 2), min(hpBarWidth, max(hpBarWidth - barPercent, 0)), 5 }, 0, 255, 0);
 		}
+		else {
+			App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
+		}
 	}
-
-	App->render->Blit(entityTexture, entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2));
 	
 	return true;
 }
 
-void Building::AttackEnemy(float dt)
+void Building::Attack(float dt)
 {
 	if (timer >= buildingAttackSpeed) {
-		attackTarget->Life -= Attack - attackTarget->Defense;
-		if (attackTarget->Life <= 0) {
-			attackTarget->Dead();
-			if (Life > 0) {
+		attackUnitTarget->unitLife -= buildingAttack - attackUnitTarget->unitDefense;
+		if (attackUnitTarget->unitLife <= 0) {
+			attackUnitTarget->Dead();
+			if (buildingLife > 0) {
 				state = BUILDING_IDLE;
 			}
 		}
@@ -141,6 +144,7 @@ void Building::Dead()
 
 pugi::xml_node Building::LoadBuildingInfo(buildingType type)
 {
+	
 	return pugi::xml_node();
 }
 

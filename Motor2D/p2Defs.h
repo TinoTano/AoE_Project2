@@ -61,13 +61,6 @@ inline const char* const PATH(const char* folder, const char* file)
 	return path;
 }
 
-
-template <typename T>
-T clamp(const T& n, const T& lower, const T&upper)
-{
-	return MAX(lower, MIN(n, upper));
-}
-
 // Performance macros
 #define PERF_START(timer) timer.Start()
 #define PERF_PEEK(timer) LOG("%s took %f ms", __FUNCTION__, timer.ReadMs())

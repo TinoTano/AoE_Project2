@@ -34,19 +34,18 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool IsOccupied(iPoint tile, Unit* ignore_unit = nullptr);
 
 	bool LoadGameData();
 
-	Unit* CreateUnit(int posX, int posY, unitType type);
-	Building* CreateBuilding(int posX, int posY,  buildingType type);
+	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type);
+	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type);
 	Resource* CreateResource(int posX, int posY, resourceType type, int resourceRectIndex);
 
-	void DeleteUnit(Unit* unit);
-	void DeleteBuilding(Building* building);
+	void DeleteUnit(Unit* unit, bool isEnemy);
+	void DeleteBuilding(Building* building, bool isEnemy);
 	void DeleteResource(Resource* resource);
-
-	bool IsOccupied(iPoint tile, iPoint ignore_tile = { -1,-1 });
-	void OnCollision(Collision_data& col_data);
+	void OnCollision(Collider* c1, Collider* c2);
 
 private:
 	void DestroyEntity(Entity* entity);
