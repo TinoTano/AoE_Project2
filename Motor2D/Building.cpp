@@ -59,6 +59,10 @@ Building::~Building()
 
 bool Building::Update(float dt)
 {
+	App->input->GetMousePosition(mouseX, mouseY);
+	mouseX -= App->render->camera.x;
+	mouseY -= App->render->camera.y;
+
 	switch (state) {
 	case BUILDING_ATTACKING:
 		Attack(dt);
@@ -73,24 +77,27 @@ bool Building::Update(float dt)
 	if (isDamaged) {
 		//blit fire animation
 	}
-
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-		int x;
-		int y;
-		App->input->GetMousePosition(x, y);
-		if (x < entityPosition.x + (collider->rect.w / 2) && x > entityPosition.x - (collider->rect.w / 2) &&
-			y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
-			if (isVisible) {
-				isSelected = true;
+	if (mouseY > NOTHUD.y - CAMERA_OFFSET_Y && mouseY < NOTHUD.h - CAMERA_OFFSET_Y)
+	{
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+			int x;
+			int y;
+			App->input->GetMousePosition(x, y);
+			if (x < entityPosition.x + (collider->rect.w / 2) && x > entityPosition.x - (collider->rect.w / 2) &&
+				y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
+				if (isVisible) {
+					isSelected = true;
+					App->entityManager->selectedBuildingtList.push_back(this);
+				}
 			}
-		}
-		else {
-			if (isSelected) {
-				isSelected = false;
+			else {
+				if (isSelected) {
+					isSelected = false;
+					App->entityManager->selectedBuildingtList.remove(this);
+				}
 			}
 		}
 	}
-
 	return true;
 }
 

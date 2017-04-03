@@ -64,6 +64,9 @@ public:
 	bool isSelected = false;
 	bool canAttack = false;
 	buildingState state = BUILDING_IDLE;
+
+	int mouseX;
+	int mouseY;
 };
 
 #endif // !__BUILDING_H__

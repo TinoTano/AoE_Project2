@@ -69,6 +69,7 @@ bool EntityManager::Update(float dt)
 		(*it)->Update(dt);
 		(*it)->Draw();
 	}
+
 	if (mouseY > NOTHUD.y - CAMERA_OFFSET_Y && mouseY < NOTHUD.h - CAMERA_OFFSET_Y)
 	{
 

@@ -289,6 +289,7 @@ private:
 	Label* life;
 
 	Image* sword_img;		Image* armor_img;
+
 	//Image* arrow_img;
 
 	//BUILDINGINFO
@@ -328,9 +329,10 @@ private:
 	void HUDClearBuildingMenu();
 
 	// ----- CREATE UNITS ------
-	Button* create_elven_archer_bt, *create_elven_longblade_bt, *cancel_bt;
+	Button* create_elven_archer_bt, *create_elven_longblade_bt, *create_elven_cavalry_bt, *cancel_bt;
 	void HUDCreateUnits();
 	void HUDClearCreateUnits();
+
 };
 
 

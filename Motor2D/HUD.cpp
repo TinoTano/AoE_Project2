@@ -19,6 +19,7 @@ HUD::HUD()
 {
 	buttons_positions.push_back({ 30 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40 });
 	buttons_positions.push_back({ 69 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ 108 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40 });
 
 	buttons_positions.push_back({ 200 - CAMERA_OFFSET_X, 710 - CAMERA_OFFSET_Y, 39,40 });
 }
@@ -45,6 +46,8 @@ void HUD::Update() {
 
 	if (App->entityManager->selectedBuildingtList.size() == 1)
 	{
+		App->entityManager->selectedUnitList.clear();
+
 		if (type != BUILDINGINFO)
 		{
 			ClearSingle();
@@ -91,11 +94,18 @@ void HUD::Update() {
 						HUDBuildingMenu();
 					else if (create_elven_archer_bt->current == CLICKIN)
 					{
-						App->entityManager->CreateUnit(400, 250, false, ELVEN_ARCHER);
+						App->entityManager->CreateUnit(200, 250, false, ELVEN_ARCHER);
+						create_elven_archer_bt->current = FREE;
 					}
 					else if (create_elven_longblade_bt->current == CLICKIN)
 					{
-						App->entityManager->CreateUnit(400, 350, false, ELVEN_LONGBLADE);
+						App->entityManager->CreateUnit(200, 350, false, ELVEN_LONGBLADE);
+						create_elven_longblade_bt->current = FREE;
+					}
+					else if (create_elven_cavalry_bt->current == CLICKIN)
+					{
+						App->entityManager->CreateUnit(200, 450, false, ELVEN_CAVALRY);
+						create_elven_cavalry_bt->current = FREE;
 					}
 				}
 				break;
@@ -135,7 +145,8 @@ void HUD::Update() {
 				{
 					if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
 					{
-						name->str = it._Ptr->_Myval.GetName();
+						single->section = it->GetRect();
+						name->SetString(it->GetName());
 						defense = App->entityManager->selectedUnitList.front()->unitDefense;
 						attack = App->entityManager->selectedUnitList.front()->unitDefense;
 					}
@@ -144,8 +155,8 @@ void HUD::Update() {
 				_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
 				_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
 
-				damage_val->str = damage;
-				armor_val->str = armor;
+				damage_val->SetString(damage);
+				armor_val->SetString(armor);
 
 				max_life = App->entityManager->selectedUnitList.front()->unitMaxLife;
 				curr_life = App->entityManager->selectedUnitList.front()->unitLife;
@@ -157,7 +168,7 @@ void HUD::Update() {
 				_itoa_s(max_life, maxlife, 65, 10);
 				life_str += maxlife;
 
-				life->str = maxlife;
+				life->SetString(maxlife);
 
 				int percent = ((max_life - curr_life) * 100) / max_life;
 				int barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
@@ -279,10 +290,18 @@ void HUD::HUDCreateUnits()
 	create_elven_longblade_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 
 	blit_sections.clear();
+	blit_sections.push_back({ 66, 0, 33, 32 });
+	blit_sections.push_back({ 66, 0, 33, 32 });
+
+	create_elven_cavalry_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
 	blit_sections.push_back({ 52, 64, 39, 40 });
 	blit_sections.push_back({ 91, 64, 39, 40 });
 
-	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[3].x - CAMERA_OFFSET_X, buttons_positions[3].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+
 
 }
 
@@ -290,6 +309,7 @@ void HUD::HUDClearCreateUnits()
 {
 	App->gui->DestroyUIElement(create_elven_archer_bt);
 	App->gui->DestroyUIElement(create_elven_longblade_bt);
+	App->gui->DestroyUIElement(create_elven_cavalry_bt);
 	App->gui->DestroyUIElement(cancel_bt);
 }
 

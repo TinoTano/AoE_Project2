@@ -143,7 +143,7 @@ bool Scene::Start()
 	troll->isHero = true;
 
 	my_townCenter = App->entityManager->CreateBuilding(580, 350, false, TOWN_CENTER);
-	enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);
+	//enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 
