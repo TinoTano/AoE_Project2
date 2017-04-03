@@ -569,7 +569,10 @@ Building* EntityManager::CreateBuilding(int posX, int posY, bool isEnemy, buildi
 
 Resource* EntityManager::CreateResource(int posX, int posY, resourceType type, int resourceRectIndex)
 {
-	Resource* resource = new Resource(posX, posY, resourcesDB[type], resourceRectIndex);
+	iPoint ret;
+	ret.x = (posX - posY);
+	ret.y = (posX + posY) / 2;
+	Resource* resource = new Resource(ret.x, ret.y, resourcesDB[type], resourceRectIndex);
 	resource->entityID = nextID;
 	nextID++;
 	resourceList.push_back(resource);
