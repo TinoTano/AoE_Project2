@@ -7,6 +7,8 @@
 #include "Input.h"
 #include "Window.h"
 #include "Gui.h"
+#include "SceneManager.h"
+#include <stdlib.h>  
 
 Gui::Gui() : Module()
 {
@@ -59,8 +61,10 @@ bool Gui::Start()
 	sprites_cursor.push_back({ 420, 50, 70, 50 });
 	sprites_cursor.push_back({ 490, 50, 70, 50 });
 	sprites_cursor.push_back({ 560, 50, 70, 50 });
-
+	hud = new HUD();
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
+
+	LoadHUDData();
 
 	return true;
 }
@@ -97,8 +101,12 @@ bool Gui::PostUpdate()
 		}
 	}
 
+	if (App->sceneManager->current_scene->name == "scene")
+	{
+		hud->Update();
+	}
+	// CURSOR ALWAYS GOES LAST!!!!!
 	cursor->Update();
-
 	return true;
 }
 
@@ -107,14 +115,19 @@ bool Gui::CleanUp()
 {
 	LOG("Freeing GUI");
 
+	cursor->CleanUp();
+
 	if (Elements.empty() != true)
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 		{
-			delete it._Ptr->_Myval;
+			App->gui->DestroyUIElement(it._Ptr->_Myval);
 		}
 	}
-
+	Elements.clear();
+	delete cursor;
+	hud->CleanUp();
+	delete hud;
 	return true;
 }
 
@@ -134,13 +147,13 @@ bool Gui::Load(pugi::xml_node &)
 	return true;
 }
 
-void Gui::ScreenMoves(pair<int,int> movement) {
+void Gui::ScreenMoves(pair<int, int> movement) {
 
 	if (Elements.empty() != true)
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 		{
-				it._Ptr->_Myval->Movement(movement);
+			it._Ptr->_Myval->Movement(movement);
 		}
 	}
 }
@@ -242,6 +255,12 @@ UIElement * Gui::CreateLabel(char * text, int x, int y, _TTF_Font * font)
 	return ret;
 }
 
+UIElement* Gui::CreateLabel(string text, int x, int y, _TTF_Font* font) {
+	UIElement* ret = new Label(text, x, y, font);
+	Elements.push_back(ret);
+	return ret;
+}
+
 UIElement * Gui::CreateLabel(char * text, SDL_Rect area, _TTF_Font * font)
 {
 	UIElement* ret = new Label(text, area, font);
@@ -291,9 +310,34 @@ UIElement * Gui::CreateCursor(char* path, vector<SDL_Rect> cursor_list)
 	UIElement* ret = nullptr;
 	SDL_Texture * tex = App->tex->Load(path);
 	ret = new Cursor(tex, cursor_list);
-	Elements.push_back(ret);
 	return ret;
 }
+
+void Gui::DestroyUIElement(UIElement* element)
+{
+
+	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+	{
+		if (element == it._Ptr->_Myval)
+		{
+			it._Ptr->_Myval->CleanUp();
+			Elements.remove(it._Ptr->_Myval);
+			RELEASE((element));
+		}
+	}
+
+}
+
+void Gui::DestroyALLUIElements() {
+
+	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+	{
+		it._Ptr->_Myval->CleanUp();
+		Elements.remove(it._Ptr->_Myval);
+		RELEASE((it._Ptr->_Myval));
+	}
+}
+
 
 // IMAGE
 Image::Image(SDL_Rect argsection, int x, int y, SDL_Texture* argtexture) : UIElement(true, x, y, IMAGE, argtexture), section(argsection) {}
@@ -303,6 +347,11 @@ Image::Image(int x, int y, SDL_Texture* argtexture) : UIElement(true, x, y, IMAG
 void Image::Update()
 {
 	Draw();
+	if (!App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
+		current = MouseDetect();
+
+	current = MouseDetect();
+
 	if (debug) DebugMode();
 }
 
@@ -344,16 +393,30 @@ void Image::Movement(pair<int, int> movement) {
 void Image::DebugMode() {
 	App->render->DrawQuad({ pos.first, pos.second, section.w, section.h }, debug_color.r, debug_color.g, debug_color.b, debug_color.a, true);
 }
+void Image::CleanUp()
+{
+	parent = nullptr;
+	App->tex->UnLoad(texture);
+}
 // LABEL 
 
 Label::Label(char* text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {
-	texture = App->font->Print(str.c_str());
+	color = { 0,0,0,250 };
+	texture = App->font->Print(str.c_str(), color);
+	App->font->CalcSize(str.c_str(), width, height);
+}
+
+Label::Label(string text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {
+	color = { 0,0,0,250 };
+	texture = App->font->Print(str.c_str(), color);
 	App->font->CalcSize(str.c_str(), width, height);
 }
 
 Label::Label(char * text, SDL_Rect area, _TTF_Font* font) : UIElement(true, area.x, area.y, LABEL, nullptr), str(text), font(font) {
-	texture = App->font->Print(str.c_str());
+	color = { 0,0,0,250 };
+	texture = App->font->Print(str.c_str(), color);
 	App->font->CalcSize(str.c_str(), width, height);
+
 }
 
 void Label::Update()
@@ -369,8 +432,13 @@ void Label::Draw()
 
 void Label::SetText(char* text) {
 	str = text;
-	texture = App->font->Print(str.c_str());
+	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height);
+}
+void Label::SetString(string text) {
+	str = text.c_str();
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 void Label::SetSize(int size) {
@@ -378,6 +446,21 @@ void Label::SetSize(int size) {
 	this->size = size;
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);
+}
+
+void Label::SetColor(SDL_Color color)
+{
+	this->color = color;
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height, font);
+}
+
+void Label::CleanUp()
+{
+	parent = nullptr;
+	font = nullptr;
+	App->tex->UnLoad(texture);
+	str.clear();
 }
 
 void Label::Movement(pair<int, int> movement) {
@@ -415,6 +498,14 @@ void Button::Update()
 	}
 
 	if (debug) DebugMode();
+}
+
+void Button::CleanUp()
+{
+	parent = nullptr;
+	App->tex->UnLoad(texture);
+	blit_sections.clear();
+	detect_sections.clear();
 }
 
 void Button::Draw(SDL_Rect section)
@@ -515,6 +606,16 @@ void InputText::Draw() {
 	App->font->CalcSize(str.c_str(), width, height);
 	SDL_Rect text_size{ 0, 0, width, height };
 	App->render->Blit(texture, pos.first, pos.second, &text_size);
+}
+
+void InputText::CleanUp()
+{
+	parent = nullptr;
+	App->tex->UnLoad(texture);
+	font = nullptr;
+	str.clear();
+	cpy_str.clear();
+	words_lenght.clear();
 }
 
 MouseState InputText::MouseDetect() {
@@ -655,8 +756,8 @@ ScrollBar::ScrollBar(int x, int y, ScrollBarModel model) : UIElement(true, x, y,
 void ScrollBar::Update()
 {
 	Up->pos.second;
-		pair<int, int> motion;
-		App->input->GetMouseMotion(motion.first, motion.second);
+	pair<int, int> motion;
+	App->input->GetMouseMotion(motion.first, motion.second);
 
 	switch (model) {
 	case MODEL1:
@@ -750,6 +851,12 @@ void ScrollBar::DebugMode() {
 
 Quad::Quad(SDL_Rect area, SDL_Color color) : UIElement(true, area.x, area.y, QUAD, nullptr), color(color), area(area) {
 }
+void Quad::CleanUp()
+{
+	parent = nullptr;
+
+
+}
 void Quad::Update() {
 	Draw();
 
@@ -785,11 +892,16 @@ void Cursor::Update() {
 	}
 }
 void Cursor::Draw() {
-	
-	App->render->Blit(texture, pos.first - blitoffset.first , pos.second - blitoffset.second, &sprite_list[id]);
+
+	App->render->Blit(texture, pos.first - blitoffset.first, pos.second - blitoffset.second, &sprite_list[id]);
 }
 void Cursor::SetCursor(int id) {
 	this->id = id;
+}
+
+void Cursor::CleanUp()
+{
+	sprite_list.clear();
 }
 
 // WINDOW
@@ -820,6 +932,18 @@ SDL_Rect WindowUI::FocusArea()
 	ret.h = height;
 	return ret;
 }
+void WindowUI::CleanUp()
+{
+	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
+	{
+		//RELEASE((*it));
+		App->gui->DestroyUIElement(it._Ptr->_Myval);
+		in_window.remove(it._Ptr->_Myval);
+	}
+
+	in_window.clear();
+}
+
 void WindowUI::SetFocus(int& x, int& y, int width, int height)
 {
 	this->x = &x;
@@ -829,4 +953,51 @@ void WindowUI::SetFocus(int& x, int& y, int width, int height)
 }
 bool WindowUI::IsEnabled() {
 	return enabled;
+}
+
+
+
+bool Gui::LoadHUDData()
+{
+	bool ret = false;
+	pugi::xml_document HUDDataFile;
+	pugi::xml_node HUDData;
+	pugi::xml_node unitNodeInfo;
+	pugi::xml_node buildingNodeInfo;
+	pugi::xml_node resourceNodeInfo;
+
+	HUDData = App->LoadHUDDataFile(HUDDataFile);
+
+	if (HUDData.empty() == false)
+	{
+		SDL_Rect proportions;
+		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
+		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("height").as_uint();
+
+		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit"))
+		{
+			EntityType type = UNIT;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id, name);
+			SpriteUnits.push_back(unit);
+		}
+		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building"))
+		{
+			EntityType type = BUILDING;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id, name);
+			SpriteBuildings.push_back(unit);
+		}
+	}
+	return ret;
 }

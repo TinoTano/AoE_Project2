@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 #include <vector>
+#include "EntityManager.h"
 
 using namespace std;
 
@@ -15,6 +16,11 @@ using namespace std;
 #define BAR_COLOR {200,0,100,100}
 #define THUMB_COLOR {0,50,200, 200}
 #define BLIT_SQUARE_COLOR {200,0,100,100}
+#define LABEL_COLOR {0,0,0 250}
+#define CAMERA_OFFSET_X App->render->camera.x
+#define CAMERA_OFFSET_Y App->render->camera.y
+
+
 struct _TTF_Font;
 
 
@@ -50,6 +56,20 @@ enum ScrollBarModel {
 	//WHich we use for command window
 };
 
+enum HUDType {
+	MULTIPLESELECTION,
+	SINGLEINFO,
+	BUILDINGINFO,
+	NONE
+};
+
+enum EntityType {
+	UNIT,
+	BUILDING,
+	RESOURCE
+};
+
+class UnitSprite;
 
 class UIElement {
 public:
@@ -57,7 +77,8 @@ public:
 	virtual void	Update() {}
 	virtual	void	Draw() {}
 	virtual void	DebugMode() {}
-	virtual void	Movement(pair<int,int>) {}
+	virtual void	Movement(pair<int, int>) {}
+	virtual void	CleanUp() {}
 	void			SetPos(int x, int y);
 	void			SetParentPos(int x, int y);
 	void			Move(int x, int y);
@@ -85,6 +106,7 @@ public:
 	void Update();
 	void Draw();
 	void DebugMode();
+	void CleanUp();
 
 
 	SDL_Rect section;
@@ -94,17 +116,23 @@ public:
 class Label : public UIElement {
 public:
 	Label(char * text, int x, int y, _TTF_Font* font);
+	Label(string text, int x, int y, _TTF_Font* font);
 	Label(char * text, SDL_Rect area, _TTF_Font* font);
 	void Movement(pair<int, int> movement);
 
 	void Update();
 	void Draw();
 	void SetText(char* text);
+	void SetString(string text);
 	void SetSize(int size);
+	void SetColor(SDL_Color color);
+	void CleanUp();
+	string str;
 
+private:
 	int width = 0, height = 0, size = 0;
 	_TTF_Font* font;
-	string str;
+
 
 	SDL_Color color;
 	SDL_Rect area;
@@ -116,8 +144,10 @@ public:
 	Button(int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier tier, SDL_Texture* texture);
 
 	void Update();
+	void CleanUp();
+
 	void Draw(SDL_Rect section);
-	void Movement(pair<int,int> movement);
+	void Movement(pair<int, int> movement);
 	MouseState MouseDetect();
 	void DebugMode();
 
@@ -134,6 +164,7 @@ public:
 	void DebugMode();
 	void Update();
 	void Draw();
+	void CleanUp();
 	MouseState MouseDetect();
 
 
@@ -193,6 +224,7 @@ public:
 class Quad : public UIElement {
 public:
 	Quad(SDL_Rect area, SDL_Color color);
+	void CleanUp();
 	void Update();
 	void Draw();
 	void SetArea(SDL_Rect area);
@@ -208,13 +240,14 @@ public:
 	void Update();
 	void Draw();
 	void SetCursor(int id);
-	
+	void CleanUp();
+
 private:
 	int id = 0;
 	pair<int, int> cursor_pos;
 	pair<int, int> blitoffset;
 	vector<SDL_Rect> sprite_list;
-	
+
 };
 
 class WindowUI {
@@ -230,8 +263,77 @@ public:
 	void WindowOn();
 	void WindowOff();
 	SDL_Rect FocusArea();
+	void CleanUp();
 
 };
+
+class HUD {
+private:
+	bool enabled = true;
+public:
+	HUDType		type = NONE;
+	HUD();
+
+
+	// MULTIPLESELECTION
+private:
+	list<Image*> multiple;
+	int max_width;
+
+	//SINGLEINFO
+private:
+	Unit* selected_unit;
+
+	Image* single;			Label* name;
+	Label* armor_val;		Label* damage_val;
+	Label* life;
+
+	Image* sword_img;		Image* armor_img;
+	//Image* arrow_img;
+
+	//BUILDINGINFO
+
+	Building* selected_building;
+	//Image* single;
+	//Label* name;
+	//Label* life;
+	uint attack, defense, max_life, curr_life;
+	// BUTTONS POSITIONS
+	vector<SDL_Rect> buttons_positions;
+
+public:
+	bool IsEnabled();
+	void GetSelection();
+	void StartBuildingInfo();
+
+	void Update();
+
+	void ClearMultiple();
+	void ClearSingle();
+	void ClearBuilding();
+	void CleanUp();
+private:
+	//
+	// HUD MANAGING FUNCTIONS
+
+	enum HUDBuildingState {
+		BUILDINGMENU,
+		BUILDINGCREATEUNITS
+	};
+	HUDBuildingState building_state;
+
+	// ----- MENU -----
+	Button* create_unit_bt;
+	void HUDBuildingMenu();
+	void HUDClearBuildingMenu();
+
+	// ----- CREATE UNITS ------
+	Button* create_elven_archer_bt, *create_elven_longblade_bt, *cancel_bt;
+	void HUDCreateUnits();
+	void HUDClearCreateUnits();
+};
+
+
 // ---------------------------------------------------
 
 class Gui : public Module
@@ -263,31 +365,64 @@ public:
 	bool Save(pugi::xml_node&) const;
 	bool Load(pugi::xml_node&);
 
+	bool	LoadHUDData();
+
 	UIElement* CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier Tier);
 	// Blit_Sections contains de rects from the image. Tier 1 must have 3 and Tier 2 must have 2;
 	UIElement* CreateImage(char* path, int x, int y, SDL_Rect section);
 	UIElement* CreateImage(char* path, int x, int y);
 	UIElement* CreateLabel(char* text, int x, int y, _TTF_Font* font);
+	UIElement* CreateLabel(string text, int x, int y, _TTF_Font* font);
 	UIElement* CreateLabel(char* text, SDL_Rect area, _TTF_Font* font);
 	UIElement* CreateInput(int x, int y, SDL_Rect detect_section, _TTF_Font* font);
 	UIElement* CreateScrollBar(int x, int y, ScrollBarModel model);
 	UIElement* CreateQuad(SDL_Rect size, SDL_Color color);
 	UIElement* CreateCursor(char* path, vector<SDL_Rect> cursor_list);
+	void DestroyUIElement(UIElement* element);
+	void DestroyALLUIElements();
+
 	SDL_Texture* GetAtlas() const;
-	void ScreenMoves(pair<int,int> movement);
+	void ScreenMoves(pair<int, int> movement);
 	void	SetPriority();
 	void	Focus(SDL_Rect rect);
 	void	Unfocus();
 
-private:
+
+
 	SDL_Texture* atlas = nullptr;
 	string atlas_file_name;
 	list<UIElement*> Elements;
 
+	// ----- UNIT CLASS ----- //
+	// -------------------- //
 public:
 	Cursor* cursor = nullptr;
+	list<UnitSprite> SpriteUnits;
+	list<UnitSprite> SpriteBuildings;
+	HUD* hud;
 };
 
 
+class UnitSprite {
+	SDL_Rect rectangle;
+	uint ID;
+	EntityType type;
+	string name;
+public:
+	UnitSprite(EntityType argtype, SDL_Rect argrectangle, uint argID, string argname) : type(argtype), rectangle(argrectangle), ID(argID), name(argname) {
+	}
+	SDL_Rect GetRect() {
+		return rectangle;
+	}
+	uint GetID() {
+		return ID;
+	}
+	EntityType GetType() {
+		return type;
+	}
+	string GetName() {
+		return name;
+	}
+};
 
 #endif // __j1GUI_H__

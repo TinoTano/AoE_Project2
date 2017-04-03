@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<HUDData>
+	<Sprites>
+		<Proportions width ="33" height="32"/>
+	</Sprites>
+
+	<Units>
+		<Unit>
+        <Name value = "ELVEN LONGBLADE"/>
+        <ID value = "0"/>
+	<Position x="33" y ="0"/>
+		</Unit>
+		<Unit>
+        <Name value = "DWARVEN MAULER"/>
+        <ID value = "1"/>
+		</Unit>
+		<Unit>
+        <Name value = "GONDOR SPEARMAN"/>
+        <ID value = "2"/>
+		</Unit>
+		<Unit>
+        <Name value = "ELVEN ARCHER"/>
+        <ID value = "3"/>
+	<Position x = "0" y = "0"/>
+		</Unit>
+		<Unit>
+        <Name value = "DUNEDAIN RANGE"/>
+        <ID value = "4"/>
+		</Unit>
+		<Unit>
+        <Name value = "ELVEN CAVALRYE"/>
+        <ID value = "5"/>
+	<Position x = "66" y = "0"/>
+		</Unit>
+		<Unit>
+        <Name value = "GONDOR KNIGHT"/>
+        <ID value = "6"/>
+	<Position x = "99" y = "0"/>
+		</Unit>
+		<Unit>
+        <Name value = "ROHAN KNIGHT"/>
+        <ID value = "7"/>
+	<Position x = "132" y = "0"/>
+		</Unit>
+		<Unit>
+        <Name value = "MOUNTED DUNEDAIN"/>
+        <ID value = "4"/>
+	<Position x = "165" y = "0"/>
+		</Unit>
+		<Unit>
+        <Name value = "SIEGE TOWER"/>
+        <ID value = "9"/>
+		</Unit>
+		<Unit>
+        <Name value = "LIGHT_CATAPULT"/>
+        <ID value = "10"/>
+		</Unit>
+		<Unit>
+        <Name value = "ORC SOLDIER"/>
+        <ID value = "12"/>
+		</Unit>
+		<Unit>
+        <Name value = "URUK HAI SOLDIER"/>
+        <ID value = "13"/>
+		</Unit>
+		<Unit>
+        <Name value = "ORC ARCHER"/>
+        <ID value = "14"/>
+		</Unit>
+		<Unit>
+        <Name value = "VENOMOUS SPIDER"/>
+        <ID value = "15"/>
+		</Unit>
+		<Unit>
+        <Name value = "HARADRIM OLIFANT"/>
+        <ID value = "16"/>
+		</Unit>
+		<Unit>
+        <Name value = "NAZGUL"/>
+        <ID value = "17"/>
+		</Unit>
+		<Unit>
+        <Name value = "TROLL MAULER"/>
+        <ID value = "18"/>
+		</Unit>
+	</Units>
+
+	<Buildings>
+		<Building>
+        <Name value = "TOWN_CENTER"/>
+        <ID value = "0"/>
+	<Position x = "0" y = "0"/>
+		</Building>
+		<Building>
+        <Name value = "HOUSE"/>
+        <ID value = "1"/>
+	<Position x = "33" y = "0"/>
+		</Building>
+		<Building>
+        <Name value = "ORC_BARRACKS"/>
+        <ID value = "2"/>
+	<Position x="99" y="0"/>
+		</Building>
+		<Building>
+        <Name value = "ARCHERY_RANGE"/>
+        <ID value = "3"/>
+		</Building>
+		<Building>
+        <Name value = "STABLES"/>
+        <ID value = "4"/>
+		</Building>
+		<Building>
+        <Name value = "SIEGE_WORKSHOP"/>
+        <ID value = "5"/>
+		</Building>
+		<Building>
+        <Name value = "MARKET"/>
+        <ID value = "6"/>
+		</Building>
+		<Building>
+        <Name value = "BLACKSMITH"/>
+        <ID value = "7"/>
+		</Building>
+		<Building>
+        <Name value = "MILL"/>
+        <ID value = "8"/>
+		</Building>
+		<Building>
+        <Name value = "WALL"/>
+        <ID value = "9"/>
+		</Building>
+		<Building>
+        <Name value = "GATE"/>
+        <ID value = "10"/>
+		</Building>
+		<Building>
+        <Name value = "OUTPOST"/>
+        <ID value = "11"/>
+		</Building>
+		<Building>
+        <Name value = "MONASTERY"/>
+        <ID value = "12"/>
+		</Building>
+		<Building>
+        <Name value = "CASTLE"/>
+        <ID value = "13"/>
+		</Building>
+	</Buildings>
+</HUDData>

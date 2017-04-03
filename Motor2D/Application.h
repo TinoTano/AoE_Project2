@@ -14,16 +14,15 @@ class Render;
 class Textures;
 class Audio;
 class FileSystem;
-class Scene;
-class SceneTest;
+class SceneManager;
 class Map;
 class PathFinding;
 class Fonts;
 class EntityManager;
 class Collision;
 class Gui;
-class FogOfWar;
-class Console;
+//class FogOfWar;
+//class Console;
 
 class Application
 {
@@ -62,6 +61,7 @@ public:
 	void GetSaveGames(list<string>& list_to_fill) const;
 
 	pugi::xml_node LoadGameDataFile(pugi::xml_document&) const;
+	pugi::xml_node LoadHUDDataFile(pugi::xml_document&) const;
 
 private:
 
@@ -95,7 +95,7 @@ public:
 	Render*				render = NULL;
 	Textures*			tex = NULL;
 	Audio*				audio = NULL;
-	Scene*				scene = NULL;
+	SceneManager*		sceneManager = NULL;
 	FileSystem*			fs = NULL;
 	Map*				map = NULL;
 	PathFinding*		pathfinding = NULL;
@@ -103,9 +103,8 @@ public:
 	EntityManager*		entityManager = NULL;
 	Collision*			collision = NULL;
 	Gui*				gui = NULL;
-	SceneTest*			scenetest = NULL;
-	FogOfWar*			fog = NULL;
-	Console*			console = NULL;
+	//FogOfWar*			fog = NULL;
+	//Console*			console = NULL;
 	bool				quit = false;
 
 private:

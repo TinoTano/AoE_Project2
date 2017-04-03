@@ -1,68 +1,40 @@
-﻿  pugixml.cpp
-  Window.cpp
-  Unit.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(53): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(53): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(141): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(204): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(205): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(218): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(219): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(222): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\unit.cpp(223): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-  Textures.cpp
-  Render.cpp
-  Timer.cpp
-  SceneTest.cpp
-  Scene.cpp
-  Resource.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\resource.cpp(20): warning C4018: '<': signed/unsigned mismatch
-  PerfTimer.cpp
-  Pathfinding.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\pathfinding.cpp(154): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
-  c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-  p2Log.cpp
-  Map.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\map.cpp(105): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\map.cpp(106): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Input.cpp
-  Audio.cpp
-  Application.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\application.cpp(246): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\application.cpp(242): warning C4477: 'sprintf_s' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 6 has type 'uint64'
-  c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\application.cpp(242): note: consider using '%llu' in the format string
-  c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\application.cpp(242): note: consider using '%I64u' in the format string
-  Main.cpp
-  Gui.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\gui.cpp(152): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\gui.cpp(429): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\gui.cpp(439): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\gui.cpp(460): warning C4018: '<': signed/unsigned mismatch
-  Fonts.cpp
-  FogOfWar.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\fogofwar.cpp(119): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\fogofwar.cpp(120): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-  Generating Code...
-  Compiling...
-  FileSystem.cpp
-  EntityManager.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\entitymanager.cpp(126): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\entitymanager.cpp(156): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-  Entity.cpp
-  Console.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\console.cpp(31): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\console.cpp(37): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\console.cpp(49): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\console.cpp(50): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-  Collision.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\collision.cpp(122): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-  Building.cpp
-c:\users\josephg2\desktop\aoe_project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\motor2d\building.cpp(42): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-  Generating Code...
-     Creating library C:\Users\josephg2\Desktop\AoE_Project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\Debug\AgeOfTheRing.lib and object C:\Users\josephg2\Desktop\AoE_Project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\Debug\AgeOfTheRing.exp
-physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
-  Motor2D.vcxproj -> C:\Users\josephg2\Desktop\AoE_Project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\josephg2\Desktop\AoE_Project2-cda5ad282b5c18eb0016bc42000ca0acb1afb19b\Debug\AgeOfTheRing.pdb (Full PDB)
+﻿Build started 03/04/2017 15:23:31.
+     1>Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\VisualStudio2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _ITERATOR_DEBUG_LEVEL=0 /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Scene.cpp
+         Scene.cpp
+       Link:
+         D:\VisualStudio2015\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib" /MACHINE:X86 Debug\Building.obj
+         Debug\Collision.obj
+         Debug\Console.obj
+         Debug\Entity.obj
+         Debug\EntityManager.obj
+         Debug\FileSystem.obj
+         Debug\FogOfWar.obj
+         Debug\Fonts.obj
+         Debug\Gui.obj
+         Debug\HUD.obj
+         Debug\Main.obj
+         Debug\Application.obj
+         Debug\Audio.obj
+         Debug\Input.obj
+         Debug\Map.obj
+         Debug\MenuScene.obj
+         Debug\p2Log.obj
+         Debug\Pathfinding.obj
+         Debug\PerfTimer.obj
+         Debug\Resource.obj
+         Debug\Scene.obj
+         Debug\SceneManager.obj
+         Debug\Timer.obj
+         Debug\Render.obj
+         Debug\Textures.obj
+         Debug\Unit.obj
+         Debug\Window.obj
+         Debug\pugixml.obj
+         Motor2D.vcxproj -> C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
+     1>Done Building Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.47

@@ -6,7 +6,7 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Audio.h"
-#include "Scene.h"
+#include "SceneManager.h"
 #include "FileSystem.h"
 #include "Map.h"
 #include "Pathfinding.h"
@@ -16,9 +16,8 @@
 #include "EntityManager.h"
 #include "Collision.h"
 #include "Gui.h"
-#include "SceneTest.h"
-#include "FogOfWar.h"
-#include "Console.h"
+//#include "FogOfWar.h"
+//#include "Console.h"
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -30,7 +29,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	render = new Render();
 	tex = new Textures();
 	audio = new Audio();
-	scene = new Scene();
+	sceneManager = new SceneManager();
 	fs = new FileSystem();
 	map = new Map();
 	pathfinding = new PathFinding();
@@ -38,9 +37,8 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	entityManager = new EntityManager();
 	collision = new Collision();
 	gui = new Gui();
-	scenetest = new SceneTest();
-	fog = new FogOfWar();
-	console = new Console();
+	//fog = new FogOfWar();
+	//console = new Console();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -53,11 +51,10 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(pathfinding);
 	AddModule(font);
 	AddModule(gui);
-	AddModule(console);
+//	AddModule(console);
 
 	// scene last
-	AddModule(scene);
-	AddModule(scenetest);
+	AddModule(sceneManager);
 
 
 	AddModule(entityManager);
@@ -201,6 +198,23 @@ pugi::xml_node Application::LoadGameDataFile(pugi::xml_document & gameDatafile) 
 		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
 	else
 		ret = gameDatafile.child("GameData");
+
+	return ret;
+}
+
+pugi::xml_node Application::LoadHUDDataFile(pugi::xml_document &HUDDatafile) const
+{
+	pugi::xml_node ret;
+
+	char* buf = NULL;
+	int size = App->fs->Load("HUDData.xml", &buf);
+	pugi::xml_parse_result result = HUDDatafile.load_buffer(buf, size);
+	RELEASE(buf);
+
+	if (result == NULL)
+		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
+	else
+		ret = HUDDatafile.child("HUDData");
 
 	return ret;
 }
