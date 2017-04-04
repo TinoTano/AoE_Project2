@@ -134,18 +134,13 @@ bool Scene::Start()
 
 
 	//Test
-	/*App->entityManager->CreateUnit(400, 250, false, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(370, 300, false, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(350, 400, false, ELVEN_ARCHER);
-	App->entityManager->CreateUnit(370, 500, false, ELVEN_ARCHER);*/
 
-	App->entityManager->CreateUnit(550, 2100, true, DWARVEN_MAULER);
-	App->entityManager->CreateUnit(880, 2100, true, DWARVEN_MAULER);
-	App->entityManager->CreateUnit(680, 2100, true, DWARVEN_MAULER);
 	App->entityManager->CreateUnit(400, 1900, false, VILLAGER);
+	UpdateVillagers(1, 1);
 
 	troll = App->entityManager->CreateUnit(450, 2150, false, ELVEN_CAVALRY);
+	//troll = App->entityManager->CreateUnit(550, 2100, true, TROLL_MAULER);
+
 	troll->isHero = true;
 
 	my_townCenter = App->entityManager->CreateBuilding(580, 1600, false, TOWN_CENTER);
@@ -154,6 +149,7 @@ bool Scene::Start()
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 
 	timer.Start();
+	troll_timer.Start();
 
 	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", 665, 40, nullptr);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
@@ -238,28 +234,30 @@ bool Scene::CleanUp()
 
 void Scene::TimeEvents() {
 
-	int x = (int)enemy_timer.ReadSec();
-
-	if ((int)timer.ReadSec() > 150) {
+	if ((int)timer.ReadSec() > 140) {
 		Timer_lbl->SetColor({ 255, 0,0,255 });
 	}
 
 	if ((int)timer.ReadSec() == 140) {
-		enemy_timer.Start();
+		orc_timer.Start();
 		wave = 2;
 	}
 	else if ((int)timer.ReadSec() < 140) {
-		enemy_timer.Start();
+		orc_timer.Start();
 	}
-	if ((int)enemy_timer.ReadSec() == 40)
+	if ((int)troll_timer.ReadSec() == 300) {
+		App->entityManager->CreateUnit(2400, 2100, true, TROLL_MAULER);
+		troll_timer.Start();
+	}
+	if ((int)orc_timer.ReadSec() == 40)
 	{
-		enemies_to_spawn = wave;
+		orcs_to_spawn = wave;
 		wave++;
-		enemy_timer.Start();
+		orc_timer.Start();
 	}
-	if ((int)enemies_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
-		App->entityManager->CreateUnit(-350, 500, true, DWARVEN_MAULER);
-		enemies_to_spawn--;
+	if ((int)orcs_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
+		App->entityManager->CreateUnit(2400, 2100, true, ORC_SOLDIER);
+		orcs_to_spawn--;
 		spawn_timer.Start();
 	}
 }

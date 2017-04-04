@@ -56,19 +56,6 @@ enum ScrollBarModel {
 	//WHich we use for command window
 };
 
-enum HUDType {
-	MULTIPLESELECTION,
-	SINGLEINFO,
-	BUILDINGINFO,
-	NONE
-};
-
-enum EntityType {
-	UNIT,
-	BUILDING,
-	RESOURCE
-};
-
 class UnitSprite;
 
 class UIElement {
@@ -267,18 +254,32 @@ public:
 
 };
 
+
+
+enum EntityType {
+	UNIT,
+	BUILDING,
+	RESOURCE
+};
+
 class HUD {
-private:
-	bool enabled = true;
 public:
+
+	enum HUDType {
+		MULTIPLESELECTION,
+		SINGLEINFO,
+		BUILDINGINFO,
+		RESOURCEINFO,
+		NONE
+	};
+
 	HUDType		type = NONE;
 	HUD();
-
 
 	// MULTIPLESELECTION
 private:
 	list<Image*> multiple;
-	int max_width;
+	int max_width = 700;;
 
 	//SINGLEINFO
 private:
@@ -293,20 +294,20 @@ private:
 	//Image* arrow_img;
 
 	//BUILDINGINFO
-
 	Building* selected_building;
-	//Image* single;
-	//Label* name;
-	//Label* life;
 	uint attack, defense, max_life, curr_life;
+
+	// RESOURCEINFO
+	Resource* selected_resource;
+	uint gathering;
+
 	// BUTTONS POSITIONS
 	vector<SDL_Rect> buttons_positions;
-
 public:
 	bool IsEnabled();
 	void GetSelection();
 	void StartBuildingInfo();
-
+	void StartResourceInfo();
 	void Update();
 
 	void ClearMultiple();
@@ -316,6 +317,13 @@ public:
 private:
 	//
 	// HUD MANAGING FUNCTIONS
+	// ----------------------
+	//        RESOURCE
+	//-----------------------
+	void HUDResourceMenu();
+	// -----------------------
+	//        BUILDING
+	// -----------------------
 
 	enum HUDBuildingState {
 		BUILDINGMENU,
@@ -401,6 +409,7 @@ public:
 	Cursor* cursor = nullptr;
 	list<UnitSprite> SpriteUnits;
 	list<UnitSprite> SpriteBuildings;
+	list<UnitSprite> SpriteResources;
 	HUD* hud;
 };
 
