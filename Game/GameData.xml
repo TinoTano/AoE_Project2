@@ -1484,6 +1484,13 @@
       <Stats>
         <Life value ="350"/>
       </Stats>
+      <Rects>
+          <Rect x="0" y="0" w="255" h="128"/>
+          <Rect x="255" y="0" w="255" h="128"/>
+          <Rect x="610" y="0" w="255" h="128"/>
+          <Rect x="865" y="0" w="255" h="128"/>
+          <Rect x="1120" y="0" w="255" h="128"/>
+      </Rects>
     </Resource>
     
   </Resources>

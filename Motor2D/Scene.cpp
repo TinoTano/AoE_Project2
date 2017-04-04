@@ -155,6 +155,8 @@ bool Scene::Start()
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
 	Timer_lbl->SetSize(26);
 
+	App->map->LoadResources(App->map->map_file.child("map"));
+
 	return true;
 }
 

@@ -124,6 +124,7 @@ public:
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
 	bool CreateWalkabilityMap(int& width, int& height, uchar** buffer) const;
+	bool LoadResources(pugi::xml_node& node);
 
 private:
 
@@ -132,17 +133,17 @@ private:
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
-	bool LoadResources(pugi::xml_node& node);
+	
 
 	TileSet* GetTilesetFromTileId(int id) const;
 
 public:
 
 	MapData data;
+	pugi::xml_document	map_file;
 
 private:
 
-	pugi::xml_document	map_file;
 	string				folder;
 	bool				map_loaded;
 	SDL_Surface*		fogSurface;

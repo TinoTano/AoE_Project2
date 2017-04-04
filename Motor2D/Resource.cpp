@@ -12,7 +12,7 @@ Resource::Resource(int posX, int posY, Resource* resource, int resourceRectIndex
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
-	this->type = type;
+	this->type = resource->type;
 
 	resourceLife = resource->resourceLife;
 	resourceIdleTexture = resource->resourceIdleTexture;

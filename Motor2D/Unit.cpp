@@ -359,7 +359,11 @@ void Unit::AttackEnemyUnit(float dt)
 
 	if (currentAnim->Finished()) {
 		attackUnitTarget->unitLife -= unitAttack - attackUnitTarget->unitDefense;
-		if (attackUnitTarget->unitLife <= 0) {
+
+		if (attackUnitTarget->unitLife < 0)
+			attackUnitTarget->unitLife = 0;
+
+		if (attackUnitTarget->unitLife == 0) {
 			attackUnitTarget->Dead();
 			if (unitLife > 0) {
 				SetState(UNIT_IDLE);
@@ -374,7 +378,12 @@ void Unit::AttackEnemyBuilding(float dt)
 	LookAt();
 	if (currentAnim->Finished()) {
 		attackBuildingTarget->buildingLife -= unitAttack - attackBuildingTarget->buildingDefense;
-		if (attackBuildingTarget->buildingLife <= 0) {
+
+
+		if (attackBuildingTarget->buildingLife < 0)
+			attackBuildingTarget->buildingLife = 0;
+
+		if (attackBuildingTarget->buildingLife == 0) {
 			attackBuildingTarget->Dead();
 			if (unitLife > 0) {
 				SetState(UNIT_IDLE);
