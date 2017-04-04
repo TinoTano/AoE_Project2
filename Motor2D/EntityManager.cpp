@@ -95,16 +95,17 @@ bool EntityManager::Update(float dt)
 		// Allies
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
 		{
-			Unit* clickedUnit = nullptr;
-			Building* clickedBuilding = nullptr;
-			Resource* clickedResource = nullptr;
 			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
 			{
+				(*it)->attackBuildingTarget = nullptr;
+				(*it)->attackUnitTarget = nullptr;
+				(*it)->resourceTarget = nullptr;
 				iPoint target;
 				App->input->GetMousePosition(target.x, target.y);
 				for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++)
 				{
 					if ((*it)->isVisible) {
+						LOG("Mouse x = %d, Mouse y = %d ; %d, %d, %d, %d", mouseX, mouseY, (*it2)->entityPosition.x + ((*it2)->collider->rect.w / 2), (*it2)->entityPosition.x - ((*it2)->collider->rect.w / 2), (*it2)->entityPosition.y + ((*it2)->collider->rect.h / 2), (*it2)->entityPosition.y - ((*it2)->collider->rect.h / 2));
 						if (mouseX < (*it2)->entityPosition.x + ((*it2)->collider->rect.w / 2) && mouseX >(*it2)->entityPosition.x - ((*it2)->collider->rect.w / 2) &&
 							mouseY < (*it2)->entityPosition.y + ((*it2)->collider->rect.h / 2) && mouseY >(*it2)->entityPosition.y - ((*it2)->collider->rect.h / 2))
 						{
@@ -116,7 +117,7 @@ bool EntityManager::Update(float dt)
 				if (clickedUnit != nullptr)
 				{
 					(*it)->attackUnitTarget = clickedUnit;
-					(*it)->state = UNIT_ATTACKING;
+					clickedUnit = nullptr;
 				}
 				else {
 					for (list<Building*>::iterator it3 = enemyBuildingList.begin(); it3 != enemyBuildingList.end(); it3++)
@@ -132,7 +133,7 @@ bool EntityManager::Update(float dt)
 					}
 					if (clickedBuilding != nullptr) {
 						(*it)->attackBuildingTarget = clickedBuilding;
-						(*it)->state = UNIT_ATTACKING;
+						clickedBuilding = nullptr;
 					}
 					else {
 						for (list<Resource*>::iterator it4 = resourceList.begin(); it4 != resourceList.end(); it4++)
@@ -149,7 +150,7 @@ bool EntityManager::Update(float dt)
 						if (clickedResource != nullptr)
 						{
 							(*it)->resourceTarget = clickedResource;
-							(*it)->state = UNIT_ATTACKING;
+							clickedResource = nullptr;
 						}
 					}
 				}
@@ -231,6 +232,7 @@ bool EntityManager::Update(float dt)
 				multiSelectionRect = { 0,0,0,0 };
 			}
 			else {
+				bool selectedUnit = false;
 				for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 					if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
 						mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
@@ -249,6 +251,7 @@ bool EntityManager::Update(float dt)
 						}
 						timesClicked++;
 						doubleClickTimer = 0;
+						selectedUnit = true;
 						break;
 					}
 					else {
@@ -258,24 +261,26 @@ bool EntityManager::Update(float dt)
 						}
 					}
 				}
-				for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-					if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
-						mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
-						(*it)->isSelected = true;
-						for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
-							if (*it != *it2) {
-								if ((*it2)->isSelected) {
-									(*it2)->isSelected = false;
-									selectedUnitList.remove(*it2);
+				if (!selectedUnit) {
+					for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+						if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
+							mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+							(*it)->isSelected = true;
+							for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
+								if (*it != *it2) {
+									if ((*it2)->isSelected) {
+										(*it2)->isSelected = false;
+										selectedUnitList.remove(*it2);
+									}
 								}
 							}
+							break;
 						}
-						break;
-					}
-					else {
-						if ((*it)->isSelected) {
-							(*it)->isSelected = false;
-							selectedUnitList.remove(*it);
+						else {
+							if ((*it)->isSelected) {
+								(*it)->isSelected = false;
+								selectedUnitList.remove(*it);
+							}
 						}
 					}
 				}

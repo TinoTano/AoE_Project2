@@ -107,16 +107,16 @@ bool Scene::Start()
 	ui_menu.SetFocus(menu_bg_img->pos.first, menu_bg_img->pos.second, 280, 280);
 
 	// RESOURCE LABELS
-	wood = (Label*)App->gui->CreateLabel("0", 50, 5, nullptr);
+	wood = (Label*)App->gui->CreateLabel(to_string(woodCount), 50, 5, nullptr);
 	wood->SetColor({ 255, 255, 255 ,255 });
 	//*food, *gold, *stone, *villagers
-	food = (Label*)App->gui->CreateLabel("0", 150, 5, nullptr);
+	food = (Label*)App->gui->CreateLabel(to_string(foodCount), 150, 5, nullptr);
 	food->SetColor({ 255, 255, 255 ,255 });
 
-	gold = (Label*)App->gui->CreateLabel("0", 280, 5, nullptr);
+	gold = (Label*)App->gui->CreateLabel(to_string(goldCount), 280, 5, nullptr);
 	gold->SetColor({ 255, 255, 255 ,255 });
 
-	stone = (Label*)App->gui->CreateLabel("0", 360, 5, nullptr);
+	stone = (Label*)App->gui->CreateLabel(to_string(stoneCount), 360, 5, nullptr);
 	stone->SetColor({ 255, 255, 255 ,255 });
 
 	villagers = (Label*)App->gui->CreateLabel("0/0", 480, 5, nullptr);
@@ -145,8 +145,8 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(680, 2100, true, DWARVEN_MAULER);
 	App->entityManager->CreateUnit(400, 1900, false, VILLAGER);
 
-	troll = App->entityManager->CreateUnit(50, 1450, false, ELVEN_CAVALRY);
-	troll->isHero = true;
+	troll = App->entityManager->CreateUnit(450, 2150, false, ELVEN_CAVALRY);
+	//troll->isHero = true;
 
 	my_townCenter = App->entityManager->CreateBuilding(580, 1600, false, TOWN_CENTER);
 	//enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);

@@ -69,6 +69,10 @@ private:
 
 	int mouseX;
 	int mouseY;
+
+	Unit* clickedUnit = nullptr;
+	Building* clickedBuilding = nullptr;
+	Resource* clickedResource = nullptr;
 	
 public:
 	int nextID;

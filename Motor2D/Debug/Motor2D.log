@@ -1,17 +1,17 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (AoE_Project2.vcxproj, Development - Class 11 Handout.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Unit.cpp
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(55): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(55): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(252): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(314): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(315): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(328): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(329): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(332): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(333): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(56): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(56): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(244): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(305): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(306): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(319): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(320): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(323): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(324): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(74): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+  c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(75): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
   c:\users\admin\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
 c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
   Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe

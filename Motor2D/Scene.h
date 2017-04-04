@@ -60,9 +60,6 @@ private:
 	vector<SDL_Rect> blit_sections;		 vector<SDL_Rect> detect_sections;
 	vector<SDL_Rect> blit_sections_menu; vector<SDL_Rect> detect_sections_menu;
 
-	// RESOURCES 
-	Label* wood, *food, *gold, *stone, *villagers;
-
 public:
 	void UpdateResources(Label* resource, uint new_val);
 	void UpdateVillagers(uint available_villagers, uint total_villagers);
@@ -82,6 +79,12 @@ public:
 	Building* my_townCenter;
 	Building* enemy_townCenter;
 	Unit* troll;
+	int woodCount = 0;
+	int foodCount = 0;
+	int goldCount = 0;
+	int stoneCount = 0;
+	// RESOURCES 
+	Label* wood, *food, *gold, *stone, *villagers;
 };
 
 #endif // __SCENE_H__

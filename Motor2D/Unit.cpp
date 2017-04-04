@@ -12,6 +12,7 @@
 #include "p2Defs.h"
 #include "Scene.h"
 #include "Gui.h"
+#include "SceneManager.h"
 
 Unit::Unit()
 {
@@ -71,9 +72,9 @@ bool Unit::Update(float dt)
 {
 	switch (state) {
 	case UNIT_MOVING:
-		if (attackUnitTarget != nullptr && entityPosition.DistanceTo(attackUnitTarget->entityPosition) < 5 ||
+		if (attackUnitTarget != nullptr && entityPosition.DistanceTo(attackUnitTarget->entityPosition) < 100 ||
 			attackBuildingTarget != nullptr && entityPosition.DistanceTo(attackBuildingTarget->entityPosition) < 150 ||
-			resourceTarget != nullptr && entityPosition.DistanceTo(resourceTarget->entityPosition) < 5) {
+			resourceTarget != nullptr && entityPosition.DistanceTo(resourceTarget->entityPosition) < 30) {
 			SetState(UNIT_ATTACKING);
 		}
 		else {
@@ -90,15 +91,6 @@ bool Unit::Update(float dt)
 		else if (resourceTarget != nullptr) {
 			GatherResource(dt);
 		}
-			//else {
-			//	iPoint newPos = App->map->WorldToMap(resourceTarget->entityPosition.x, resourceTarget->entityPosition.y);
-			//	SetDestination(newPos);
-			//}
-			//if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
-			//	int x, y;
-			//	App->input->GetMousePosition(x, y);
-			//	resourceTarget->entityPosition = { x,y };
-			//}
 		break;
 	case UNIT_DEAD:
 		if (currentAnim->Finished()) {
@@ -271,9 +263,9 @@ void Unit::SetDestination(iPoint destination)
 		}
 		path.erase(path.begin());
 	}
-	if (attackUnitTarget != nullptr) {
-		attackUnitTarget = nullptr;
-	}
+	//if (attackUnitTarget != nullptr) {
+	//	attackUnitTarget = nullptr;
+	//}
 }
 
 void Unit::Move(float dt)
@@ -396,7 +388,19 @@ void Unit::GatherResource(float dt)
 {
 	LookAt();
 	if (currentAnim->Finished()) {
+		int decreaseLife = resourceTarget->resourceLife;
 		resourceTarget->resourceLife -= unitAttack;
+		if (resourceTarget->resourceLife > 0) decreaseLife -= resourceTarget->resourceLife;
+		switch (resourceTarget->type) {
+		case BLACK_TREE:
+			App->sceneManager->level1_scene->woodCount += decreaseLife;
+			App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+			break;
+		case GREEN_TREE:
+			App->sceneManager->level1_scene->woodCount += decreaseLife;
+			App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+			break;
+		}
 		if (resourceTarget->resourceLife <= 0) {
 			resourceTarget->Dead();
 			SetState(UNIT_IDLE);
