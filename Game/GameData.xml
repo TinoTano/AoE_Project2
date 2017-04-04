@@ -1098,31 +1098,31 @@
 			</Stats>
 			<Animations>
 				<Idle>
-					<Rows value="8"/>
+					<Rows value="5"/>
 					<Columns value="15"/>
 					<Width value="42"/>
-					<Height value="40"/>
+					<Height value="51"/>
 					<Speed value="0.2f"/>
 				</Idle>
 				<Move>
-					<Rows value="8"/>
+					<Rows value="5"/>
 					<Columns value="15"/>
 					<Width value="42"/>
-					<Height value="40"/> 
+					<Height value="51"/> 
 					<Speed value="0.2f"/>
 				</Move>
 				<Attack>
-					<Rows value="8"/>
+					<Rows value="5"/>
 					<Columns value="15"/>
 					<Width value="42"/>
-					<Height value="40"/>
+					<Height value="51"/>
 					<Speed value="0.2f"/>
 				</Attack>
 				<Die>
-					<Rows value="8"/>
+					<Rows value="5"/>
 					<Columns value="15"/>
 					<Width value="42"/>
-					<Height value="40"/>
+					<Height value="51"/>
 					<Speed value="0.2f"/>
 				</Die>
 			</Animations>

@@ -77,7 +77,7 @@ private:
 public:
 	int nextID;
 	list<Unit*> selectedUnitList;
-	list<Building*> selectedBuildingtList;
+	list<Building*> selectedBuildingList;
 	Resource* selectedResource = nullptr;
 	list<Unit*> friendlyUnitList;
 	list<Unit*> enemyUnitList;

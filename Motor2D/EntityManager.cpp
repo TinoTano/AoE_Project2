@@ -136,21 +136,23 @@ bool EntityManager::Update(float dt)
 						clickedBuilding = nullptr;
 					}
 					else {
-						for (list<Resource*>::iterator it4 = resourceList.begin(); it4 != resourceList.end(); it4++)
-						{
-							if ((*it)->isVisible) {
-								if (mouseX < (*it4)->entityPosition.x + (90 / 2) && mouseX >(*it4)->entityPosition.x - (90 / 2) &&
-									mouseY < (*it4)->entityPosition.y + (150 / 2) && mouseY >(*it4)->entityPosition.y - (150 / 2))
-								{
-									clickedResource = *it4;
-									break;
+						if ((*it)->type == VILLAGER) {
+							for (list<Resource*>::iterator it4 = resourceList.begin(); it4 != resourceList.end(); it4++)
+							{
+								if ((*it)->isVisible) {
+									if (mouseX < (*it4)->entityPosition.x + (90 / 2) && mouseX >(*it4)->entityPosition.x - (90 / 2) &&
+										mouseY < (*it4)->entityPosition.y + (150 / 2) && mouseY >(*it4)->entityPosition.y - (150 / 2))
+									{
+										clickedResource = *it4;
+										break;
+									}
 								}
 							}
-						}
-						if (clickedResource != nullptr)
-						{
-							(*it)->resourceTarget = clickedResource;
-							clickedResource = nullptr;
+							if (clickedResource != nullptr)
+							{
+								(*it)->resourceTarget = clickedResource;
+								clickedResource = nullptr;
+							}
 						}
 					}
 				}
@@ -241,12 +243,10 @@ bool EntityManager::Update(float dt)
 							selectedUnitList.push_back(*it);
 							timesClicked = 0;
 						}
-						for (list<Unit*>::iterator it2 = friendlyUnitList.begin(); it2 != friendlyUnitList.end(); it2++) {
+						for (list<Unit*>::iterator it2 = selectedUnitList.begin(); it2 != selectedUnitList.end(); it2++) {
 							if (*it != *it2) {
-								if ((*it2)->isSelected) {
-									(*it2)->isSelected = false;
-									selectedUnitList.remove(*it2);
-								}
+								(*it2)->isSelected = false;
+								selectedUnitList.remove(*it2);
 							}
 						}
 						timesClicked++;
@@ -262,10 +262,14 @@ bool EntityManager::Update(float dt)
 					}
 				}
 				if (!selectedUnit) {
+					bool selectedEnemyUnit = false;
 					for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 						if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
 							mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+							selectedUnitList.clear();
 							(*it)->isSelected = true;
+							selectedUnitList.push_back(*it);
+							selectedEnemyUnit = true;
 							for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++) {
 								if (*it != *it2) {
 									if ((*it2)->isSelected) {
@@ -280,6 +284,30 @@ bool EntityManager::Update(float dt)
 							if ((*it)->isSelected) {
 								(*it)->isSelected = false;
 								selectedUnitList.remove(*it);
+							}
+						}
+					}
+					if (!selectedEnemyUnit) {
+						bool selectedBuilding = false;
+						for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
+							if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
+								mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+								(*it)->isSelected = true;
+								selectedBuildingList.push_back(*it);
+								selectedBuilding = true;
+								break;
+							}
+						}
+						if (!selectedBuilding) {
+							bool selectedEnemyBuilding = false;
+							for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
+								if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
+									mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+									(*it)->isSelected = true;
+									selectedBuildingList.push_back(*it);
+									selectedBuilding = true;
+									break;
+								}
 							}
 						}
 					}

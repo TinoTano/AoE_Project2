@@ -146,7 +146,7 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(400, 1900, false, VILLAGER);
 
 	troll = App->entityManager->CreateUnit(450, 2150, false, ELVEN_CAVALRY);
-	//troll->isHero = true;
+	troll->isHero = true;
 
 	my_townCenter = App->entityManager->CreateBuilding(580, 1600, false, TOWN_CENTER);
 	//enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);

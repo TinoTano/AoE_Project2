@@ -55,6 +55,7 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 
 Building::~Building()
 {
+
 }
 
 bool Building::Update(float dt)
@@ -87,13 +88,13 @@ bool Building::Update(float dt)
 				y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
 				if (isVisible) {
 					isSelected = true;
-					App->entityManager->selectedBuildingtList.push_back(this);
+					App->entityManager->selectedBuildingList.push_back(this);
 				}
 			}
 			else {
 				if (isSelected) {
 					isSelected = false;
-					App->entityManager->selectedBuildingtList.remove(this);
+					App->entityManager->selectedBuildingList.remove(this);
 				}
 			}
 		}

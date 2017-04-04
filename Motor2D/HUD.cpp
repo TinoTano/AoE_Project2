@@ -44,7 +44,7 @@ void HUD::Update() {
 
 	char armor[65], damage[65], currlife[65], maxlife[65];
 
-	if (App->entityManager->selectedBuildingtList.size() == 1)
+	if (App->entityManager->selectedBuildingList.size() == 1)
 	{
 		App->entityManager->selectedUnitList.clear();
 
@@ -56,8 +56,8 @@ void HUD::Update() {
 			StartBuildingInfo();
 		}
 		else {
-			max_life = App->entityManager->selectedBuildingtList.front()->buildingMaxLife;
-			curr_life = App->entityManager->selectedBuildingtList.front()->buildingLife;
+			max_life = App->entityManager->selectedBuildingList.front()->buildingMaxLife;
+			curr_life = App->entityManager->selectedBuildingList.front()->buildingLife;
 
 			string life_str;
 			_itoa_s(curr_life, currlife, 65, 10);
@@ -337,15 +337,15 @@ void HUD::StartBuildingInfo()
 
 	for (list<UnitSprite>::iterator it = App->gui->SpriteBuildings.begin(); it != App->gui->SpriteBuildings.end(); ++it)
 	{
-		if (it._Ptr->_Myval.GetID() == App->entityManager->selectedBuildingtList.front()->type)
+		if (it._Ptr->_Myval.GetID() == App->entityManager->selectedBuildingList.front()->type)
 		{
 			single = (Image*)App->gui->CreateImage("gui/BuildingMiniatures.png", 310 - App->render->camera.x, 670 - App->render->camera.y, it._Ptr->_Myval.GetRect());
 			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), 310 - App->render->camera.x, 650 - App->render->camera.y, nullptr);
 		}
 	}
 
-	max_life = App->entityManager->selectedBuildingtList.front()->buildingMaxLife;
-	curr_life = App->entityManager->selectedBuildingtList.front()->buildingLife;
+	max_life = App->entityManager->selectedBuildingList.front()->buildingMaxLife;
+	curr_life = App->entityManager->selectedBuildingList.front()->buildingLife;
 
 
 	_itoa_s(curr_life, currlife, 65, 10);
