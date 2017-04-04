@@ -1067,6 +1067,66 @@
 				</Die>
 			</Animations>
 		</Unit>
+  
+    <Unit>
+      <Info>
+        <Name value = "VILLAGER"/>
+        <ID value = "19"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Units/Human/HumanWalkingWorker.png"/>
+				<Move value="textures/Units/Human/HumanWalkingWorker.png"/>
+				<Attack value="textures/Units/Human/HumanWalkingWorker.png"/>
+        <Cut value="textures/Units/Human"/>
+        <Minning value="textures/Units/Human"/>
+        <Collecting_animals value="textures/Units/Human"/>
+        <Collecting_plant value="textures/Units/Human"/>
+				<Die value="textures/Units/Human/HumanWalkingWorker.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="0"/>
+				<Life value="25"/>
+				<Attack value="3"/>
+				<AttackSpeed value="1.5"/>
+				<Defense value="0"/>
+				<PiercingDamage value="0"/>
+				<MovementSpeed value="0.7"/>
+				<LineOfSight value="3"/>
+				<FoodCost value=""/>
+				<GoldCost value=""/>
+				<BuildTime value=""/>
+			</Stats>
+			<Animations>
+				<Idle>
+					<Rows value="8"/>
+					<Columns value="15"/>
+					<Width value="42"/>
+					<Height value="40"/>
+					<Speed value="0.2f"/>
+				</Idle>
+				<Move>
+					<Rows value="8"/>
+					<Columns value="15"/>
+					<Width value="42"/>
+					<Height value="40"/> 
+					<Speed value="0.2f"/>
+				</Move>
+				<Attack>
+					<Rows value="8"/>
+					<Columns value="15"/>
+					<Width value="42"/>
+					<Height value="40"/>
+					<Speed value="0.2f"/>
+				</Attack>
+				<Die>
+					<Rows value="8"/>
+					<Columns value="15"/>
+					<Width value="42"/>
+					<Height value="40"/>
+					<Speed value="0.2f"/>
+				</Die>
+			</Animations>
+    </Unit>
 	</Units>
 	
 <!-- BUILDINGS -->

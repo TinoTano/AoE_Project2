@@ -21,6 +21,8 @@ public:
 
 	bool Update(float dt);
 	bool Draw();
+	
+	void Dead();
 
 private:
 

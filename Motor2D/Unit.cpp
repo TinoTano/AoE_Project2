@@ -74,11 +74,27 @@ bool Unit::Update(float dt)
 		Move(dt);
 		break;
 	case UNIT_ATTACKING:
-		if (attackUnitTarget != nullptr) {
+		if (entityPosition.DistanceNoSqrt(attackUnitTarget->entityPosition) < 5) {
 			AttackEnemyUnit(dt);
 		}
-		if (attackBuildingTarget != nullptr) {
-			AttackEnemyBuilding(dt);
+		else if (attackBuildingTarget != nullptr) {
+			if (entityPosition.DistanceNoSqrt(attackBuildingTarget->entityPosition) < 5) {
+				AttackEnemyBuilding(dt);
+			}
+		}
+		else if (resourceTarget != nullptr) {
+			if (entityPosition.DistanceNoSqrt(resourceTarget->entityPosition) < 5) {
+				GatherResource(dt);
+			}
+			//else {
+			//	iPoint newPos = App->map->WorldToMap(resourceTarget->entityPosition.x, resourceTarget->entityPosition.y);
+			//	SetDestination(newPos);
+			//}
+			//if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+			//	int x, y;
+			//	App->input->GetMousePosition(x, y);
+			//	resourceTarget->entityPosition = { x,y };
+			//}
 		}
 		break;
 	case UNIT_DEAD:
@@ -88,7 +104,7 @@ bool Unit::Update(float dt)
 		}
 		break;
 	}
-
+	Draw();
 
 	if (isHero) Hero_Special_Attack();
 
@@ -313,7 +329,8 @@ void Unit::LookAt()
 			velocity.x = attackBuildingTarget->entityPosition.x - entityPosition.x;
 			velocity.y = attackBuildingTarget->entityPosition.y - entityPosition.y;
 		}
-		velocity.Normalize();
+		if (velocity.x != 0 || velocity.y != 0)
+			velocity.Normalize();
 	}
 
 	float angle = atan2f(velocity.y, velocity.x) * RADTODEG;
@@ -369,6 +386,19 @@ void Unit::AttackEnemyBuilding(float dt)
 				SetState(UNIT_IDLE);
 				attackBuildingTarget = nullptr;
 			}
+		}
+	}
+}
+
+void Unit::GatherResource(float dt)
+{
+	LookAt();
+	if (currentAnim->Finished()) {
+		resourceTarget->resourceLife -= unitAttack;
+		if (resourceTarget->resourceLife <= 0) {
+			resourceTarget->Dead();
+			SetState(UNIT_IDLE);
+			resourceTarget = nullptr;
 		}
 	}
 }

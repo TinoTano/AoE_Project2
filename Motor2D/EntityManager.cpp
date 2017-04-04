@@ -47,61 +47,113 @@ bool EntityManager::Update(float dt)
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;
 
+	SDL_Rect cam = App->render->culling_cam;
+
 	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-		(*it)->Update(dt);
-		(*it)->Draw();
+		if ((*it)->entityPosition.x >= cam.x && (*it)->entityPosition.x <= cam.x + cam.w && (*it)->entityPosition.y + 150 > cam.y && (*it)->entityPosition.y + 150 < cam.y + cam.h) {
+			(*it)->isVisible = true;
+		}
+		else {
+			(*it)->isVisible = false;
+		}
+		if ((*it)->isVisible) {
+			(*it)->Draw();
+		}
 	}
 	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
 		(*it)->Update(dt);
-		(*it)->Draw();
 		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
 		(*it)->Update(dt);
-		(*it)->Draw();
 	}
 	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 		(*it)->Update(dt);
-		(*it)->Draw();
 		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
-		(*it)->Draw();
 	}
 
 	if (mouseY > NOTHUD.y - CAMERA_OFFSET_Y && mouseY < NOTHUD.h - CAMERA_OFFSET_Y)
 	{
 
 		// Enemies
-		for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++)
-		{
-			if ((*it)->state == UNIT_IDLE)
-			{
-				iPoint target;
-				target = App->sceneManager->level1_scene->my_townCenter->GetPosition();
-				target = App->map->WorldToMap(target.x, target.y);
-				(*it)->SetDestination(target);
-			}
-		}
+		//Uncomment when base exists or it podruces lag
+		//for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++)
+		//{
+		//	if ((*it)->state == UNIT_IDLE && (*it)->destinationReached)
+		//	{
+		//		iPoint target;
+		//		target = App->sceneManager->level1_scene->my_townCenter->GetPosition();
+		//		target = App->map->WorldToMap(target.x, target.y);
+		//		(*it)->SetDestination(target);
+		//	}
+		//}
 
 		// Allies
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
 		{
 			Unit* clickedUnit = nullptr;
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++)
+			Building* clickedBuilding = nullptr;
+			Resource* clickedResource = nullptr;
+			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
 			{
-				if ((*it)->isSelected)
+				iPoint target;
+				App->input->GetMousePosition(target.x, target.y);
+				for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++)
 				{
-					iPoint target;
-					App->input->GetMousePosition(target.x, target.y);
-					target = App->map->WorldToMap(target.x - App->render->camera.x, target.y - App->render->camera.y);
-					(*it)->SetDestination(target);
-					if (clickedUnit != nullptr)
-					{
-						(*it)->attackUnitTarget = clickedUnit;
+					if ((*it)->isVisible) {
+						if (mouseX < (*it2)->entityPosition.x + ((*it2)->collider->rect.w / 2) && mouseX >(*it2)->entityPosition.x - ((*it2)->collider->rect.w / 2) &&
+							mouseY < (*it2)->entityPosition.y + ((*it2)->collider->rect.h / 2) && mouseY >(*it2)->entityPosition.y - ((*it2)->collider->rect.h / 2))
+						{
+							clickedUnit = *it2;
+							break;
+						}
 					}
 				}
+				if (clickedUnit != nullptr)
+				{
+					(*it)->attackUnitTarget = clickedUnit;
+					(*it)->state = UNIT_ATTACKING;
+				}
+				else {
+					for (list<Building*>::iterator it3 = enemyBuildingList.begin(); it3 != enemyBuildingList.end(); it3++)
+					{
+						if ((*it)->isVisible) {
+							if (mouseX < (*it3)->entityPosition.x + ((*it3)->collider->rect.w / 2) && mouseX >(*it3)->entityPosition.x - ((*it3)->collider->rect.w / 2) &&
+								mouseY < (*it3)->entityPosition.y + ((*it3)->collider->rect.h / 2) && mouseY >(*it3)->entityPosition.y - ((*it3)->collider->rect.h / 2))
+							{
+								clickedBuilding = *it3;
+								break;
+							}
+						}
+					}
+					if (clickedBuilding != nullptr) {
+						(*it)->attackBuildingTarget = clickedBuilding;
+						(*it)->state = UNIT_ATTACKING;
+					}
+					else {
+						for (list<Resource*>::iterator it4 = resourceList.begin(); it4 != resourceList.end(); it4++)
+						{
+							if ((*it)->isVisible) {
+								if (mouseX < (*it4)->entityPosition.x + (90 / 2) && mouseX >(*it4)->entityPosition.x - (90 / 2) &&
+									mouseY < (*it4)->entityPosition.y + (150 / 2) && mouseY >(*it4)->entityPosition.y - (150 / 2))
+								{
+									clickedResource = *it4;
+									break;
+								}
+							}
+						}
+						if (clickedResource != nullptr)
+						{
+							(*it)->resourceTarget = clickedResource;
+							(*it)->state = UNIT_ATTACKING;
+						}
+					}
+				}
+				target = App->map->WorldToMap(target.x - App->render->camera.x, target.y - App->render->camera.y);
+				(*it)->SetDestination(target);
 			}
 		}
 
@@ -381,6 +433,8 @@ bool EntityManager::LoadGameData()
 
 			Unit* unitTemplate = new Unit();
 
+			unitTemplate->type = (unitType)unitNodeInfo.child("Info").child("ID").attribute("value").as_int();
+
 			string idleTexturePath = unitNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string moveTexturePath = unitNodeInfo.child("Textures").child("Move").attribute("value").as_string();
 			string attackTexturePath = unitNodeInfo.child("Textures").child("Attack").attribute("value").as_string();
@@ -414,9 +468,11 @@ bool EntityManager::LoadGameData()
 				}
 				idle.speed = animationNode.child("Speed").attribute("value").as_float();
 				unitTemplate->idleAnimations.push_back(idle);
-				if (i != 0 && i != rows - 1) {
-					idle.flip = SDL_FLIP_HORIZONTAL;
-					unitTemplate->idleAnimations.push_back(idle);
+				if (!unitTemplate->type == VILLAGER) {
+					if (i != 0 && i != rows - 1) {
+						idle.flip = SDL_FLIP_HORIZONTAL;
+						unitTemplate->idleAnimations.push_back(idle);
+					}
 				}
 			}
 
@@ -433,9 +489,11 @@ bool EntityManager::LoadGameData()
 				}
 				move.speed = animationNode.child("Speed").attribute("value").as_float();
 				unitTemplate->movingAnimations.push_back(move);
-				if (i != 0 && i != rows - 1) {
-					move.flip = SDL_FLIP_HORIZONTAL;
-					unitTemplate->movingAnimations.push_back(move);
+				if (!unitTemplate->type == VILLAGER) {
+					if (i != 0 && i != rows - 1) {
+						move.flip = SDL_FLIP_HORIZONTAL;
+						unitTemplate->movingAnimations.push_back(move);
+					}
 				}
 			}
 
@@ -452,9 +510,11 @@ bool EntityManager::LoadGameData()
 				}
 				attack.speed = animationNode.child("Speed").attribute("value").as_float();
 				unitTemplate->attackingAnimations.push_back(attack);
-				if (i != 0 && i != rows - 1) {
-					attack.flip = SDL_FLIP_HORIZONTAL;
-					unitTemplate->attackingAnimations.push_back(attack);
+				if (!unitTemplate->type == VILLAGER) {
+					if (i != 0 && i != rows - 1) {
+						attack.flip = SDL_FLIP_HORIZONTAL;
+						unitTemplate->attackingAnimations.push_back(attack);
+					}
 				}
 			}
 
@@ -471,9 +531,11 @@ bool EntityManager::LoadGameData()
 				}
 				die.speed = animationNode.child("Speed").attribute("value").as_float();
 				unitTemplate->dyingAnimations.push_back(die);
-				if (i != 0 && i != rows - 1) {
-					die.flip = SDL_FLIP_HORIZONTAL;
-					unitTemplate->dyingAnimations.push_back(die);
+				if (!unitTemplate->type == VILLAGER) {
+					if (i != 0 && i != rows - 1) {
+						die.flip = SDL_FLIP_HORIZONTAL;
+						unitTemplate->dyingAnimations.push_back(die);
+					}
 				}
 			}
 
@@ -481,8 +543,6 @@ bool EntityManager::LoadGameData()
 			unitTemplate->unitMoveTexture = App->tex->Load(moveTexturePath.c_str());
 			unitTemplate->unitAttackTexture = App->tex->Load(attackTexturePath.c_str());
 			unitTemplate->unitDieTexture = App->tex->Load(dieTexturePath.c_str());
-
-			unitTemplate->type = (unitType)unitNodeInfo.child("Info").child("ID").attribute("value").as_int();
 
 			unitsDB.insert(pair<int, Unit*>(unitTemplate->type, unitTemplate));
 		}

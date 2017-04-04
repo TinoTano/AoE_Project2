@@ -143,7 +143,7 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(-350, 500, true, DWARVEN_MAULER);
 	App->entityManager->CreateUnit(580, 700, true, DWARVEN_MAULER);
 	App->entityManager->CreateUnit(680, 700, true, DWARVEN_MAULER);
-	App->entityManager->CreateUnit(400, 900, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(400, 1900, false, VILLAGER);
 
 	troll = App->entityManager->CreateUnit(50, 150, false, ELVEN_CAVALRY);
 	troll->isHero = true;

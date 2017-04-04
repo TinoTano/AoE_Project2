@@ -16,7 +16,9 @@ enum unitType {
 	ELVEN_LONGBLADE, DWARVEN_MAULER, GONDOR_SPEARMAN, ELVEN_ARCHER, DUNEDAIN_RANGE, ELVEN_CAVALRY, GONDOR_KNIGHT,
 	ROHAN_KNIGHT, MOUNTED_DUNEDAIN, SIEGE_TOWER, LIGHT_CATAPULT,
 
-	GOBLIN_SOLDIER, ORC_SOLDIER, URUK_HAI_SOLDIER, ORC_ARCHER, VENOMOUS_SPIDER, HARADRIM_OLIFANT, NAZGUL, TROLL_MAULER
+	GOBLIN_SOLDIER, ORC_SOLDIER, URUK_HAI_SOLDIER, ORC_ARCHER, VENOMOUS_SPIDER, HARADRIM_OLIFANT, NAZGUL, TROLL_MAULER,
+
+	VILLAGER
 };
 
 enum unitState
@@ -30,6 +32,10 @@ enum unitFaction {
 
 enum unitDirection {
 	DOWN, DOWN_LEFT, DOWN_RIGHT, LEFT, RIGHT, UP_LEFT, UP_RIGHT, UP
+};
+
+enum villagerDirection {
+	VILLAGER_DOWN_LEFT, VILLAGER_DOWN, VILLAGER_DOWN_RIGHT, VILLAGER_RIGHT, VILLAGER_UP_RIGHT, VILLAGER_UP, VILLAGER_UP_LEFT, VILLAGER_LEFT
 };
 
 class Unit : public Entity
@@ -53,6 +59,7 @@ public:
 	void SetAnim(unitDirection currentDirection);
 	void AttackEnemyUnit(float dt);
 	void AttackEnemyBuilding(float dt);
+	void GatherResource(float dt);
 	void Dead();
 	void SetState(unitState state);
 
@@ -88,12 +95,19 @@ public:
 	int unitDefense = 0;
 	bool isVisible = true;
 	bool isSelected = false;
+	Resource* resourceTarget = nullptr;
 
 	//Animations
 	vector<Animation> idleAnimations;
 	vector<Animation> movingAnimations;
 	vector<Animation> attackingAnimations;
 	vector<Animation> dyingAnimations;
+
+	//villager
+	vector<Animation> cuttingAnimations;
+	vector<Animation> minningAnimations;
+	vector<Animation> collectingAnimalsAnimations;
+	vector<Animation> collectingPlantsAnimations;
 
 	Animation* currentAnim = nullptr;
 

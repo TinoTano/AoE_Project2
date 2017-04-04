@@ -98,6 +98,9 @@ bool Building::Update(float dt)
 			}
 		}
 	}
+
+	Draw();
+
 	return true;
 }
 

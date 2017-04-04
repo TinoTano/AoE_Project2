@@ -1,5 +1,10 @@
-﻿  Scene.cpp
-  MenuScene.cpp
-  Generando código...
-  Motor2D.vcxproj -> C:\Users\David\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\David\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (AoE_Project2.vcxproj, Development - Class 11 Handout.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  EntityManager.cpp
+c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(189): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(219): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(471): warning C4806: '==': unsafe operation: no value of type 'bool' promoted to type 'unitType' can equal the given constant
+c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(492): warning C4806: '==': unsafe operation: no value of type 'bool' promoted to type 'unitType' can equal the given constant
+c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(513): warning C4806: '==': unsafe operation: no value of type 'bool' promoted to type 'unitType' can equal the given constant
+c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(534): warning C4806: '==': unsafe operation: no value of type 'bool' promoted to type 'unitType' can equal the given constant
+  Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

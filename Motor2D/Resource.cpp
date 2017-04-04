@@ -2,6 +2,7 @@
 #include "Render.h"
 #include "Application.h"
 #include "p2Log.h"
+#include "EntityManager.h"
 
 Resource::Resource()
 {
@@ -42,4 +43,9 @@ bool Resource::Draw()
 {
 	App->render->Blit(entityTexture, entityPosition.x - (resourceRect.w / 2), entityPosition.y - resourceRect.h, &resourceRect);
 	return true;
+}
+
+void Resource::Dead()
+{
+	App->entityManager->DeleteResource(this);
 }
