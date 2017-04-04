@@ -82,6 +82,7 @@ void HUD::Update() {
 			_itoa_s(max_life, maxlife, 65, 10);
 			life_str += maxlife;
 			life->SetString(life_str);
+			if (max_life == 0) max_life = curr_life;
 			percent = ((max_life - curr_life) * 100) / max_life;
 			barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
 			bar.rect.x = 310 - App->render->camera.x;
@@ -212,6 +213,7 @@ void HUD::Update() {
 
 				life->SetString(life_str);
 
+				if (max_life == 0) max_life = curr_life;
 				percent = ((max_life - curr_life) * 100) / max_life;
 				barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
 				bar.rect.x = 310 - App->render->camera.x;
