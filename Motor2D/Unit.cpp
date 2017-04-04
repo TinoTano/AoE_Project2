@@ -71,21 +71,25 @@ bool Unit::Update(float dt)
 {
 	switch (state) {
 	case UNIT_MOVING:
-		Move(dt);
+		if (attackUnitTarget != nullptr && entityPosition.DistanceTo(attackUnitTarget->entityPosition) < 5 ||
+			attackBuildingTarget != nullptr && entityPosition.DistanceTo(attackBuildingTarget->entityPosition) < 150 ||
+			resourceTarget != nullptr && entityPosition.DistanceTo(resourceTarget->entityPosition) < 5) {
+			SetState(UNIT_ATTACKING);
+		}
+		else {
+			Move(dt);
+		}
 		break;
 	case UNIT_ATTACKING:
-		if (entityPosition.DistanceNoSqrt(attackUnitTarget->entityPosition) < 5) {
+		if (attackUnitTarget != nullptr) {
 			AttackEnemyUnit(dt);
 		}
 		else if (attackBuildingTarget != nullptr) {
-			if (entityPosition.DistanceNoSqrt(attackBuildingTarget->entityPosition) < 5) {
-				AttackEnemyBuilding(dt);
-			}
+			AttackEnemyBuilding(dt);
 		}
 		else if (resourceTarget != nullptr) {
-			if (entityPosition.DistanceNoSqrt(resourceTarget->entityPosition) < 5) {
-				GatherResource(dt);
-			}
+			GatherResource(dt);
+		}
 			//else {
 			//	iPoint newPos = App->map->WorldToMap(resourceTarget->entityPosition.x, resourceTarget->entityPosition.y);
 			//	SetDestination(newPos);
@@ -95,7 +99,6 @@ bool Unit::Update(float dt)
 			//	App->input->GetMousePosition(x, y);
 			//	resourceTarget->entityPosition = { x,y };
 			//}
-		}
 		break;
 	case UNIT_DEAD:
 		if (currentAnim->Finished()) {
@@ -294,7 +297,6 @@ void Unit::Move(float dt)
 			if (path.size() > 0) {
 				destinationTile = path.front();
 				path.erase(path.begin());
-				LOG("%d %d", destinationTile.x, destinationTile.y);
 			}
 			else {
 				destinationReached = true;
