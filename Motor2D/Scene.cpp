@@ -140,13 +140,14 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(350, 400, false, ELVEN_ARCHER);
 	App->entityManager->CreateUnit(370, 500, false, ELVEN_ARCHER);*/
 
-	App->entityManager->CreateUnit(550, 2100, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(550, 2700, true, DWARVEN_MAULER);
 	App->entityManager->CreateUnit(880, 2100, true, DWARVEN_MAULER);
 	App->entityManager->CreateUnit(680, 2100, true, DWARVEN_MAULER);
 	App->entityManager->CreateUnit(400, 1900, false, VILLAGER);
 
 	troll = App->entityManager->CreateUnit(450, 2150, false, ELVEN_CAVALRY);
 	troll->isHero = true;
+	App->entityManager->CreateUnit(650, 2150, false, ELVEN_CAVALRY);
 
 	my_townCenter = App->entityManager->CreateBuilding(580, 1600, false, TOWN_CENTER);
 	//enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);

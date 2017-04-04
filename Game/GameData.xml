@@ -23,6 +23,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="1.1"/>
 				<LineOfSight value="3"/>
+        <Range value="20"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -79,6 +80,7 @@
 				<PiercingDamage value="2"/>
 				<MovementSpeed value="0.9"/>
 				<LineOfSight value="3"/>
+        <Range value="30"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -135,6 +137,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="1"/>
 				<LineOfSight value="4"/>
+        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -191,6 +194,7 @@
 				<PiercingDamage value="1"/>
 				<MovementSpeed value="1.1"/>
 				<LineOfSight value="7"/>
+        <Range value="150"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -247,6 +251,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="1"/>
 				<LineOfSight value="6"/>
+        <Range value="30"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -303,6 +308,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="1.5"/>
 				<LineOfSight value="6"/>
+        <Range value="165"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -359,6 +365,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="1.5"/>
 				<LineOfSight value="5"/>
+        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -415,6 +422,7 @@
 				<PiercingDamage value="2"/>
 				<MovementSpeed value="1.3"/>
 				<LineOfSight value="3"/>
+        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -471,6 +479,7 @@
 				<PiercingDamage value="3"/>
 				<MovementSpeed value="1.4"/>
 				<LineOfSight value="4"/>
+        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -527,6 +536,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="0.7"/>
 				<LineOfSight value="3"/>
+        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -583,6 +593,7 @@
 				<PiercingDamage value="3"/>
 				<MovementSpeed value="0.8"/>
 				<LineOfSight value="6"/>
+        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -640,6 +651,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="1.1"/>
 				<LineOfSight value="3"/>
+        <Range value="25"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -696,6 +708,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="1"/>
 				<LineOfSight value="3"/>
+        <Range value="25"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -752,6 +765,7 @@
 				<PiercingDamage value="2"/>
 				<MovementSpeed value="1"/>
 				<LineOfSight value="4"/>
+        <Range value="20"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -808,6 +822,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="1.1"/>
 				<LineOfSight value="6"/>
+        <Range value="155"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -864,6 +879,7 @@
 				<PiercingDamage value="1"/>
 				<MovementSpeed value="1.3"/>
 				<LineOfSight value="3"/>
+        <Range value="45"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -920,6 +936,7 @@
 				<PiercingDamage value="3"/>
 				<MovementSpeed value="1.2"/>
 				<LineOfSight value="3"/>
+        <Range value="160"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -976,6 +993,7 @@
 				<PiercingDamage value="2"/>
 				<MovementSpeed value="1.5"/>
 				<LineOfSight value="4"/>
+        <Range value="40"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -1032,6 +1050,7 @@
 				<PiercingDamage value="2"/>
 				<MovementSpeed value="0.7"/>
 				<LineOfSight value="3"/>
+        <Range value="70"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -1092,6 +1111,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="0.7"/>
 				<LineOfSight value="3"/>
+        <Range value="20"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>

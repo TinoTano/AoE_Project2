@@ -92,6 +92,7 @@ public:
 	bool isVisible = true;
 	bool isSelected = false;
 	Resource* resourceTarget = nullptr;
+	int unitRange = 0;
 
 	//Animations
 	vector<Animation> idleAnimations;

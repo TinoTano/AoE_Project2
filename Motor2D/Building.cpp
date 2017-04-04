@@ -100,7 +100,17 @@ bool Building::Update(float dt)
 		}
 	}
 
-	Draw();
+	SDL_Rect cam = App->render->culling_cam;
+
+	if (entityPosition.x >= cam.x && entityPosition.x <= cam.x + cam.w && entityPosition.y + collider->rect.h > cam.y && entityPosition.y < cam.y + cam.h) {
+		isVisible = true;
+	}
+	else {
+		isVisible = false;
+	}
+	if (isVisible) {
+		Draw();
+	}
 
 	return true;
 }

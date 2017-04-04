@@ -41,6 +41,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 	unitMaxLife = unit->unitMaxLife;
 	unitAttack = unit->unitAttack;
 	unitDefense = unit->unitDefense;
+	unitRange = unit->unitRange;
 
 	//Animations
 	idleAnimations = unit->idleAnimations;
@@ -72,18 +73,56 @@ bool Unit::Update(float dt)
 {
 	switch (state) {
 	case UNIT_MOVING:
-		if (attackUnitTarget != nullptr && entityPosition.DistanceTo(attackUnitTarget->entityPosition) < 100 ||
+		if (attackUnitTarget != nullptr && entityPosition.DistanceTo(attackUnitTarget->entityPosition) < unitRange ||
 			attackBuildingTarget != nullptr && entityPosition.DistanceTo(attackBuildingTarget->entityPosition) < 150 ||
 			resourceTarget != nullptr && entityPosition.DistanceTo(resourceTarget->entityPosition) < 30) {
+			if (attackUnitTarget != nullptr) {
+				if (attackUnitTarget->isEnemy) {
+					if (attackUnitTarget->attackUnitTarget == nullptr) {
+						attackUnitTarget->attackUnitTarget = this;
+						attackUnitTarget->attackBuildingTarget = nullptr;
+						attackUnitTarget->resourceTarget = nullptr;
+						attackUnitTarget->destinationReached = true;
+					}
+				}
+			}
 			SetState(UNIT_ATTACKING);
+			destinationReached = true;
 		}
 		else {
+			if (attackUnitTarget != nullptr) {
+				//Uncomment if you want the enemy to go back when it's far from town hall
+				//if (isEnemy && entityPosition.DistanceTo(App->sceneManager->level1_scene->my_townCenter->entityPosition) > 1000) {
+				//	SetState(UNIT_IDLE);
+				//	destinationReached = true;
+				//	break;
+				//}
+				if (destinationReached) {
+					iPoint target = App->map->WorldToMap(attackUnitTarget->entityPosition.x, attackUnitTarget->entityPosition.y);
+					SetDestination(target);
+				}
+				//Uncomment if you want the enemy to go back when it's far from attacker
+				//else {
+				//	if (entityPosition.DistanceTo(attackUnitTarget->entityPosition) > unitRange + 50) {
+				//		if (isEnemy && attackUnitTarget->attackUnitTarget == nullptr && attackBuildingTarget == nullptr) {
+				//			SetState(UNIT_IDLE);
+				//			destinationReached = true;
+				//			break;
+				//		}
+				//	}
+				//}
+			}
 			Move(dt);
 		}
 		break;
 	case UNIT_ATTACKING:
 		if (attackUnitTarget != nullptr) {
-			AttackEnemyUnit(dt);
+			if (entityPosition.DistanceTo(attackUnitTarget->entityPosition) > unitRange) {
+				SetState(UNIT_MOVING);
+			}
+			else {
+				AttackEnemyUnit(dt);
+			}
 		}
 		else if (attackBuildingTarget != nullptr) {
 			AttackEnemyBuilding(dt);
@@ -99,7 +138,17 @@ bool Unit::Update(float dt)
 		}
 		break;
 	}
-	Draw();
+	SDL_Rect cam = App->render->culling_cam;
+
+	if (entityPosition.x >= cam.x && entityPosition.x <= cam.x + cam.w && entityPosition.y > cam.y && entityPosition.y < cam.y + cam.h) {
+		isVisible = true;
+	}
+	else {
+		isVisible = false;
+	}
+	if (isVisible) {
+		Draw();
+	}
 
 	if (isHero) Hero_Special_Attack();
 
@@ -263,9 +312,6 @@ void Unit::SetDestination(iPoint destination)
 		}
 		path.erase(path.begin());
 	}
-	//if (attackUnitTarget != nullptr) {
-	//	attackUnitTarget = nullptr;
-	//}
 }
 
 void Unit::Move(float dt)
@@ -292,7 +338,9 @@ void Unit::Move(float dt)
 			}
 			else {
 				destinationReached = true;
-				SetState(UNIT_IDLE);
+				if (attackUnitTarget == nullptr) {
+					SetState(UNIT_IDLE);
+				}
 			}
 		}
 	}
