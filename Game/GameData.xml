@@ -296,8 +296,8 @@
 			</Textures>
 			<Stats>
 				<Faction value="0"/>
-				<Life value="80"/>
-				<Attack value="4"/>
+				<Life value="90"/>
+				<Attack value="20"/>
 				<AttackSpeed value="2.1"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
