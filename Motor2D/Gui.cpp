@@ -445,6 +445,7 @@ void Label::SetText(char* text) {
 	App->font->CalcSize(str.c_str(), width, height);
 }
 void Label::SetString(string text) {
+	if (texture != nullptr) App->tex->UnLoad(texture);
 	str = text.c_str();
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);
@@ -459,6 +460,7 @@ void Label::SetSize(int size) {
 
 void Label::SetColor(SDL_Color color)
 {
+	if (texture != nullptr) App->tex->UnLoad(texture);
 	this->color = color;
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);

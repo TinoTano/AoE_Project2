@@ -1,42 +1,79 @@
-﻿Build started 04/04/2017 19:03:54.
-     1>Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" on node 2 (Build target(s)).
-     1>ClCompile:
-         D:\VisualStudio2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _ITERATOR_DEBUG_LEVEL=0 /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt HUD.cpp
-         HUD.cpp
-     1>c:\users\usuario\documents\github\aoe_project2\motor2d\hud.cpp(113): warning C4553: '==': operator has no effect; did you intend '='?
-     1>c:\users\usuario\documents\github\aoe_project2\motor2d\hud.cpp(382): warning C4101: 'currlife': unreferenced local variable
-       Link:
-         D:\VisualStudio2015\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib" /MACHINE:X86 Debug\Building.obj
-         Debug\Collision.obj
-         Debug\Console.obj
-         Debug\Entity.obj
-         Debug\EntityManager.obj
-         Debug\FileSystem.obj
-         Debug\FogOfWar.obj
-         Debug\Fonts.obj
-         Debug\Gui.obj
-         Debug\HUD.obj
-         Debug\Main.obj
-         Debug\Application.obj
-         Debug\Audio.obj
-         Debug\Input.obj
-         Debug\Map.obj
-         Debug\MenuScene.obj
-         Debug\p2Log.obj
-         Debug\Pathfinding.obj
-         Debug\PerfTimer.obj
-         Debug\Resource.obj
-         Debug\Scene.obj
-         Debug\SceneManager.obj
-         Debug\Timer.obj
-         Debug\Render.obj
-         Debug\Textures.obj
-         Debug\Unit.obj
-         Debug\Window.obj
-         Debug\pugixml.obj
-         Motor2D.vcxproj -> C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-     1>Done Building Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" (Build target(s)).
-
-Build succeeded.
-
-Time Elapsed 00:00:01.20
+﻿  pugixml.cpp
+  Window.cpp
+  Unit.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(56): warning C4838: la conversión de 'float' en 'int' requiere una conversión de restricción
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(56): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(244): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(305): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(306): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(319): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(320): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(323): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(324): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+  c:\users\marc\documents\github\aoe_project2\motor2d\p2point.h(120): note: durante la compilación de la función miembro de plantilla de clase 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\marc\documents\github\aoe_project2\motor2d\unit.cpp(75): note: vea la referencia a la creación de instancias de plantilla de función 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' que se está compilando
+  c:\users\marc\documents\github\aoe_project2\motor2d\entity.h(33): note: vea la referencia a la creación de instancias de plantilla de clase 'p2Point<int>' que se está compilando
+c:\users\marc\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversión de 'float' a 'int'; posible pérdida de datos
+  Textures.cpp
+  Render.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\render.cpp(78): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\documents\github\aoe_project2\motor2d\render.cpp(93): warning C4018: '<': no coinciden signed/unsigned
+  Timer.cpp
+  SceneManager.cpp
+  Scene.cpp
+  Resource.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\resource.cpp(21): warning C4018: '<': no coinciden signed/unsigned
+  PerfTimer.cpp
+  Pathfinding.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+  c:\users\marc\documents\github\aoe_project2\motor2d\p2point.h(120): note: durante la compilación de la función miembro de plantilla de clase 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\marc\documents\github\aoe_project2\motor2d\pathfinding.cpp(154): note: vea la referencia a la creación de instancias de plantilla de función 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' que se está compilando
+  c:\users\marc\documents\github\aoe_project2\motor2d\entity.h(33): note: vea la referencia a la creación de instancias de plantilla de clase 'p2Point<int>' que se está compilando
+c:\users\marc\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversión de 'float' a 'int'; posible pérdida de datos
+  p2Log.cpp
+  MenuScene.cpp
+  Map.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\map.cpp(107): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\marc\documents\github\aoe_project2\motor2d\map.cpp(108): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+  Input.cpp
+  Audio.cpp
+  Application.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\application.cpp(260): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\documents\github\aoe_project2\motor2d\application.cpp(256): warning C4477: 'sprintf_s' : la cadena de formato '%lu' requiere un argumento de tipo 'unsigned long', pero el argumento variádico 6 tiene el tipo 'uint64'
+  c:\users\marc\documents\github\aoe_project2\motor2d\application.cpp(256): note: considere el uso de ' %llu' en la cadena de formato
+  c:\users\marc\documents\github\aoe_project2\motor2d\application.cpp(256): note: considere el uso de ' %I64u' en la cadena de formato
+  Main.cpp
+  HUD.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\hud.cpp(113): warning C4553: '==': el operador no tiene efecto; ¿ha pensado en '='?
+c:\users\marc\documents\github\aoe_project2\motor2d\hud.cpp(382): warning C4101: 'currlife': variable local sin referencia
+  Gui.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\gui.cpp(165): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\documents\github\aoe_project2\motor2d\gui.cpp(536): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\documents\github\aoe_project2\motor2d\gui.cpp(546): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\documents\github\aoe_project2\motor2d\gui.cpp(567): warning C4018: '<': no coinciden signed/unsigned
+  Generando código...
+  Compilando...
+  Fonts.cpp
+  FogOfWar.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\fogofwar.cpp(119): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+c:\users\marc\documents\github\aoe_project2\motor2d\fogofwar.cpp(120): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+  FileSystem.cpp
+  EntityManager.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\entitymanager.cpp(193): warning C4800: 'SDL_bool': forzando el valor a bool 'true' o 'false' (advertencia de rendimiento)
+c:\users\marc\documents\github\aoe_project2\motor2d\entitymanager.cpp(223): warning C4800: 'SDL_bool': forzando el valor a bool 'true' o 'false' (advertencia de rendimiento)
+  Entity.cpp
+  Console.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\console.cpp(31): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+c:\users\marc\documents\github\aoe_project2\motor2d\console.cpp(37): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+c:\users\marc\documents\github\aoe_project2\motor2d\console.cpp(49): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+c:\users\marc\documents\github\aoe_project2\motor2d\console.cpp(50): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+  Collision.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\collision.cpp(122): warning C4800: 'SDL_bool': forzando el valor a bool 'true' o 'false' (advertencia de rendimiento)
+  Building.cpp
+c:\users\marc\documents\github\aoe_project2\motor2d\building.cpp(42): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+  Generando código...
+     Creando biblioteca C:\Users\Marc\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib y objeto C:\Users\Marc\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
+physfs.lib(physfs.obj) : warning LNK4217: se importó el símbolo _sprintf definido localmente en la función _PHYSFS_setSaneConfig
+  Motor2D.vcxproj -> C:\Users\Marc\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\Marc\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
