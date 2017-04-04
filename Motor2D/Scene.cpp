@@ -140,15 +140,15 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(350, 400, false, ELVEN_ARCHER);
 	App->entityManager->CreateUnit(370, 500, false, ELVEN_ARCHER);*/
 
-	App->entityManager->CreateUnit(-350, 500, true, DWARVEN_MAULER);
-	App->entityManager->CreateUnit(580, 700, true, DWARVEN_MAULER);
-	App->entityManager->CreateUnit(680, 700, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(550, 2100, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(880, 2100, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(680, 2100, true, DWARVEN_MAULER);
 	App->entityManager->CreateUnit(400, 1900, false, VILLAGER);
 
-	troll = App->entityManager->CreateUnit(50, 150, false, ELVEN_CAVALRY);
+	troll = App->entityManager->CreateUnit(50, 1450, false, ELVEN_CAVALRY);
 	troll->isHero = true;
 
-	my_townCenter = App->entityManager->CreateBuilding(580, 350, false, TOWN_CENTER);
+	my_townCenter = App->entityManager->CreateBuilding(580, 1600, false, TOWN_CENTER);
 	//enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
@@ -158,7 +158,6 @@ bool Scene::Start()
 	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", 665, 40, nullptr);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
 	Timer_lbl->SetSize(26);
-
 
 	return true;
 }

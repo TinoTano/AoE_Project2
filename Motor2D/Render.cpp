@@ -152,8 +152,8 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	if (mousePosX < 10)
 	{
 		if (camera.x + (camera.w / 2) < App->map->data.mapWidth) {
-			camera.x += 5;
-			movement.first = 5;
+			camera.x += 10;
+			movement.first = 10;
 		}
 	}
 	
@@ -161,8 +161,8 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	if (mousePosX > camera.w - 10)
 	{
 		if (-camera.x - (-camera.w / 2) < App->map->data.mapWidth / 2) {
-			camera.x -= 5;
-			movement.first = -5;
+			camera.x -= 10;
+			movement.first = -10;
 		}
 	}
 
@@ -170,8 +170,8 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	if (mousePosY < 10)
 	{
 		if (camera.y + (camera.h / 2) < App->map->data.mapHeight / 1.5f) {
-			camera.y += 5;
-			movement.second = 5;
+			camera.y += 10;
+			movement.second = 10;
 		}
 	}
 
@@ -179,8 +179,8 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	if (mousePosY > camera.h - 10)
 	{
 		if (-camera.y - (-camera.h / 2) < App->map->data.mapHeight) {
-			camera.y -= 5;
-			movement.second = -5;
+			camera.y -= 10;
+			movement.second = -10;
 		}
 	}
 

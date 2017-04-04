@@ -80,16 +80,17 @@ bool EntityManager::Update(float dt)
 
 		// Enemies
 		//Uncomment when base exists or it podruces lag
-		//for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++)
-		//{
-		//	if ((*it)->state == UNIT_IDLE && (*it)->destinationReached)
-		//	{
-		//		iPoint target;
-		//		target = App->sceneManager->level1_scene->my_townCenter->GetPosition();
-		//		target = App->map->WorldToMap(target.x, target.y);
-		//		(*it)->SetDestination(target);
-		//	}
-		//}
+		for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++)
+		{
+			if ((*it)->state == UNIT_IDLE && (*it)->destinationReached)
+			{
+				iPoint target;
+				target = App->sceneManager->level1_scene->my_townCenter->GetPosition();
+				target = App->map->WorldToMap(target.x, target.y);
+				(*it)->SetDestination(target);
+				(*it)->attackBuildingTarget = App->sceneManager->level1_scene->my_townCenter;
+			}
+		}
 
 		// Allies
 		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN)
@@ -468,11 +469,9 @@ bool EntityManager::LoadGameData()
 				}
 				idle.speed = animationNode.child("Speed").attribute("value").as_float();
 				unitTemplate->idleAnimations.push_back(idle);
-				if (!unitTemplate->type == VILLAGER) {
-					if (i != 0 && i != rows - 1) {
-						idle.flip = SDL_FLIP_HORIZONTAL;
-						unitTemplate->idleAnimations.push_back(idle);
-					}
+				if (i != 0 && i != rows - 1) {
+					idle.flip = SDL_FLIP_HORIZONTAL;
+					unitTemplate->idleAnimations.push_back(idle);
 				}
 			}
 
@@ -489,11 +488,9 @@ bool EntityManager::LoadGameData()
 				}
 				move.speed = animationNode.child("Speed").attribute("value").as_float();
 				unitTemplate->movingAnimations.push_back(move);
-				if (!unitTemplate->type == VILLAGER) {
-					if (i != 0 && i != rows - 1) {
-						move.flip = SDL_FLIP_HORIZONTAL;
-						unitTemplate->movingAnimations.push_back(move);
-					}
+				if (i != 0 && i != rows - 1) {
+					move.flip = SDL_FLIP_HORIZONTAL;
+					unitTemplate->movingAnimations.push_back(move);
 				}
 			}
 
@@ -510,11 +507,9 @@ bool EntityManager::LoadGameData()
 				}
 				attack.speed = animationNode.child("Speed").attribute("value").as_float();
 				unitTemplate->attackingAnimations.push_back(attack);
-				if (!unitTemplate->type == VILLAGER) {
-					if (i != 0 && i != rows - 1) {
-						attack.flip = SDL_FLIP_HORIZONTAL;
-						unitTemplate->attackingAnimations.push_back(attack);
-					}
+				if (i != 0 && i != rows - 1) {
+					attack.flip = SDL_FLIP_HORIZONTAL;
+					unitTemplate->attackingAnimations.push_back(attack);
 				}
 			}
 
@@ -531,11 +526,9 @@ bool EntityManager::LoadGameData()
 				}
 				die.speed = animationNode.child("Speed").attribute("value").as_float();
 				unitTemplate->dyingAnimations.push_back(die);
-				if (!unitTemplate->type == VILLAGER) {
-					if (i != 0 && i != rows - 1) {
-						die.flip = SDL_FLIP_HORIZONTAL;
-						unitTemplate->dyingAnimations.push_back(die);
-					}
+				if (i != 0 && i != rows - 1) {
+					die.flip = SDL_FLIP_HORIZONTAL;
+					unitTemplate->dyingAnimations.push_back(die);
 				}
 			}
 
@@ -676,7 +669,7 @@ void EntityManager::DeleteResource(Resource* resource)
 
 void EntityManager::OnCollision(Collider * c1, Collider * c2)
 {
-	if (c1->type == COLLIDER_FRIENDLY_UNIT && c2->type == COLLIDER_ENEMY_UNIT)
+	/*if (c1->type == COLLIDER_FRIENDLY_UNIT && c2->type == COLLIDER_ENEMY_UNIT)
 	{
 		for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
 		{
@@ -733,7 +726,7 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 				}
 			}
 		}
-	}
+	}*/
 }
 
 
