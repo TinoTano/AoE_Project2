@@ -148,47 +148,51 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	pair<int, int> movement;
 	App->input->GetMousePosition(mousePosX, mousePosY);
 
-	//Move left
-	if (mousePosX < 10)
-	{
-		if (camera.x + (camera.w / 2) < 6100) {
-			camera.x += 10;
-			movement.first = 10;
-		}
-	}
+
+	if (mousePosX < 10)	//Move left
+		movement.first = 10;
+	else if (mousePosX > camera.w - 10)  //Move right
+		movement.first = -10;
+
+	if (mousePosY < 10)	//Move up
+		movement.second = 10;
+	else if (mousePosY > camera.h - 10)  //Move down
+		movement.second = -10;
 	
-	//Move right
-	if (mousePosX > camera.w - 10)
-	{
-		if (-camera.x - (-camera.w / 2) < App->map->data.mapWidth / 2) {
-			camera.x -= 10;
-			movement.first = -10;
-		}
+	iPoint cam_pos_iso;   
+	cam_pos_iso.x = (-camera.x) - (camera.y * 2);    
+	cam_pos_iso.y =  -camera.y + (camera.x / 2);
+
+	if ((cam_pos_iso.x - 15) < 0) {
+		if (movement.first == 10)
+			movement.first = 0;
+		if (movement.second == 10)
+			movement.second = 0;
+	}
+	else if (cam_pos_iso.x + (camera.w * 2) > 9600) {
+		if (movement.first == -10)
+			movement.first = 0;
+		if (movement.second == -10)
+			movement.second = 0;
 	}
 
-	//Move up
-	if (mousePosY < 10)
-	{
-		if (camera.y + (camera.h / 2) < 800) {
-			camera.y += 10;
-			movement.second = 10;
-		}
+	if ((cam_pos_iso.y - 15) < 0) {
+		if (movement.first == -10)
+			movement.first = 0;
+		if (movement.second == 10)
+			movement.second = 0;
+	}
+	else if (cam_pos_iso.y + (camera.h) > 4800) {
+		if (movement.first == 10)
+			movement.first = 0;
+		if (movement.second == -10)
+			movement.second = 0;
 	}
 
-	//Move down
-	if (mousePosY > camera.h - 10)
-	{
-		if (-camera.y - (-camera.h / 2) < App->map->data.mapHeight) {
-			camera.y -= 10;
-			movement.second = -10;
-		}
-	}
-
-
-	iPoint ret;
-	ret.y = -(camera.x - camera.y);
-	ret.x = (camera.x + camera.y) / 2;
-	//LOG("camera pos: %d, %d", ret.x, ret.y);;
+	LOG("cam: %d, %d", camera.x, camera.y);
+	LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
+	camera.x += movement.first;
+	camera.y += movement.second;
 
 	culling_cam.x = -camera.x;
 	culling_cam.y = -camera.y;
