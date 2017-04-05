@@ -163,34 +163,6 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	cam_pos_iso.x = (-camera.x) - (camera.y * 2);    
 	cam_pos_iso.y =  -camera.y + (camera.x / 2);
 
-	if ((cam_pos_iso.x - 15) < 0) {
-		if (movement.first == 10)
-			movement.first = 0;
-		if (movement.second == 10)
-			movement.second = 0;
-	}
-	else if (cam_pos_iso.x + (camera.w * 2) > 9600) {
-		if (movement.first == -10)
-			movement.first = 0;
-		if (movement.second == -10)
-			movement.second = 0;
-	}
-
-	if ((cam_pos_iso.y - 15) < 0) {
-		if (movement.first == -10)
-			movement.first = 0;
-		if (movement.second == 10)
-			movement.second = 0;
-	}
-	else if (cam_pos_iso.y + (camera.h) > 4800) {
-		if (movement.first == 10)
-			movement.first = 0;
-		if (movement.second == -10)
-			movement.second = 0;
-	}
-
-	LOG("cam: %d, %d", camera.x, camera.y);
-	LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
 	camera.x += movement.first;
 	camera.y += movement.second;
 
