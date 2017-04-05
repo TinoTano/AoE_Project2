@@ -270,15 +270,15 @@ bool Scene::CleanUp()
 
 void Scene::TimeEvents() {
 
-	if ((int)timer.ReadSec() > 100) {
+	if ((int)timer.ReadSec() > 120) {
 		Timer_lbl->SetColor({ 255, 0,0,255 });
 	}
 
-	if ((int)timer.ReadSec() == 100) {
+	if ((int)timer.ReadSec() == 120) {
 		orc_timer.Start();
 		wave = 2;
 	}
-	else if ((int)timer.ReadSec() < 100) {
+	else if ((int)timer.ReadSec() < 120) {
 		orc_timer.Start();
 	}
 	if ((int)troll_timer.ReadSec() == 300) {
@@ -287,15 +287,15 @@ void Scene::TimeEvents() {
 	}
 	if ((int)orc_timer.ReadSec() == 40)
 	{
-		wave++;
 		orcs_to_spawn = wave;
+		wave++;
 		orc_timer.Start();
+	}
 		if ((int)orcs_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
 			App->entityManager->CreateUnit(3000, 2100, true, ORC_SOLDIER);
 			orcs_to_spawn--;
 			spawn_timer.Start();
 		}
-	}
 }
 void Scene::UpdateTime(float time)
 {
