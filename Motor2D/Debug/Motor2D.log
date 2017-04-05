@@ -1,6 +1,4 @@
-﻿  HUD.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(119): warning C4553: '==': operator has no effect; did you intend '='?
-c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(390): warning C4101: 'currlife': unreferenced local variable
-c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(513): warning C4390: ';': empty controlled statement found; is this the intent?
+﻿     Creating library C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
+physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
   Motor2D.vcxproj -> C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
   Motor2D.vcxproj -> C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

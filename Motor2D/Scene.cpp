@@ -239,10 +239,12 @@ bool Scene::PostUpdate()
 	bool ret = true;
 	if (my_townCenter->buildingLife == 0 && game_finished == false) {
 		Timer_lbl->SetString("DEFEAT");
+		Timer_lbl->SetColor({255, 0,0,255});
 		game_finished = true;
 	}
 	else if (enemy_townCenter->buildingLife == 0 && game_finished == false) {
 		Timer_lbl->SetString("VICTORY");
+		Timer_lbl->SetColor({ 0, 255 ,0 , 255 });
 		game_finished = true;
 	}
 	if (back_to_menu_bt->current == CLICKIN) {
@@ -270,15 +272,15 @@ void Scene::TimeEvents() {
 		Timer_lbl->SetColor({ 255, 0,0,255 });
 	}
 
-	if ((int)timer.ReadSec() == 140) {
+	if ((int)timer.ReadSec() == 100) {
 		orc_timer.Start();
 		wave = 2;
 	}
-	else if ((int)timer.ReadSec() < 140) {
+	else if ((int)timer.ReadSec() < 100) {
 		orc_timer.Start();
 	}
 	if ((int)troll_timer.ReadSec() == 300) {
-		App->entityManager->CreateUnit(2400, 2100, true, TROLL_MAULER);
+		App->entityManager->CreateUnit(3400, 1800, true, TROLL_MAULER);
 		troll_timer.Start();
 	}
 	if ((int)orc_timer.ReadSec() == 40)
@@ -286,7 +288,7 @@ void Scene::TimeEvents() {
 		orcs_to_spawn = wave;
 		orc_timer.Start();
 		if ((int)orcs_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
-			App->entityManager->CreateUnit(2400, 2100, true, ORC_SOLDIER);
+			App->entityManager->CreateUnit(3400, 1500, true, ORC_SOLDIER);
 			orcs_to_spawn--;
 			spawn_timer.Start();
 		}
