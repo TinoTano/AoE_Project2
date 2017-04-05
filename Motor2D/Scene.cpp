@@ -251,8 +251,8 @@ void Scene::TimeEvents() {
 		orcs_to_spawn = wave;
 		orc_timer.Start();
 		if ((int)orcs_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
-			+App->entityManager->CreateUnit(2400, 2100, true, ORC_SOLDIER);
-			+orcs_to_spawn--;
+			App->entityManager->CreateUnit(2400, 2100, true, ORC_SOLDIER);
+			orcs_to_spawn--;
 			spawn_timer.Start();
 		}
 	}
