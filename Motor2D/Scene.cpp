@@ -280,15 +280,16 @@ void Scene::TimeEvents() {
 		orc_timer.Start();
 	}
 	if ((int)troll_timer.ReadSec() == 300) {
-		App->entityManager->CreateUnit(3400, 1800, true, TROLL_MAULER);
+		App->entityManager->CreateUnit(3000, 2100, true, TROLL_MAULER);
 		troll_timer.Start();
 	}
 	if ((int)orc_timer.ReadSec() == 40)
 	{
+		wave++;
 		orcs_to_spawn = wave;
 		orc_timer.Start();
 		if ((int)orcs_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
-			App->entityManager->CreateUnit(3400, 1500, true, ORC_SOLDIER);
+			App->entityManager->CreateUnit(3000, 2100, true, ORC_SOLDIER);
 			orcs_to_spawn--;
 			spawn_timer.Start();
 		}

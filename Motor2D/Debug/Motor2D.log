@@ -1,87 +1,87 @@
-﻿  p2Log.cpp
+﻿  pugixml.cpp
   Window.cpp
   Unit.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(62): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(62): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(351): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(412): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(413): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(426): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(427): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(430): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(431): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(81): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
-  c:\users\davidfa7\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-  Timer.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(62): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(62): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(351): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(412): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(413): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(426): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(427): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(430): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(431): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\users\josephg2\desktop\dpfjo\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\josephg2\desktop\dpfjo\motor2d\unit.cpp(81): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+  c:\users\josephg2\desktop\dpfjo\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
+c:\users\josephg2\desktop\dpfjo\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
   Textures.cpp
+  Render.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\render.cpp(78): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\dpfjo\motor2d\render.cpp(93): warning C4018: '<': signed/unsigned mismatch
+  Timer.cpp
   SceneManager.cpp
   Scene.cpp
   Resource.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\resource.cpp(21): warning C4018: '<': signed/unsigned mismatch
-  Render.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\render.cpp(78): warning C4018: '<': signed/unsigned mismatch
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\render.cpp(93): warning C4018: '<': signed/unsigned mismatch
-  pugixml.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\resource.cpp(21): warning C4018: '<': signed/unsigned mismatch
   PerfTimer.cpp
   Pathfinding.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\davidfa7\documents\github\aoe_project2\motor2d\pathfinding.cpp(154): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
-  c:\users\davidfa7\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\users\josephg2\desktop\dpfjo\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\josephg2\desktop\dpfjo\motor2d\pathfinding.cpp(154): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+  c:\users\josephg2\desktop\dpfjo\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
+c:\users\josephg2\desktop\dpfjo\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  p2Log.cpp
   MenuScene.cpp
   Map.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\map.cpp(107): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\map.cpp(108): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Main.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\map.cpp(107): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\josephg2\desktop\dpfjo\motor2d\map.cpp(108): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   Input.cpp
-  HUD.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\hud.cpp(119): warning C4553: '==': operator has no effect; did you intend '='?
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\hud.cpp(390): warning C4101: 'currlife': unreferenced local variable
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\hud.cpp(513): warning C4390: ';': empty controlled statement found; is this the intent?
-  Gui.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(166): warning C4018: '<': signed/unsigned mismatch
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(398): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(548): warning C4018: '<': signed/unsigned mismatch
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(558): warning C4018: '<': signed/unsigned mismatch
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(579): warning C4018: '<': signed/unsigned mismatch
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(581): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(729): warning C4305: 'argument': truncation from 'int' to 'bool'
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(747): warning C4305: 'argument': truncation from 'int' to 'bool'
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(880): warning C4305: 'argument': truncation from 'int' to 'bool'
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(900): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
-  Fonts.cpp
-  FogOfWar.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\fogofwar.cpp(119): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\fogofwar.cpp(120): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-  Generating Code...
-  Compiling...
-  FileSystem.cpp
-  EntityManager.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\entitymanager.cpp(201): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\entitymanager.cpp(231): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-  Entity.cpp
-  Console.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\console.cpp(31): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\console.cpp(37): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\console.cpp(49): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\console.cpp(50): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-  Collision.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\collision.cpp(122): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\collision.cpp(134): warning C4305: 'argument': truncation from 'int' to 'bool'
-  Building.cpp
   Audio.cpp
   Application.cpp
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\application.cpp(260): warning C4018: '<': signed/unsigned mismatch
-c:\users\davidfa7\documents\github\aoe_project2\motor2d\application.cpp(256): warning C4477: 'sprintf_s' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 6 has type 'uint64'
-  c:\users\davidfa7\documents\github\aoe_project2\motor2d\application.cpp(256): note: consider using '%llu' in the format string
-  c:\users\davidfa7\documents\github\aoe_project2\motor2d\application.cpp(256): note: consider using '%I64u' in the format string
+c:\users\josephg2\desktop\dpfjo\motor2d\application.cpp(260): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\dpfjo\motor2d\application.cpp(256): warning C4477: 'sprintf_s' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 6 has type 'uint64'
+  c:\users\josephg2\desktop\dpfjo\motor2d\application.cpp(256): note: consider using '%llu' in the format string
+  c:\users\josephg2\desktop\dpfjo\motor2d\application.cpp(256): note: consider using '%I64u' in the format string
+  Main.cpp
+  HUD.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\hud.cpp(119): warning C4553: '==': operator has no effect; did you intend '='?
+c:\users\josephg2\desktop\dpfjo\motor2d\hud.cpp(390): warning C4101: 'currlife': unreferenced local variable
+c:\users\josephg2\desktop\dpfjo\motor2d\hud.cpp(513): warning C4390: ';': empty controlled statement found; is this the intent?
+  Gui.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(166): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(398): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(548): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(558): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(579): warning C4018: '<': signed/unsigned mismatch
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(581): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(729): warning C4305: 'argument': truncation from 'int' to 'bool'
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(747): warning C4305: 'argument': truncation from 'int' to 'bool'
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(880): warning C4305: 'argument': truncation from 'int' to 'bool'
+c:\users\josephg2\desktop\dpfjo\motor2d\gui.cpp(900): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
   Generating Code...
-  LINK : C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe not found or not built by the last incremental link; performing full link
-     Creating library C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
+  Compiling...
+  Fonts.cpp
+  FogOfWar.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\fogofwar.cpp(119): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\dpfjo\motor2d\fogofwar.cpp(120): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+  FileSystem.cpp
+  EntityManager.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\entitymanager.cpp(201): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\josephg2\desktop\dpfjo\motor2d\entitymanager.cpp(231): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+  Entity.cpp
+  Console.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\console.cpp(31): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\dpfjo\motor2d\console.cpp(37): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\dpfjo\motor2d\console.cpp(49): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\josephg2\desktop\dpfjo\motor2d\console.cpp(50): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+  Collision.cpp
+c:\users\josephg2\desktop\dpfjo\motor2d\collision.cpp(122): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\josephg2\desktop\dpfjo\motor2d\collision.cpp(134): warning C4305: 'argument': truncation from 'int' to 'bool'
+  Building.cpp
+  Generating Code...
+  LINK : C:\Users\josephg2\Desktop\dpfjo\Debug\AgeOfTheRing.exe not found or not built by the last incremental link; performing full link
+     Creating library C:\Users\josephg2\Desktop\dpfjo\Debug\AgeOfTheRing.lib and object C:\Users\josephg2\Desktop\dpfjo\Debug\AgeOfTheRing.exp
 physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
-  Motor2D.vcxproj -> C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
+  Motor2D.vcxproj -> C:\Users\josephg2\Desktop\dpfjo\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\josephg2\Desktop\dpfjo\Debug\AgeOfTheRing.pdb (Full PDB)
