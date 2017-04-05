@@ -30,7 +30,7 @@ bool EntityManager::Awake(pugi::xml_node & config)
 bool EntityManager::Start()
 {
 	LOG("Starting EntityManager");
-	
+
 	bool ret = LoadGameData();
 
 	return ret;
@@ -50,7 +50,7 @@ bool EntityManager::Update(float dt)
 	SDL_Rect cam = App->render->culling_cam;
 
 	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-		if ((*it)->entityPosition.x >= (cam.x  - 150)&& (*it)->entityPosition.x <= (cam.x + cam.w + 150) &&
+		if ((*it)->entityPosition.x >= (cam.x - 150) && (*it)->entityPosition.x <= (cam.x + cam.w + 150) &&
 			(*it)->entityPosition.y > (cam.y - 150) && (*it)->entityPosition.y < (cam.y + cam.h + 150)) {
 			(*it)->isVisible = true;
 		}
@@ -145,7 +145,7 @@ bool EntityManager::Update(float dt)
 							clickedBuilding = nullptr;
 						}
 						else {
-							if ((*it)->type == VILLAGER) {
+							if ((*it)->type == VILLAGER || (*it)->type == ELF_VILLAGER) {
 								for (list<Resource*>::iterator it4 = resourceList.begin(); it4 != resourceList.end(); it4++)
 								{
 									if (mouseX < (*it4)->entityPosition.x + (90 / 2) && mouseX >(*it4)->entityPosition.x - (90 / 2) &&
@@ -482,6 +482,12 @@ bool EntityManager::LoadGameData()
 			string attackTexturePath = unitNodeInfo.child("Textures").child("Attack").attribute("value").as_string();
 			string dieTexturePath = unitNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
+			//Villager
+			string chopTexturePath;
+			if (unitTemplate->type == VILLAGER || unitTemplate->type == ELF_VILLAGER) {
+				chopTexturePath = unitNodeInfo.child("Textures").child("Cut").attribute("value").as_string();
+			}
+
 			unitTemplate->faction = (unitFaction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			unitTemplate->attackSpeed = 1 / unitNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
 			unitTemplate->unitLife = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
@@ -580,11 +586,33 @@ bool EntityManager::LoadGameData()
 			unitTemplate->unitAttackTexture = App->tex->Load(attackTexturePath.c_str());
 			unitTemplate->unitDieTexture = App->tex->Load(dieTexturePath.c_str());
 
+			if (unitTemplate->type == VILLAGER || unitTemplate->type == ELF_VILLAGER) {
+				//Anim Chopping//
+				animationNode = unitNodeInfo.child("Animations").child("Chop");
+				width = animationNode.child("Width").attribute("value").as_int();
+				height = animationNode.child("Height").attribute("value").as_int();
+				rows = animationNode.child("Rows").attribute("value").as_int();
+				columns = animationNode.child("Columns").attribute("value").as_int();
+				for (int i = 0; i < rows; i++) {
+					Animation chop;
+					for (int j = 0; j < columns; j++) {
+						chop.PushBack({ width*j,height*i,width,height });
+					}
+					chop.speed = animationNode.child("Speed").attribute("value").as_float();
+					unitTemplate->cuttingAnimations.push_back(chop);
+					if (i != 0 && i != rows - 1) {
+						chop.flip = SDL_FLIP_HORIZONTAL;
+						unitTemplate->cuttingAnimations.push_back(chop);
+					}
+				}
+				unitTemplate->unitChoppingTexture = App->tex->Load(chopTexturePath.c_str());
+			}
+
 			unitsDB.insert(pair<int, Unit*>(unitTemplate->type, unitTemplate));
 		}
 
 		for (buildingNodeInfo = gameData.child("Buildings").child("Building"); buildingNodeInfo; buildingNodeInfo = buildingNodeInfo.next_sibling("Building")) {
-			
+
 			Building* buildingTemplate = new Building();
 
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
@@ -605,7 +633,7 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->buildingMaxLife = buildingTemplate->buildingLife;
 		}
 
-		for (resourceNodeInfo = gameData.child("Resources").child("Resource"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resource")) 
+		for (resourceNodeInfo = gameData.child("Resources").child("Resource"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resource"))
 		{
 
 			Resource* resourceTemplate = new Resource();
@@ -714,61 +742,61 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 {
 	/*if (c1->type == COLLIDER_FRIENDLY_UNIT && c2->type == COLLIDER_ENEMY_UNIT)
 	{
-		for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
-		{
-			if ((*friendly_unit)->collider == c1)
-			{
-				(*friendly_unit)->SetState(UNIT_ATTACKING);
+	for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
+	{
+	if ((*friendly_unit)->collider == c1)
+	{
+	(*friendly_unit)->SetState(UNIT_ATTACKING);
 
-				for (list<Unit*>::iterator enemy_unit = enemyUnitList.begin(); enemy_unit != enemyUnitList.end(); enemy_unit++)
-				{
-					if ((*enemy_unit)->collider == c2)
-					{
-						(*enemy_unit)->SetState(UNIT_ATTACKING);
-						if ((*friendly_unit)->attackUnitTarget == nullptr) (*friendly_unit)->attackUnitTarget = (*enemy_unit);
-						if ((*enemy_unit)->attackUnitTarget == nullptr) (*enemy_unit)->attackUnitTarget = (*friendly_unit);
-					}
-				}
-			}
-		}
+	for (list<Unit*>::iterator enemy_unit = enemyUnitList.begin(); enemy_unit != enemyUnitList.end(); enemy_unit++)
+	{
+	if ((*enemy_unit)->collider == c2)
+	{
+	(*enemy_unit)->SetState(UNIT_ATTACKING);
+	if ((*friendly_unit)->attackUnitTarget == nullptr) (*friendly_unit)->attackUnitTarget = (*enemy_unit);
+	if ((*enemy_unit)->attackUnitTarget == nullptr) (*enemy_unit)->attackUnitTarget = (*friendly_unit);
+	}
+	}
+	}
+	}
 	}
 
 	if (c1->type == COLLIDER_ENEMY_UNIT && c2->type == COLLIDER_FRIENDLY_BUILDING)
 	{
-		for (list<Unit*>::iterator enemy_unit = enemyUnitList.begin(); enemy_unit != enemyUnitList.end(); enemy_unit++)
-		{
-			if ((*enemy_unit)->collider == c1 && (*enemy_unit)->attackUnitTarget == nullptr)
-			{
-				for (list<Building*>::iterator friendly_building = friendlyBuildingList.begin(); friendly_building != friendlyBuildingList.end(); friendly_building++)
-				{
-					if ((*friendly_building)->collider == c2)
-					{
-						(*enemy_unit)->SetState(UNIT_ATTACKING);
-						(*enemy_unit)->attackBuildingTarget = (*friendly_building);
-						break;
-					}
-				}
-			}
-		}
+	for (list<Unit*>::iterator enemy_unit = enemyUnitList.begin(); enemy_unit != enemyUnitList.end(); enemy_unit++)
+	{
+	if ((*enemy_unit)->collider == c1 && (*enemy_unit)->attackUnitTarget == nullptr)
+	{
+	for (list<Building*>::iterator friendly_building = friendlyBuildingList.begin(); friendly_building != friendlyBuildingList.end(); friendly_building++)
+	{
+	if ((*friendly_building)->collider == c2)
+	{
+	(*enemy_unit)->SetState(UNIT_ATTACKING);
+	(*enemy_unit)->attackBuildingTarget = (*friendly_building);
+	break;
+	}
+	}
+	}
+	}
 	}
 
 	if (c1->type == COLLIDER_FRIENDLY_UNIT && c2->type == COLLIDER_ENEMY_BUILDING)
 	{
-		for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
-		{
-			if ((*friendly_unit)->collider == c1 && (*friendly_unit)->attackUnitTarget == nullptr)
-			{
-				for (list<Building*>::iterator enemy_building = enemyBuildingList.begin(); enemy_building != enemyBuildingList.end(); enemy_building++)
-				{
-					if ((*enemy_building)->collider == c2)
-					{
-						(*friendly_unit)->SetState(UNIT_ATTACKING);
-						(*friendly_unit)->attackBuildingTarget = (*enemy_building);
-						break;
-					}
-				}
-			}
-		}
+	for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
+	{
+	if ((*friendly_unit)->collider == c1 && (*friendly_unit)->attackUnitTarget == nullptr)
+	{
+	for (list<Building*>::iterator enemy_building = enemyBuildingList.begin(); enemy_building != enemyBuildingList.end(); enemy_building++)
+	{
+	if ((*enemy_building)->collider == c2)
+	{
+	(*friendly_unit)->SetState(UNIT_ATTACKING);
+	(*friendly_unit)->attackBuildingTarget = (*enemy_building);
+	break;
+	}
+	}
+	}
+	}
 	}*/
 }
 
