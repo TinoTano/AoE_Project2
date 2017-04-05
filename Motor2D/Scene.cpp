@@ -138,6 +138,7 @@ bool Scene::Start()
 	// ---------------------
 	// DONE!
 
+	App->map->LoadResources(App->map->map_file.child("map"));
 
 	//Test
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);

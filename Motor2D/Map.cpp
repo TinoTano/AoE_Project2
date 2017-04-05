@@ -242,7 +242,6 @@ bool Map::Load(const char* file_name)
 			data.layers.push_back(lay);
 	}
 
-	ret = LoadResources(map_file.child("map"));
 
 	if(ret == true)
 	{
