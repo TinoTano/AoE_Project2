@@ -169,7 +169,7 @@ bool Scene::Start()
 	wave = 0;
 	orcs_to_spawn = 0;
 	trolls_to_spawn = 0;
-	woodCount = 0;
+	woodCount = 100;
 	foodCount = 0;
 	goldCount = 0;
 	stoneCount = 0;
