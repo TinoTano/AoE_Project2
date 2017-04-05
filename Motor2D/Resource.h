@@ -36,7 +36,7 @@ public:
 	bool isSelected = false;
 	vector<SDL_Rect> resourceRectVector;
 	SDL_Rect resourceRect;
-	int rectIndex;
+	int rectIndex = 0;
 	bool isInteractable = false;
 	SDL_Rect resourceGatheringRect;
 };
