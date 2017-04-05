@@ -89,6 +89,7 @@ bool EntityManager::Update(float dt)
 				target = App->map->WorldToMap(target.x, target.y);
 				(*it)->SetDestination(target);
 				(*it)->attackBuildingTarget = App->sceneManager->level1_scene->my_townCenter;
+				(*it)->checkTile = true;
 			}
 		}
 
@@ -105,13 +106,11 @@ bool EntityManager::Update(float dt)
 					App->input->GetMousePosition(target.x, target.y);
 					for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++)
 					{
-						if ((*it)->isVisible) {
-							if (mouseX < (*it2)->entityPosition.x + ((*it2)->collider->rect.w / 2) && mouseX >(*it2)->entityPosition.x - ((*it2)->collider->rect.w / 2) &&
-								mouseY < (*it2)->entityPosition.y + ((*it2)->collider->rect.h / 2) && mouseY >(*it2)->entityPosition.y - ((*it2)->collider->rect.h / 2))
-							{
-								clickedUnit = *it2;
-								break;
-							}
+						if (mouseX < (*it2)->entityPosition.x + ((*it2)->collider->rect.w / 2) && mouseX >(*it2)->entityPosition.x - ((*it2)->collider->rect.w / 2) &&
+							mouseY < (*it2)->entityPosition.y + ((*it2)->collider->rect.h / 2) && mouseY >(*it2)->entityPosition.y - ((*it2)->collider->rect.h / 2))
+						{
+							clickedUnit = *it2;
+							break;
 						}
 					}
 					if (clickedUnit != nullptr)
@@ -122,7 +121,16 @@ bool EntityManager::Update(float dt)
 					else {
 						for (list<Building*>::iterator it3 = enemyBuildingList.begin(); it3 != enemyBuildingList.end(); it3++)
 						{
-							if ((*it)->isVisible) {
+							if ((*it3)->type == SAURON_TOWER) {
+								LOG("%d %d", mouseY, (*it3)->entityPosition.y);
+								if (mouseX < (*it3)->entityPosition.x + ((*it3)->collider->rect.w / 2) && mouseX >(*it3)->entityPosition.x - ((*it3)->collider->rect.w / 2) &&
+									mouseY < (*it3)->entityPosition.y + ((*it3)->collider->rect.h * 2) && mouseY >(*it3)->entityPosition.y + 150)
+								{
+									clickedBuilding = *it3;
+									break;
+								}
+							}
+							else {
 								if (mouseX < (*it3)->entityPosition.x + ((*it3)->collider->rect.w / 2) && mouseX >(*it3)->entityPosition.x - ((*it3)->collider->rect.w / 2) &&
 									mouseY < (*it3)->entityPosition.y + ((*it3)->collider->rect.h / 2) && mouseY >(*it3)->entityPosition.y - ((*it3)->collider->rect.h / 2))
 								{
@@ -139,13 +147,11 @@ bool EntityManager::Update(float dt)
 							if ((*it)->type == VILLAGER) {
 								for (list<Resource*>::iterator it4 = resourceList.begin(); it4 != resourceList.end(); it4++)
 								{
-									if ((*it)->isVisible) {
-										if (mouseX < (*it4)->entityPosition.x + (90 / 2) && mouseX >(*it4)->entityPosition.x - (90 / 2) &&
-											mouseY < (*it4)->entityPosition.y + (150 / 2) && mouseY >(*it4)->entityPosition.y - (150 / 2))
-										{
-											clickedResource = *it4;
-											break;
-										}
+									if (mouseX < (*it4)->entityPosition.x + (90 / 2) && mouseX >(*it4)->entityPosition.x - (90 / 2) &&
+										mouseY < (*it4)->entityPosition.y + (150 / 2) && mouseY >(*it4)->entityPosition.y - (150 / 2))
+									{
+										clickedResource = *it4;
+										break;
 									}
 								}
 								if (clickedResource != nullptr)
@@ -303,7 +309,7 @@ bool EntityManager::Update(float dt)
 							bool selectedEnemyBuilding = false;
 							for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
 								if (mouseX < (*it)->entityPosition.x + ((*it)->collider->rect.w / 2) && mouseX >(*it)->entityPosition.x - ((*it)->collider->rect.w / 2) &&
-									mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h / 2) && mouseY >(*it)->entityPosition.y - ((*it)->collider->rect.h / 2)) {
+									mouseY < (*it)->entityPosition.y + ((*it)->collider->rect.h * 2) && mouseY >(*it)->entityPosition.y + 150) {
 									(*it)->isSelected = true;
 									selectedBuildingList.push_back(*it);
 									selectedBuilding = true;
@@ -484,6 +490,7 @@ bool EntityManager::LoadGameData()
 			unitTemplate->unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
 			unitTemplate->unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
 			unitTemplate->unitRange = unitNodeInfo.child("Stats").child("Range").attribute("value").as_int();
+			unitTemplate->unitRangeOffset = unitNodeInfo.child("Stats").child("RangeOffset").attribute("value").as_int();
 
 			pugi::xml_node animationNode;
 			int width;

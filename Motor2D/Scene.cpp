@@ -15,6 +15,7 @@
 #include <sstream>
 #include "FileSystem.h"
 #include "SceneManager.h"
+#include "Building.h"
 
 Scene::Scene() : SceneElement("scene")
 {

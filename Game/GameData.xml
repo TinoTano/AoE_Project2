@@ -21,7 +21,7 @@
 				<AttackSpeed value="2.2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="1.1"/>
+				<MovementSpeed value="110.1"/>
 				<LineOfSight value="3"/>
         <Range value="20"/>
 				<FoodCost value=""/>
@@ -78,7 +78,7 @@
 				<AttackSpeed value="1.9"/>
 				<Defense value="2"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="0.9"/>
+				<MovementSpeed value="110.9"/>
 				<LineOfSight value="3"/>
         <Range value="30"/>
 				<FoodCost value=""/>
@@ -135,7 +135,7 @@
 				<AttackSpeed value="2"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="1"/>
+				<MovementSpeed value="110"/>
 				<LineOfSight value="4"/>
         <Range value="35"/>
 				<FoodCost value=""/>
@@ -192,7 +192,7 @@
 				<AttackSpeed value="2.2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="1"/>
-				<MovementSpeed value="1.1"/>
+				<MovementSpeed value="110.1"/>
 				<LineOfSight value="7"/>
         <Range value="150"/>
 				<FoodCost value=""/>
@@ -249,7 +249,7 @@
 				<AttackSpeed value="2"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="1"/>
+				<MovementSpeed value="110"/>
 				<LineOfSight value="6"/>
         <Range value="30"/>
 				<FoodCost value=""/>
@@ -306,7 +306,7 @@
 				<AttackSpeed value="2.1"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="1.5"/>
+				<MovementSpeed value="130.5"/>
 				<LineOfSight value="6"/>
         <Range value="165"/>
 				<FoodCost value=""/>
@@ -319,7 +319,7 @@
 					<Columns value="10"/>
 					<Width value="98"/>
 					<Height value="94"/>
-					<Speed value="0.2f"/>
+					<Speed value="0.15f"/>
 				</Idle>
 				<Move>
 					<Rows value="5"/>
@@ -363,7 +363,7 @@
 				<AttackSpeed value="2"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="1.5"/>
+				<MovementSpeed value="110.5"/>
 				<LineOfSight value="5"/>
         <Range value="35"/>
 				<FoodCost value=""/>
@@ -420,7 +420,7 @@
 				<AttackSpeed value="1.9"/>
 				<Defense value="2"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="1.3"/>
+				<MovementSpeed value="110.3"/>
 				<LineOfSight value="3"/>
         <Range value="35"/>
 				<FoodCost value=""/>
@@ -477,7 +477,7 @@
 				<AttackSpeed value="2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="3"/>
-				<MovementSpeed value="1.4"/>
+				<MovementSpeed value="110.4"/>
 				<LineOfSight value="4"/>
         <Range value="35"/>
 				<FoodCost value=""/>
@@ -534,7 +534,7 @@
 				<AttackSpeed value="0"/>
 				<Defense value="3"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="0.7"/>
+				<MovementSpeed value="100.7"/>
 				<LineOfSight value="3"/>
         <Range value="35"/>
 				<FoodCost value=""/>
@@ -591,7 +591,7 @@
 				<AttackSpeed value="1.8"/>
 				<Defense value="1"/>
 				<PiercingDamage value="3"/>
-				<MovementSpeed value="0.8"/>
+				<MovementSpeed value="100.8"/>
 				<LineOfSight value="6"/>
         <Range value="35"/>
 				<FoodCost value=""/>
@@ -649,9 +649,10 @@
 				<AttackSpeed value="2.1"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="1.1"/>
+				<MovementSpeed value="85.1"/>
 				<LineOfSight value="3"/>
         <Range value="25"/>
+        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -706,9 +707,10 @@
 				<AttackSpeed value="2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="1"/>
+				<MovementSpeed value="85"/>
 				<LineOfSight value="3"/>
         <Range value="25"/>
+        <RangeOffset value="70"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -733,7 +735,7 @@
 					<Columns value="15"/>
 					<Width value="75"/>
 					<Height value="79"/>
-					<Speed value="0.2f"/>
+					<Speed value="0.25f"/>
 				</Attack>
 				<Die>
 					<Rows value="5"/>
@@ -763,9 +765,10 @@
 				<AttackSpeed value="2"/>
 				<Defense value="1"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="1"/>
+				<MovementSpeed value="85"/>
 				<LineOfSight value="4"/>
         <Range value="20"/>
+        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -820,9 +823,10 @@
 				<AttackSpeed value="2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="1.1"/>
+				<MovementSpeed value="85.1"/>
 				<LineOfSight value="6"/>
         <Range value="155"/>
+        <RangeOffset value="150"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -877,9 +881,10 @@
 				<AttackSpeed value="2.1"/>
 				<Defense value="0"/>
 				<PiercingDamage value="1"/>
-				<MovementSpeed value="1.3"/>
+				<MovementSpeed value="85.3"/>
 				<LineOfSight value="3"/>
         <Range value="45"/>
+        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -934,9 +939,10 @@
 				<AttackSpeed value="1.9"/>
 				<Defense value="2"/>
 				<PiercingDamage value="3"/>
-				<MovementSpeed value="1.2"/>
+				<MovementSpeed value="90.2"/>
 				<LineOfSight value="3"/>
         <Range value="160"/>
+        <RangeOffset value="150"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -991,9 +997,10 @@
 				<AttackSpeed value="2.1"/>
 				<Defense value="1"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="1.5"/>
+				<MovementSpeed value="90.5"/>
 				<LineOfSight value="4"/>
         <Range value="40"/>
+        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -1048,9 +1055,10 @@
 				<AttackSpeed value="1.5"/>
 				<Defense value="0"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="0.7"/>
+				<MovementSpeed value="85.7"/>
 				<LineOfSight value="3"/>
         <Range value="70"/>
+        <RangeOffset value="100"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -1109,9 +1117,10 @@
 				<AttackSpeed value="1.5"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="0.7"/>
+				<MovementSpeed value="100.7"/>
 				<LineOfSight value="3"/>
         <Range value="20"/>
+        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>

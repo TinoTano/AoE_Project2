@@ -42,6 +42,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 	unitAttack = unit->unitAttack;
 	unitDefense = unit->unitDefense;
 	unitRange = unit->unitRange;
+	unitRangeOffset = unit->unitRangeOffset;
 
 	//Animations
 	idleAnimations = unit->idleAnimations;
@@ -73,8 +74,11 @@ bool Unit::Update(float dt)
 {
 	switch (state) {
 	case UNIT_MOVING:
+		if (attackBuildingTarget != nullptr) {
+			LOG("%d", entityPosition.DistanceTo(attackBuildingTarget->entityPosition));
+		}
 		if (attackUnitTarget != nullptr && entityPosition.DistanceTo(attackUnitTarget->entityPosition) < unitRange ||
-			attackBuildingTarget != nullptr && entityPosition.DistanceTo(attackBuildingTarget->entityPosition) < 150 ||
+			attackBuildingTarget != nullptr && entityPosition.DistanceTo(attackBuildingTarget->entityPosition) < unitRange + 150 ||
 			resourceTarget != nullptr && entityPosition.DistanceTo(resourceTarget->entityPosition) < 60) {
 			if (attackUnitTarget != nullptr) {
 				if (attackUnitTarget->isEnemy) {
@@ -98,8 +102,25 @@ bool Unit::Update(float dt)
 				//	break;
 				//}
 				if (destinationReached) {
-					iPoint target = App->map->WorldToMap(attackUnitTarget->entityPosition.x, attackUnitTarget->entityPosition.y);
-					SetDestination(target);
+					//Temporal fix
+					if (entityPosition.DistanceTo(attackUnitTarget->entityPosition) < unitRange + unitRangeOffset) {
+						destinationTileWorld = attackUnitTarget->entityPosition;
+						checkTile = false;
+						destinationReached = false;
+					}
+					else {
+						iPoint target = App->map->WorldToMap(attackUnitTarget->entityPosition.x, attackUnitTarget->entityPosition.y);
+						SetDestination(target);
+					}
+
+
+					if (entityPosition.DistanceTo(attackUnitTarget->entityPosition) > unitRange + unitRangeOffset) {
+						if (isEnemy && attackUnitTarget->attackUnitTarget == nullptr && attackBuildingTarget == nullptr) {
+							SetState(UNIT_IDLE);
+							destinationReached = true;
+							break;
+						}
+					}
 				}
 				//Uncomment if you want the enemy to go back when it's far from attacker
 				//else {
@@ -185,8 +206,16 @@ bool Unit::Draw()
 
 			App->render->sprites_toDraw.push_back(bar);
 
-			int percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
-			int barPercent = (percent * hpBarWidth) / 100;
+			int percent;
+			int barPercent;
+
+			if (unitMaxLife > 0) {
+				percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
+				barPercent = (percent * hpBarWidth) / 100;
+			}
+			else {
+				barPercent = 0;
+			}
 
 			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
 			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
@@ -216,8 +245,16 @@ bool Unit::Draw()
 		{
 			Sprite bar;
 
-			int percent = ((attackUnitTarget->unitMaxLife - attackUnitTarget->unitLife) * 100) / attackUnitTarget->unitMaxLife;
-			int barPercent = (percent * hpBarWidth) / 100;
+			int percent;
+			int barPercent;
+
+			if (attackUnitTarget->unitMaxLife > 0) {
+				percent = ((attackUnitTarget->unitMaxLife - attackUnitTarget->unitLife) * 100) / attackUnitTarget->unitMaxLife;
+				barPercent = (percent * hpBarWidth) / 100;
+			}
+			else {
+				barPercent = 0;
+			}
 
 			bar.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
 			bar.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
@@ -243,8 +280,16 @@ bool Unit::Draw()
 		{
 			Sprite bar;
 
-			int percent = ((attackBuildingTarget->buildingMaxLife - attackBuildingTarget->buildingLife) * 100) / attackBuildingTarget->buildingMaxLife;
-			int barPercent = (percent * hpBarWidth) / 100;
+			int percent;
+			int barPercent;
+
+			if (attackBuildingTarget->buildingMaxLife > 0) {
+				percent = ((attackBuildingTarget->buildingMaxLife - attackBuildingTarget->buildingLife) * 100) / attackBuildingTarget->buildingMaxLife;
+				barPercent = (percent * hpBarWidth) / 100;
+			}
+			else {
+				barPercent = 0;
+			}
 
 			bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
 			bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
@@ -321,7 +366,7 @@ void Unit::Move(float dt)
 
 	if (!destinationReached) {
 
-		fPoint vel = (velocity * (unitMovementSpeed + 100)) * dt;
+		fPoint vel = (velocity * unitMovementSpeed) * dt;
 		roundf(vel.x);
 		roundf(vel.y);
 
@@ -331,7 +376,7 @@ void Unit::Move(float dt)
 		entityPosition.x += int(vel.x);
 		entityPosition.y += int(vel.y);
 
-		if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 1) {
+		if (entityPosition.DistanceNoSqrt(destinationTileWorld) < 5) {
 			if (path.size() > 0) {
 				destinationTile = path.front();
 				path.erase(path.begin());
@@ -348,8 +393,9 @@ void Unit::Move(float dt)
 
 void Unit::CalculateVelocity()
 {
-
-	destinationTileWorld = App->map->MapToWorld(destinationTile.x + 1, destinationTile.y);
+	if (checkTile) {
+		destinationTileWorld = App->map->MapToWorld(destinationTile.x + 1, destinationTile.y);
+	}
 	velocity.x = destinationTileWorld.x - entityPosition.x;
 	velocity.y = destinationTileWorld.y - entityPosition.y;
 

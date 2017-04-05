@@ -94,6 +94,8 @@ public:
 	Resource* resourceTarget = nullptr;
 	int unitRange = 0;
 	SDL_Rect r = { 0,0,0,0 };
+	int unitRangeOffset = 0;
+	bool checkTile = true;
 
 	//Animations
 	vector<Animation> idleAnimations;

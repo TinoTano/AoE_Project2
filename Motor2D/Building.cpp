@@ -39,7 +39,13 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 	entityTexture = buildingIdleTexture;
 
 	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
-	SDL_Rect colliderRect = { entityPosition.x - (imageWidth / 2), entityPosition.y - (imageHeight / 2), imageWidth, imageHeight};
+	SDL_Rect colliderRect;
+	if (type == SAURON_TOWER) {
+		colliderRect = { entityPosition.x - ((int)imageWidth / 2), entityPosition.y + ((int)imageHeight / 4), (int)imageWidth, 150 };
+	}
+	else {
+		colliderRect = { entityPosition.x - ((int)imageWidth / 2), entityPosition.y - ((int)imageHeight / 2), (int)imageWidth, (int)imageHeight };
+	}
 	COLLIDER_TYPE colliderType;
 	if (isEnemy) {
 		colliderType = COLLIDER_ENEMY_BUILDING;
