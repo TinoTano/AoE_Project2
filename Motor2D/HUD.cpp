@@ -255,6 +255,7 @@ void HUD::Update() {
 						}
 						if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType()) {
 
+							if (it_unit._Ptr->_Myval->unitMaxLife == 0) it_unit._Ptr->_Myval->unitMaxLife = it_unit._Ptr->_Myval->unitLife;
 							percent = ((it_unit._Ptr->_Myval->unitMaxLife - it_unit._Ptr->_Myval->unitLife) * 100) / it_unit._Ptr->_Myval->unitMaxLife;
 							barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
 							bar.rect.x = 310 + x - App->render->camera.x;
