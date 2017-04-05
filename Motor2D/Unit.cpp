@@ -467,10 +467,7 @@ void Unit::AttackEnemyUnit(float dt)
 	if (currentAnim->Finished()) {
 		attackUnitTarget->unitLife -= unitAttack - attackUnitTarget->unitDefense;
 
-		if (attackUnitTarget->unitLife < 0)
-			attackUnitTarget->unitLife = 0;
-
-		if (attackUnitTarget->unitLife == 0) {
+		if (attackUnitTarget->unitLife <= 0) {
 			attackUnitTarget->Dead();
 			if (unitLife > 0) {
 				SetState(UNIT_IDLE);
@@ -527,7 +524,6 @@ void Unit::GatherResource(float dt)
 
 void Unit::Dead() {
 	SetState(UNIT_DEAD);
-	collider->rect = { 0, 0, 0, 0 };
 }
 
 void Unit::SetState(unitState newState)
