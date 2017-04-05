@@ -97,11 +97,12 @@ bool Unit::Update(float dt)
 		else {
 			if (attackUnitTarget != nullptr) {
 				//Uncomment if you want the enemy to go back when it's far from town hall
-				//if (isEnemy && entityPosition.DistanceTo(App->sceneManager->level1_scene->my_townCenter->entityPosition) > 1000) {
-				//	SetState(UNIT_IDLE);
-				//	destinationReached = true;
-				//	break;
-				//}
+				if (isEnemy && isGuard && entityPosition.DistanceTo(App->sceneManager->level1_scene->enemy_townCenter->entityPosition) > 500 ||
+					isEnemy && isGuard && App->sceneManager->level1_scene->enemy_townCenter->attackingTargets.empty()) {
+					SetState(UNIT_IDLE);
+					destinationReached = true;
+					break;
+				}
 				if (destinationReached) {
 					//Temporal fix
 					if (entityPosition.DistanceTo(attackUnitTarget->entityPosition) < unitRange + unitRangeOffset) {
@@ -499,6 +500,11 @@ void Unit::AttackEnemyBuilding(float dt)
 void Unit::GatherResource(float dt)
 {
 	LookAt();
+	if (resourceTarget->entityTexture != resourceTarget->resourceGatheringTexture) {
+		resourceTarget->entityTexture = resourceTarget->resourceGatheringTexture;
+		resourceTarget->resourceRect = resourceTarget->resourceGatheringRect;
+		resourceTarget->state = RESOURCE_GATHERING;
+	}
 	if (currentAnim->Finished()) {
 		int decreaseLife = resourceTarget->resourceLife;
 		resourceTarget->resourceLife -= unitAttack;
@@ -523,6 +529,12 @@ void Unit::GatherResource(float dt)
 
 void Unit::Dead() {
 	SetState(UNIT_DEAD);
+	if (attackBuildingTarget != nullptr) {
+		attackBuildingTarget->attackingTargets.remove(this);
+	}
+	attackBuildingTarget = nullptr;
+	attackUnitTarget = nullptr;
+	resourceTarget = nullptr;
 }
 
 void Unit::SetState(unitState newState)

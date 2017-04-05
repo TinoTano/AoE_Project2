@@ -91,6 +91,8 @@ public:
 	int stoneCount = 0;
 	// RESOURCES 
 	Label* wood, *food, *gold, *stone, *villagers;
+	Unit* guard1;
+	Unit* guard2;
 };
 
 #endif // __SCENE_H__

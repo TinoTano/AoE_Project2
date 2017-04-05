@@ -10,6 +10,7 @@
 #include "Textures.h"
 #include "Resource.h"
 #include "SceneManager.h"
+#include <algorithm>
 
 EntityManager::EntityManager() : Module()
 {
@@ -86,10 +87,19 @@ bool EntityManager::Update(float dt)
 			{
 				(*it)->attackUnitTarget = nullptr;
 				iPoint target;
-				target = App->sceneManager->level1_scene->my_townCenter->GetPosition();
-				target = App->map->WorldToMap(target.x, target.y);
-				(*it)->SetDestination(target);
-				(*it)->attackBuildingTarget = App->sceneManager->level1_scene->my_townCenter;
+				if (App->sceneManager->level1_scene->enemy_townCenter->attackingTargets.size() > 0 && (*it)->entityPosition.DistanceTo(App->sceneManager->level1_scene->enemy_townCenter->entityPosition) < 600) {
+					(*it)->attackUnitTarget = App->sceneManager->level1_scene->enemy_townCenter->attackingTargets.front();
+					target = App->map->WorldToMap((*it)->attackUnitTarget->entityPosition.x, (*it)->attackUnitTarget->entityPosition.y);
+					(*it)->SetDestination(target);
+				}
+				else {
+					if (!(*it)->isGuard) {
+						target = App->sceneManager->level1_scene->my_townCenter->GetPosition();
+						target = App->map->WorldToMap(target.x, target.y);
+						(*it)->attackBuildingTarget = App->sceneManager->level1_scene->my_townCenter;
+						(*it)->SetDestination(target);
+					}
+				}
 				(*it)->checkTile = true;
 			}
 		}
@@ -100,6 +110,7 @@ bool EntityManager::Update(float dt)
 			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
 			{
 				if (!(*it)->isEnemy) {
+					if ((*it)->attackBuildingTarget != nullptr) (*it)->attackBuildingTarget->attackingTargets.remove(*it);
 					(*it)->attackBuildingTarget = nullptr;
 					(*it)->attackUnitTarget = nullptr;
 					(*it)->resourceTarget = nullptr;
@@ -123,7 +134,6 @@ bool EntityManager::Update(float dt)
 						for (list<Building*>::iterator it3 = enemyBuildingList.begin(); it3 != enemyBuildingList.end(); it3++)
 						{
 							if ((*it3)->type == SAURON_TOWER) {
-								LOG("%d %d", mouseY, (*it3)->entityPosition.y);
 								if (mouseX < (*it3)->entityPosition.x + ((*it3)->collider->rect.w / 2) && mouseX >(*it3)->entityPosition.x - ((*it3)->collider->rect.w / 2) &&
 									mouseY < (*it3)->entityPosition.y + ((*it3)->collider->rect.h * 2) && mouseY >(*it3)->entityPosition.y + 150)
 								{
@@ -142,6 +152,9 @@ bool EntityManager::Update(float dt)
 						}
 						if (clickedBuilding != nullptr) {
 							(*it)->attackBuildingTarget = clickedBuilding;
+							if (!(find(clickedBuilding->attackingTargets.begin(), clickedBuilding->attackingTargets.end(), *it) != clickedBuilding->attackingTargets.end())) {
+								clickedBuilding->attackingTargets.push_back((*it));
+							}
 							clickedBuilding = nullptr;
 						}
 						else {
@@ -657,6 +670,8 @@ bool EntityManager::LoadGameData()
 
 			resourceTemplate->resourceIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			resourceTemplate->resourceGatheringTexture = App->tex->Load(gatheringTexturePath.c_str());
+			resourceTemplate->resourceGatheringRect = { resourceNodeInfo.child("GatherRect").child("Rect").attribute("x").as_int(),resourceNodeInfo.child("GatherRect").child("Rect").attribute("y").as_int(),
+														resourceNodeInfo.child("GatherRect").child("Rect").attribute("w").as_int(),resourceNodeInfo.child("GatherRect").child("Rect").attribute("h").as_int() };
 
 			resourceTemplate->type = (resourceType)resourceNodeInfo.child("Info").child("ID").attribute("value").as_int();
 
@@ -748,6 +763,33 @@ void EntityManager::DeleteResource(Resource* resource)
 
 void EntityManager::OnCollision(Collider * c1, Collider * c2)
 {
+
+	if (c1->type == COLLIDER_FRIENDLY_UNIT && c2->type == COLLIDER_ENEMY_UNIT)
+	{
+		Unit* friendUnit = nullptr;
+		
+		for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
+		{
+			if ((*friendly_unit)->collider == c1)
+			{
+				friendUnit = *friendly_unit;
+			}
+		}
+
+		for (list<Unit*>::iterator enemy_unit = enemyUnitList.begin(); enemy_unit != enemyUnitList.end(); enemy_unit++)
+		{
+			if ((*enemy_unit)->collider == c2)
+			{
+				if ((*enemy_unit)->attackUnitTarget == nullptr) {
+					friendUnit->collider->active = false;
+					(*enemy_unit)->attackUnitTarget = friendUnit;
+					(*enemy_unit)->attackBuildingTarget = nullptr;
+					(*enemy_unit)->collider->active = false;
+				}
+			}
+		}
+	}
+
 	/*if (c1->type == COLLIDER_FRIENDLY_UNIT && c2->type == COLLIDER_ENEMY_UNIT)
 	{
 	for (list<Unit*>::iterator friendly_unit = friendlyUnitList.begin(); friendly_unit != friendlyUnitList.end(); friendly_unit++)
@@ -768,7 +810,7 @@ void EntityManager::OnCollision(Collider * c1, Collider * c2)
 	}
 	}
 	}
-
+	
 	if (c1->type == COLLIDER_ENEMY_UNIT && c2->type == COLLIDER_FRIENDLY_BUILDING)
 	{
 	for (list<Unit*>::iterator enemy_unit = enemyUnitList.begin(); enemy_unit != enemyUnitList.end(); enemy_unit++)

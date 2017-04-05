@@ -98,6 +98,7 @@ public:
 	SDL_Rect r = { 0,0,0,0 };
 	int unitRangeOffset = 0;
 	bool checkTile = true;
+	bool isGuard = false;
 
 	//Animations
 	vector<Animation> idleAnimations;

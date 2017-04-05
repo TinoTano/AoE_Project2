@@ -157,6 +157,11 @@ bool Scene::Start()
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, false, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, true, SAURON_TOWER);
 
+	guard1 = App->entityManager->CreateUnit(3000, 2100, true, TROLL_MAULER);
+	guard1->isGuard = true;
+	guard2 = App->entityManager->CreateUnit(3500, 2100, true, TROLL_MAULER);
+	guard2->isGuard = true;
+
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 
 	timer.Start();
@@ -191,7 +196,7 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-		debug = !debug;
+		//debug = !debug;
 	}
 
 	/*
@@ -284,7 +289,7 @@ void Scene::TimeEvents() {
 		orc_timer.Start();
 	}
 	if ((int)troll_timer.ReadSec() == 300) {
-		App->entityManager->CreateUnit(3000, 2100, true, TROLL_MAULER);
+		App->entityManager->CreateUnit(2800, 2100, true, TROLL_MAULER);
 		troll_timer.Start();
 	}
 	if ((int)orc_timer.ReadSec() == 40)
@@ -294,7 +299,7 @@ void Scene::TimeEvents() {
 		orc_timer.Start();
 	}
 		if ((int)orcs_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
-			App->entityManager->CreateUnit(3000, 2100, true, ORC_SOLDIER);
+			App->entityManager->CreateUnit(2800, 2100, true, ORC_SOLDIER);
 			orcs_to_spawn--;
 			spawn_timer.Start();
 		}

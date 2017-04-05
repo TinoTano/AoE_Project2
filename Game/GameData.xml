@@ -1510,7 +1510,7 @@
         </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/BlackTrees.png"/>
-          <Gathering value="textures/Resources/"/>
+          <Gathering value="textures/Resources/Trees/BlackCutingTrees.png"/>
         </Textures>
         <Stats>
           <Life value ="100"/>
@@ -1531,6 +1531,9 @@
           <Rect x="2193" y="0" w="71" h="195"/>
           <Rect x="2384" y="0" w="76" h="195"/>
         </Rects>
+        <GatherRect>
+          <Rect x="0" y="0" w="100" h="40"/>
+        </GatherRect>
 	</Resource>
       
 	<Resource value ="GreenTrees">
@@ -1539,7 +1542,7 @@
         </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/GreenTrees.png"/>
-          <Gathering value="textures/Resources/"/>
+          <Gathering value="textures/Resources/Trees/BrownCutingTrees.png"/>
         </Textures>
         <Stats>
           <Life value ="100"/>
@@ -1560,6 +1563,9 @@
           <Rect x="2310" y="0" w="93" h="192"/>
           <Rect x="2502" y="0" w="108" h="192"/>
         </Rects>
+        <GatherRect>
+          <Rect x="0" y="0" w="100" h="40"/>
+        </GatherRect>
     </Resource>
 
     <Resource value ="GOLD_MINE">

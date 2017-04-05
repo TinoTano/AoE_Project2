@@ -64,6 +64,7 @@ public:
 	bool isSelected = false;
 	bool canAttack = false;
 	buildingState state = BUILDING_IDLE;
+	list<Unit*> attackingTargets;
 
 	int mouseX;
 	int mouseY;

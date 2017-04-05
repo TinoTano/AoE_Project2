@@ -38,6 +38,7 @@ public:
 	SDL_Rect resourceRect;
 	int rectIndex;
 	bool isInteractable = false;
+	SDL_Rect resourceGatheringRect;
 };
 
 #endif
