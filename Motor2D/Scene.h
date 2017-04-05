@@ -49,7 +49,7 @@ public:
 	void LoadScene();
 	void SaveScene();
 	uint villagers_curr = 0, villagers_total = 0;
-
+	bool game_finished;
 private:
 	SDL_Texture* debug_tex;
 	bool debug = false;

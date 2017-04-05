@@ -142,12 +142,7 @@ bool Scene::Start()
 
 	//Test
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 150, false, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 300, TOWN_HALL_POS_Y + 150, false, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 100, false, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 300, TOWN_HALL_POS_Y + 200, false, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 350, false, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 250, false, ELF_VILLAGER);
+	
 
 	UpdateVillagers(1, 1);
 
@@ -158,6 +153,7 @@ bool Scene::Start()
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, false, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, true, SAURON_TOWER);
+	enemy_townCenter->buildingLife = 10;
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 
@@ -167,6 +163,18 @@ bool Scene::Start()
 	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, nullptr);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
 	Timer_lbl->SetSize(26);
+
+	game_finished = false;
+
+	wave = 0;
+	orcs_to_spawn = 0;
+	trolls_to_spawn = 0;
+	woodCount = 0;
+	foodCount = 0;
+	goldCount = 0;
+	stoneCount = 0;
+	villagers_curr = 0;
+	villagers_total = 0;
 
 	return true;
 }
@@ -218,8 +226,11 @@ bool Scene::Update(float dt)
 		ui_menu.WindowOff();
 		App->gui->Unfocus();
 	}
-	UpdateTime(timer.ReadSec());
-	TimeEvents();
+	if (game_finished == false)
+	{
+		UpdateTime(timer.ReadSec());
+		TimeEvents();
+	}
 	return true;
 }
 
@@ -227,7 +238,14 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate()
 {
 	bool ret = true;
-
+	if (my_townCenter->buildingLife == 0 && game_finished == false) {
+		Timer_lbl->SetString("DEFEAT");
+		game_finished = true;
+	}
+	else if (enemy_townCenter->buildingLife == 0 && game_finished == false) {
+		Timer_lbl->SetString("VICTORY");
+		game_finished = true;
+	}
 	if (back_to_menu_bt->current == CLICKIN) {
 		App->audio->PlayFx(App->sceneManager->menu_scene->fx_button_click);
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
