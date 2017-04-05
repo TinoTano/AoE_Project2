@@ -40,7 +40,7 @@ bool Resource::Update(float dt)
 }
 
 bool Resource::Draw()
-{
+{	
 	App->render->Blit(entityTexture, entityPosition.x - (resourceRect.w / 2), entityPosition.y - resourceRect.h, &resourceRect);
 	return true;
 }

@@ -50,7 +50,8 @@ bool EntityManager::Update(float dt)
 	SDL_Rect cam = App->render->culling_cam;
 
 	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-		if ((*it)->entityPosition.x >= cam.x && (*it)->entityPosition.x <= cam.x + cam.w && (*it)->entityPosition.y > cam.y && (*it)->entityPosition.y < cam.y + cam.h) {
+		if ((*it)->entityPosition.x >= (cam.x  - 150)&& (*it)->entityPosition.x <= (cam.x + cam.w + 150) &&
+			(*it)->entityPosition.y > (cam.y - 150) && (*it)->entityPosition.y < (cam.y + cam.h + 150)) {
 			(*it)->isVisible = true;
 		}
 		else {
