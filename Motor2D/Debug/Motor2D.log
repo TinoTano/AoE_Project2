@@ -1,79 +1,8 @@
-﻿  p2Log.cpp
-  Window.cpp
-  Unit.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(58): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(58): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(338): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(399): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(400): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(413): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(414): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(417): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(418): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(78): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
-  c:\users\marcdpg\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-  Timer.cpp
-  Textures.cpp
-  SceneManager.cpp
-  Scene.cpp
-  Resource.cpp
+﻿  Resource.cpp
 c:\users\marcdpg\documents\github\aoe_project2\motor2d\resource.cpp(21): warning C4018: '<': signed/unsigned mismatch
-  Render.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\render.cpp(78): warning C4018: '<': signed/unsigned mismatch
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\render.cpp(93): warning C4018: '<': signed/unsigned mismatch
-  pugixml.cpp
-  PerfTimer.cpp
-  Pathfinding.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\marcdpg\documents\github\aoe_project2\motor2d\pathfinding.cpp(154): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
-  c:\users\marcdpg\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-  MenuScene.cpp
-  Map.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\map.cpp(107): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\map.cpp(108): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  Main.cpp
-  Input.cpp
-  HUD.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\hud.cpp(114): warning C4553: '==': operator has no effect; did you intend '='?
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\hud.cpp(385): warning C4101: 'currlife': unreferenced local variable
-  Gui.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\gui.cpp(165): warning C4018: '<': signed/unsigned mismatch
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\gui.cpp(539): warning C4018: '<': signed/unsigned mismatch
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\gui.cpp(549): warning C4018: '<': signed/unsigned mismatch
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\gui.cpp(570): warning C4018: '<': signed/unsigned mismatch
-  Fonts.cpp
-  FogOfWar.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\fogofwar.cpp(119): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\fogofwar.cpp(120): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-  Generating Code...
-  Compiling...
-  FileSystem.cpp
-  EntityManager.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\entitymanager.cpp(200): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\entitymanager.cpp(230): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-  Entity.cpp
-  Console.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\console.cpp(31): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\console.cpp(37): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\console.cpp(49): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\console.cpp(50): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
-  Collision.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\collision.cpp(122): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-  Building.cpp
-  Audio.cpp
-  Application.cpp
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\application.cpp(260): warning C4018: '<': signed/unsigned mismatch
-c:\users\marcdpg\documents\github\aoe_project2\motor2d\application.cpp(256): warning C4477: 'sprintf_s' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 6 has type 'uint64'
-  c:\users\marcdpg\documents\github\aoe_project2\motor2d\application.cpp(256): note: consider using '%llu' in the format string
-  c:\users\marcdpg\documents\github\aoe_project2\motor2d\application.cpp(256): note: consider using '%I64u' in the format string
-  Generating Code...
-  LINK : C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe not found or not built by the last incremental link; performing full link
-     Creating library C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
-physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
-  Motor2D.vcxproj -> C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\resource.cpp(43): error C2143: syntax error: missing ';' before '<<'
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\resource.cpp(43): error C2761: 'bool Resource::Draw(void)': member function redeclaration not allowed
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\resource.cpp(43): error C2059: syntax error: '<<'
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\resource.cpp(44): error C2143: syntax error: missing ';' before '{'
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\resource.cpp(44): error C2447: '{': missing function header (old-style formal list?)
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\resource.cpp(63): fatal error C1004: unexpected end-of-file found
