@@ -151,7 +151,7 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	//Move left
 	if (mousePosX < 10)
 	{
-		if (camera.x + (camera.w / 2) < App->map->data.mapWidth) {
+		if (camera.x + (camera.w / 2) < 6100) {
 			camera.x += 10;
 			movement.first = 10;
 		}
@@ -169,7 +169,7 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	//Move up
 	if (mousePosY < 10)
 	{
-		if (camera.y + (camera.h / 2) < App->map->data.mapHeight / 1.5f) {
+		if (camera.y + (camera.h / 2) < 800) {
 			camera.y += 10;
 			movement.second = 10;
 		}
@@ -188,7 +188,7 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	iPoint ret;
 	ret.y = -(camera.x - camera.y);
 	ret.x = (camera.x + camera.y) / 2;
-	LOG("camera pos: %d, %d", ret.x, ret.y);
+	//LOG("camera pos: %d, %d", ret.x, ret.y);;
 
 	culling_cam.x = -camera.x;
 	culling_cam.y = -camera.y;

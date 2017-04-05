@@ -1,3 +1,6 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (AoE_Project2.vcxproj, Development - Class 11 Handout.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Render.cpp
+c:\users\admin\documents\github\aoe_project2\motor2d\render.cpp(78): warning C4018: '<': signed/unsigned mismatch
+c:\users\admin\documents\github\aoe_project2\motor2d\render.cpp(93): warning C4018: '<': signed/unsigned mismatch
   Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
   Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

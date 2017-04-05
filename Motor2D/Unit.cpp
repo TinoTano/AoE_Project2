@@ -75,7 +75,7 @@ bool Unit::Update(float dt)
 	case UNIT_MOVING:
 		if (attackUnitTarget != nullptr && entityPosition.DistanceTo(attackUnitTarget->entityPosition) < unitRange ||
 			attackBuildingTarget != nullptr && entityPosition.DistanceTo(attackBuildingTarget->entityPosition) < 150 ||
-			resourceTarget != nullptr && entityPosition.DistanceTo(resourceTarget->entityPosition) < 30) {
+			resourceTarget != nullptr && entityPosition.DistanceTo(resourceTarget->entityPosition) < 60) {
 			if (attackUnitTarget != nullptr) {
 				if (attackUnitTarget->isEnemy) {
 					if (attackUnitTarget->attackUnitTarget == nullptr) {
@@ -138,8 +138,9 @@ bool Unit::Update(float dt)
 		}
 		break;
 	}
-	SDL_Rect cam = App->render->culling_cam;
 
+	SDL_Rect cam = App->render->culling_cam;
+	r = currentAnim->GetCurrentFrame();
 	if (entityPosition.x >= cam.x && entityPosition.x <= cam.x + cam.w && entityPosition.y > cam.y && entityPosition.y < cam.y + cam.h) {
 		isVisible = true;
 	}
@@ -161,7 +162,6 @@ bool Unit::Draw()
 
 	if (isVisible)
 	{
-		SDL_Rect r = currentAnim->GetCurrentFrame();
 		collider->rect.x = entityPosition.x - (r.w / 4);
 		collider->rect.y = entityPosition.y - (r.h / 3);
 

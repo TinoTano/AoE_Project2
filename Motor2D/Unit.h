@@ -93,6 +93,7 @@ public:
 	bool isSelected = false;
 	Resource* resourceTarget = nullptr;
 	int unitRange = 0;
+	SDL_Rect r = { 0,0,0,0 };
 
 	//Animations
 	vector<Animation> idleAnimations;
