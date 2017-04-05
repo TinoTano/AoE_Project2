@@ -41,7 +41,13 @@ bool Resource::Update(float dt)
 
 bool Resource::Draw()
 {
-	App->render->Blit(entityTexture, entityPosition.x - (resourceRect.w / 2), entityPosition.y - resourceRect.h, &resourceRect);
+	Sprite resource;
+	resource.pos = { entityPosition.x - (resourceRect.w / 2), entityPosition.y - resourceRect.h };
+	resource.texture = entityTexture;
+	resource.priority = entityPosition.y;
+	resource.rect = resourceRect;
+
+	App->render->sprites_toDraw.push_back(resource);
 	return true;
 }
 
