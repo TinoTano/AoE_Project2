@@ -1,4 +1,4 @@
-#Welcome to Age of The Ring!
+﻿#Welcome to Age of The Ring!
 
 ##Version changelist
 
@@ -26,7 +26,7 @@ earth.
 - Right click to move selected unit to destination. The destination can be a resource, enemy or a building.
 - SPACE BAR activates the hero skill.
 
-##How to play?:
+##How to play?
 
 - To win you have to defeat the enemy, destroying the Sauron Tower.
 - If your Town Center is destroyed you will lose.
