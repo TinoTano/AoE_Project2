@@ -485,10 +485,8 @@ void Unit::AttackEnemyBuilding(float dt)
 		attackBuildingTarget->buildingLife -= unitAttack - attackBuildingTarget->buildingDefense;
 
 
-		if (attackBuildingTarget->buildingLife < 0)
-			attackBuildingTarget->buildingLife = 0;
-
-		if (attackBuildingTarget->buildingLife == 0) {
+		if (attackBuildingTarget->buildingLife <= 0) {
+			attackBuildingTarget->buildingLife = -1;
 			attackBuildingTarget->Dead();
 			if (unitLife > 0) {
 				SetState(UNIT_IDLE);
