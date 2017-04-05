@@ -113,7 +113,7 @@ void HUD::Update() {
 							App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
 							create_villager_bt->current == FREE;
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -=50);
-							App->entityManager->CreateUnit(280, 1700, false, VILLAGER);
+							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 150, false, VILLAGER);
 						}
 					}
 				}
@@ -130,7 +130,7 @@ void HUD::Update() {
 					else if (create_elven_archer_bt->current == CLICKIN)
 					{
 						if (App->sceneManager->level1_scene->woodCount > 70) {
-							App->entityManager->CreateUnit(280, 1700, false, ELVEN_ARCHER);
+							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 120, false, ELVEN_ARCHER);
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
 							create_elven_archer_bt->current = FREE;
 						}
@@ -138,7 +138,7 @@ void HUD::Update() {
 					else if (create_elven_longblade_bt->current == CLICKIN)
 					{
 						if (App->sceneManager->level1_scene->woodCount > 70) {
-							App->entityManager->CreateUnit(300, 1750, false, ELVEN_LONGBLADE);
+							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 90, false, ELVEN_LONGBLADE);
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
 							create_elven_longblade_bt->current = FREE;
 						}
@@ -146,7 +146,7 @@ void HUD::Update() {
 					else if (create_elven_cavalry_bt->current == CLICKIN)
 					{
 						if (App->sceneManager->level1_scene->woodCount > 350) {
-							App->entityManager->CreateUnit(220, 1650, false, ELVEN_CAVALRY);
+							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 190, false, ELVEN_CAVALRY);
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
 							create_elven_cavalry_bt->current = FREE;
 						}
