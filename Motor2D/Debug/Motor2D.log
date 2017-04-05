@@ -1,11 +1,40 @@
-﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (AoE_Project2.vcxproj, Development - Class 11 Handout.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  EntityManager.cpp
-c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(216): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(246): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\admin\documents\github\aoe_project2\motor2d\entitymanager.cpp(90): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
-  c:\users\admin\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
-c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-  Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
+﻿Build started 05/04/2017 23:54:32.
+     1>Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\VisualStudio2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _ITERATOR_DEBUG_LEVEL=0 /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Scene.cpp
+         Scene.cpp
+       Link:
+         D:\VisualStudio2015\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib" /MACHINE:X86 Debug\Building.obj
+         Debug\Collision.obj
+         Debug\Console.obj
+         Debug\Entity.obj
+         Debug\EntityManager.obj
+         Debug\FileSystem.obj
+         Debug\FogOfWar.obj
+         Debug\Fonts.obj
+         Debug\Gui.obj
+         Debug\HUD.obj
+         Debug\Main.obj
+         Debug\Application.obj
+         Debug\Audio.obj
+         Debug\Input.obj
+         Debug\Map.obj
+         Debug\MenuScene.obj
+         Debug\p2Log.obj
+         Debug\Pathfinding.obj
+         Debug\PerfTimer.obj
+         Debug\Resource.obj
+         Debug\Scene.obj
+         Debug\SceneManager.obj
+         Debug\Timer.obj
+         Debug\Render.obj
+         Debug\Textures.obj
+         Debug\Unit.obj
+         Debug\Window.obj
+         Debug\pugixml.obj
+         Motor2D.vcxproj -> C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
+     1>Done Building Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.25

@@ -148,7 +148,11 @@ bool Scene::Start()
 	
 
 	UpdateVillagers(3, 3);
-
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
 	hero->isHero = true;
 
@@ -246,12 +250,13 @@ bool Scene::Update(float dt)
 bool Scene::PostUpdate()
 {
 	bool ret = true;
-	if (my_townCenter->buildingLife == 0 && game_finished == false) {
+
+	if (my_townCenter->buildingLife <= 0 && game_finished == false) {
 		Timer_lbl->SetString("DEFEAT");
 		Timer_lbl->SetColor({255, 0,0,255});
 		game_finished = true;
 	}
-	else if (enemy_townCenter->buildingLife == 0 && game_finished == false) {
+	else if (enemy_townCenter->buildingLife <= 0 && game_finished == false) {
 		Timer_lbl->SetString("VICTORY");
 		Timer_lbl->SetColor({ 0, 255 ,0 , 255 });
 		game_finished = true;
