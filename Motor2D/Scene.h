@@ -7,6 +7,13 @@
 #include "Gui.h"
 #include <string>
 
+
+#define TOWN_HALL_POS_X -2600
+#define TOWN_HALL_POS_Y 2250
+
+#define STARTING_CAMERA_X 3250
+#define STARTING_CAMERA_Y -1900
+
 struct SDL_Texture;
 class Unit;
 class Building;
@@ -77,7 +84,7 @@ public:
 	///////
 	Building* my_townCenter;
 	Building* enemy_townCenter;
-	Unit* troll;
+	Unit* hero;
 	int woodCount = 0;
 	int foodCount = 0;
 	int goldCount = 0;

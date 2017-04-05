@@ -60,6 +60,11 @@ bool Scene::Start()
 		start = true;
 	}
 
+	// LOADING CAMERA POSITION
+
+	App->render->camera.x = STARTING_CAMERA_X;
+
+	App->render->camera.y = STARTING_CAMERA_Y;
 	// LOADING FX
 
 
@@ -70,24 +75,24 @@ bool Scene::Start()
 
 	// LOADING SCENE UI
 
-	top = (Image*)App->gui->CreateImage("gui/ingame_layer.png", 0, 0, { 0,0,1920, 30 });
-	bottom = (Image*)App->gui->CreateImage("gui/ingame_layer.png", 0, 622, { 0, 40, 1408, 172 });
+	top = (Image*)App->gui->CreateImage("gui/ingame_layer.png", -STARTING_CAMERA_X, -STARTING_CAMERA_Y, { 0,0,1920, 30 });
+	bottom = (Image*)App->gui->CreateImage("gui/ingame_layer.png", -STARTING_CAMERA_X, -STARTING_CAMERA_Y + 622, { 0, 40, 1408, 172 });
 
-	menu_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", 1330, 5, blit_sections_menu, detect_sections_menu, TIER2);
+	menu_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", -STARTING_CAMERA_X + 1330, -STARTING_CAMERA_Y + 5, blit_sections_menu, detect_sections_menu, TIER2);
 
 
 
 	// MENU WINDOW
 
-	menu_bg_img = (Image*)App->gui->CreateImage("gui/tech-tree-parchment-drop-down-background.png", 540, 200, { 0,0, 280, 280 });
-	back_to_menu_bt = (Button*)App->gui->CreateButton("gui/button.png", 570, 210, blit_sections, detect_sections, TIER2);
-	quit_game_bt = (Button*)App->gui->CreateButton("gui/button.png", 570, 250, blit_sections, detect_sections, TIER2);
-	save_game_bt = (Button*)App->gui->CreateButton("gui/button.png", 570, 290, blit_sections, detect_sections, TIER2);
-	cancel_bt = (Button*)App->gui->CreateButton("gui/button.png", 570, 330, blit_sections, detect_sections, TIER2);
-	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", 605, 213, nullptr);
-	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", 640, 253, nullptr);
-	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", 640, 293, nullptr);
-	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", 650, 333, nullptr);
+	menu_bg_img = (Image*)App->gui->CreateImage("gui/tech-tree-parchment-drop-down-background.png", -STARTING_CAMERA_X + 540, -STARTING_CAMERA_Y + 200, { 0,0, 280, 280 });
+	back_to_menu_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 210, blit_sections, detect_sections, TIER2);
+	quit_game_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 250, blit_sections, detect_sections, TIER2);
+	save_game_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 290, blit_sections, detect_sections, TIER2);
+	cancel_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 330, blit_sections, detect_sections, TIER2);
+	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", -STARTING_CAMERA_X + 605, -STARTING_CAMERA_Y + 213, nullptr);
+	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", -STARTING_CAMERA_X + 640, -STARTING_CAMERA_Y + 253, nullptr);
+	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", -STARTING_CAMERA_X + 640, -STARTING_CAMERA_Y + 293, nullptr);
+	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", -STARTING_CAMERA_X + 650, -STARTING_CAMERA_Y + 333, nullptr);
 
 	back_to_menu_lbl->SetSize(16);
 	quit_game_lbl->SetSize(16);
@@ -108,19 +113,19 @@ bool Scene::Start()
 	ui_menu.SetFocus(menu_bg_img->pos.first, menu_bg_img->pos.second, 280, 280);
 
 	// RESOURCE LABELS
-	wood = (Label*)App->gui->CreateLabel(to_string(woodCount), 50, 5, nullptr);
+	wood = (Label*)App->gui->CreateLabel(to_string(woodCount), -STARTING_CAMERA_X + 50, -STARTING_CAMERA_Y + 5, nullptr);
 	wood->SetColor({ 255, 255, 255 ,255 });
 	//*food, *gold, *stone, *villagers
-	food = (Label*)App->gui->CreateLabel(to_string(foodCount), 150, 5, nullptr);
+	food = (Label*)App->gui->CreateLabel(to_string(foodCount), -STARTING_CAMERA_X + 150, -STARTING_CAMERA_Y + 5, nullptr);
 	food->SetColor({ 255, 255, 255 ,255 });
 
-	gold = (Label*)App->gui->CreateLabel(to_string(goldCount), 280, 5, nullptr);
+	gold = (Label*)App->gui->CreateLabel(to_string(goldCount), -STARTING_CAMERA_X + 280, -STARTING_CAMERA_Y + 5, nullptr);
 	gold->SetColor({ 255, 255, 255 ,255 });
 
-	stone = (Label*)App->gui->CreateLabel(to_string(stoneCount), 360, 5, nullptr);
+	stone = (Label*)App->gui->CreateLabel(to_string(stoneCount), -STARTING_CAMERA_X + 360, -STARTING_CAMERA_Y + 5, nullptr);
 	stone->SetColor({ 255, 255, 255 ,255 });
 
-	villagers = (Label*)App->gui->CreateLabel("0/0", 480, 5, nullptr);
+	villagers = (Label*)App->gui->CreateLabel("0/0", -STARTING_CAMERA_X + 480, -STARTING_CAMERA_Y + 5, nullptr);
 	villagers->SetColor({ 255, 255, 255 ,255 });
 
 	// SET UI PRIORITY
@@ -135,13 +140,20 @@ bool Scene::Start()
 
 
 	//Test
-	App->entityManager->CreateUnit(400, 1900, false, VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
+
 	UpdateVillagers(1, 1);
 
-	troll = App->entityManager->CreateUnit(450, 2150, false, ELVEN_CAVALRY);
-	troll->isHero = true;
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
+	hero->isHero = true;
 
-	my_townCenter = App->entityManager->CreateBuilding(-2600, 2250, false, TOWN_CENTER);
+	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, false, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, true, SAURON_TOWER);
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
@@ -149,7 +161,7 @@ bool Scene::Start()
 	timer.Start();
 	troll_timer.Start();
 
-	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", 665, 40, nullptr);
+	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, nullptr);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
 	Timer_lbl->SetSize(26);
 
