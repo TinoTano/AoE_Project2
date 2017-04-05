@@ -153,7 +153,6 @@ bool Scene::Start()
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, false, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, true, SAURON_TOWER);
-	enemy_townCenter->buildingLife = 10;
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 

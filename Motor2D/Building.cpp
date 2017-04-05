@@ -133,7 +133,6 @@ bool Building::Draw()
 		aux.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
 		aux.rect.w = imageWidth;
 		aux.rect.h = imageHeight;
-		aux.flip = SDL_FLIP_HORIZONTAL;
 
 		if (isSelected)
 		{
@@ -146,26 +145,30 @@ bool Building::Draw()
 			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
 			bar.rect.w = hpBarWidth;
 			bar.rect.h = 5;
-			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
+			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight + 10;
 			bar.r = 255;
+			bar.g = 0;
+			bar.b = 0;
 
 			App->render->sprites_toDraw.push_back(bar);
 
-			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
-			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
-			bar.rect.h = 5;
-			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
-			bar.r = 0;
-			bar.g = 255;
+			Sprite bar2;
 
-			App->render->sprites_toDraw.push_back(bar);
+			bar2.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar2.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar2.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar2.rect.h = 5;
+			bar2.priority = entityPosition.y - (imageHeight / 2) + imageHeight + 11;
+			bar2.r = 0;
+			bar2.g = 255;
+			bar2.b = 0;
+
+			App->render->sprites_toDraw.push_back(bar2);
 		}
 
 		App->render->sprites_toDraw.push_back(aux);
 	}
 
-	
 	return true;
 }
 
