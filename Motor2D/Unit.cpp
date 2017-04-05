@@ -468,6 +468,7 @@ void Unit::AttackEnemyUnit(float dt)
 		attackUnitTarget->unitLife -= unitAttack - attackUnitTarget->unitDefense;
 
 		if (attackUnitTarget->unitLife <= 0) {
+			attackUnitTarget->unitLife = -1;
 			attackUnitTarget->Dead();
 			if (unitLife > 0) {
 				SetState(UNIT_IDLE);

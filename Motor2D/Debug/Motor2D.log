@@ -1,3 +1,20 @@
-﻿  Scene.cpp
-  Motor2D.vcxproj -> C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
+﻿  Unit.cpp
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(62): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(62): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(351): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(412): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(413): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(426): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(427): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(430): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(431): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\marcdpg\documents\github\aoe_project2\motor2d\unit.cpp(81): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+  c:\users\marcdpg\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
+c:\users\marcdpg\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  LINK : C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe not found or not built by the last incremental link; performing full link
+     Creating library C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
+physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
+  Motor2D.vcxproj -> C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\marcdpg\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
