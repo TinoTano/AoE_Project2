@@ -18,7 +18,7 @@ enum unitType {
 
 	GOBLIN_SOLDIER, ORC_SOLDIER, URUK_HAI_SOLDIER, ORC_ARCHER, VENOMOUS_SPIDER, HARADRIM_OLIFANT, NAZGUL, TROLL_MAULER,
 
-	VILLAGER
+	VILLAGER, ELF_VILLAGER
 };
 
 enum unitState
@@ -82,6 +82,8 @@ public:
 	SDL_Texture* unitMoveTexture = nullptr;
 	SDL_Texture* unitAttackTexture = nullptr;
 	SDL_Texture* unitDieTexture = nullptr;
+	//VILLAGER
+	SDL_Texture* unitChoppingTexture = nullptr;
 	unitState state = UNIT_IDLE;
 	Unit* attackUnitTarget = nullptr;
 	Building* attackBuildingTarget = nullptr;

@@ -141,18 +141,20 @@ bool Scene::Start()
 	App->map->LoadResources(App->map->map_file.child("map"));
 
 	//Test
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 150, false, ELF_VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 300, TOWN_HALL_POS_Y + 150, false, ELF_VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 150, false, ELF_VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 100, false, ELF_VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 300, TOWN_HALL_POS_Y + 200, false, ELF_VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 350, false, ELF_VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 250, false, ELF_VILLAGER);
 
 	UpdateVillagers(1, 1);
 
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 200, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
 	hero->isHero = true;
+
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y - 180, true, TROLL_MAULER);
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, false, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, true, SAURON_TOWER);

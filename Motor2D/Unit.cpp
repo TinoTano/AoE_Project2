@@ -37,6 +37,7 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 	unitMoveTexture = unit->unitMoveTexture;
 	unitAttackTexture = unit->unitAttackTexture;
 	unitDieTexture = unit->unitDieTexture;
+	unitChoppingTexture = unit->unitChoppingTexture;
 	unitLife = unit->unitLife;
 	unitMaxLife = unit->unitMaxLife;
 	unitAttack = unit->unitAttack;
@@ -49,6 +50,9 @@ Unit::Unit(int posX, int posY, bool isEnemy, Unit* unit)
 	movingAnimations = unit->movingAnimations;
 	attackingAnimations = unit->attackingAnimations;
 	dyingAnimations = unit->dyingAnimations;
+
+	//Villager
+	cuttingAnimations = unit->cuttingAnimations;
 
 	entityTexture = unitIdleTexture;
 
@@ -74,9 +78,6 @@ bool Unit::Update(float dt)
 {
 	switch (state) {
 	case UNIT_MOVING:
-		if (attackBuildingTarget != nullptr) {
-			LOG("%d", entityPosition.DistanceTo(attackBuildingTarget->entityPosition));
-		}
 		if (attackUnitTarget != nullptr && entityPosition.DistanceTo(attackUnitTarget->entityPosition) < unitRange ||
 			attackBuildingTarget != nullptr && entityPosition.DistanceTo(attackBuildingTarget->entityPosition) < unitRange + 150 ||
 			resourceTarget != nullptr && entityPosition.DistanceTo(resourceTarget->entityPosition) < 60) {
@@ -532,8 +533,13 @@ void Unit::SetState(unitState newState)
 		break;
 	case UNIT_ATTACKING:
 		this->state = UNIT_ATTACKING;
+		if (resourceTarget != nullptr) {
+			entityTexture = unitChoppingTexture;
+		}
+		else {
+			entityTexture = unitAttackTexture;
+		}
 		SetAnim(currentDirection);
-		entityTexture = unitAttackTexture;
 		break;
 	case UNIT_DEAD:
 		this->state = UNIT_DEAD;
@@ -553,7 +559,12 @@ void Unit::SetAnim(unitDirection currentDirection) {
 		currentAnim = &movingAnimations[currentDirection];
 		break;
 	case UNIT_ATTACKING:
-		currentAnim = &attackingAnimations[currentDirection];
+		if (resourceTarget != nullptr) {
+			currentAnim = &cuttingAnimations[currentDirection];
+		}
+		else {
+			currentAnim = &attackingAnimations[currentDirection];
+		}
 		break;
 	case UNIT_DEAD:
 		currentAnim = &dyingAnimations[currentDirection];

@@ -1119,7 +1119,7 @@
 				<PiercingDamage value="0"/>
 				<MovementSpeed value="100.7"/>
 				<LineOfSight value="3"/>
-        <Range value="20"/>
+        <Range value="30"/>
         <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
@@ -1155,6 +1155,75 @@
 					<Speed value="0.2f"/>
 				</Die>
 			</Animations>
+    </Unit>
+
+    <Unit>
+      <Info>
+        <Name value = "ELF_VILLAGER"/>
+        <ID value = "20"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Units/Elf villager/ElfVillagerIdle.png"/>
+        <Move value="textures/Units/Elf villager/ElfVillagerMove.png"/>
+        <Attack value="textures/Units/Elf villager/ElfVillagerAttack.png"/>
+        <Cut value="textures/Units/Elf villager/ElfVillagerChopping.png"/>
+        <Minning value="textures/Units/Human"/>
+        <Collecting_animals value="textures/Units/Human"/>
+        <Collecting_plant value="textures/Units/Human"/>
+        <Die value="textures/Units/Elf villager/ElfVillagerDie.png"/>
+      </Textures>
+      <Stats>
+        <Faction value="0"/>
+        <Life value="25"/>
+        <Attack value="3"/>
+        <AttackSpeed value="1.5"/>
+        <Defense value="0"/>
+        <PiercingDamage value="0"/>
+        <MovementSpeed value="100.7"/>
+        <LineOfSight value="3"/>
+        <Range value="30"/>
+        <RangeOffset value="50"/>
+        <FoodCost value=""/>
+        <GoldCost value=""/>
+        <BuildTime value=""/>
+      </Stats>
+      <Animations>
+        <Idle>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="22"/>
+          <Height value="42"/>
+          <Speed value="0.2f"/>
+        </Idle>
+        <Move>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="28"/>
+          <Height value="45"/>
+          <Speed value="0.2f"/>
+        </Move>
+        <Attack>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="54"/>
+          <Height value="51"/>
+          <Speed value="0.2f"/>
+        </Attack>
+        <Chop>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="74"/>
+          <Height value="76"/>
+          <Speed value="0.2f"/>
+        </Chop>
+        <Die>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="77"/>
+          <Height value="68"/>
+          <Speed value="0.2f"/>
+        </Die>
+      </Animations>
     </Unit>
 	</Units>
 	
