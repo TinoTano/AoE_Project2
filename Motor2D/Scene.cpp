@@ -65,6 +65,7 @@ bool Scene::Start()
 	App->render->camera.x = STARTING_CAMERA_X;
 
 	App->render->camera.y = STARTING_CAMERA_Y;
+
 	// LOADING FX
 
 
@@ -191,6 +192,7 @@ bool Scene::Update(float dt)
 		debug = !debug;
 	}
 
+	/*
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		SaveScene();
 	}
@@ -198,7 +200,7 @@ bool Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) {
 		LoadScene();
 	}
-
+*/
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
 

@@ -151,7 +151,8 @@ void HUD::Update() {
 					else if (create_elven_cavalry_bt->current == CLICKIN)
 					{
 						if (App->sceneManager->level1_scene->woodCount > 350) {
-							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 190, false, ELVEN_CAVALRY);
+							Unit* elven = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 190, false, ELVEN_CAVALRY);
+							elven->isHero = true;
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
 							create_elven_cavalry_bt->current = FREE;
 						}
