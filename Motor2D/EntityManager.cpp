@@ -88,9 +88,11 @@ bool EntityManager::Update(float dt)
 				(*it)->attackUnitTarget = nullptr;
 				iPoint target;
 				if (App->sceneManager->level1_scene->enemy_townCenter->attackingTargets.size() > 0 && (*it)->entityPosition.DistanceTo(App->sceneManager->level1_scene->enemy_townCenter->entityPosition) < 600) {
-					(*it)->attackUnitTarget = App->sceneManager->level1_scene->enemy_townCenter->attackingTargets.front();
-					target = App->map->WorldToMap((*it)->attackUnitTarget->entityPosition.x, (*it)->attackUnitTarget->entityPosition.y);
-					(*it)->SetDestination(target);
+					if (App->sceneManager->level1_scene->enemy_townCenter->attackingTargets.front()->entityPosition.DistanceTo(App->sceneManager->level1_scene->enemy_townCenter->entityPosition) < 400) {
+						(*it)->attackUnitTarget = App->sceneManager->level1_scene->enemy_townCenter->attackingTargets.front();
+						target = App->map->WorldToMap((*it)->attackUnitTarget->entityPosition.x, (*it)->attackUnitTarget->entityPosition.y);
+						(*it)->SetDestination(target);
+					}
 				}
 				else {
 					if (!(*it)->isGuard) {
