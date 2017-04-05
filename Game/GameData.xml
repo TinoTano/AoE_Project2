@@ -1403,6 +1403,23 @@
 				<CanAttack value="false"/>
 			</Stats>
 		</Building>
+    <Building>
+      <Info>
+        <Name value = "SAURON_TOWER"/>
+        <ID value = "14"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Buildings/TowerOfSauron.png"/>
+				<Die value="textures/Buildings/TowerOfSauron.png"/>
+			</Textures>
+			<Stats>
+				<Life value="4800"/>
+				<WoodCost value="0"/>
+				<StoneCost value="650"/>
+				<BuildTime value="200"/>
+				<CanAttack value="false"/>
+			</Stats>
+		</Building>
 	</Buildings>
 
 <!-- Resources -->

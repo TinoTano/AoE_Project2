@@ -140,8 +140,8 @@ bool Scene::Start()
 	troll = App->entityManager->CreateUnit(450, 2150, false, ELVEN_CAVALRY);
 	troll->isHero = true;
 
-	my_townCenter = App->entityManager->CreateBuilding(580, 1600, false, TOWN_CENTER);
-	//enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);
+	my_townCenter = App->entityManager->CreateBuilding(-2600, 2250, false, TOWN_CENTER);
+	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, true, SAURON_TOWER);
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 

@@ -1,5 +1,80 @@
-﻿  HUD.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(114): warning C4553: '==': operator has no effect; did you intend '='?
-c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(385): warning C4101: 'currlife': unreferenced local variable
-  Motor2D.vcxproj -> C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
-  Motor2D.vcxproj -> C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
+﻿  pugixml.cpp
+  Window.cpp
+  Unit.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(57): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(57): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(293): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(353): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(354): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(367): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(368): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(371): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(372): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\davidfa7\documents\github\aoe_project2\motor2d\unit.cpp(76): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+  c:\users\davidfa7\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  Textures.cpp
+  Render.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\render.cpp(78): warning C4018: '<': signed/unsigned mismatch
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\render.cpp(93): warning C4018: '<': signed/unsigned mismatch
+  Timer.cpp
+  SceneManager.cpp
+  Scene.cpp
+  Resource.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\resource.cpp(21): warning C4018: '<': signed/unsigned mismatch
+  PerfTimer.cpp
+  Pathfinding.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\davidfa7\documents\github\aoe_project2\motor2d\pathfinding.cpp(154): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+  c:\users\davidfa7\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  p2Log.cpp
+  MenuScene.cpp
+  Map.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\map.cpp(107): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\map.cpp(108): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  Input.cpp
+  Audio.cpp
+  Application.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\application.cpp(260): warning C4018: '<': signed/unsigned mismatch
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\application.cpp(256): warning C4477: 'sprintf_s' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 6 has type 'uint64'
+  c:\users\davidfa7\documents\github\aoe_project2\motor2d\application.cpp(256): note: consider using '%llu' in the format string
+  c:\users\davidfa7\documents\github\aoe_project2\motor2d\application.cpp(256): note: consider using '%I64u' in the format string
+  Main.cpp
+  HUD.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\hud.cpp(114): warning C4553: '==': operator has no effect; did you intend '='?
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\hud.cpp(385): warning C4101: 'currlife': unreferenced local variable
+  Gui.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(165): warning C4018: '<': signed/unsigned mismatch
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(536): warning C4018: '<': signed/unsigned mismatch
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(546): warning C4018: '<': signed/unsigned mismatch
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\gui.cpp(567): warning C4018: '<': signed/unsigned mismatch
+  Generating Code...
+  Compiling...
+  Fonts.cpp
+  FogOfWar.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\fogofwar.cpp(119): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\fogofwar.cpp(120): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+  FileSystem.cpp
+  EntityManager.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\entitymanager.cpp(194): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\entitymanager.cpp(224): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+  Entity.cpp
+  Console.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\console.cpp(31): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\console.cpp(37): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\console.cpp(49): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\console.cpp(50): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+  Collision.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\collision.cpp(122): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
+  Building.cpp
+c:\users\davidfa7\documents\github\aoe_project2\motor2d\building.cpp(42): warning C4838: conversion from 'uint' to 'int' requires a narrowing conversion
+  Generating Code...
+  LINK : C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe not found or not built by the last incremental link; performing full link
+     Creating library C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
+physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
+  Motor2D.vcxproj -> C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\davidfa7\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)
