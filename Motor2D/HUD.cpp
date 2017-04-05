@@ -43,8 +43,6 @@ void HUD::Update() {
 	int barPercent;
 	string life_str;
 
-	char armor[65], damage[65], currlife[65], maxlife[65];
-
 	if (App->entityManager->selectedResource != nullptr) {
 
 		App->entityManager->selectedUnitList.clear();
@@ -82,7 +80,6 @@ void HUD::Update() {
 			}
 			max_life = App->entityManager->selectedBuildingList.front()->buildingMaxLife;
 			curr_life = App->entityManager->selectedBuildingList.front()->buildingLife;
-			life_str;
 			_itoa_s(curr_life, currlife, 65, 10);
 			life_str += currlife;
 			life_str += "/";
@@ -221,7 +218,7 @@ void HUD::Update() {
 
 				life->SetString(life_str);
 
-				if (max_life == 0) max_life = curr_life;
+				if (max_life <= 0) max_life = curr_life;
 				percent = ((max_life - curr_life) * 100) / max_life;
 				barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
 				bar.rect.x = 310 - App->render->camera.x;
@@ -513,7 +510,7 @@ void HUD::ClearMultiple()
 {
 	for (list<Image*>::iterator it = multiple.begin(); it != multiple.end(); ++it)
 	{
-		if (it._Ptr->_Myval != nullptr)
+		if (it._Ptr->_Myval != nullptr);
 			App->gui->DestroyUIElement(it._Ptr->_Myval);
 	}
 }
@@ -521,25 +518,34 @@ void HUD::ClearMultiple()
 void HUD::ClearSingle()
 {
 	if (single != nullptr)
+	{
 		App->gui->DestroyUIElement(single);
-	if (name != nullptr)
+	}
+	if (name != nullptr) {
 		App->gui->DestroyUIElement(name);
-	if (sword_img != nullptr)
+	}
+	if (sword_img != nullptr) {
 		App->gui->DestroyUIElement(sword_img);
-	if (armor_img != nullptr)
+	}
+	if (armor_img != nullptr) {
 		App->gui->DestroyUIElement(armor_img);
-	if (damage_val != nullptr)
+	}
+	if (damage_val != nullptr) {
 		App->gui->DestroyUIElement(damage_val);
-	if (armor_val != nullptr)
+	}
+	if (armor_val != nullptr) {
 		App->gui->DestroyUIElement(armor_val);
-	if (life != nullptr)
+	}
+	if (life != nullptr) {
 		App->gui->DestroyUIElement(life);
+	}
 }
 
 void HUD::CleanUp()
 {
 	ClearMultiple();
 	ClearSingle();
+	type = NONE;
 }
 
 bool Gui::LoadHUDData()

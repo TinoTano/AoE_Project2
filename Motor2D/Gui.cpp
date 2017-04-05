@@ -64,6 +64,7 @@ bool Gui::Start()
 	hud = new HUD();
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
 
+
 	LoadHUDData();
 
 	return true;
@@ -441,6 +442,9 @@ void Label::Draw()
 
 void Label::SetText(char* text) {
 	str = text;
+	if (texture != nullptr) {
+		App->tex->UnLoad(texture);
+	}
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height);
 }
@@ -448,7 +452,9 @@ void Label::SetString(string text) {
 	if (str != text)
 	{
 		str = text.c_str();
-		App->tex->UnLoad(texture);
+		if (texture != nullptr) {
+			App->tex->UnLoad(texture);
+		}
 		texture = App->font->Print(str.c_str(), color, font);
 		App->font->CalcSize(str.c_str(), width, height, font);
 	}
@@ -457,6 +463,9 @@ void Label::SetString(string text) {
 void Label::SetSize(int size) {
 	font = App->font->Load(nullptr, size);
 	this->size = size;
+	if (texture != nullptr) {
+		App->tex->UnLoad(texture);
+	}
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);
 }

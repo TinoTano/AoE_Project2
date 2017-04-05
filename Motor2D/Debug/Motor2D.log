@@ -1,54 +1,6 @@
-﻿  Render.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\render.cpp(78): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\documents\github\aoe_project2\motor2d\render.cpp(93): warning C4018: '<': signed/unsigned mismatch
-  EntityManager.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\entitymanager.cpp(201): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\josephg2\documents\github\aoe_project2\motor2d\entitymanager.cpp(231): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-  Generating Code...
-  Compiling...
-  Unit.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(62): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(62): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(351): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(412): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(413): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(426): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(427): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(430): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(431): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\josephg2\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  c:\users\josephg2\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\josephg2\documents\github\aoe_project2\motor2d\unit.cpp(81): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
-  c:\users\josephg2\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
-c:\users\josephg2\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-  Resource.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\resource.cpp(21): warning C4018: '<': signed/unsigned mismatch
-  HUD.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(122): warning C4553: '==': operator has no effect; did you intend '='?
-c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(393): warning C4101: 'currlife': unreferenced local variable
-  Gui.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(165): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(397): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(539): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(549): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(570): warning C4018: '<': signed/unsigned mismatch
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(572): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(720): warning C4305: 'argument': truncation from 'int' to 'bool'
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(738): warning C4305: 'argument': truncation from 'int' to 'bool'
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(871): warning C4305: 'argument': truncation from 'int' to 'bool'
-c:\users\josephg2\documents\github\aoe_project2\motor2d\gui.cpp(891): warning C4800: 'Uint8': forcing value to bool 'true' or 'false' (performance warning)
-  Collision.cpp
-c:\users\josephg2\documents\github\aoe_project2\motor2d\collision.cpp(122): warning C4800: 'SDL_bool': forcing value to bool 'true' or 'false' (performance warning)
-c:\users\josephg2\documents\github\aoe_project2\motor2d\collision.cpp(134): warning C4305: 'argument': truncation from 'int' to 'bool'
-  Building.cpp
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  Textures.cpp
-  Scene.cpp
-  MenuScene.cpp
-  Map.cpp
-  FogOfWar.cpp
-  Console.cpp
-  Application.cpp
+﻿  HUD.cpp
+c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(119): warning C4553: '==': operator has no effect; did you intend '='?
+c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(390): warning C4101: 'currlife': unreferenced local variable
+c:\users\josephg2\documents\github\aoe_project2\motor2d\hud.cpp(513): warning C4390: ';': empty controlled statement found; is this the intent?
   Motor2D.vcxproj -> C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
   Motor2D.vcxproj -> C:\Users\josephg2\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

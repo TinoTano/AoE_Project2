@@ -291,7 +291,7 @@ private:
 
 	Image* sword_img;		Image* armor_img;
 
-	//Image* arrow_img;
+	char armor[65], damage[65], currlife[65], maxlife[65];
 
 	//BUILDINGINFO
 	Building* selected_building;

@@ -258,6 +258,8 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 	App->gui->DestroyALLUIElements();
 	ui_menu.CleanUp();
+	App->entityManager->selectedUnitList.clear();
+	App->entityManager->selectedBuildingList.clear();
 	App->entityManager->CleanUp();
 	return true;
 }
