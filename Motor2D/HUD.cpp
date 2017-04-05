@@ -73,6 +73,13 @@ void HUD::Update() {
 			StartBuildingInfo();
 		}
 		else {
+			for (list<UnitSprite>::iterator it = App->gui->SpriteBuildings.begin(); it != App->gui->SpriteBuildings.end(); ++it)
+			{
+				if (it._Ptr->_Myval.GetID() == App->entityManager->selectedBuildingList.front()->type)
+				{
+					name->SetString(it._Ptr->_Myval.GetName());
+				}
+			}
 			max_life = App->entityManager->selectedBuildingList.front()->buildingMaxLife;
 			curr_life = App->entityManager->selectedBuildingList.front()->buildingLife;
 			life_str;
@@ -97,6 +104,7 @@ void HUD::Update() {
 			bar.r = 0;
 			bar.g = 255;
 			App->render->ui_toDraw.push_back(bar);
+			if (name->str == "TOWN CENTER")
 			switch (building_state) {
 			case BUILDINGMENU:
 				if (building_state != BUILDINGMENU)
@@ -430,6 +438,7 @@ void HUD::StartBuildingInfo()
 
 	life = (Label*)App->gui->CreateLabel(life_str, 350 - App->render->camera.x, 700 - App->render->camera.y, nullptr);
 
+	if (name->str == "TOWN CENTER")
 	HUDBuildingMenu();
 }
 

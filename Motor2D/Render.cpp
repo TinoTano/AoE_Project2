@@ -81,7 +81,7 @@ bool Render::PostUpdate()
 			Blit(sprites_toDraw[it].texture, sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, &sprites_toDraw[it].rect, sprites_toDraw[it].flip);
 		else
 		{
-			if (sprites_toDraw[it].radius == 0) DrawQuad(sprites_toDraw[it].rect, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
+			if (sprites_toDraw[it].radius == 0) DrawQuad(sprites_toDraw[it].rect, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b, sprites_toDraw[it].filled);
 			else DrawCircle(sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, sprites_toDraw[it].radius, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
 		}
 	}
@@ -263,7 +263,7 @@ bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, S
 	return ret;
 }
 
-bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled, bool use_camera) const
+bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, bool filled, Uint8 a , bool use_camera) const
 {
 	bool ret = true;
 	uint scale = App->win->GetScale();

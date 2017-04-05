@@ -149,7 +149,7 @@ bool Scene::Start()
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
 	hero->isHero = true;
 
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y - 180, true, TROLL_MAULER);
+	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y - 180, true, TROLL_MAULER);
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, false, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, true, SAURON_TOWER);
@@ -264,7 +264,7 @@ bool Scene::CleanUp()
 
 void Scene::TimeEvents() {
 
-	if ((int)timer.ReadSec() > 140) {
+	if ((int)timer.ReadSec() > 100) {
 		Timer_lbl->SetColor({ 255, 0,0,255 });
 	}
 

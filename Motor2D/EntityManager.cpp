@@ -324,7 +324,15 @@ bool EntityManager::Update(float dt)
 		}
 
 		if (multiSelectionRect.w != 0) {
-			App->render->DrawQuad(multiSelectionRect, 255, 255, 255, 255, false);
+			Sprite square;
+
+			square.rect = multiSelectionRect;
+			square.priority = 100000;
+			square.r = 255;
+			square.g = 255;
+			square.b = 255;
+			square.filled = false;
+			App->render->sprites_toDraw.push_back(square);
 		}
 
 		if (doubleClickTimer <= 0.5f) {

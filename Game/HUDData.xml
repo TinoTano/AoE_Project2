@@ -88,11 +88,16 @@
         <ID value = "19"/>
 	<Position x="0" y = "0"/>
 		</Unit>
+		<Unit>
+	<Name value = "ELF VILLAGER"/>
+        <ID value = "20"/>
+	<Position x="0" y = "0"/>
+		</Unit>
 	</Units>
 
 	<Buildings>
 		<Building>
-        <Name value = "TOWN_CENTER"/>
+        <Name value = "TOWN CENTER"/>
         <ID value = "0"/>
 	<Position x = "0" y = "0"/>
 		</Building>
@@ -102,12 +107,12 @@
 	<Position x = "33" y = "0"/>
 		</Building>
 		<Building>
-        <Name value = "ORC_BARRACKS"/>
+        <Name value = "ORC BARRACKS"/>
         <ID value = "2"/>
 	<Position x="99" y="0"/>
 		</Building>
 		<Building>
-        <Name value = "ARCHERY_RANGE"/>
+        <Name value = "ARCHERY RANGE"/>
         <ID value = "3"/>
 		</Building>
 		<Building>
@@ -115,7 +120,7 @@
         <ID value = "4"/>
 		</Building>
 		<Building>
-        <Name value = "SIEGE_WORKSHOP"/>
+        <Name value = "SIEGE WORKSHOP"/>
         <ID value = "5"/>
 		</Building>
 		<Building>
@@ -149,6 +154,10 @@
 		<Building>
         <Name value = "CASTLE"/>
         <ID value = "13"/>
+		</Building>
+		<Building>
+        <Name value = "SAURON TOWER"/>
+        <ID value = "14"/>
 		</Building>
 	</Buildings>
 </HUDData>

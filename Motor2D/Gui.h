@@ -304,7 +304,7 @@ private:
 	// BUTTONS POSITIONS
 	vector<SDL_Rect> buttons_positions;
 public:
-	bool IsEnabled();
+	
 	void GetSelection();
 	void StartBuildingInfo();
 	void StartResourceInfo();
