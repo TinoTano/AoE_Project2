@@ -70,10 +70,9 @@ private:
 	Label* Timer_lbl;
 	void UpdateTime(float time);
 	void TimeEvents();
-	Timer enemy_timer;
+	Timer orc_timer, troll_timer;
 	Timer spawn_timer;
-	uint enemy_timer_val, spawn_timer_val;
-	uint wave = 0, enemies_to_spawn = 0;
+	uint wave = 0, orcs_to_spawn = 0, trolls_to_spawn = 0;
 public:
 	///////
 	Building* my_townCenter;

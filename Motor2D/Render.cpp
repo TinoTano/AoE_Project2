@@ -184,6 +184,12 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 		}
 	}
 
+
+	iPoint ret;
+	ret.y = -(camera.x - camera.y);
+	ret.x = (camera.x + camera.y) / 2;
+	LOG("camera pos: %d, %d", ret.x, ret.y);
+
 	culling_cam.x = -camera.x;
 	culling_cam.y = -camera.y;
 

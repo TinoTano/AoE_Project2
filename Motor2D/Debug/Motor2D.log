@@ -1,18 +1,9 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (AoE_Project2.vcxproj, Development - Class 11 Handout.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Unit.cpp
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(57): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(57): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(292): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(352): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(353): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(366): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(367): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(370): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(371): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
-  c:\users\admin\documents\github\aoe_project2\motor2d\unit.cpp(76): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
-  c:\users\admin\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
-c:\users\admin\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+  Scene.cpp
+c:\users\admin\documents\github\aoe_project2\motor2d\scene.cpp(262): warning C4552: '+': operator has no effect; expected operator with side-effect
+c:\users\admin\documents\github\aoe_project2\motor2d\scene.cpp(263): warning C4552: '+': operator has no effect; expected operator with side-effect
+  LINK : C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe not found or not built by the last incremental link; performing full link
+     Creating library C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib and object C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exp
+physfs.lib(physfs.obj) : warning LNK4217: locally defined symbol _sprintf imported in function _PHYSFS_setSaneConfig
   Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe
   Motor2D.vcxproj -> C:\Users\admin\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb (Full PDB)

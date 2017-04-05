@@ -10,10 +10,7 @@
 #include "SceneManager.h"
 #include <stdlib.h>  
 
-bool HUD::IsEnabled()
-{
-	return enabled;
-}
+
 //HUD
 HUD::HUD()
 {
@@ -41,8 +38,28 @@ void HUD::ClearBuilding() {
 }
 
 void HUD::Update() {
+	Sprite bar;
+	int percent;
+	int barPercent;
+	string life_str;
 
 	char armor[65], damage[65], currlife[65], maxlife[65];
+
+	if (App->entityManager->selectedResource != nullptr) {
+
+		App->entityManager->selectedUnitList.clear();
+		App->entityManager->selectedBuildingList.clear();
+
+		if (type != RESOURCEINFO)
+		{
+			ClearSingle();
+			ClearMultiple();
+			ClearBuilding();
+			type = RESOURCEINFO;
+			StartResourceInfo();
+		}
+
+	}
 
 	if (App->entityManager->selectedBuildingList.size() == 1)
 	{
@@ -58,21 +75,28 @@ void HUD::Update() {
 		else {
 			max_life = App->entityManager->selectedBuildingList.front()->buildingMaxLife;
 			curr_life = App->entityManager->selectedBuildingList.front()->buildingLife;
-
-			string life_str;
+			life_str;
 			_itoa_s(curr_life, currlife, 65, 10);
 			life_str += currlife;
 			life_str += "/";
 			_itoa_s(max_life, maxlife, 65, 10);
 			life_str += maxlife;
-
-			life->str = maxlife;
-
-			int percent = ((max_life - curr_life) * 100) / max_life;
-			int barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
-
-			App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h, App->gui->SpriteBuildings.front().GetRect().w, 5 }, 255, 0, 0);
-			App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h, min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
+			life->SetString(life_str);
+			if (max_life == 0) max_life = curr_life;
+			percent = ((max_life - curr_life) * 100) / max_life;
+			barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
+			bar.rect.x = 310 - App->render->camera.x;
+			bar.rect.y = 670 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+			bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
+			bar.rect.h = 5;
+			bar.r = 255;
+			bar.g = 0;
+			bar.b = 0;
+			App->render->ui_toDraw.push_back(bar);
+			bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+			bar.r = 0;
+			bar.g = 255;
+			App->render->ui_toDraw.push_back(bar);
 			switch (building_state) {
 			case BUILDINGMENU:
 				if (building_state != BUILDINGMENU)
@@ -85,8 +109,12 @@ void HUD::Update() {
 						HUDCreateUnits();
 					}
 					else if (create_villager_bt->current == CLICKIN) {
-						App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
-						create_villager_bt->current == FREE;
+						if (App->sceneManager->level1_scene->woodCount > 50) {
+							App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
+							create_villager_bt->current == FREE;
+							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -=50);
+							App->entityManager->CreateUnit(280, 1700, false, VILLAGER);
+						}
 					}
 				}
 
@@ -101,18 +129,27 @@ void HUD::Update() {
 						HUDBuildingMenu();
 					else if (create_elven_archer_bt->current == CLICKIN)
 					{
-						App->entityManager->CreateUnit(200, 250, false, ELVEN_ARCHER);
-						create_elven_archer_bt->current = FREE;
+						if (App->sceneManager->level1_scene->woodCount > 70) {
+							App->entityManager->CreateUnit(280, 1700, false, ELVEN_ARCHER);
+							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
+							create_elven_archer_bt->current = FREE;
+						}
 					}
 					else if (create_elven_longblade_bt->current == CLICKIN)
 					{
-						App->entityManager->CreateUnit(200, 350, false, ELVEN_LONGBLADE);
-						create_elven_longblade_bt->current = FREE;
+						if (App->sceneManager->level1_scene->woodCount > 70) {
+							App->entityManager->CreateUnit(300, 1750, false, ELVEN_LONGBLADE);
+							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
+							create_elven_longblade_bt->current = FREE;
+						}
 					}
 					else if (create_elven_cavalry_bt->current == CLICKIN)
 					{
-						App->entityManager->CreateUnit(200, 450, false, ELVEN_CAVALRY);
-						create_elven_cavalry_bt->current = FREE;
+						if (App->sceneManager->level1_scene->woodCount > 350) {
+							App->entityManager->CreateUnit(220, 1650, false, ELVEN_CAVALRY);
+							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+							create_elven_cavalry_bt->current = FREE;
+						}
 					}
 				}
 				break;
@@ -168,22 +205,30 @@ void HUD::Update() {
 				max_life = App->entityManager->selectedUnitList.front()->unitMaxLife;
 				curr_life = App->entityManager->selectedUnitList.front()->unitLife;
 
-				string life_str;
 				_itoa_s(curr_life, currlife, 65, 10);
 				life_str += currlife;
 				life_str += "/";
 				_itoa_s(max_life, maxlife, 65, 10);
 				life_str += maxlife;
 
-				life->SetString(maxlife);
+				life->SetString(life_str);
 
-				int percent = ((max_life - curr_life) * 100) / max_life;
-				int barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
-
-				App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteUnits.front().GetRect().h, App->gui->SpriteUnits.front().GetRect().w, 5 }, 255, 0, 0);
-				App->render->DrawQuad({ 310 - App->render->camera.x, 670 - App->render->camera.y + App->gui->SpriteUnits.front().GetRect().h, min(App->gui->SpriteUnits.front().GetRect().w, max(App->gui->SpriteUnits.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
-			}
-			break;
+				if (max_life == 0) max_life = curr_life;
+				percent = ((max_life - curr_life) * 100) / max_life;
+				barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
+				bar.rect.x = 310 - App->render->camera.x;
+				bar.rect.y = 670 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+				bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
+				bar.rect.h = 5;
+				bar.r = 255;
+				bar.g = 0;
+				bar.b = 0;
+				App->render->ui_toDraw.push_back(bar);
+				bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+				bar.r = 0;
+				bar.g = 255;
+				App->render->ui_toDraw.push_back(bar);
+				break;
 		default:
 			if (type != MULTIPLESELECTION)
 			{
@@ -199,8 +244,6 @@ void HUD::Update() {
 			else
 			{
 				int x = 0, y = 0;
-
-
 				for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteUnits.begin(); it_sprite != App->gui->SpriteUnits.end(); ++it_sprite)
 				{
 					for (list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin(); it_unit != App->entityManager->selectedUnitList.end(); ++it_unit)
@@ -211,11 +254,21 @@ void HUD::Update() {
 							y += App->gui->SpriteUnits.front().GetRect().h + 5;
 						}
 						if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType()) {
-							int percent = ((it_unit._Ptr->_Myval->unitMaxLife - it_unit._Ptr->_Myval->unitLife) * 100) / it_unit._Ptr->_Myval->unitMaxLife;
-							int barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
 
-							App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteUnits.front().GetRect().h + y, App->gui->SpriteUnits.front().GetRect().w, 5 }, 255, 0, 0);
-							App->render->DrawQuad({ 310 - App->render->camera.x + x, 650 - App->render->camera.y + App->gui->SpriteUnits.front().GetRect().h + y, min(App->gui->SpriteUnits.front().GetRect().w, max(App->gui->SpriteUnits.front().GetRect().w - barPercent , 0)), 5 }, 0, 255, 0);
+							percent = ((it_unit._Ptr->_Myval->unitMaxLife - it_unit._Ptr->_Myval->unitLife) * 100) / it_unit._Ptr->_Myval->unitMaxLife;
+							barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
+							bar.rect.x = 310 + x - App->render->camera.x;
+							bar.rect.y = 650 + y - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+							bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
+							bar.rect.h = 5;
+							bar.r = 255;
+							bar.g = 0;
+							bar.b = 0;
+							App->render->ui_toDraw.push_back(bar);
+							bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+							bar.r = 0;
+							bar.g = 255;
+							App->render->ui_toDraw.push_back(bar);
 							x += App->gui->SpriteUnits.front().GetRect().w;
 						}
 					}
@@ -240,12 +293,9 @@ void HUD::Update() {
 
 			}
 			break;
+			}
 		}
 	}
-
-
-
-
 }
 
 
@@ -327,6 +377,29 @@ void HUD::HUDClearCreateUnits()
 	App->gui->DestroyUIElement(create_elven_longblade_bt);
 	App->gui->DestroyUIElement(create_elven_cavalry_bt);
 	App->gui->DestroyUIElement(cancel_bt);
+}
+
+void HUD::StartResourceInfo()
+{
+	char currlife[65], maxlife[65];
+	string life_str;
+
+	for (list<UnitSprite>::iterator it = App->gui->SpriteResources.begin(); it != App->gui->SpriteResources.end(); ++it)
+	{
+		if (it._Ptr->_Myval.GetID() == App->entityManager->selectedResource->type)
+		{
+			single = (Image*)App->gui->CreateImage("gui/ResourcesMiniatures.png", 310 - App->render->camera.x, 670 - App->render->camera.y, it._Ptr->_Myval.GetRect());
+			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), 310 - App->render->camera.x, 650 - App->render->camera.y, nullptr);
+		}
+	}
+
+	max_life = App->entityManager->selectedResource->resourceLife;
+	_itoa_s(max_life, maxlife, 65, 10);
+	life_str += maxlife;
+
+	life = (Label*)App->gui->CreateLabel(life_str, 350 - App->render->camera.x, 700 - App->render->camera.y, nullptr);
+
+	//HUDResourceMenu();
 }
 
 
@@ -457,4 +530,61 @@ void HUD::CleanUp()
 {
 	ClearMultiple();
 	ClearSingle();
+}
+
+bool Gui::LoadHUDData()
+{
+	bool ret = false;
+	pugi::xml_document HUDDataFile;
+	pugi::xml_node HUDData;
+	pugi::xml_node unitNodeInfo;
+	pugi::xml_node buildingNodeInfo;
+	pugi::xml_node resourceNodeInfo;
+
+	HUDData = App->LoadHUDDataFile(HUDDataFile);
+
+	if (HUDData.empty() == false)
+	{
+		SDL_Rect proportions;
+		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
+		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("height").as_uint();
+
+		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit"))
+		{
+			EntityType type = UNIT;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id, name);
+			SpriteUnits.push_back(unit);
+		}
+		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building"))
+		{
+			EntityType type = BUILDING;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id, name);
+			SpriteBuildings.push_back(unit);
+		}
+		for (unitNodeInfo = HUDData.child("Resources").child("Resource"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Resource"))
+		{
+			EntityType type = RESOURCE;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id, name);
+			SpriteResources.push_back(unit);
+		}
+	}
+	return ret;
 }

@@ -83,6 +83,11 @@
         <Name value = "TROLL MAULER"/>
         <ID value = "18"/>
 		</Unit>
+		<Unit>
+	<Name value = "VILLAGER"/>
+        <ID value = "19"/>
+	<Position x="0" y = "0"/>
+		</Unit>
 	</Units>
 
 	<Buildings>

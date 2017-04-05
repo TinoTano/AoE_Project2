@@ -445,6 +445,7 @@ void Label::SetText(char* text) {
 	App->font->CalcSize(str.c_str(), width, height);
 }
 void Label::SetString(string text) {
+	if (texture != nullptr) App->tex->UnLoad(texture);
 	str = text.c_str();
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);
@@ -459,6 +460,7 @@ void Label::SetSize(int size) {
 
 void Label::SetColor(SDL_Color color)
 {
+	if (texture != nullptr) App->tex->UnLoad(texture);
 	this->color = color;
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);
@@ -979,51 +981,4 @@ void WindowUI::SetFocus(int& x, int& y, int width, int height)
 }
 bool WindowUI::IsEnabled() {
 	return enabled;
-}
-
-
-
-bool Gui::LoadHUDData()
-{
-	bool ret = false;
-	pugi::xml_document HUDDataFile;
-	pugi::xml_node HUDData;
-	pugi::xml_node unitNodeInfo;
-	pugi::xml_node buildingNodeInfo;
-	pugi::xml_node resourceNodeInfo;
-
-	HUDData = App->LoadHUDDataFile(HUDDataFile);
-
-	if (HUDData.empty() == false)
-	{
-		SDL_Rect proportions;
-		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
-		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("height").as_uint();
-
-		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit"))
-		{
-			EntityType type = UNIT;
-			string name(unitNodeInfo.child("Name").attribute("value").as_string());
-
-			int id = unitNodeInfo.child("ID").attribute("value").as_int();
-			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
-			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
-
-			UnitSprite unit(type, proportions, id, name);
-			SpriteUnits.push_back(unit);
-		}
-		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building"))
-		{
-			EntityType type = BUILDING;
-			string name(unitNodeInfo.child("Name").attribute("value").as_string());
-
-			int id = unitNodeInfo.child("ID").attribute("value").as_int();
-			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
-			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
-
-			UnitSprite unit(type, proportions, id, name);
-			SpriteBuildings.push_back(unit);
-		}
-	}
-	return ret;
 }

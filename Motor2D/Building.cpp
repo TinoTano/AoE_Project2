@@ -20,7 +20,7 @@ Building::Building(int posX, int posY, bool isEnemy, Building* building)
 	entityPosition.x = posX;
 	entityPosition.y = posY;
 	this->isEnemy = isEnemy;
-	this->type = type;
+	this->type = building->type;
 
 	faction = building->faction;
 	buildingAttackSpeed = building->buildingAttackSpeed;
