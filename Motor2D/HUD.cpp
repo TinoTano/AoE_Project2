@@ -259,27 +259,9 @@ void HUD::Update() {
 							x = 0;
 							y += App->gui->SpriteUnits.front().GetRect().h + 5;
 						}
-						if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType()) {
-
-							if (it_unit._Ptr->_Myval->unitMaxLife == 0) it_unit._Ptr->_Myval->unitMaxLife = it_unit._Ptr->_Myval->unitLife;
-							percent = ((it_unit._Ptr->_Myval->unitMaxLife - it_unit._Ptr->_Myval->unitLife) * 100) / it_unit._Ptr->_Myval->unitMaxLife;
-							barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
-							bar.rect.x = 310 + x - App->render->camera.x;
-							bar.rect.y = 650 + y - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
-							bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
-							bar.rect.h = 5;
-							bar.r = 255;
-							bar.g = 0;
-							bar.b = 0;
-							App->render->ui_toDraw.push_back(bar);
-							bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
-							bar.r = 0;
-							bar.g = 255;
-							App->render->ui_toDraw.push_back(bar);
 							x += App->gui->SpriteUnits.front().GetRect().w;
 						}
 					}
-				}
 
 				// CODE TO SELECT ONE UNIT FROM THE PANEL NOT FUNCTIONAL FOR NOW
 				/*

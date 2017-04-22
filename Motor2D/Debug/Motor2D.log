@@ -1,8 +1,22 @@
-﻿Build started 05/04/2017 23:54:32.
+﻿Build started 06/04/2017 1:29:38.
      1>Project "C:\Users\usuario\Documents\GitHub\AoE_Project2\Motor2D\Motor2D.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\VisualStudio2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _ITERATOR_DEBUG_LEVEL=0 /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Scene.cpp
-         Scene.cpp
+         D:\VisualStudio2015\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _ITERATOR_DEBUG_LEVEL=0 /D _MBCS /Gm /EHsc /RTC1 /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Unit.cpp
+         Unit.cpp
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(62): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(62): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(358): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(419): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(420): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(433): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(434): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(437): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(438): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+         c:\users\usuario\documents\github\aoe_project2\motor2d\p2point.h(120): note: while compiling class template member function 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+         c:\users\usuario\documents\github\aoe_project2\motor2d\unit.cpp(83): note: see reference to function template instantiation 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' being compiled
+         c:\users\usuario\documents\github\aoe_project2\motor2d\entity.h(33): note: see reference to class template instantiation 'p2Point<int>' being compiled
+     1>c:\users\usuario\documents\github\aoe_project2\motor2d\p2point.h(124): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
        Link:
          D:\VisualStudio2015\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\usuario\Documents\GitHub\AoE_Project2\Debug\AgeOfTheRing.lib" /MACHINE:X86 Debug\Building.obj
          Debug\Collision.obj
@@ -37,4 +51,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.25
+Time Elapsed 00:00:01.66

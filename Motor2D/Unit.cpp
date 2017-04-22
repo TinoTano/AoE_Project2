@@ -208,42 +208,44 @@ bool Unit::Draw()
 
 			App->render->sprites_toDraw.push_back(circle);
 
-			int percent;
-			int barPercent;
+			if (unitLife > 0) {
+				int percent;
+				int barPercent;
 
-			if (unitMaxLife > 0) {
-				percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
-				barPercent = (percent * hpBarWidth) / 100;
+				if (unitMaxLife > 0) {
+					percent = ((unitMaxLife - unitLife) * 100) / unitMaxLife;
+					barPercent = (percent * hpBarWidth) / 100;
+				}
+				else {
+					barPercent = 0;
+				}
+
+				Sprite bar;
+
+				bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+				bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+				bar.rect.w = hpBarWidth;
+				bar.rect.h = 5;
+				bar.priority = entityPosition.y - (r.h / 2) + r.h + 1;
+				bar.r = 255;
+				bar.g = 0;
+				bar.b = 0;
+
+				App->render->sprites_toDraw.push_back(bar);
+
+				Sprite bar2;
+
+				bar2.rect.x = entityPosition.x - (hpBarWidth / 2);
+				bar2.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+				bar2.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+				bar2.rect.h = 5;
+				bar2.priority = entityPosition.y - (r.h / 2) + r.h + 2;
+				bar2.r = 0;
+				bar2.g = 255;
+				bar2.b = 0;
+
+				App->render->sprites_toDraw.push_back(bar2);
 			}
-			else {
-				barPercent = 0;
-			}
-
-			Sprite bar;
-
-			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
-			bar.rect.w = hpBarWidth;
-			bar.rect.h = 5;
-			bar.priority = entityPosition.y - (r.h / 2) + r.h + 1;
-			bar.r = 255;
-			bar.g = 0;
-			bar.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar);
-
-			Sprite bar2;
-
-			bar2.rect.x = entityPosition.x - (hpBarWidth / 2);
-			bar2.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
-			bar2.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
-			bar2.rect.h = 5;
-			bar2.priority = entityPosition.y - (r.h / 2) + r.h + 2;
-			bar2.r = 0;
-			bar2.g = 255;
-			bar2.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar2);
 		}
 
 		if (attackUnitTarget != nullptr)
@@ -253,75 +255,79 @@ bool Unit::Draw()
 			int percent;
 			int barPercent;
 
-			if (attackUnitTarget->unitMaxLife > 0) {
-				percent = ((attackUnitTarget->unitMaxLife - attackUnitTarget->unitLife) * 100) / attackUnitTarget->unitMaxLife;
-				barPercent = (percent * hpBarWidth) / 100;
+			if (attackUnitTarget->unitLife > 0) {
+				if (attackUnitTarget->unitMaxLife > 0) {
+					percent = ((attackUnitTarget->unitMaxLife - attackUnitTarget->unitLife) * 100) / attackUnitTarget->unitMaxLife;
+					barPercent = (percent * hpBarWidth) / 100;
+				}
+				else {
+					barPercent = 0;
+				}
+
+				bar.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
+				bar.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
+				bar.rect.w = hpBarWidth;
+				bar.rect.h = 5;
+				bar.priority = attackUnitTarget->entityPosition.y - (r.h / 2) + r.h + 1;
+				bar.r = 255;
+				bar.g = 0;
+				bar.b = 0;
+
+				App->render->sprites_toDraw.push_back(bar);
+
+				Sprite bar2;
+
+				bar2.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
+				bar2.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
+				bar2.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+				bar2.rect.h = 5;
+				bar2.priority = attackUnitTarget->entityPosition.y - (r.h / 2) + r.h + 2;
+				bar2.r = 0;
+				bar2.g = 255;
+				bar2.b = 0;
+
+				App->render->sprites_toDraw.push_back(bar2);
 			}
-			else {
-				barPercent = 0;
-			}
-
-			bar.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
-			bar.rect.w = hpBarWidth;
-			bar.rect.h = 5;
-			bar.priority = attackUnitTarget->entityPosition.y - (r.h / 2) + r.h + 1;
-			bar.r = 255;
-			bar.g = 0;
-			bar.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar);
-
-			Sprite bar2;
-
-			bar2.rect.x = attackUnitTarget->entityPosition.x - (hpBarWidth / 2);
-			bar2.rect.y = attackUnitTarget->entityPosition.y - ((int)(attackUnitTarget->collider->rect.h / 1.5f));
-			bar2.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
-			bar2.rect.h = 5;
-			bar2.priority = attackUnitTarget->entityPosition.y - (r.h / 2) + r.h + 2;
-			bar2.r = 0;
-			bar2.g = 255;
-			bar2.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar2);
 		}
 
 		if (attackBuildingTarget != nullptr)
 		{
-			Sprite bar;
+			if (attackBuildingTarget->buildingLife > 0) {
+				Sprite bar;
 
-			int percent;
-			int barPercent;
+				int percent;
+				int barPercent;
 
-			if (attackBuildingTarget->buildingMaxLife > 0) {
-				percent = ((attackBuildingTarget->buildingMaxLife - attackBuildingTarget->buildingLife) * 100) / attackBuildingTarget->buildingMaxLife;
-				barPercent = (percent * hpBarWidth) / 100;
+				if (attackBuildingTarget->buildingMaxLife > 0) {
+					percent = ((attackBuildingTarget->buildingMaxLife - attackBuildingTarget->buildingLife) * 100) / attackBuildingTarget->buildingMaxLife;
+					barPercent = (percent * hpBarWidth) / 100;
+				}
+				else {
+					barPercent = 0;
+				}
+
+				bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
+				bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
+				bar.rect.w = hpBarWidth;
+				bar.rect.h = 5;
+				bar.priority = attackBuildingTarget->entityPosition.y - (attackBuildingTarget->imageHeight / 2) + attackBuildingTarget->imageHeight + 1;
+				bar.r = 255;
+				bar.g = 0;
+				bar.b = 0;
+
+				App->render->sprites_toDraw.push_back(bar);
+
+				bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
+				bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
+				bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+				bar.rect.h = 5;
+				bar.priority = attackBuildingTarget->entityPosition.y - (attackBuildingTarget->imageHeight / 2) + attackBuildingTarget->imageHeight + 2;
+				bar.r = 0;
+				bar.g = 255;
+				bar.b = 0;
+
+				App->render->sprites_toDraw.push_back(bar);
 			}
-			else {
-				barPercent = 0;
-			}
-
-			bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
-			bar.rect.w = hpBarWidth;
-			bar.rect.h = 5;
-			bar.priority = attackBuildingTarget->entityPosition.y - (attackBuildingTarget->imageHeight / 2) + attackBuildingTarget->imageHeight + 1;
-			bar.r = 255;
-			bar.g = 0;
-			bar.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar);
-
-			bar.rect.x = attackBuildingTarget->entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = attackBuildingTarget->entityPosition.y - ((int)(attackBuildingTarget->collider->rect.h / 1.5f));
-			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
-			bar.rect.h = 5;
-			bar.priority = attackBuildingTarget->entityPosition.y - (attackBuildingTarget->imageHeight / 2) + attackBuildingTarget->imageHeight + 2;
-			bar.r = 0;
-			bar.g = 255;
-			bar.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar);
 		}
 
 		if (collider != nullptr) App->render->sprites_toDraw.push_back(aux);

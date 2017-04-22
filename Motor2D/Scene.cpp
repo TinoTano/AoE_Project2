@@ -149,11 +149,6 @@ bool Scene::Start()
 
 	UpdateVillagers(3, 3);
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, false, ELVEN_CAVALRY);
 	hero->isHero = true;
 
 	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y - 180, true, TROLL_MAULER);
