@@ -39,15 +39,11 @@ public:
 	Skill_type type = NO_SKILL;
 
 public:
-	virtual bool Activate(Hero* hero = nullptr)
-	{
-		return true;
-	}
+	virtual void Activate(Hero* hero = nullptr)
+	{}
 
-	virtual bool Deactivate(Hero* hero = nullptr)
-	{
-		return true;
-	}
+	virtual void Deactivate(Hero* hero = nullptr)
+	{}
 
 };
 
@@ -68,17 +64,17 @@ public:
 		multiplier = 2.5;
 	}
 
-	bool Activate(Hero* hero) 
+	void Activate(Hero* hero) 
 	{
+		active = true;
 		hero->skill_timer.Start();
 		hero->Attack *= multiplier;
-		return true;
 	}
 
-	bool Deactivate(Hero* hero)
+	void Deactivate(Hero* hero)
 	{
+		active = false;
 		hero->Attack /= multiplier;
-		return false;
 	}
 
 };

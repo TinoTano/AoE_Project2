@@ -33,20 +33,11 @@ Hero::~Hero()
 
 bool Hero::HeroUpdate() {
 
-	if (skill->active = true) {
-		if (skill_timer.ReadSec() > skill->duration) 
-			skill->active = skill->Deactivate(this);
-	}
+	if (skill->active) {
+		if (skill_timer.ReadSec() > skill->duration)
+			skill->Deactivate(this);
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE)) {
-		//if(App->entityManager->FindUnit(this))
-		if (skill_timer.ReadSec() > skill->cooldown)
-			skill->active = skill->Activate(this);
-	}
-
-
-	if (skill->active)
-	{  // this should be replaced by skill_effect bliting
+		// this should be replaced by skill_effect bliting
 
 		Sprite aux;
 
@@ -56,6 +47,12 @@ bool Hero::HeroUpdate() {
 		aux.r = aux.g = aux.b = 255;
 
 		App->render->sprites_toDraw.push_back(aux);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE)) {
+		//if(App->entityManager->FindUnit(this))
+		if (skill_timer.ReadSec() > skill->cooldown)
+			skill->Activate(this);
 	}
 
 	return true;
