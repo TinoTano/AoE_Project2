@@ -33,6 +33,8 @@ void Map::Draw()
 	if(map_loaded == false)
 		return;
 
+	SDL_Rect cam = App->render->culling_cam;
+
 	for(list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); it++)
 	{
 		MapLayer* layer = *it;
@@ -44,19 +46,19 @@ void Map::Draw()
 		{
 			for(int x = 0; x < data.width; ++x)
 			{
-				int tile_id = layer->Get(x, y);
-				if(tile_id > 0)
-				{
-					TileSet* tileset = GetTilesetFromTileId(tile_id);
 
-					SDL_Rect r = tileset->GetTileRect(tile_id);
-					iPoint pos = MapToWorld(x, y);
+				iPoint tileWorld = MapToWorld(x, y);
+				if (App->render->CullingCam(tileWorld)){
 
-					SDL_Rect cam = App->render->culling_cam;
+					int tile_id = layer->Get(x, y);
 
-					if (pos.x + data.tile_width >= cam.x && pos.x <= cam.x + cam.w)
-						if (pos.y + data.tile_height * 2 > cam.y && pos.y < cam.y + cam.h)		
-							App->render->Blit(tileset->texture, pos.x, pos.y, &r);					
+					if (tile_id > 0)
+					{
+						TileSet* tileset = GetTilesetFromTileId(tile_id);
+
+						SDL_Rect r = tileset->GetTileRect(tile_id);
+						App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
+					}
 				}
 			}
 		}
@@ -481,12 +483,9 @@ bool Map::LoadResources(pugi::xml_node & node)
 				type = GREEN_TREE;
 			}
 			else if (name == "Rock") {
-				type = STONE;
+				type = STONE_MINE;
 			}
-			Resource* resource = App->entityManager->CreateResource(prop.attribute("x").as_int(), prop.attribute("y").as_int(), (resourceType)type, 0);
-			if (!resource->isInteractable) {
-				data.noInteractResources.push_back(resource);
-			}
+			Resource* resource = App->entityManager->CreateResource(prop.attribute("x").as_int(), prop.attribute("y").as_int(), (resourceItem)type);
 		}
 	}
 

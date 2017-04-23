@@ -3,7 +3,10 @@
 
 #include "Module.h"
 #include "Unit.h"
+#include "Collision.h"
 #include "p2Point.h"
+
+#include <vector>
 
 
 #define DEFAULT_PATH_LENGTH 50
@@ -14,6 +17,9 @@
 // Intro: http://www.raywenderlich.com/4946/introduction-to-a-pathfinding
 // Details: http://theory.stanford.edu/~amitp/GameProgramming/
 // --------------------------------------------------
+
+struct Path;
+struct PathNode;
 
 class PathFinding : public Module
 {
@@ -31,10 +37,13 @@ public:
 	void SetMap(uint width, uint height, uchar* data);
 
 	// Main function to request a path from A to B
-	int CreatePath(iPoint& origin, iPoint& destination, list<iPoint>& path);
+	list<iPoint>* CreatePath(const iPoint& origin, const iPoint& destination);
 
 	// To request all tiles involved in the last generated path
 	const list<iPoint>* GetLastPath() const;
+
+	list<iPoint>* GetPath() const;
+	list<list<iPoint>*>* GetPaths();
 
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries(const iPoint& pos) const;
@@ -45,8 +54,14 @@ public:
 	// Utility: return the walkability value of a tile
 	uchar GetTileAt(const iPoint& pos) const;
 
-	void FindAvailableDestination(iPoint& destination, iPoint& origin);
-	iPoint FindNearestAvailable(Unit* unit) const;
+	bool Jump(int current_x, int current_y, int dx, int dy, iPoint start, iPoint end, PathNode& new_node);
+
+	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 1, const iPoint& target = { -1, -1 }, list<iPoint>* cells_to_ignore = nullptr) const;
+	void CalculatePath(Path* path);
+	void SharePath(Unit* commander, list<Unit*> followers);
+	bool DeletePath(list<iPoint>* path_to_delete);
+	Collision_state SolveCollision(Unit* unit1, Unit* unit2);
+	bool PushUnit(Unit* pushing_unit, Unit* pushed_unit);
 
 private:
 
@@ -57,6 +72,7 @@ private:
 	uchar* map;
 	// we store the created path here
 	list<iPoint> lastPath;
+	list<list<iPoint>*> paths;
 };
 
 // forward declaration
@@ -79,6 +95,7 @@ struct PathNode
 	// Calculate the F for a specific destination tile
 	int CalculateF(const iPoint& destination);
 
+	void IdentifySuccessors(PathList& list_to_fill, iPoint startNode, iPoint endNode, PathFinding* path_finder) const;
 	// -----------
 	int g;
 	int h;
@@ -92,16 +109,29 @@ struct PathNode
 struct PathList
 {
 	// Looks for a node in this list and returns it's list node or NULL
-	PathNode* Find(const iPoint& point) const;
+	list<PathNode>::iterator Find(const iPoint& point);
 
 	// Returns the Pathnode with lowest score in this list or NULL if empty
-	PathNode* GetNodeLowestScore() const;
+	list<PathNode>::iterator GetNodeLowestScore();
 
 	// -----------
 	// The list itself, note they are pointers!
-	list<PathNode*> pathNodeList;
+	list<PathNode> pathNodeList;
 };
 
 
+struct Path {
+	Path() { completed = false; }
+	PathList open;
+	PathList closed;
+	PathList adjacent;
+
+	iPoint origin;
+	iPoint destination;
+
+	list<iPoint> finished_path;
+
+	bool completed;
+};
 
 #endif // __PATHFINDING_H__

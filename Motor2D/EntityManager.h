@@ -6,7 +6,6 @@
 #include "Unit.h"
 #include "Building.h"
 #include "Resource.h"
-
 #define NOTHUD SDL_Rect{0, 30, 1920 , 622}
 #define CAMERA_OFFSET_X App->render->camera.x
 #define CAMERA_OFFSET_Y App->render->camera.y
@@ -38,18 +37,20 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	bool IsOccupied(iPoint tile, Unit* ignore_unit = nullptr);
+	bool IsOccupied(iPoint tile, iPoint ignore_tile = { -1,-1 });
 
 	bool LoadGameData();
 
-	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type);
-	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type);
-	Resource* CreateResource(int posX, int posY, resourceType type, int resourceRectIndex);
+	Unit* CreateUnit(int posX, int posY, unitType type);
+	Building* CreateBuilding(int posX, int posY, buildingType type);
+	Resource* CreateResource(int posX, int posY, resourceItem type);
 
-	void DeleteUnit(Unit* unit, bool isEnemy);
-	void DeleteBuilding(Building* building, bool isEnemy);
+	void DeleteUnit(Unit* unit);
+	void DeleteBuilding(Building* building);
 	void DeleteResource(Resource* resource);
-	void OnCollision(Collider* c1, Collider* c2);
+	void OnCollision(Collision_data& col_data);
+
+	iPoint FindNearestResource(resourceType type, iPoint pos);
 
 private:
 	void DestroyEntity(Entity* entity);

@@ -2,41 +2,75 @@
 #define __Collision_H__
 
 #include "Module.h"
+#include "p2Point.h"
+
+class Unit;
+class Entity;
+class Building;
+class Resource;
 
 enum COLLIDER_TYPE
 {
 	COLLIDER_NONE = -1,
-	COLLIDER_FRIENDLY_UNIT,
-	COLLIDER_ENEMY_UNIT,
-	COLLIDER_FRIENDLY_BUILDING,
-	COLLIDER_ENEMY_BUILDING,
+	COLLIDER_UNIT,
+	COLLIDER_BUILDING,
 	COLLIDER_RESOURCE,
+	COLLIDER_LOS,
+	COLLIDER_RANGE,
 
 
 	COLLIDER_MAX
 };
 
+enum Collision_state {
+
+	UNSOLVED,
+	SOLVING,
+	SOLVED
+
+};
+
+
+
 struct Collider
 {
-	SDL_Rect rect;
+	iPoint pos;
+	int r;
 	bool to_delete = false;
+	bool colliding = false;
 	COLLIDER_TYPE type;
-	Module* callback = nullptr;
-	bool active = true;
+	Entity* entity;
+	Module* callback;
 
-	Collider(SDL_Rect rectangle, COLLIDER_TYPE type, Module* callback = nullptr) :
-		rect(rectangle),
+	Collider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback, Entity* entity) :
+		pos(position),
 		type(type),
-		callback(callback)
+		r(radius),
+		callback(callback),
+		entity(entity)
 	{}
 
 	void SetPos(int x, int y)
 	{
-		rect.x = x;
-		rect.y = y;
+		pos.x = x;
+		pos.y = y;
 	}
 
-	bool CheckCollision(const SDL_Rect& r) const;
+	bool CheckCollision(Collider* c2) const;
+	Unit* GetUnit();
+	Building* GetBuilding();
+	Resource* GetResource();
+};
+
+struct Collision_data {
+
+	Collider* c1;
+	Collider* c2;
+	Collision_state state = UNSOLVED;
+
+	Collision_data(Collider* c1, Collider* c2) : c1(c1), c2(c2)
+	{}
+
 };
 
 class Collision : public Module
@@ -61,8 +95,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	Collider* AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module* callback = nullptr);
+	Collider* AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
 	void DeleteCollider(Collider* collider);
+	bool FindCollision(Collider* col1, Collider* col2);
 	void DebugDraw();
 
 private:
@@ -72,6 +107,7 @@ private:
 
 public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
+	list<Collision_data*> collision_list;
 };
 
 #endif // __ModuleCollision_H__

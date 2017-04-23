@@ -1186,6 +1186,8 @@
         <FoodCost value=""/>
         <GoldCost value=""/>
         <BuildTime value=""/>
+	<GatheringSpeed value="10"/>
+	<MaxCapacity value="50"/>
       </Stats>
       <Animations>
         <Idle>
@@ -1221,10 +1223,68 @@
           <Columns value="15"/>
           <Width value="77"/>
           <Height value="68"/>
-          <Speed value="0.2f"/>
+          <Speed value="0.4f"/>
         </Die>
       </Animations>
     </Unit>
+
+		<Unit>
+      <Info>
+        <Name value = "GONDOR_HERO"/>
+        <ID value = "21"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Units/GondorKnight/GondorKnightIdle.png"/>
+				<Move value="textures/Units/GondorKnight/GondorKnightMove.png"/>
+				<Attack value="textures/Units/GondorKnight/GondorKnightAttack.png"/>
+				<Die value="textures/Units/GondorKnight/GondorKnightDie.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="0"/>
+				<Life value="100"/>
+				<Attack value="5"/>
+				<AttackSpeed value="2"/>
+				<Defense value="1"/>
+				<PiercingDamage value="0"/>
+				<MovementSpeed value="110.5"/>
+				<LineOfSight value="5"/>
+        <Range value="35"/>
+				<FoodCost value=""/>
+				<GoldCost value=""/>
+				<BuildTime value=""/>
+				<SkillType value="1"/>
+			</Stats>
+			<Animations>
+				<Idle>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="77"/>
+					<Height value="90"/>
+					<Speed value="0.2f"/>
+				</Idle>
+				<Move>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="77"/>
+					<Height value="91"/>
+					<Speed value="0.2f"/>
+				</Move>
+				<Attack>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="91"/>
+					<Height value="98"/>
+					<Speed value="0.2f"/>
+				</Attack>
+				<Die>
+					<Rows value="10"/>
+					<Columns value="5"/>
+					<Width value="232"/>
+					<Height value="127"/>
+					<Speed value="0.2f"/>
+				</Die>
+			</Animations>
+		</Unit>
 	</Units>
 	
 <!-- BUILDINGS -->
@@ -1507,6 +1567,7 @@
     <Resource value="BlackTrees">
         <Info>
           <ID value="0"/>
+	  <Type value="1"/>
         </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/BlackTrees.png"/>
@@ -1539,6 +1600,7 @@
 	<Resource value ="GreenTrees">
         <Info>
           <ID value="1"/>
+	  <Type value="1"/>
         </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/GreenTrees.png"/>
@@ -1571,6 +1633,7 @@
     <Resource value ="GOLD_MINE">
       <Info>
         <ID value ="2"/>
+	<Type value="2"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/"/>
@@ -1581,9 +1644,10 @@
       </Stats>
     </Resource>
 
-    <Resource value ="FOOD">
+    <Resource value ="BUSH">
       <Info>
         <ID value ="3"/>
+	<Type value="3"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/"/>
@@ -1594,9 +1658,10 @@
       </Stats>
     </Resource>
 
-    <Resource value ="STONE">
+    <Resource value ="STONE_MINE">
       <Info>
         <ID value ="4"/>
+	<Type value="4"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/Rocks/Rocks.png"/>

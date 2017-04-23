@@ -52,6 +52,9 @@ bool Render::Awake(pugi::xml_node& config)
 		camera.y = 0;
 	}
 	culling_cam = camera;
+
+	culling_cam.w += (300 * 2);
+	culling_cam.h += (300 * 2);
 	return ret;
 }
 
@@ -158,18 +161,53 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 		movement.second = 10;
 	else if (mousePosY > camera.h - 10)  //Move down
 		movement.second = -10;
-	
-	iPoint cam_pos_iso;   
-	cam_pos_iso.x = (-camera.x) - (camera.y * 2);    
-	cam_pos_iso.y =  -camera.y + (camera.x / 2);
 
+	iPoint cam_pos_iso;
+	cam_pos_iso.x = (-camera.x) - (camera.y * 2);
+	cam_pos_iso.y = -camera.y + (camera.x / 2);
+
+	if ((cam_pos_iso.x - 15) < 0) {
+		if (movement.first == 10)
+			movement.first = 0;
+		if (movement.second == 10)
+			movement.second = 0;
+	}
+	else if (cam_pos_iso.x + (camera.w * 2) > 9600) {
+		if (movement.first == -10)
+			movement.first = 0;
+		if (movement.second == -10)
+			movement.second = 0;
+	}
+
+	if ((cam_pos_iso.y - 15) < 0) {
+		if (movement.first == -10)
+			movement.first = 0;
+		if (movement.second == 10)
+			movement.second = 0;
+	}
+	else if (cam_pos_iso.y + (camera.h) > 4800) {
+		if (movement.first == 10)
+			movement.first = 0;
+		if (movement.second == -10)
+			movement.second = 0;
+	}
+
+	LOG("cam: %d, %d", camera.x, camera.y);
+	LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
 	camera.x += movement.first;
 	camera.y += movement.second;
 
-	culling_cam.x = -camera.x;
-	culling_cam.y = -camera.y;
+	culling_cam.x = -camera.x - 300;
+	culling_cam.y = -camera.y - 300;
 
 	return movement;
+}
+
+bool Render::CullingCam(iPoint point) {
+
+	SDL_Point p = { point.x, point.y };
+	return SDL_PointInRect(&p, &culling_cam);
+
 }
 
 void Render::SetViewPort(const SDL_Rect& rect)

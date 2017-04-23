@@ -3,9 +3,9 @@
 
 #include "Entity.h"
 #include "Animation.h"
+#include "Timer.h"
 #include <list>
 
-class Unit;
 
 enum buildingType {
 	TOWN_CENTER, HOUSE, ORC_BARRACKS, ARCHERY_RANGE, STABLES, SIEGE_WORKSHOP, MARKET, BLACKSMITH, MILL, WALL, GATE, OUTPOST, MONASTERY, CASTLE, SAURON_TOWER
@@ -16,20 +16,19 @@ enum buildingState
 	BUILDING_IDLE, BUILDING_ATTACKING, BUILDING_DESTROYING
 };
 
-enum buildingFaction {
-	FREE_MEN_BUILDING, SAURON_ARMY_BUILDING
-};
+class Unit;
 
 class Building : public Entity
 {
 public:
 	Building();
-	Building(int posX, int posY, bool isEnemy, Building* building);
+	Building(int posX, int posY, Building* building);
 	~Building();
 
 	bool Update(float dt);
 	bool Draw();
-	void Attack(float dt);
+	bool IsEnemy() const;
+	void AttackEnemy(float dt);
 	void Dead();
 	pugi::xml_node LoadBuildingInfo(buildingType type);
 
@@ -40,13 +39,10 @@ private:
 
 public:
 	buildingType type = ORC_BARRACKS;
-	buildingFaction faction;
 	float buildingAttackSpeed = 0;
 	int buildingPiercingDamage = 0;
-	bool isEnemy = false;
-	float timer = 0;
+	Timer attack_timer;
 	list<Unit*> availableUnitsToCreateList;
-	bool isDamaged = false;
 	int hpBarWidth = 0;
 	int buildingWoodCost = 0;
 	int buildingStoneCost = 0;
@@ -55,19 +51,12 @@ public:
 	SDL_Texture* buildingDieTexture = nullptr;
 	uint imageWidth = 0;
 	uint imageHeight = 0;
-	Unit* attackUnitTarget = nullptr;
-	int buildingLife = 0;
-	int buildingMaxLife = 0;
-	int buildingAttack = 0;
-	int buildingDefense = 0;
-	bool isVisible = true;
-	bool isSelected = false;
+	Entity* attackTarget = nullptr;
 	bool canAttack = false;
 	buildingState state = BUILDING_IDLE;
-	list<Unit*> attackingTargets;
+	Collider* LineOfSight = nullptr;
+	Collider* range = nullptr;
 
-	int mouseX;
-	int mouseY;
 };
 
 #endif // !__BUILDING_H__

@@ -85,6 +85,12 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Villager.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Hero.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -185,6 +191,12 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Project 2\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Villager.h">
+      <Filter>Project 2\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Hero.h">
+      <Filter>Project 2\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

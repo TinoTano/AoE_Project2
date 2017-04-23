@@ -64,6 +64,7 @@ public:
 
 	//Move camera with cursor
 	pair<int,int> MoveCameraWithCursor(float dt);
+	bool CullingCam(iPoint point);
 
 public:
 

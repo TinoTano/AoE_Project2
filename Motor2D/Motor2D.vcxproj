@@ -84,6 +84,7 @@
     <ClCompile Include="FogOfWar.cpp" />
     <ClCompile Include="Fonts.cpp" />
     <ClCompile Include="Gui.cpp" />
+    <ClCompile Include="Hero.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Application.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="Villager.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
   </ItemGroup>
@@ -115,6 +117,7 @@
     <ClInclude Include="FogOfWar.h" />
     <ClInclude Include="Fonts.h" />
     <ClInclude Include="Gui.h" />
+    <ClInclude Include="Hero.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="MemLeaks.h" />
     <ClInclude Include="MenuScene.h" />
@@ -135,6 +138,7 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Unit.h" />
+    <ClInclude Include="Villager.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />

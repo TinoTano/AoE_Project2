@@ -2,43 +2,41 @@
 #define _RESOURCE_H_
 
 #include "Entity.h"
+#include "Collision.h"
 #include <vector>
 
 enum resourceType {
-	BLACK_TREE, GREEN_TREE, GOLD_MINE, FOOD, STONE
+	NONE, WOOD, GOLD, FOOD, STONE
 };
 
-enum resourceState {
-	RESOURCE_IDLE, RESOURCE_GATHERING
+enum resourceItem {
+	BLACK_TREE, GREEN_TREE, GOLD_MINE, BUSH, STONE_MINE
 };
+
 
 class Resource : public Entity
 {
 public:
 	Resource();
-	Resource(int posX, int posY, Resource* resource, int resourceRectIndex);
+	Resource(int posX, int posY, Resource* resource);
 	~Resource();
 
 	bool Update(float dt);
-	bool Draw();
 	
+	bool Draw();
+
+	void Damaged();
 	void Dead();
 
 private:
 
 public:
-	resourceState state = RESOURCE_IDLE;
-	resourceType type = BLACK_TREE;
-	int resourceLife = 0;
+	resourceItem visual = BLACK_TREE;
+	resourceType type = WOOD;
 	SDL_Texture* resourceIdleTexture = nullptr;
 	SDL_Texture* resourceGatheringTexture = nullptr;
-	bool isVisible = true;
-	bool isSelected = false;
 	vector<SDL_Rect> resourceRectVector;
 	SDL_Rect resourceRect;
-	int rectIndex = 0;
-	bool isInteractable = false;
-	SDL_Rect resourceGatheringRect;
 };
 
 #endif

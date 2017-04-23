@@ -2,31 +2,42 @@
 #include "Render.h"
 #include "Application.h"
 #include "p2Log.h"
+#include "Scene.h"
 #include "EntityManager.h"
+#include "Collision.h"
+#include "Textures.h"
 
 Resource::Resource()
 {
 }
 
-Resource::Resource(int posX, int posY, Resource* resource, int resourceRectIndex)
+Resource::Resource(int posX, int posY, Resource* resource)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
-	this->type = resource->type;
-
-	resourceLife = resource->resourceLife;
+	type = resource->type;
+	visual = resource->visual;
+	Life = resource->Life;
 	resourceIdleTexture = resource->resourceIdleTexture;
 	resourceGatheringTexture = resource->resourceGatheringTexture;
-	resourceRectVector = resource->resourceRectVector;
-	if (resourceRectIndex < resourceRectVector.size()) {
-		rectIndex = resource->rectIndex;
-		resourceRect = resourceRectVector[rectIndex];
+	
+
+	if (resource->resourceRectVector.size() > 0) {
+		int rectID = (rand() % resource->resourceRectVector.size()) - 1;
+		
+		if (rectID < 0)
+			rectID = 0;
+
+		resourceRect = resource->resourceRectVector.at(rectID);
 	}
 	else {
-		LOG("Wrong resourceRectIndex");
+		uint w = 0, h = 0;
+		App->tex->GetSize(resourceIdleTexture, w, h);
+		resourceRect.x = 0, resourceRect.y = 0, resourceRect.w = w, resourceRect.h = h;
 	}
-	resourceGatheringRect = resource->resourceGatheringRect;
 
+
+	collider = App->collision->AddCollider(entityPosition, resourceRect.w / 4, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
 	entityTexture = resourceIdleTexture;
 }
 
@@ -43,12 +54,8 @@ bool Resource::Update(float dt)
 bool Resource::Draw()
 {
 	Sprite resource;
-	if (state == RESOURCE_GATHERING) {
-		resource.pos = { entityPosition.x - 75, entityPosition.y - resourceRect.h };
-	}
-	else {
-		resource.pos = { entityPosition.x - (resourceRect.w / 2), entityPosition.y - resourceRect.h };
-	}
+	resource.pos.x = entityPosition.x - (resourceRect.w / 2);
+	resource.pos.y = entityPosition.y - (resourceRect.h / 2);
 	resource.texture = entityTexture;
 	resource.priority = entityPosition.y;
 	resource.rect = resourceRect;
@@ -57,7 +64,28 @@ bool Resource::Draw()
 	return true;
 }
 
+void Resource::Damaged() {
+
+	entityTexture = resourceGatheringTexture;
+	uint w = 0, h = 0;
+	App->tex->GetSize(resourceGatheringTexture, w, h);
+	resourceRect.x = 0, resourceRect.y = 0, resourceRect.w = w, resourceRect.h = h;
+
+}
+
 void Resource::Dead()
 {
 	App->entityManager->DeleteResource(this);
+	App->collision->DeleteCollider(collider);
+
+	for (list<Unit*>::iterator it = App->entityManager->friendlyUnitList.begin(); it != App->entityManager->friendlyUnitList.end(); it++) {
+		if ((*it)->IsVillager) {
+			if ((*it)->attackTarget == this) {
+				iPoint destination = App->map->WorldToMap(TOWN_HALL_POS_X, TOWN_HALL_POS_Y);
+				(*it)->SetDestination(destination);
+				(*it)->SetState(UNIT_MOVING);
+
+			}
+		}
+	}
 }

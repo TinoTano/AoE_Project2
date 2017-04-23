@@ -78,8 +78,8 @@ void HUD::Update() {
 					name->SetString(it._Ptr->_Myval.GetName());
 				}
 			}
-			max_life = App->entityManager->selectedBuildingList.front()->buildingMaxLife;
-			curr_life = App->entityManager->selectedBuildingList.front()->buildingLife;
+			max_life = App->entityManager->selectedBuildingList.front()->MaxLife;
+			curr_life = App->entityManager->selectedBuildingList.front()->Life;
 			_itoa_s(curr_life, currlife, 65, 10);
 			life_str += currlife;
 			life_str += "/";
@@ -118,7 +118,7 @@ void HUD::Update() {
 							App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
 							create_villager_bt->current == FREE;
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -=50);
-							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 150, false, ELF_VILLAGER);
+							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 150, ELF_VILLAGER);
 						}
 					}
 				}
@@ -135,7 +135,7 @@ void HUD::Update() {
 					else if (create_elven_archer_bt->current == CLICKIN)
 					{
 						if (App->sceneManager->level1_scene->woodCount > 70) {
-							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 120, false, ELVEN_ARCHER);
+							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 120, ELVEN_ARCHER);
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
 							create_elven_archer_bt->current = FREE;
 						}
@@ -143,7 +143,7 @@ void HUD::Update() {
 					else if (create_elven_longblade_bt->current == CLICKIN)
 					{
 						if (App->sceneManager->level1_scene->woodCount > 70) {
-							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 90, false, ELVEN_LONGBLADE);
+							App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 90, ELVEN_LONGBLADE);
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
 							create_elven_longblade_bt->current = FREE;
 						}
@@ -151,8 +151,8 @@ void HUD::Update() {
 					else if (create_elven_cavalry_bt->current == CLICKIN)
 					{
 						if (App->sceneManager->level1_scene->woodCount > 350) {
-							Unit* elven = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 190, false, ELVEN_CAVALRY);
-							elven->isHero = true;
+							Unit* elven = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 190, ELVEN_CAVALRY);
+							elven->IsHero = true;
 							App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
 							create_elven_cavalry_bt->current = FREE;
 						}
@@ -193,23 +193,23 @@ void HUD::Update() {
 			else {
 				for (list<UnitSprite>::iterator it = App->gui->SpriteUnits.begin(); it != App->gui->SpriteUnits.end(); ++it)
 				{
-					if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
+					/*if (it._Ptr->_Myval.GetID() == App->entityManager->selectedUnitList.front()->GetType())
 					{
 						single->section = it->GetRect();
 						name->SetString(it->GetName());
-						defense = App->entityManager->selectedUnitList.front()->unitDefense;
-						attack = App->entityManager->selectedUnitList.front()->unitDefense;
-					}
+						defense = App->entityManager->selectedUnitList.front()->Defense;
+						attack = App->entityManager->selectedUnitList.front()->Defense;
+					}*/
 				}
 
-				_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
-				_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
+				_itoa_s(App->entityManager->selectedUnitList.front()->Defense, armor, 65, 10);
+				_itoa_s(App->entityManager->selectedUnitList.front()->Attack, damage, 65, 10);
 
 				damage_val->SetString(damage);
 				armor_val->SetString(armor);
 
-				max_life = App->entityManager->selectedUnitList.front()->unitMaxLife;
-				curr_life = App->entityManager->selectedUnitList.front()->unitLife;
+				max_life = App->entityManager->selectedUnitList.front()->MaxLife;
+				curr_life = App->entityManager->selectedUnitList.front()->Life;
 
 				_itoa_s(curr_life, currlife, 65, 10);
 				life_str += currlife;
@@ -259,9 +259,27 @@ void HUD::Update() {
 							x = 0;
 							y += App->gui->SpriteUnits.front().GetRect().h + 5;
 						}
+						if (it_sprite._Ptr->_Myval.GetID() == it_unit._Ptr->_Myval->GetType()) {
+
+							if (it_unit._Ptr->_Myval->MaxLife == 0) it_unit._Ptr->_Myval->MaxLife = it_unit._Ptr->_Myval->Life;
+							percent = ((it_unit._Ptr->_Myval->MaxLife - it_unit._Ptr->_Myval->Life) * 100) / it_unit._Ptr->_Myval->MaxLife;
+							barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
+							bar.rect.x = 310 + x - App->render->camera.x;
+							bar.rect.y = 650 + y - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+							bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
+							bar.rect.h = 5;
+							bar.r = 255;
+							bar.g = 0;
+							bar.b = 0;
+							App->render->ui_toDraw.push_back(bar);
+							bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+							bar.r = 0;
+							bar.g = 255;
+							App->render->ui_toDraw.push_back(bar);
 							x += App->gui->SpriteUnits.front().GetRect().w;
 						}
 					}
+				}
 
 				// CODE TO SELECT ONE UNIT FROM THE PANEL NOT FUNCTIONAL FOR NOW
 				/*
@@ -382,7 +400,7 @@ void HUD::StartResourceInfo()
 		}
 	}
 
-	max_life = App->entityManager->selectedResource->resourceLife;
+	max_life = App->entityManager->selectedResource->Life;
 	_itoa_s(max_life, maxlife, 65, 10);
 	life_str += maxlife;
 
@@ -406,8 +424,8 @@ void HUD::StartBuildingInfo()
 		}
 	}
 
-	max_life = App->entityManager->selectedBuildingList.front()->buildingMaxLife;
-	curr_life = App->entityManager->selectedBuildingList.front()->buildingLife;
+	max_life = App->entityManager->selectedBuildingList.front()->MaxLife;
+	curr_life = App->entityManager->selectedBuildingList.front()->Life;
 
 
 	_itoa_s(curr_life, currlife, 65, 10);
@@ -440,8 +458,8 @@ void HUD::GetSelection() {
 			}
 		}
 
-		_itoa_s(App->entityManager->selectedUnitList.front()->unitDefense, armor, 65, 10);
-		_itoa_s(App->entityManager->selectedUnitList.front()->unitAttack, damage, 65, 10);
+		_itoa_s(App->entityManager->selectedUnitList.front()->Defense, armor, 65, 10);
+		_itoa_s(App->entityManager->selectedUnitList.front()->Attack, damage, 65, 10);
 
 		sword_img = (Image*)App->gui->CreateImage("gui/game_scene_ui.png", 310 - App->render->camera.x, 720 - App->render->camera.y, SDL_Rect{ 0,19, 38, 22 });
 		armor_img = (Image*)App->gui->CreateImage("gui/game_scene_ui.png", 310 - App->render->camera.x, 750 - App->render->camera.y, SDL_Rect{ 0,63, 37, 19 });
@@ -449,8 +467,8 @@ void HUD::GetSelection() {
 		damage_val = (Label*)App->gui->CreateLabel(damage, 350 - App->render->camera.x, 720 - App->render->camera.y, nullptr);
 		armor_val = (Label*)App->gui->CreateLabel(armor, 350 - App->render->camera.x, 750 - App->render->camera.y, nullptr);
 
-		max_life = App->entityManager->selectedUnitList.front()->unitMaxLife;
-		curr_life = App->entityManager->selectedUnitList.front()->unitLife;
+		max_life = App->entityManager->selectedUnitList.front()->MaxLife;
+		curr_life = App->entityManager->selectedUnitList.front()->Life;
 
 
 		_itoa_s(curr_life, currlife, 65, 10);
