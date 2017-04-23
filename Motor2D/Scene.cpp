@@ -206,6 +206,12 @@ bool Scene::Update(float dt)
 		LoadScene();
 	}
 */
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+		if (App->entityManager->selectedUnitList.size() > 0) {
+			App->entityManager->PlaceBuilding(ORC_BARRACKS);
+		}
+	}
+
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
 

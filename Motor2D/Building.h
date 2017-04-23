@@ -13,7 +13,7 @@ enum buildingType {
 
 enum buildingState
 {
-	BUILDING_IDLE, BUILDING_ATTACKING, BUILDING_DESTROYING
+	BUILDING_IDLE, BUILDING_FINISH_CONSTRUCTION, BUILDING_ATTACKING, BUILDING_DESTROYING
 };
 
 class Unit;
@@ -56,14 +56,9 @@ public:
 	buildingState state = BUILDING_IDLE;
 	Collider* LineOfSight = nullptr;
 	Collider* range = nullptr;
+	bool onConstruction = false;
 
 };
 
 #endif // !__BUILDING_H__
-
-
-
-
-
-
 

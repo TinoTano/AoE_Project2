@@ -6,6 +6,9 @@
 #include "Unit.h"
 #include "Building.h"
 #include "Resource.h"
+#include "Render.h"
+#include "Villager.h"
+
 #define NOTHUD SDL_Rect{0, 30, 1920 , 622}
 #define CAMERA_OFFSET_X App->render->camera.x
 #define CAMERA_OFFSET_Y App->render->camera.y
@@ -49,6 +52,7 @@ public:
 	void DeleteBuilding(Building* building);
 	void DeleteResource(Resource* resource);
 	void OnCollision(Collision_data& col_data);
+	void PlaceBuilding(buildingType type);
 
 	iPoint FindNearestResource(resourceType type, iPoint pos);
 
@@ -74,6 +78,11 @@ private:
 	Unit* clickedUnit = nullptr;
 	Building* clickedBuilding = nullptr;
 	Resource* clickedResource = nullptr;
+
+	bool placingBuilding = false;
+	Sprite placingBuildingSprite;
+	buildingType creatingBuildingType;
+	list<Villager*> constructors;
 	
 public:
 	int nextID;

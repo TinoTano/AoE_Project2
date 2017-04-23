@@ -84,23 +84,32 @@ bool EntityManager::Update(float dt)
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedUnitList.empty()) {
 
-		iPoint destination = App->map->WorldToMap(mouseX, mouseY);
+		if (!placingBuilding) {
+			iPoint destination = App->map->WorldToMap(mouseX, mouseY);
 
-		Unit* commander = selectedUnitList.front();
+			Unit* commander = selectedUnitList.front();
 
-		commander->SetDestination(destination);
+			commander->SetDestination(destination);
 
-		if (selectedUnitList.size() > 1) {
+			if (selectedUnitList.size() > 1) {
 
-			selectedUnitList.pop_front();
-			App->pathfinding->SharePath(commander, selectedUnitList);
-			selectedUnitList.push_front(commander);
+				selectedUnitList.pop_front();
+				App->pathfinding->SharePath(commander, selectedUnitList);
+				selectedUnitList.push_front(commander);
 
+			}
+
+			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
+				(*it)->SetState(UNIT_MOVING);
+
+			for (list<Villager*>::iterator it = constructors.begin(); it != constructors.end(); it++) {
+				(*it)->constructingTarget = nullptr;
+				constructors.remove(*it);
+			}
 		}
-
-		for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
-			(*it)->SetState(UNIT_MOVING);
-
+		else {
+			placingBuilding = false;
+		}
 	}
 
 	if (mouseY > NOTHUD.y - CAMERA_OFFSET_Y && mouseY < NOTHUD.h - CAMERA_OFFSET_Y)
@@ -218,6 +227,41 @@ bool EntityManager::Update(float dt)
 	}
 
 	doubleClickTimer += dt;
+
+	if (placingBuilding) {
+		placingBuildingSprite.pos = { mouseX - placingBuildingSprite.rect.w / 2, mouseY - placingBuildingSprite.rect.h / 2 };
+		App->render->sprites_toDraw.push_back(placingBuildingSprite);
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			iPoint dest = App->map->WorldToMap(mouseX, mouseY);
+			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
+				if ((*it)->type == VILLAGER || (*it)->type == ELF_VILLAGER) {
+					Villager* villager = (Villager*)*it;
+					villager->SetDestination(dest);
+					villager->SetState(UNIT_MOVING);
+					constructors.push_back(villager);
+				}
+			}
+			placingBuilding = false;
+		}
+	}
+
+	if (constructors.size() > 0) {
+		for (list<Villager*>::iterator it = constructors.begin(); it != constructors.end(); it++) {
+			iPoint buildingCenterPos(placingBuildingSprite.pos.x + (placingBuildingSprite.rect.w / 2), placingBuildingSprite.pos.y + (placingBuildingSprite.rect.h / 2));
+			if (buildingCenterPos.DistanceTo((*it)->entityPosition) < 60) {
+				if ((*it)->constructingTarget == nullptr) {
+					Building* building = CreateBuilding(buildingCenterPos.x, buildingCenterPos.y, creatingBuildingType);
+					building->Life = 1;
+					building->faction = FREE_MEN; //just for testing;
+					for (list<Villager*>::iterator it2 = constructors.begin(); it2 != constructors.end(); it2++) {
+						(*it)->constructingTarget = building;
+					}
+				}
+				(*it)->SetState(UNIT_BUILDING);
+				constructors.remove(*it);
+			}
+		}
+	}
 
 	return true;
 
@@ -572,6 +616,17 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 
 
 	return unit;
+}
+
+void EntityManager::PlaceBuilding(buildingType type)
+{
+	placingBuildingSprite.texture = buildingsDB[type]->buildingIdleTexture;
+	placingBuilding = true;
+	uint width, height;
+	App->tex->GetSize(placingBuildingSprite.texture, width, height);
+	placingBuildingSprite.rect = { 0,0,(int)width,(int)height };
+	placingBuildingSprite.priority = 12500;
+	creatingBuildingType = type;
 }
 
 Building* EntityManager::CreateBuilding(int posX, int posY,  buildingType type)

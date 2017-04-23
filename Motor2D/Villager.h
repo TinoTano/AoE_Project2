@@ -3,6 +3,7 @@
 
 #include "Unit.h"
 #include "Resource.h"
+#include "Building.h"
 
 class Villager : public Unit
 {
@@ -11,6 +12,7 @@ public:
 	Villager(int posx, int posy, Villager* unit = nullptr);
 
 	void GatherResource(float dt);
+	void Contructing(float dt);
 
 public:
 	int gathering_speed = 0;
@@ -25,6 +27,10 @@ public:
 	vector<Animation> collectingAnimalsAnimations;
 	vector<Animation> collectingPlantsAnimations;
 
+	bool isConstructor = false;
+	bool isSelected = false;
+	Building* constructingTarget = nullptr;
+	int buildingSpeed = 20;
 };
 
 

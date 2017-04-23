@@ -40,5 +40,19 @@ void Villager::GatherResource(float dt)
 
 }
 
+void Villager::Contructing(float dt)
+{
+	if (currentAnim->Finished()) {
+		constructingTarget->Life += buildingSpeed;
+	}
+
+	if (constructingTarget->Life >= constructingTarget->MaxLife) {
+		if (constructingTarget->Life > constructingTarget->MaxLife) {
+			constructingTarget->Life = constructingTarget->MaxLife;
+		}
+		SetState(UNIT_IDLE);
+	}
+}
+
 
 
