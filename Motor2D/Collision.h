@@ -8,6 +8,7 @@ class Unit;
 class Entity;
 class Building;
 class Resource;
+class QuadTree;
 
 enum COLLIDER_TYPE
 {
@@ -105,6 +106,10 @@ private:
 
 	list<Collider*> colliders;
 	bool debug = false;
+
+	QuadTree* quadTree;
+	vector<QuadTree*> nodeList;
+	list<Collider*> potentialCollisionList;
 
 public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
