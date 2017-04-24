@@ -223,3 +223,17 @@ bool Collision::FindCollision(Collider* col1, Collider* col2) {
 	return false;
 
 }
+
+Collider* Collision::FindNearestCollider(iPoint point) {
+
+	Collider* col = nullptr;
+	if (colliders.size() > 0) {
+		col = colliders.front();
+		for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
+			if ((*it)->pos.DistanceTo(point) < col->pos.DistanceTo(point))
+				col = (*it);
+		}
+	}
+	return col;
+
+}

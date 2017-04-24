@@ -57,7 +57,7 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	SDL_Rect r = currentAnim->GetCurrentFrame();
 
-	collider = App->collision->AddCollider(entityPosition, r.w / 4, COLLIDER_UNIT, App->entityManager, (Entity*)this);
+	collider = App->collision->AddCollider(entityPosition, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider(entityPosition, r.w , COLLIDER_RANGE, App->entityManager, (Entity*)this);
 }
 

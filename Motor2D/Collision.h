@@ -98,6 +98,7 @@ public:
 	Collider* AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
 	void DeleteCollider(Collider* collider);
 	bool FindCollision(Collider* col1, Collider* col2);
+	Collider* FindNearestCollider(iPoint point);
 	void DebugDraw();
 
 private:

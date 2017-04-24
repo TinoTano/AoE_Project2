@@ -128,85 +128,109 @@ bool EntityManager::Update(float dt)
 		break;
 
 	case KEY_UP:
-
+		
 		selectedUnitList.clear();
 		selectedBuildingList.clear();
+		selectedResource = nullptr;
 
-		int selectedCount = 0;
+		if (multiSelectionRect.x == mouseX && multiSelectionRect.y == mouseY) {   // if there's no selection rect... (only clicked)
 
-		if (multiSelectionRect.w < 0) {
-			multiSelectionRect.x += multiSelectionRect.w;
-			multiSelectionRect.w *= -1;
-		}
-		if (multiSelectionRect.h < 0) {
-			multiSelectionRect.y += multiSelectionRect.h;
-			multiSelectionRect.h *= -1;
-		}
+			iPoint mouse = { mouseX, mouseY };
+			Entity* clicked_entity = App->collision->FindNearestCollider(mouse)->entity;
 
+			if (mouse.DistanceTo(clicked_entity->entityPosition) < clicked_entity->collider->r) {
+				switch (clicked_entity->collider->type) {
 
-		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-			SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-			if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
-				selectedUnitList.push_back((*it));
-		}
-
-		if (selectedCount == 0) {
-
-			for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
-				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
-					selectedBuildingList.push_back((*it));
+				case COLLIDER_UNIT:
+					selectedUnitList.push_back((Unit*)clicked_entity);
+					break;
+				case COLLIDER_BUILDING:
+					selectedBuildingList.push_back((Building*)clicked_entity);
+					break;
+				case COLLIDER_RESOURCE:
+					selectedResource = (Resource*)clicked_entity;
+					break;
+				}
 			}
 		}
+		else {    // if there's selection rect (clicked and dragged)
 
-		if (selectedCount == 0) {
+			int selectedCount = 0;
 
-			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+			if (multiSelectionRect.w < 0) {
+				multiSelectionRect.x += multiSelectionRect.w;
+				multiSelectionRect.w *= -1;
+			}
+			if (multiSelectionRect.h < 0) {
+				multiSelectionRect.y += multiSelectionRect.h;
+				multiSelectionRect.h *= -1;
+			}
+
+
+			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
 				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
 
 				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
 					selectedUnitList.push_back((*it));
 			}
-		}
 
-		if (selectedCount == 0) {
+			if (selectedCount == 0) {
 
-			for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
-				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+				for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
+					SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
 
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
-					selectedBuildingList.push_back((*it));
-			}
-		}
-
-		/*if (selectedCount == 0) {
-
-			for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
-					resourceList.push_back((*it));
-			}
-		}*/
-
-		if (doubleClickTimer <= 0.5f) {
-			for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-				if (!selectedUnitList.empty()) {
-					if ((*it) != selectedUnitList.front()) {
-
-						if ((*it)->GetType() == selectedUnitList.front()->GetType())
-							selectedUnitList.push_back((*it));
-
-					}
+					if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
+						selectedBuildingList.push_back((*it));
 				}
 			}
-			doubleClickTimer = 0;
-		}
 
-		multiSelectionRect = { 0,0,0,0 };
-		break;
+			if (selectedCount == 0) {
+
+				for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+					SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+
+					if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
+						selectedUnitList.push_back((*it));
+				}
+			}
+
+			if (selectedCount == 0) {
+
+				for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
+					SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+
+					if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
+						selectedBuildingList.push_back((*it));
+				}
+			}
+
+			/*if (selectedCount == 0) {
+
+				for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
+					SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+
+					if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
+						resourceList.push_back((*it));
+				}
+			}*/
+
+			if (doubleClickTimer <= 0.5f) {
+				for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+					if (!selectedUnitList.empty()) {
+						if ((*it) != selectedUnitList.front()) {
+
+							if ((*it)->GetType() == selectedUnitList.front()->GetType())
+								selectedUnitList.push_back((*it));
+
+						}
+					}
+				}
+				doubleClickTimer = 0;
+			}
+
+			multiSelectionRect = { 0,0,0,0 };
+			break;
+		}
 	}
 
 	for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
@@ -729,43 +753,32 @@ void EntityManager::OnCollision(Collision_data& col_data)
 
 	case COLLIDER_UNIT:
 
-		unit2 = col_data.c2->GetUnit();
-		col_data.state = App->pathfinding->SolveCollision(unit, unit2);// first parameter should be the higher priority unit!
+		if (col_data.c2->entity->faction == unit->faction) {
+			unit2 = col_data.c2->GetUnit();
+			col_data.state = App->pathfinding->SolveCollision(unit, unit2);// first parameter should be the higher priority unit!
+		}
 		break;
 
 	case COLLIDER_BUILDING:
-
+		
 		building = col_data.c2->GetBuilding();
 
-		if (building->faction != unit->faction) {
-			if (unit->attackTarget == nullptr) {
-				unit->attackTarget = building;
-				unit->SetState(UNIT_ATTACKING);
-			}
+		if (unit->IsVillager && building->type == TOWN_CENTER) {
 
-			if (building->canAttack && building->attackTarget == nullptr) {
-				building->attackTarget = unit;
-				building->state = BUILDING_ATTACKING;
-			}
-		}
-		else {
-			if (unit->IsVillager && building->type == TOWN_CENTER) {
+			Villager* villager = (Villager*)unit;
+			if (villager->curr_capacity > 0) {
 
-				Villager* villager = (Villager*)unit;
-				if (villager->curr_capacity > 0) {
-
-					switch (villager->resource_carried) {
-					case WOOD:
-						App->sceneManager->level1_scene->woodCount += villager->curr_capacity;
-						App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
-						break;
-					}
-
-					villager->curr_capacity = 0;
-
-					villager->SetDestination(FindNearestResource(villager->resource_carried, villager->entityPosition));
-					villager->SetState(UNIT_MOVING);
+				switch (villager->resource_carried) {
+				case WOOD:
+					App->sceneManager->level1_scene->woodCount += villager->curr_capacity;
+					App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+					break;
 				}
+
+				villager->curr_capacity = 0;
+
+				villager->SetDestination(FindNearestResource(villager->resource_carried, villager->entityPosition));
+				villager->SetState(UNIT_MOVING);
 			}
 		}
 
@@ -775,7 +788,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 
 		resource = col_data.c2->GetResource();
 
-		if (unit->IsVillager) {
+		if (unit->IsVillager && unit->state == UNIT_IDLE) {
 			Villager* villager = (Villager*)unit;
 			if (villager->curr_capacity == 0) {
 				villager->resource_carried = resource->type;
