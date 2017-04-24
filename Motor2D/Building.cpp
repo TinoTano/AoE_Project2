@@ -38,7 +38,7 @@ Building::Building(int posX, int posY, Building* building)
 	entityTexture = buildingIdleTexture;
 	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
 
-	collider = App->collision->AddCollider(entityPosition, imageWidth / 1.5, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
+	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider(entityPosition, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 
 	hpBarWidth = 50;

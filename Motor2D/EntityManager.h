@@ -65,12 +65,13 @@ private:
 	list<Resource*> removeResourceList;
 
 	SDL_Rect multiSelectionRect = { 0,0,0,0 };
-	int timesClicked = 0;
-	float doubleClickTimer = 0;
+	Timer click_timer;
 
 	map<int, Unit*> unitsDB;
 	map<int, Building*> buildingsDB;
 	map<int, Resource*> resourcesDB;
+
+	Entity* clicked_entity = nullptr;
 
 	int mouseX;
 	int mouseY;
