@@ -107,13 +107,13 @@ private:
 	list<Collider*> colliders;
 	bool debug = false;
 
-	QuadTree* quadTree;
-	vector<QuadTree*> nodeList;
-	list<Collider*> potentialCollisionList;
+	
+	list<Collider*> potential_collisions;
 
 public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
 	list<Collision_data*> collision_list;
+	QuadTree* quadTree;
 };
 
 #endif // __ModuleCollision_H__

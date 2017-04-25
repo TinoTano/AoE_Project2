@@ -56,7 +56,7 @@ bool Collision::Start()
 {
 	uint w, h;
 	App->win->GetWindowSize(w, h);
-	quadTree = new QuadTree({ -App->render->camera.x,0,(int)w,(int)h }, 0);
+	quadTree = new QuadTree({ -4800, 0, 4800, 4800 }, 0);
 	return true;
 }
 
@@ -80,18 +80,18 @@ bool Collision::PreUpdate()
 	Collider *c2;
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
-		c1 = (*col1);
-	
-		if (c1->type != COLLIDER_UNIT)
-			continue;
-	
-		for (list<Collider*>::iterator col2 = colliders.begin(); col2 != colliders.end(); col2++) {
-			c2 = (*col2);
-	
-			if (c1->CheckCollision(c2) == true && c1 != c2)  {
-	
-				if ((matrix[c1->type][c2->type] && c1->callback) || (matrix[c2->type][c1->type] && c2->callback)) {
-	
+
+		if ((*col1)->type == COLLIDER_UNIT) {
+			c1 = (*col1);
+
+			potential_collisions.clear();
+			quadTree->Retrieve(potential_collisions, c1);
+
+			for (list<Collider*>::iterator col2 = potential_collisions.begin(); col2 != potential_collisions.end(); col2++) {
+				c2 = (*col2);
+
+				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback) {
+
 					if (!FindCollision(c1, c2)) {
 						Collision_data* collision = new Collision_data(c1, c2);
 						collision_list.push_back(collision);
@@ -100,30 +100,6 @@ bool Collision::PreUpdate()
 			}
 		}
 	}
-
-	//Quadtree
-	//quadTree->ClearTree();
-	//
-	//for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
-	//	quadTree->Insert(*it);
-	//}
-	//
-	//for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
-	//	potentialCollisionList.clear();
-	//	quadTree->Retrieve(potentialCollisionList, *it);
-	//	if (potentialCollisionList.size() > 0) {
-	//		for (list<Collider*>::iterator it2 = potentialCollisionList.begin(); it2 != potentialCollisionList.end(); it2++) {
-	//			if ((*it)->CheckCollision((*it2)->rect)) {
-	//				if (matrix[(*it)->type][(*it2)->type] && (*it)->callback)
-	//					(*it)->callback->OnCollision((*it), (*it2));
-	//
-	//				if (matrix[(*it2)->type][(*it)->type] && (*it2)->callback)
-	//					(*it2)->callback->OnCollision((*it2), (*it));
-	//			}
-	//		}
-	//	}
-	//}
-	
 
 	for (list<Collision_data*>::iterator collisions = collision_list.begin(); collisions != collision_list.end(); collisions++) {
 
@@ -181,6 +157,7 @@ Collider * Collision::AddCollider(iPoint position, int radius, COLLIDER_TYPE typ
 {
 	Collider* ret = new Collider(position, radius, type, callback, entity);
 	colliders.push_back(ret);
+	quadTree->Insert(ret);
 
 	return ret;
 }

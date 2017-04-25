@@ -1,9 +1,9 @@
 #include "QuadTree.h"
 
-QuadTree::QuadTree(SDL_Rect nodeBounds, int level)
+QuadTree::QuadTree(SDL_Rect nodeBounds, int level, int node_index)
 {
 	node[0] = node[1] = node[2] = node[3] = nullptr;
-	nodeIndex = 0;
+	nodeIndex = node_index;
 	nodeRect = nodeBounds;
 	this->level = level;
 }
@@ -15,7 +15,7 @@ QuadTree::~QuadTree()
 
 void QuadTree::ClearTree()
 {
-	colllidersList.clear();
+	collidersList.clear();
 
 	for (int i = 0; i < NODE_COUNT; i++) {
 		if (node[0] != nullptr) {
@@ -32,22 +32,83 @@ void QuadTree::SplitNode()
 	int x = nodeRect.x;
 	int y = nodeRect.y;
 
-	node[0] = new QuadTree(SDL_Rect{ x, y, halfWidth, halfHeight }, level + 1); //NW Node
-	node[1] = new QuadTree(SDL_Rect{ x + halfWidth, y, halfWidth, halfHeight }, level + 1); //NE Node
-	node[2] = new QuadTree(SDL_Rect{ x, y + halfHeight, halfWidth, halfHeight }, level + 1); //SW Node
-	node[3] = new QuadTree(SDL_Rect{ x + halfWidth, y + halfHeight, halfWidth, halfHeight }, level + 1); //SE Node
+	node[0] = new QuadTree(SDL_Rect{ x, y, halfWidth, halfHeight }, level + 1, 0); //NW Node
+	node[1] = new QuadTree(SDL_Rect{ x + halfWidth, y, halfWidth, halfHeight }, level + 1, 1); //NE Node
+	node[2] = new QuadTree(SDL_Rect{ x, y + halfHeight, halfWidth, halfHeight }, level + 1, 2); //SW Node
+	node[3] = new QuadTree(SDL_Rect{ x + halfWidth, y + halfHeight, halfWidth, halfHeight }, level + 1, 3); //SE Node
 
-	node[0]->nodeIndex = 0;
-	node[1]->nodeIndex = 1;
-	node[2]->nodeIndex = 2;
-	node[3]->nodeIndex = 3;
+	for (int i = 0; i < NODE_COUNT; i++) {
+
+		for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end(); it++) {
+
+			if (node[i]->Contains(*it))
+				node[i]->collidersList.push_back(*it);
+		}
+	}
+	collidersList.clear();
 }
 
-int QuadTree::GetNodeIndex(Collider* col)
+void QuadTree::MergeNode() {
+
+	for (int i = 0; i < NODE_COUNT; i++) {
+
+		for (list<Collider*>::iterator it = node[i]->collidersList.begin(); it != node[i]->collidersList.end(); it++)
+			collidersList.push_back(*it);
+
+		RELEASE(node[i]);
+		node[i] = nullptr;
+	}
+
+	for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end();) {   
+		for (list<Collider*>::iterator it2 = it; it2 != collidersList.end(); ) {
+			it2++;
+			if (it == it2) 
+				collidersList.erase(it2);     // to eliminate possible duplicates
+		}
+	}
+	
+}
+
+void QuadTree::UpdateCol(Collider* col) {
+
+	int index = GetNodeIndex(col);
+	if (index == -1) {
+		if (!IsInList(col)) {
+
+			collidersList.push_back(col);
+			if (collidersList.size() > MAX_OBJECTS && level < MAX_LEVELS && node[0] == nullptr)
+				SplitNode();
+		}
+	}
+	else {
+		for (int i = 0; i < NODE_COUNT; i++) {
+
+			if (i != index && node[i]->IsInList(col) && !node[i]->Contains(col))
+				node[i]->collidersList.remove(col);
+		}
+
+		node[index]->UpdateCol(col);
+	}
+}
+
+void QuadTree::UpdateTree() {
+
+	if (node[0] != nullptr) {
+		for (int i = 0; i < NODE_COUNT; i++) {
+
+			if (node[i]->collidersList.size() < MAX_OBJECTS && node[i]->node[0] != nullptr)
+				node[i]->MergeNode();
+			else
+				node[i]->UpdateTree();
+		}
+	}
+}
+
+int QuadTree::GetNodeIndex(Collider* col, int start_from)
 {
 	int index = -1;
 
-	for (int i = 0; i < NODE_COUNT; i++) {
+	for (int i = start_from; i < NODE_COUNT; i++) {
 		if (node[i] != nullptr) {
 			if (node[i]->Contains(col)) {
 				index = node[i]->nodeIndex;
@@ -71,64 +132,44 @@ void QuadTree::Insert(Collider* col)
 		}
 	}
 
-	colllidersList.push_back(col);
+	collidersList.push_back(col);
 
-	if (colllidersList.size() > MAX_OBJECTS && level < MAX_LEVELS) {
-		if (node[0] == nullptr) {
-			SplitNode();
-		}
-
-		int i = 0;
-		while (i < colllidersList.size()) {
-			list<Collider*>::iterator it = colllidersList.begin();
-			for (int j = 0; j < i; j++) {
-				it++;
-			}
-
-			int index = GetNodeIndex(*it);
-			if (index != -1) {
-				node[index]->Insert(*it);
-				colllidersList.remove(*it);
-			}
-			else {
-				i++;
-			}
-		}
-	}
+	if (collidersList.size() > MAX_OBJECTS && level < MAX_LEVELS && node[0] == nullptr) 
+		SplitNode();
+	
 }
 
 void QuadTree::Retrieve(list<Collider*> &possibleColliders, Collider* col)
 {
 
 	int index = GetNodeIndex(col);
-	if (index != -1 && node[0] != nullptr) {
-		node[index]->Retrieve(possibleColliders, col);
+	if (index == -1) {
+		for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end(); it++) {
+			//Skip checking with himself
+			if (col != *it) 
+				possibleColliders.push_back(*it);
+		}
 	}
 	else {
-		for (list<Collider*>::iterator it = colllidersList.begin(); it != colllidersList.end(); it++) {
-			//Skip checking with himself
-			if (col != *it) {
-				possibleColliders.push_back(*it);
-			}
+		while (index != -1) {
+
+			node[index]->Retrieve(possibleColliders, col);
+			index = GetNodeIndex(col, (index + 1));
 		}
 	}
 }
 
 bool QuadTree::Contains(Collider * col)
 {
-	return (col->pos.x >= nodeRect.x && col->pos.x <= nodeRect.x + nodeRect.w &&
-		col->pos.y >= nodeRect.y && col->pos.y <= nodeRect.y + nodeRect.h);
+	return (col->pos.x >= (nodeRect.x - col->r) && col->pos.x <= (nodeRect.x + nodeRect.w + col->r) &&
+		col->pos.y >= (nodeRect.y - col->r) && col->pos.y <= (nodeRect.y + nodeRect.h + col->r));
 }
 
-void QuadTree::GetNodes(vector<QuadTree*>& nodeList)
-{
-	if (node[0] != nullptr) {
-		for (int i = 0; i < NODE_COUNT; i++) {
-			node[i]->GetNodes(nodeList);
-		}
-	}
-	else {
-		nodeList.push_back(this);
-	}
+bool QuadTree::IsInList(Collider* col) {
 
+	for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end(); it++) {
+		if (col == (*it))
+			return true;
+	}
+	return false;
 }

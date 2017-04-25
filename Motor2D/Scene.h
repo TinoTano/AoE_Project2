@@ -74,6 +74,7 @@ private:
 	// TIMER
 
 	Timer timer;
+	int quadtree_flag = 0;
 	Label* Timer_lbl;
 	void UpdateTime(float time);
 	void TimeEvents();

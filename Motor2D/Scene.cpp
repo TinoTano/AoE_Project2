@@ -15,6 +15,7 @@
 #include <sstream>
 #include "FileSystem.h"
 #include "SceneManager.h"
+#include "QuadTree.h"
 #include "Building.h"
 
 Scene::Scene() : SceneElement("scene")
@@ -241,6 +242,11 @@ bool Scene::Update(float dt)
 	if (game_finished == false)
 	{
 		UpdateTime(timer.ReadSec());
+	}
+
+	if (timer.ReadSec() > (quadtree_flag + 20)) {
+		App->collision->quadTree->UpdateTree();
+		quadtree_flag = timer.ReadSec();
 	}
 	return true;
 }

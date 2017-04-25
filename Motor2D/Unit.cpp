@@ -14,6 +14,7 @@
 #include "Gui.h"
 #include "SceneManager.h"
 #include "Hero.h"
+#include "QuadTree.h"
 #include "Villager.h"
 
 Unit::Unit()
@@ -270,6 +271,8 @@ void Unit::Move(float dt)
 
 	next_step.x = entityPosition.x + int(vel.x);
 	next_step.y = entityPosition.y + int(vel.y);
+
+	App->collision->quadTree->UpdateCol(collider);
 }
 
 void Unit::CalculateVelocity()

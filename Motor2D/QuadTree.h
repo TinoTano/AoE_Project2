@@ -5,7 +5,7 @@
 #include <vector>
 #include "Collision.h"
 
-#define MAX_OBJECTS 2 //Number of obects in a node before split
+#define MAX_OBJECTS 15 //Number of obects in a node before split
 #define NODE_COUNT 4 //4 nodes. NW, NE, SW, SE. 
 #define MAX_LEVELS 5
 
@@ -14,18 +14,21 @@ using namespace std;
 class QuadTree
 {
 public:
-	QuadTree(SDL_Rect nodeBounds, int level);
+	QuadTree(SDL_Rect nodeBounds, int level, int node_index = 0);
 	~QuadTree();
 	void ClearTree();
 	void SplitNode();
-	int GetNodeIndex(Collider* col);
+	void MergeNode();
+	void UpdateCol(Collider* col);
+	void UpdateTree();
+	int GetNodeIndex(Collider* col, int start_from = 0);
 	void Insert(Collider* col);
 	void Retrieve(list<Collider*> &potentialColliders, Collider* col);
 	bool Contains(Collider* col);
-	void GetNodes(vector<QuadTree*>& node);
+	bool IsInList(Collider* col);
 
 public:
-	list<Collider*> colllidersList;
+	list<Collider*> collidersList;
 	SDL_Rect nodeRect;
 	QuadTree* node[4];
 	int nodeIndex;
