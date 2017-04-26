@@ -82,7 +82,6 @@ public:
 	list<iPoint>* path;
 	bool destinationReached = true;
 	fPoint velocity = { 0,0 };
-	iPoint destinationTile = { 0,0 };
 	iPoint destinationTileWorld = { 0,0 };
 	Collider* LineOfSight = nullptr;
 	Collider* range = nullptr;

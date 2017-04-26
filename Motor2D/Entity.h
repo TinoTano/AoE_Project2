@@ -12,6 +12,19 @@ struct Collider;
 enum Faction {
 	FREE_MEN, NATURE, SAURON_ARMY
 };
+//
+//class Order {
+//public:
+//
+//	bool completed = false;
+//	Entity* entity = nullptr;
+//
+//public:
+//
+//	virtual void Execute() {};
+//	virtual void CheckCompletion() {};
+//
+//};
 
 class Entity
 {
@@ -47,4 +60,20 @@ public:
 
 #endif // !__ENTITY_H__
 
+//
+//class MoveOrder : public Order {
+//
+//public:
+//
+//	iPoint destinationMap = { -1, -1 };
+//
+//public:
+//
+//	void Execute() {
+//
+//		Unit* unit = (Unit*)entity;
+//		unit->destinationTileWorld = App->map->MapToWorld(destinationMap.x, destinationMap.y);
+//
+//	}
+//};
 

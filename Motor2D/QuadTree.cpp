@@ -59,7 +59,7 @@ void QuadTree::MergeNode() {
 		node[i] = nullptr;
 	}
 
-	for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end();) {   
+	for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end(); it++) {   
 		for (list<Collider*>::iterator it2 = it; it2 != collidersList.end(); ) {
 			it2++;
 			if (it == it2) 
