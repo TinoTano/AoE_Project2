@@ -100,12 +100,35 @@ bool EntityManager::Update(float dt)
 
 			}
 
-			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++)
-				(*it)->SetState(UNIT_MOVING);
+			fPoint mouse = { (float)mouseX, (float)mouseY };
+			Collider* nearest_col = App->collision->FindNearestCollider({ (int)mouse.x, (int)mouse.y });
 
-			for (list<Villager*>::iterator it = constructors.begin(); it != constructors.end(); it++) {
-				(*it)->constructingTarget = nullptr;
-				constructors.remove(*it);
+			if (mouse.DistanceTo({ (float)nearest_col->pos.x, (float)nearest_col->pos.y }) < nearest_col->r) {
+				if (nearest_col->type == COLLIDER_BUILDING) {
+					right_clicked_entity = nearest_col->entity;
+				}
+			}
+			else {
+				right_clicked_entity = nullptr;
+			}
+
+			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
+				if (right_clicked_entity != nullptr) {
+					if ((*it)->type == VILLAGER || ELF_VILLAGER) {
+						Villager* villager = (Villager*)*it;
+						villager->constructingTarget = (Building*)right_clicked_entity;
+						placingBuildingSprite.pos = { villager->constructingTarget->collider->pos.x - ((int)villager->constructingTarget->imageWidth / 2), villager->constructingTarget->collider->pos.y - ((int)villager->constructingTarget->imageHeight / 2) };
+						constructors.push_back(villager);
+						right_clicked_entity = nullptr;
+					}
+				}
+				else {
+					if ((*it)->type == VILLAGER || ELF_VILLAGER) {
+						Villager* villager = (Villager*)*it;
+						villager->constructingTarget = nullptr;
+					}
+				}
+				(*it)->SetState(UNIT_MOVING);
 			}
 		}
 		else {
@@ -129,17 +152,21 @@ bool EntityManager::Update(float dt)
 			break;
 
 		case KEY_UP:
-
-			selectedUnitList.clear();
+			if (clearSelectedUnits) {
+				selectedUnitList.clear();
+			}
+			else {
+				clearSelectedUnits = true;
+			}
 			selectedBuildingList.clear();
 			selectedResource = nullptr;
 
 			if (multiSelectionRect.x == mouseX && multiSelectionRect.y == mouseY) {   // if there's no selection rect... (only clicked)
 
-				iPoint mouse = { mouseX, mouseY };
-				Collider* nearest_col = App->collision->FindNearestCollider(mouse);
+				fPoint mouse = { (float)mouseX, (float)mouseY };
+				Collider* nearest_col = App->collision->FindNearestCollider({ (int)mouse.x, (int)mouse.y });
 
-				if (mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
+				if (mouse.DistanceTo({ (float)nearest_col->pos.x, (float)nearest_col->pos.y }) < nearest_col->r) {
 					Unit* unit = nullptr;
 					switch (nearest_col->type) {
 
@@ -161,12 +188,12 @@ bool EntityManager::Update(float dt)
 						}
 						break;
 					case COLLIDER_BUILDING:
-						selectedBuildingList.push_back((Building*)clicked_entity);
 						clicked_entity = nearest_col->entity;
+						selectedBuildingList.push_back((Building*)clicked_entity);
 						break;
 					case COLLIDER_RESOURCE:
-						selectedResource = (Resource*)clicked_entity;
 						clicked_entity = nearest_col->entity;
+						selectedResource = (Resource*)clicked_entity;
 						break;
 					}
 				}
@@ -278,20 +305,24 @@ bool EntityManager::Update(float dt)
 					villager->SetDestination(dest);
 					villager->SetState(UNIT_MOVING);
 					constructors.push_back(villager);
+					villager->constructingTarget = nullptr;
 				}
 			}
 			placingBuilding = false;
+			clearSelectedUnits = false;
 		}
 	}
 
 	if (constructors.size() > 0) {
 		for (list<Villager*>::iterator it = constructors.begin(); it != constructors.end(); it++) {
-			iPoint buildingCenterPos(placingBuildingSprite.pos.x + (placingBuildingSprite.rect.w / 2), placingBuildingSprite.pos.y + (placingBuildingSprite.rect.h / 2));
-			if (buildingCenterPos.DistanceTo((*it)->entityPosition) < 60) {
+			fPoint buildingCenterPos((float)placingBuildingSprite.pos.x + ((float)placingBuildingSprite.rect.w / 2), (float)placingBuildingSprite.pos.y + ((float)placingBuildingSprite.rect.h / 2));
+			if (buildingCenterPos.DistanceTo({ (float)(*it)->entityPosition.x, (float)(*it)->entityPosition.y }) < 60) {
 				if ((*it)->constructingTarget == nullptr) {
 					Building* building = CreateBuilding(buildingCenterPos.x, buildingCenterPos.y, creatingBuildingType);
 					building->Life = 1;
 					building->faction = FREE_MEN; //just for testing;
+					building->isSelected = true;
+					building->onConstruction = true;
 					for (list<Villager*>::iterator it2 = constructors.begin(); it2 != constructors.end(); it2++) {
 						(*it)->constructingTarget = building;
 					}
@@ -802,8 +833,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 	case COLLIDER_RESOURCE:
 
 		resource = col_data.c2->GetResource();
-
-		if (unit->IsVillager && unit->state == UNIT_IDLE) {
+		if (unit->IsVillager/* && unit->state == UNIT_IDLE*/) {
 			Villager* villager = (Villager*)unit;
 			if (villager->curr_capacity == 0) {
 				villager->resource_carried = resource->type;

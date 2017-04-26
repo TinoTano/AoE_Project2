@@ -38,10 +38,10 @@ public:
 	SDL_Surface* screen_surface;
 
 private:
-	string	title;
-	uint		width;
-	uint		height;
-	uint		scale;
+	string		title;
+	uint		width = 0;
+	uint		height = 0;
+	uint		scale = 0;
 };
 
 #endif // __WINDOW_H__

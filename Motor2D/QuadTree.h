@@ -29,10 +29,10 @@ public:
 
 public:
 	list<Collider*> collidersList;
-	SDL_Rect nodeRect;
+	SDL_Rect nodeRect = { 0,0,0,0 };
 	QuadTree* node[4];
-	int nodeIndex;
-	int level;
+	int nodeIndex = 0;
+	int level = 0;
 };
 
 #endif // !_QUAD_TREE_H_

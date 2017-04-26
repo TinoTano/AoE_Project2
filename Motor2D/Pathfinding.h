@@ -66,10 +66,10 @@ public:
 private:
 
 	// size of the map
-	uint width;
-	uint height;
+	uint width = 0;
+	uint height = 0;
 	// all map walkability values [0..255]
-	uchar* map;
+	uchar* map = nullptr;
 	// we store the created path here
 	list<iPoint> lastPath;
 	list<list<iPoint>*> paths;
@@ -97,10 +97,10 @@ struct PathNode
 
 	void IdentifySuccessors(PathList& list_to_fill, iPoint startNode, iPoint endNode, PathFinding* path_finder) const;
 	// -----------
-	int g;
-	int h;
-	iPoint pos;
-	const PathNode* parent; // needed to reconstruct the path in the end
+	int g = 0;
+	int h = 0;
+	iPoint pos = { 0,0 };
+	const PathNode* parent = nullptr; // needed to reconstruct the path in the end
 };
 
 // ---------------------------------------------------------------------
@@ -126,8 +126,8 @@ struct Path {
 	PathList closed;
 	PathList adjacent;
 
-	iPoint origin;
-	iPoint destination;
+	iPoint origin = { 0,0 };
+	iPoint destination = { 0,0 };
 
 	list<iPoint> finished_path;
 

@@ -86,6 +86,11 @@ bool Building::Update(float dt)
 		}
 	}*/
 
+	if (onConstruction && Life >= MaxLife) {
+		isSelected = false;
+		onConstruction = false;
+	}
+
 	return true;
 }
 
@@ -101,7 +106,7 @@ bool Building::Draw()
 	aux.rect.w = imageWidth;
 	aux.rect.h = imageHeight;
 
-	/*if (isSelected)
+	if (isSelected)
 	{
 		Sprite bar;
 
@@ -131,7 +136,7 @@ bool Building::Draw()
 		bar2.b = 0;
 
 		App->render->sprites_toDraw.push_back(bar2);
-	}*/
+	}
 
 	App->render->sprites_toDraw.push_back(aux);
 	

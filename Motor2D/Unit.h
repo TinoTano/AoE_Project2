@@ -11,6 +11,7 @@
 #include "Timer.h"
 
 class Building;
+class Villager;
 
 enum unitType {
 	ELVEN_LONGBLADE, DWARVEN_MAULER, GONDOR_SPEARMAN, ELVEN_ARCHER, DUNEDAIN_RANGE, ELVEN_CAVALRY, GONDOR_KNIGHT,
@@ -86,6 +87,7 @@ public:
 	Collider* LineOfSight = nullptr;
 	Collider* range = nullptr;
 
+	Villager* villager = nullptr;
 
 	//Animations
 	vector<Animation> idleAnimations;

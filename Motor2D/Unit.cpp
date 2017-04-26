@@ -69,7 +69,7 @@ Unit::~Unit()
 bool Unit::Update(float dt)
 {
 	r = currentAnim->GetCurrentFrame();
-	Villager* villager = nullptr;
+	
 	if (type == VILLAGER || ELF_VILLAGER) {
 		villager = (Villager*)this;
 	}
@@ -91,7 +91,7 @@ bool Unit::Update(float dt)
 		villager->GatherResource(dt);
 		break;
 	case UNIT_BUILDING:
-		villager->Contructing(dt);
+		villager->Constructing(dt);
 		break;
 	}
 
@@ -350,7 +350,9 @@ void Unit::Dead() {
 
 void Unit::SetState(unitState newState)
 {
-	Villager* villager = nullptr;
+	if (type == VILLAGER || ELF_VILLAGER) {
+		villager = (Villager*)this;
+	}
 
 	switch (newState) {
 	case UNIT_IDLE:
@@ -381,11 +383,9 @@ void Unit::SetState(unitState newState)
 		entityTexture = unitDieTexture;
 		break;
 	case UNIT_GATHERING:
-		villager = (Villager*)this;
 		entityTexture = villager->unitChoppingTexture;
 		break;
 	case UNIT_BUILDING:
-		villager = (Villager*)this;
 		entityTexture = villager->unitChoppingTexture;
 		break;
 	}
@@ -394,7 +394,9 @@ void Unit::SetState(unitState newState)
 }
 
 void Unit::SetAnim(unitDirection currentDirection) {
-
+	if (type == VILLAGER || ELF_VILLAGER) {
+		villager = (Villager*)this;
+	}
 	switch (state) {
 	case UNIT_IDLE:
 		currentAnim = &idleAnimations[currentDirection];
@@ -409,7 +411,10 @@ void Unit::SetAnim(unitDirection currentDirection) {
 		currentAnim = &dyingAnimations[currentDirection];
 		break;
 	case UNIT_GATHERING:
-		Villager* villager = (Villager*)this;
 		villager->currentAnim = &villager->choppingAnimations[currentDirection];
+		break;
+	case UNIT_BUILDING:
+		villager->currentAnim = &villager->choppingAnimations[currentDirection];
+		break;
 	}
 }

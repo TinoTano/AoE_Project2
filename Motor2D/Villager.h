@@ -12,7 +12,7 @@ public:
 	Villager(int posx, int posy, Villager* unit = nullptr);
 
 	void GatherResource(float dt);
-	void Contructing(float dt);
+	void Constructing(float dt);
 
 public:
 	int gathering_speed = 0;
@@ -30,7 +30,7 @@ public:
 	bool isConstructor = false;
 	bool isSelected = false;
 	Building* constructingTarget = nullptr;
-	int buildingSpeed = 20;
+	int buildingSpeed = 200;
 };
 
 

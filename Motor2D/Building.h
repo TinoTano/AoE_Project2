@@ -57,7 +57,7 @@ public:
 	Collider* LineOfSight = nullptr;
 	Collider* range = nullptr;
 	bool onConstruction = false;
-
+	bool isSelected = false;
 };
 
 #endif // !__BUILDING_H__

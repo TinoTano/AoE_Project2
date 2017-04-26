@@ -154,7 +154,9 @@ bool Scene::Start()
 	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y - 180, true, TROLL_MAULER);
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
+	my_townCenter->faction = FREE_MEN;
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
+	enemy_townCenter->faction = SAURON_ARMY;
 
 	guard1 = App->entityManager->CreateUnit(3000, 2100, TROLL_MAULER);
 	guard1->isGuard = true;
@@ -195,7 +197,7 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-		//debug = !debug;
+		debug = !debug;
 	}
 
 	/*
@@ -244,10 +246,10 @@ bool Scene::Update(float dt)
 		UpdateTime(timer.ReadSec());
 	}
 
-	if (timer.ReadSec() > (quadtree_flag + 20)) {
-		App->collision->quadTree->UpdateTree();
-		quadtree_flag = timer.ReadSec();
-	}
+	//if (timer.ReadSec() > (quadtree_flag + 20)) {
+	//	App->collision->quadTree->UpdateTree();
+	//	quadtree_flag = timer.ReadSec();
+	//}
 	return true;
 }
 

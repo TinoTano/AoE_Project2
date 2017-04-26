@@ -85,7 +85,7 @@ bool Render::PostUpdate()
 		else
 		{
 			if (sprites_toDraw[it].radius == 0) DrawQuad(sprites_toDraw[it].rect, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b, sprites_toDraw[it].filled);
-			else DrawCircle(sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, sprites_toDraw[it].radius, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
+			//else DrawCircle(sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, sprites_toDraw[it].radius, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
 		}
 	}
 
@@ -192,8 +192,8 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 			movement.second = 0;
 	}
 
-	LOG("cam: %d, %d", camera.x, camera.y);
-	LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
+	//LOG("cam: %d, %d", camera.x, camera.y);
+	//LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
 	camera.x += movement.first;
 	camera.y += movement.second;
 

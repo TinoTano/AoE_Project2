@@ -36,7 +36,7 @@ public:
 	SDL_Texture* resourceIdleTexture = nullptr;
 	SDL_Texture* resourceGatheringTexture = nullptr;
 	vector<SDL_Rect> resourceRectVector;
-	SDL_Rect resourceRect;
+	SDL_Rect resourceRect = { 0,0,0,0 };
 };
 
 #endif

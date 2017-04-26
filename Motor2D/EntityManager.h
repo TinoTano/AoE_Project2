@@ -72,17 +72,19 @@ private:
 	map<int, Resource*> resourcesDB;
 
 	Entity* clicked_entity = nullptr;
+	Entity* right_clicked_entity = nullptr;
 
-	int mouseX;
-	int mouseY;
+	int mouseX = 0;
+	int mouseY = 0;
 
 	bool placingBuilding = false;
 	Sprite placingBuildingSprite;
-	buildingType creatingBuildingType;
+	buildingType creatingBuildingType = ORC_BARRACKS;
 	list<Villager*> constructors;
+	bool clearSelectedUnits = true;
 	
 public:
-	int nextID;
+	int nextID = 0;
 	list<Unit*> selectedUnitList;
 	list<Building*> selectedBuildingList;
 	Resource* selectedResource = nullptr;

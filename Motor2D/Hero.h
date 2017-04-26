@@ -51,7 +51,7 @@ public:
 class DamageSkill : public Skill {
 
 public:
-	float multiplier;
+	float multiplier = 0;
 
 public:
 
