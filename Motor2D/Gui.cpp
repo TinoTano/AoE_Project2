@@ -31,7 +31,6 @@ bool Gui::Awake(pugi::xml_node& conf)
 {
 	LOG("Loading GUI atlas");
 	bool ret = true;
-	atlas_file_name = conf.child("atlas").attribute("file").as_string("");
 
 	return ret;
 }
@@ -39,9 +38,6 @@ bool Gui::Awake(pugi::xml_node& conf)
 // Called before the first frame
 bool Gui::Start()
 {
-
-	atlas = App->tex->Load(atlas_file_name.c_str());
-
 	vector<SDL_Rect> sprites_cursor;
 	sprites_cursor.push_back({ 0,   0, 70, 50 });
 	sprites_cursor.push_back({ 70,   0, 70, 50 });
@@ -61,11 +57,20 @@ bool Gui::Start()
 	sprites_cursor.push_back({ 420, 50, 70, 50 });
 	sprites_cursor.push_back({ 490, 50, 70, 50 });
 	sprites_cursor.push_back({ 560, 50, 70, 50 });
+
+	
+
+
 	hud = new HUD();
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
 
 
 	LoadHUDData();
+
+	for (uint i = 0; i < info.size(); ++i)
+	{
+		info[i].texture = App->tex->Load(info[i].path.c_str());
+	}
 
 	return true;
 }
@@ -118,6 +123,11 @@ bool Gui::CleanUp()
 
 	cursor->CleanUp();
 
+	for (uint i = 0; i < info.size(); ++i)
+	{
+		App->tex->UnLoad(info[i].texture);
+	}
+	
 	if (Elements.empty() != true)
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
@@ -132,11 +142,6 @@ bool Gui::CleanUp()
 	return true;
 }
 
-// const getter for atlas
-SDL_Texture* Gui::GetAtlas() const
-{
-	return atlas;
-}
 
 bool Gui::Save(pugi::xml_node &) const
 {
@@ -158,6 +163,7 @@ void Gui::ScreenMoves(pair<int, int> movement) {
 		}
 	}
 }
+
 void Gui::SetPriority()
 {
 	list<UIElement*> Priority1;
@@ -198,6 +204,18 @@ void Gui::Unfocus()
 		it._Ptr->_Myval->focused = true;
 	}
 }
+vector<UIElement*> Gui::GetElements(string scene)
+{
+	vector<UIElement*> ret;
+	for (uint i = 0; i < info.size(); ++i)
+	{
+		if (info[i].scene == scene) {
+			UIElement* it = CreateImage(info[i].texture, info[i].position.first, info[i].position.second, info[i].rect);
+			ret.push_back(it);
+		}
+	}
+	return ret;
+}
 // UI ELEMENT
 // methods:
 
@@ -225,9 +243,7 @@ UIElement * Gui::CreateImage(char* path, int x, int y, SDL_Rect section)
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	if (path != nullptr)
 		tex = App->tex->Load(path);
-	else tex = GetAtlas();
 
 	ret = new Image(section, x, y, tex);
 	Elements.push_back(ret);
@@ -239,14 +255,20 @@ UIElement * Gui::CreateImage(char* path, int x, int y)
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	if (path != nullptr)
 		tex = App->tex->Load(path);
-	else tex = GetAtlas();
 
 	ret = new Image(x, y, tex);
 	Elements.push_back(ret);
 
 	return ret;
+}
+
+UIElement * Gui::CreateImage(SDL_Texture * argtexture, int x, int y, SDL_Rect section)
+{
+	UIElement* ret = nullptr;
+	ret = new Image(section, x, y,argtexture);
+	Elements.push_back(ret);
+	return nullptr;
 }
 
 UIElement * Gui::CreateLabel(char * text, int x, int y, _TTF_Font * font)
@@ -280,9 +302,7 @@ UIElement * Gui::CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sec
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	if (path != nullptr)
-		tex = App->tex->Load(path);
-	else tex = GetAtlas();
+	tex = App->tex->Load(path);
 
 	ret = new Button(x, y, blit_sections, detect_sections, Tier, tex);
 	Elements.push_back(ret);
@@ -400,7 +420,7 @@ void Image::DebugMode() {
 void Image::CleanUp()
 {
 	parent = nullptr;
-	App->tex->UnLoad(texture);
+	//App->tex->UnLoad(texture);
 }
 // LABEL 
 

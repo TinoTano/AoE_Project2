@@ -1,5 +1,35 @@
 <?xml version="1.0"?>
 <HUDData>
+	<HUDs>
+			<HUD>
+				<Info>
+					<Name value = "BACKGROUND"/>
+					<ID value = "0"/>
+					<Position x = "0" y = "0"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/MenuAtlas.png"/>
+					<Rect x = "0" y = "2" w="1408" h="792"/>
+				</Texture>
+				<Scenes>
+					<Scene value = "MENUSCENE"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "MENU BACKGROUND"/>
+					<ID value = "1"/>
+					<Position x = "800" y = "200"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/MenuAtlas.png"/>
+					<Rect x = "10" y = "798" w="412" h="291"/>
+				</Texture>
+				<Scenes>
+					<Scene value = "MENUSCENE"/>
+				</Scenes>
+			</HUD>
+	</HUDs>
 	<Sprites>
 		<Proportions width ="33" height="32"/>
 	</Sprites>

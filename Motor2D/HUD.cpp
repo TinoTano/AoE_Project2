@@ -562,6 +562,22 @@ bool Gui::LoadHUDData()
 
 	if (HUDData.empty() == false)
 	{
+		for (unitNodeInfo = HUDData.child("HUDs").child("HUD"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("HUD")) {
+			string name(unitNodeInfo.child("Info").child("Name").attribute("value").as_string());
+			uint id = unitNodeInfo.child("Info").child("ID").attribute("value").as_uint();
+			pair<int, int> position;
+			position.first = unitNodeInfo.child("Info").child("Position").attribute("x").as_uint();
+			position.second = unitNodeInfo.child("Info").child("Position").attribute("y").as_uint();
+			string path(unitNodeInfo.child("Texture").child("Path").attribute("value").as_string());
+			SDL_Rect rect;
+			rect.x = unitNodeInfo.child("Texture").child("Rect").attribute("x").as_int();
+			rect.y = unitNodeInfo.child("Texture").child("Rect").attribute("y").as_int();
+			rect.w = unitNodeInfo.child("Texture").child("Rect").attribute("w").as_int();
+			rect.h = unitNodeInfo.child("Texture").child("Rect").attribute("h").as_int();
+			string scene(unitNodeInfo.child("Scenes").child("Scene").attribute("value").as_string());
+			Info curr(name, id, position, path, rect, scene);
+			info.push_back(curr);
+		}
 		SDL_Rect proportions;
 		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
 		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("height").as_uint();
@@ -602,6 +618,8 @@ bool Gui::LoadHUDData()
 			UnitSprite unit(type, proportions, id, name);
 			SpriteResources.push_back(unit);
 		}
+
+
 	}
 	return ret;
 }

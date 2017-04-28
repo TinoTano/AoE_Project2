@@ -25,21 +25,11 @@ struct _TTF_Font;
 
 
 enum ElementType {
-	IMAGE,
-	LABEL,
-	BUTTON,
-	INPUTTEXT,
-	SCROLLBAR,
-	QUAD,
-	CURSOR,
-	UNKNOWN
+	IMAGE, LABEL, BUTTON, INPUTTEXT, SCROLLBAR, QUAD, CURSOR, UNKNOWN
 };
 
 enum MouseState {
-	FREE,
-	HOVER,
-	CLICKIN,
-	CLICKOUT
+	FREE, HOVER, CLICKIN, CLICKOUT
 };
 
 enum ButtonTier {
@@ -57,7 +47,7 @@ enum ScrollBarModel {
 };
 
 class UnitSprite;
-
+class Info;
 class UIElement {
 public:
 	UIElement(bool argenabled, int argx, int argy, ElementType argtype, SDL_Texture* argtexture);
@@ -253,24 +243,15 @@ public:
 	void CleanUp();
 
 };
-
-
-
 enum EntityType {
-	UNIT,
-	BUILDING,
-	RESOURCE
+	UNIT, BUILDING, RESOURCE
 };
 
 class HUD {
 public:
 
 	enum HUDType {
-		MULTIPLESELECTION,
-		SINGLEINFO,
-		BUILDINGINFO,
-		RESOURCEINFO,
-		NONE
+		MULTIPLESELECTION, SINGLEINFO, BUILDINGINFO, RESOURCEINFO, NONE
 	};
 
 	HUDType		type = NONE;
@@ -381,6 +362,7 @@ public:
 	// Blit_Sections contains de rects from the image. Tier 1 must have 3 and Tier 2 must have 2;
 	UIElement* CreateImage(char* path, int x, int y, SDL_Rect section);
 	UIElement* CreateImage(char* path, int x, int y);
+	UIElement* CreateImage(SDL_Texture* argtexture, int x, int y, SDL_Rect section);
 	UIElement* CreateLabel(char* text, int x, int y, _TTF_Font* font);
 	UIElement* CreateLabel(string text, int x, int y, _TTF_Font* font);
 	UIElement* CreateLabel(char* text, SDL_Rect area, _TTF_Font* font);
@@ -391,18 +373,16 @@ public:
 	void DestroyUIElement(UIElement* element);
 	void DestroyALLUIElements();
 
-	SDL_Texture* GetAtlas() const;
-	void ScreenMoves(pair<int, int> movement);
+	void	ScreenMoves(pair<int, int> movement);
 	void	SetPriority();
 	void	Focus(SDL_Rect rect);
 	void	Unfocus();
 
-
-
-	SDL_Texture* atlas = nullptr;
-	string atlas_file_name;
+private:
 	list<UIElement*> Elements;
-
+	vector<Info> info;
+public:
+	vector<UIElement*>GetElements(string scene);
 	// ----- UNIT CLASS ----- //
 	// -------------------- //
 public:
@@ -434,6 +414,20 @@ public:
 	string GetName() {
 		return name;
 	}
+};
+
+class Info {
+public:
+	string name;
+	uint id;
+	pair<int, int> position;
+	string path;
+	SDL_Rect rect;
+	string scene;
+	SDL_Texture* texture;
+
+	Info::Info(string argname, uint argid, pair<int,int> argpos, string argpath, SDL_Rect argrect, string argscene):
+	name(argname), id(argid), position(argpos), path(argpath), rect(argrect), scene(argscene) {}
 };
 
 #endif // __j1GUI_H__

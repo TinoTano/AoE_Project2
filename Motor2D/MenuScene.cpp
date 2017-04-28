@@ -23,9 +23,8 @@ bool MenuScene::Start()
 	bool ret = true;
 	App->render->camera.x = 0;
 	App->render->camera.y = 0;
-	background = (Image*)App->gui->CreateImage("gui/MenuAtlas.png", 0, 2, { 0,0,1408, 792 });
-	menu_bg_img = (Image*)App->gui->CreateImage("gui/MenuAtlas.png", 800, 200, { 10, 798, 412, 291 });
 
+	App->gui->GetElements("MENUSCENE");
 	//LOAD FX
 	fx_button_click = App->audio->LoadFx("audio/fx/fx_button_click.wav");
 
@@ -75,18 +74,11 @@ bool MenuScene::PreUpdate()
 bool MenuScene::Update(float dt)
 {
 
-	for (list<UIElement*>::iterator it = App->gui->Elements.begin(); it != App->gui->Elements.end(); ++it)
-	{
-		it._Ptr->_Myval->type;
-	}
 	return true;
 }
 
 bool MenuScene::PostUpdate()
 {
-	int x = App->gui->Elements.size();
-	int y = App->entityManager->friendlyUnitList.size();
-
 	if (campaign_bt->current == CLICKIN || skirmish_bt->current == CLICKIN)
 	{
 		App->audio->PlayFx(fx_button_click);
