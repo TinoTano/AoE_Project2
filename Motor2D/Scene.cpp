@@ -80,7 +80,7 @@ bool Scene::Start()
 	top = (Image*)App->gui->CreateImage("gui/ingame_layer.png", -STARTING_CAMERA_X, -STARTING_CAMERA_Y, { 0,0,1920, 30 });
 	bottom = (Image*)App->gui->CreateImage("gui/ingame_layer.png", -STARTING_CAMERA_X, -STARTING_CAMERA_Y + 622, { 0, 40, 1408, 172 });
 
-	menu_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", -STARTING_CAMERA_X + 1330, -STARTING_CAMERA_Y + 5, blit_sections_menu, detect_sections_menu, TIER2);
+	menu_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", -STARTING_CAMERA_X + 500, -STARTING_CAMERA_Y + 5, blit_sections_menu, detect_sections_menu, TIER2);
 
 
 

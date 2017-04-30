@@ -33,9 +33,9 @@ enum MouseState {
 };
 
 enum ButtonTier {
-	TIER1,
+	TIER1 = 1,
 	// Has 3 SDL_Rects section: one for 'standard' state, one for 'on hover' state, and one for 'on click' state.
-	TIER2,
+	TIER2 = 2,
 	// Has 2 SDL_Rects section: one for 'standard' state and 'on click'.
 };
 
@@ -359,6 +359,7 @@ public:
 	bool	LoadHUDData();
 
 	UIElement* CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier Tier);
+	UIElement* CreateButton(SDL_Texture* texture, int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier Tier);
 	// Blit_Sections contains de rects from the image. Tier 1 must have 3 and Tier 2 must have 2;
 	UIElement* CreateImage(char* path, int x, int y, SDL_Rect section);
 	UIElement* CreateImage(char* path, int x, int y);
@@ -382,7 +383,7 @@ private:
 	list<UIElement*> Elements;
 	vector<Info> info;
 public:
-	vector<UIElement*>GetElements(string scene);
+	vector<Info>GetElements(string scene);
 	// ----- UNIT CLASS ----- //
 	// -------------------- //
 public:
@@ -423,11 +424,16 @@ public:
 	pair<int, int> position;
 	string path;
 	SDL_Rect rect;
+	
 	string scene;
 	SDL_Texture* texture;
+	ElementType type;
 
-	Info::Info(string argname, uint argid, pair<int,int> argpos, string argpath, SDL_Rect argrect, string argscene):
-	name(argname), id(argid), position(argpos), path(argpath), rect(argrect), scene(argscene) {}
+	vector<SDL_Rect> blit_sections;
+	vector<SDL_Rect> detect_sections;
+	ButtonTier tier;
+	Info::Info(string argname, uint argid, pair<int,int> argpos, string argpath, SDL_Rect argrect, string argscene, ElementType argtype):
+	name(argname), id(argid), position(argpos), path(argpath), rect(argrect), scene(argscene), type(argtype) {}
 };
 
 #endif // __j1GUI_H__

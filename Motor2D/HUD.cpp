@@ -562,7 +562,7 @@ bool Gui::LoadHUDData()
 
 	if (HUDData.empty() == false)
 	{
-		for (unitNodeInfo = HUDData.child("HUDs").child("HUD"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("HUD")) {
+		for (unitNodeInfo = HUDData.child("Images").child("HUD"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("HUD")) {
 			string name(unitNodeInfo.child("Info").child("Name").attribute("value").as_string());
 			uint id = unitNodeInfo.child("Info").child("ID").attribute("value").as_uint();
 			pair<int, int> position;
@@ -575,7 +575,42 @@ bool Gui::LoadHUDData()
 			rect.w = unitNodeInfo.child("Texture").child("Rect").attribute("w").as_int();
 			rect.h = unitNodeInfo.child("Texture").child("Rect").attribute("h").as_int();
 			string scene(unitNodeInfo.child("Scenes").child("Scene").attribute("value").as_string());
-			Info curr(name, id, position, path, rect, scene);
+			Info curr(name, id, position, path, rect, scene, IMAGE);
+			info.push_back(curr);
+		}
+		for (unitNodeInfo = HUDData.child("Buttons").child("HUD"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("HUD")) {
+			string name(unitNodeInfo.child("Info").child("Name").attribute("value").as_string());
+			uint id = unitNodeInfo.child("Info").child("ID").attribute("value").as_uint();
+			uint tier = unitNodeInfo.child("Info").child("Tier").attribute("value").as_uint();
+			pair<int, int> position;
+			position.first = unitNodeInfo.child("Info").child("Position").attribute("x").as_uint();
+			position.second = unitNodeInfo.child("Info").child("Position").attribute("y").as_uint();
+			string path(unitNodeInfo.child("Texture").child("Path").attribute("value").as_string());
+			string scene(unitNodeInfo.child("Scenes").child("Scene").attribute("value").as_string());
+			vector<SDL_Rect> blit;
+			for (pugi::xml_node NodeInfo = unitNodeInfo.child("Blit").child("Section"); NodeInfo; NodeInfo = NodeInfo.next_sibling("Section"))
+			{
+				SDL_Rect rect;
+				rect.x = NodeInfo.attribute("x").as_int();
+				rect.y = NodeInfo.attribute("y").as_int();
+				rect.w = NodeInfo.attribute("w").as_int();
+				rect.h = NodeInfo.attribute("h").as_int();
+				blit.push_back(rect);
+			}
+			vector<SDL_Rect> detect;
+			for (pugi::xml_node  NodeInfo = unitNodeInfo.child("Detect").child("Section");NodeInfo; NodeInfo = NodeInfo.next_sibling("Section"))
+			{
+				SDL_Rect rect;
+				rect.x = NodeInfo.attribute("x").as_int();
+				rect.y = NodeInfo.attribute("y").as_int();
+				rect.w = NodeInfo.attribute("w").as_int();
+				rect.h = NodeInfo.attribute("h").as_int();
+				detect.push_back(rect);
+			}
+			Info curr(name, id, position, path, {0,0,0,0}, scene, BUTTON);
+			curr.tier = (ButtonTier)tier;
+			curr.blit_sections = blit;
+			curr.detect_sections = detect;
 			info.push_back(curr);
 		}
 		SDL_Rect proportions;

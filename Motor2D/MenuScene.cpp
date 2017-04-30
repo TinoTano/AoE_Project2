@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "SceneManager.h"
+#include "Window.h"
 #include "Audio.h"
 
 MenuScene::MenuScene() : SceneElement("menu")
@@ -24,44 +25,48 @@ bool MenuScene::Start()
 	App->render->camera.x = 0;
 	App->render->camera.y = 0;
 
-	App->gui->GetElements("MENUSCENE");
+	uint x, y;
+	App->win->GetWindowSize(x, y);
+	elements = App->gui->GetElements("MENUSCENE");
+
+	elements[1].position.first =  (x / 3) * 2 - (x/8);
+	elements[1].position.second = (y / 2) - (y/3);
+
+	elements[2].position.first = elements[1].position.first + x / 100;
+	elements[2].position.second = elements[1].position.second + y / 50;
+
+	elements[2].detect_sections.front().x = elements[2].position.first;
+	elements[2].detect_sections.front().y = elements[2].position.second;
+
+	elements[3].position.first = elements[2].position.first;
+	elements[3].position.second = elements[2].position.second + y / 100 + elements[2].detect_sections.front().h;
+
+	elements[3].detect_sections.front().x = elements[3].position.first;
+	elements[3].detect_sections.front().y = elements[3].position.second;
+
+	elements[4].position.first = elements[3].position.first;
+	elements[4].position.second = elements[3].position.second + y / 100 + elements[3].detect_sections.front().h;
+
+	elements[4].detect_sections.front().x = elements[4].position.first;
+	elements[4].detect_sections.front().y = elements[4].position.second;
+
+
+
+	for (uint it = 0; it < elements.size(); ++it) {
+		switch (elements[it].type)
+		{
+		case IMAGE:
+			images.push_back((Image*)App->gui->CreateImage(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].rect));
+			break;
+		case BUTTON:
+			buttons.push_back((Button*)App->gui->CreateButton(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].blit_sections, elements[it].detect_sections, elements[it].tier));
+			break;
+		}
+	}
+
 	//LOAD FX
 	fx_button_click = App->audio->LoadFx("audio/fx/fx_button_click.wav");
-
-	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 462, 811, 391, 64 });
-	blit_sections.push_back({ 877, 814, 391, 64 });
-
-	vector<SDL_Rect> detect_sections;
-	detect_sections.push_back({ 810, 210, 391, 64 });
-
-	campaign_bt = (Button*)App->gui->CreateButton("gui/MenuAtlas.png", 810, 210, blit_sections, detect_sections, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 462, 881, 391, 64 });
-	blit_sections.push_back({ 877, 884, 391, 64 });
-	detect_sections.clear();
-	detect_sections.push_back({ 810, 280, 391, 64 });
-
-	skirmish_bt = (Button*)App->gui->CreateButton("gui/MenuAtlas.png", 810, 280, blit_sections, detect_sections, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 462, 951, 391, 64 });
-	blit_sections.push_back({ 877, 954, 391, 64 });
-	detect_sections.clear();
-	detect_sections.push_back({ 810, 350, 391, 64 });
-
-	options_bt = (Button*)App->gui->CreateButton("gui/MenuAtlas.png", 810, 350, blit_sections, detect_sections, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 462, 1021, 391, 64 });
-	blit_sections.push_back({ 877, 1023, 391, 64 });
-	detect_sections.clear();
-	detect_sections.push_back({ 810, 420, 391, 64 });
-
-	quit_bt = (Button*)App->gui->CreateButton("gui/MenuAtlas.png", 810, 420, blit_sections, detect_sections, TIER2);
-
-	App->audio->PlayMusic("audio/music/m_menu.ogg");
+	//App->audio->PlayMusic("audio/music/m_menu.ogg");
 
 	return ret;
 }
@@ -79,13 +84,15 @@ bool MenuScene::Update(float dt)
 
 bool MenuScene::PostUpdate()
 {
-	if (campaign_bt->current == CLICKIN || skirmish_bt->current == CLICKIN)
+	//if (campaign_bt->current == CLICKIN || skirmish_bt->current == CLICKIN)
+
+	
+	if (buttons[0]->current == CLICKIN)
 	{
 		App->audio->PlayFx(fx_button_click);
 		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
 	}
-
-	else if (quit_bt->current == CLICKIN)
+	else if (buttons[2]->current == CLICKIN)
 	{
 		App->quit = true;
 	}
@@ -95,12 +102,9 @@ bool MenuScene::PostUpdate()
 
 bool MenuScene::CleanUp()
 {
-	App->gui->DestroyUIElement(background);
-	App->gui->DestroyUIElement(menu_bg_img);
-	App->gui->DestroyUIElement(campaign_bt);
-	App->gui->DestroyUIElement(skirmish_bt);
-	App->gui->DestroyUIElement(options_bt);
-	App->gui->DestroyUIElement(quit_bt);
-
+	App->gui->DestroyALLUIElements();
+	elements.clear();
+	images.clear();
+	buttons.clear();
 	return true;
 }

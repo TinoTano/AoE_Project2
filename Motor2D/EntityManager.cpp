@@ -48,7 +48,7 @@ bool EntityManager::PreUpdate()
 
 bool EntityManager::Update(float dt)
 {
-
+/*
 	App->input->GetMousePosition(mouseX, mouseY);
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;
@@ -268,7 +268,7 @@ bool EntityManager::Update(float dt)
 						if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
 							resourceList.push_back((*it));
 					}
-				}*/
+				}
 
 				multiSelectionRect = { 0,0,0,0 };
 				break;
@@ -332,9 +332,8 @@ bool EntityManager::Update(float dt)
 			}
 		}
 	}
-
-	return true;
-
+*/
+return true;
 }
 
 bool EntityManager::PostUpdate()

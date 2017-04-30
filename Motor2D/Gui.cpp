@@ -132,6 +132,7 @@ bool Gui::CleanUp()
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 		{
+			App->tex->UnLoad(it._Ptr->_Myval->texture);
 			App->gui->DestroyUIElement(it._Ptr->_Myval);
 		}
 	}
@@ -204,14 +205,14 @@ void Gui::Unfocus()
 		it._Ptr->_Myval->focused = true;
 	}
 }
-vector<UIElement*> Gui::GetElements(string scene)
+vector<Info> Gui::GetElements(string scene)
 {
-	vector<UIElement*> ret;
+	vector<Info> ret;
+
 	for (uint i = 0; i < info.size(); ++i)
 	{
 		if (info[i].scene == scene) {
-			UIElement* it = CreateImage(info[i].texture, info[i].position.first, info[i].position.second, info[i].rect);
-			ret.push_back(it);
+			ret.push_back(info[i]);
 		}
 	}
 	return ret;
@@ -305,6 +306,14 @@ UIElement * Gui::CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sec
 	tex = App->tex->Load(path);
 
 	ret = new Button(x, y, blit_sections, detect_sections, Tier, tex);
+	Elements.push_back(ret);
+
+	return ret;
+}
+
+UIElement * Gui::CreateButton(SDL_Texture * texture, int x, int y, vector<SDL_Rect> blit_sections, vector<SDL_Rect> detect_sections, ButtonTier Tier)
+{
+	UIElement* ret = new Button(x, y, blit_sections, detect_sections, Tier, texture);
 	Elements.push_back(ret);
 
 	return ret;
@@ -546,7 +555,7 @@ void Button::Update()
 void Button::CleanUp()
 {
 	parent = nullptr;
-	App->tex->UnLoad(texture);
+	//App->tex->UnLoad(texture);
 	blit_sections.clear();
 	detect_sections.clear();
 }
