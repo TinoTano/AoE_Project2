@@ -816,7 +816,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 				switch (villager->resource_carried) {
 				case WOOD:
 					App->sceneManager->level1_scene->woodCount += villager->curr_capacity;
-					App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+				//	App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
 					break;
 				}
 

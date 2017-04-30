@@ -58,11 +58,12 @@ private:
 	// TIMER
 
 	// UI ELEMENTS
-	Image* top, *bottom;
-	Button* menu_bt, *quit_game_bt, *back_to_menu_bt, *save_game_bt, *cancel_bt;
-	WindowUI ui_menu;
-	Image* menu_bg_img;
-	Label* back_to_menu_lbl, *quit_game_lbl, *save_game_lbl, *cancel_lbl;
+	//WindowUI ui_menu;
+	//Label* back_to_menu_lbl, *quit_game_lbl, *save_game_lbl, *cancel_lbl;
+
+	vector<Info> elements;
+	vector<Image*> images;
+	vector<Button*> buttons;
 
 	vector<SDL_Rect> blit_sections;		 vector<SDL_Rect> detect_sections;
 	vector<SDL_Rect> blit_sections_menu; vector<SDL_Rect> detect_sections_menu;
@@ -75,7 +76,7 @@ private:
 
 	Timer timer;
 	int quadtree_flag = 0;
-	Label* Timer_lbl = nullptr;
+	//Label* Timer_lbl = nullptr;
 	void UpdateTime(float time);
 	void TimeEvents();
 	Timer orc_timer, troll_timer;
@@ -91,7 +92,7 @@ public:
 	int goldCount = 0;
 	int stoneCount = 0;
 	// RESOURCES 
-	Label* wood = nullptr , *food = nullptr , *gold = nullptr , *stone = nullptr , *villagers = nullptr;
+	//Label* wood = nullptr , *food = nullptr , *gold = nullptr , *stone = nullptr , *villagers = nullptr;
 	Unit* guard1 = nullptr;
 	Unit* guard2 = nullptr;
 };

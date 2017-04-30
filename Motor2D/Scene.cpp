@@ -69,23 +69,49 @@ bool Scene::Start()
 
 	// LOADING FX
 
+	uint x, y;
+	App->win->GetWindowSize(x, y);
+	
 
 	// LOADING UI BB
 	// ----------------------------------------
 	// LOADING BUTTONS RECTS
 
-
 	// LOADING SCENE UI
 
-	top = (Image*)App->gui->CreateImage("gui/ingame_layer.png", -STARTING_CAMERA_X, -STARTING_CAMERA_Y, { 0,0,1920, 30 });
-	bottom = (Image*)App->gui->CreateImage("gui/ingame_layer.png", -STARTING_CAMERA_X, -STARTING_CAMERA_Y + 622, { 0, 40, 1408, 172 });
+	elements = App->gui->GetElements("LEVEL");
+	elements[0].position.first = -STARTING_CAMERA_X +  0;
+	elements[0].position.second = - STARTING_CAMERA_Y + 0;
 
-	menu_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", -STARTING_CAMERA_X + 500, -STARTING_CAMERA_Y + 5, blit_sections_menu, detect_sections_menu, TIER2);
+	elements[1].position.first = -STARTING_CAMERA_X + 0;
+	elements[1].position.second = -STARTING_CAMERA_Y +  y - elements[1].rect.h;
+
+	elements[2].position.first = -STARTING_CAMERA_X + x - elements[2].rect.w;
+	elements[2].position.second = -STARTING_CAMERA_Y+ y - elements[2].rect.h;
+
+	elements[3].position.first = -STARTING_CAMERA_X + x - (x/4) ;
+	elements[3].position.second = -STARTING_CAMERA_Y + y / 100;
+
+
+	for (uint it = 0; it < elements.size(); ++it) {
+		switch (elements[it].type)
+		{
+		case IMAGE:
+			images.push_back((Image*)App->gui->CreateImage(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].rect));
+			break;
+		case BUTTON:
+			buttons.push_back((Button*)App->gui->CreateButton(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].blit_sections, elements[it].detect_sections, elements[it].tier));
+			break;
+		}
+	}
+
+	
+	//menu_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", -STARTING_CAMERA_X + 500, -STARTING_CAMERA_Y + 5, blit_sections_menu, detect_sections_menu, TIER2);
 
 
 
 	// MENU WINDOW
-
+/*
 	menu_bg_img = (Image*)App->gui->CreateImage("gui/tech-tree-parchment-drop-down-background.png", -STARTING_CAMERA_X + 540, -STARTING_CAMERA_Y + 200, { 0,0, 280, 280 });
 	back_to_menu_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 210, blit_sections, detect_sections, TIER2);
 	quit_game_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 250, blit_sections, detect_sections, TIER2);
@@ -133,7 +159,7 @@ bool Scene::Start()
 	// SET UI PRIORITY
 
 	App->gui->SetPriority();
-
+*/
 	// MUSIC
 
 	App->audio->PlayMusic("audio/music/m_scene.ogg");
@@ -168,9 +194,9 @@ bool Scene::Start()
 	timer.Start();
 	troll_timer.Start();
 
-	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, nullptr);
-	Timer_lbl->SetColor({ 255, 255, 255, 255 });
-	Timer_lbl->SetSize(26);
+	//Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, nullptr);
+	//Timer_lbl->SetColor({ 255, 255, 255, 255 });
+	//Timer_lbl->SetSize(26);
 
 	game_finished = false;
 
@@ -227,6 +253,7 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	/*
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
 
 	if (menu_bt->current == HOVER || menu_bt->current == CLICKIN) App->gui->cursor->SetCursor(3);
@@ -240,7 +267,7 @@ bool Scene::Update(float dt)
 	else if (cancel_bt->current == CLICKIN) {
 		ui_menu.WindowOff();
 		App->gui->Unfocus();
-	}
+	}*/
 	if (game_finished == false)
 	{
 		UpdateTime(timer.ReadSec());
@@ -258,20 +285,22 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
+	
 	if (my_townCenter->Life <= 0 && game_finished == false) {
-		Timer_lbl->SetString("DEFEAT");
-		Timer_lbl->SetColor({255, 0,0,255});
+		/*Timer_lbl->SetString("DEFEAT");
+		Timer_lbl->SetColor({255, 0,0,255});*/
 		game_finished = true;
 	}
 	else if (enemy_townCenter->Life <= 0 && game_finished == false) {
-		Timer_lbl->SetString("VICTORY");
-		Timer_lbl->SetColor({ 0, 255 ,0 , 255 });
+		/*Timer_lbl->SetString("VICTORY");
+		Timer_lbl->SetColor({ 0, 255 ,0 , 255 });*/
 		game_finished = true;
 	}
+	/*
 	if (back_to_menu_bt->current == CLICKIN) {
 		App->audio->PlayFx(App->sceneManager->menu_scene->fx_button_click);
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
-	}
+	}*/
 	return ret;
 }
 
@@ -280,7 +309,7 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 	App->gui->DestroyALLUIElements();
-	ui_menu.CleanUp();
+	//ui_menu.CleanUp();
 	App->entityManager->selectedUnitList.clear();
 	App->entityManager->selectedBuildingList.clear();
 	App->entityManager->CleanUp();
@@ -290,7 +319,7 @@ bool Scene::CleanUp()
 void Scene::TimeEvents() {
 
 	if ((int)timer.ReadSec() > 120) {
-		Timer_lbl->SetColor({ 255, 0,0,255 });
+		/*Timer_lbl->SetColor({ 255, 0,0,255 });*/
 	}
 
 	if ((int)timer.ReadSec() == 120) {
@@ -318,7 +347,7 @@ void Scene::TimeEvents() {
 }
 void Scene::UpdateTime(float time)
 {
-	Timer_lbl->SetString(to_string((int)time / 60 / 10) + to_string((int)time / 60 % 10) + ':' + to_string((int)time % 60 / 10) + to_string((int)time % 60 % 10));
+	//Timer_lbl->SetString(to_string((int)time / 60 / 10) + to_string((int)time / 60 % 10) + ':' + to_string((int)time % 60 / 10) + to_string((int)time % 60 % 10));
 }
 
 void Scene::UpdateResources(Label* resource, uint new_val)
@@ -328,7 +357,7 @@ void Scene::UpdateResources(Label* resource, uint new_val)
 
 void Scene::UpdateVillagers(uint available_villagers, uint total_villagers)
 {
-	villagers->SetString(to_string(available_villagers) + '/' + to_string(total_villagers));
+//	villagers->SetString(to_string(available_villagers) + '/' + to_string(total_villagers));
 }
 
 void Scene::SaveScene()

@@ -35,20 +35,11 @@ bool MenuScene::Start()
 	elements[2].position.first = elements[1].position.first + x / 100;
 	elements[2].position.second = elements[1].position.second + y / 50;
 
-	elements[2].detect_sections.front().x = elements[2].position.first;
-	elements[2].detect_sections.front().y = elements[2].position.second;
-
 	elements[3].position.first = elements[2].position.first;
 	elements[3].position.second = elements[2].position.second + y / 100 + elements[2].detect_sections.front().h;
 
-	elements[3].detect_sections.front().x = elements[3].position.first;
-	elements[3].detect_sections.front().y = elements[3].position.second;
-
 	elements[4].position.first = elements[3].position.first;
 	elements[4].position.second = elements[3].position.second + y / 100 + elements[3].detect_sections.front().h;
-
-	elements[4].detect_sections.front().x = elements[4].position.first;
-	elements[4].detect_sections.front().y = elements[4].position.second;
 
 
 
@@ -84,9 +75,6 @@ bool MenuScene::Update(float dt)
 
 bool MenuScene::PostUpdate()
 {
-	//if (campaign_bt->current == CLICKIN || skirmish_bt->current == CLICKIN)
-
-	
 	if (buttons[0]->current == CLICKIN)
 	{
 		App->audio->PlayFx(fx_button_click);
