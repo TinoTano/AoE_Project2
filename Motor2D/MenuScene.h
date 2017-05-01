@@ -37,11 +37,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-
-	Image* background;
-	Image* menu_bg_img;
-	Button*	campaign_bt, *skirmish_bt, *options_bt, *quit_bt;
-
+	vector<Info> elements;
+	vector<Image*> images;
+	vector<Button*> buttons;
 	uint fx_button_click;
 };
 

@@ -25,27 +25,17 @@ struct _TTF_Font;
 
 
 enum ElementType {
-	IMAGE,
-	LABEL,
-	BUTTON,
-	INPUTTEXT,
-	SCROLLBAR,
-	QUAD,
-	CURSOR,
-	UNKNOWN
+	IMAGE, LABEL, BUTTON, INPUTTEXT, SCROLLBAR, QUAD, CURSOR, UNKNOWN
 };
 
 enum MouseState {
-	FREE,
-	HOVER,
-	CLICKIN,
-	CLICKOUT
+	FREE, HOVER, CLICKIN, CLICKOUT
 };
 
 enum ButtonTier {
-	TIER1,
+	TIER1 = 1,
 	// Has 3 SDL_Rects section: one for 'standard' state, one for 'on hover' state, and one for 'on click' state.
-	TIER2,
+	TIER2 = 2,
 	// Has 2 SDL_Rects section: one for 'standard' state and 'on click'.
 };
 
@@ -57,7 +47,7 @@ enum ScrollBarModel {
 };
 
 class UnitSprite;
-
+class Info;
 class UIElement {
 public:
 	UIElement(bool argenabled, int argx, int argy, ElementType argtype, SDL_Texture* argtexture);
@@ -253,24 +243,15 @@ public:
 	void CleanUp();
 
 };
-
-
-
 enum EntityType {
-	UNIT,
-	BUILDING,
-	RESOURCE
+	UNIT, BUILDING, RESOURCE
 };
 
 class HUD {
 public:
 
 	enum HUDType {
-		MULTIPLESELECTION,
-		SINGLEINFO,
-		BUILDINGINFO,
-		RESOURCEINFO,
-		NONE
+		MULTIPLESELECTION, SINGLEINFO, BUILDINGINFO, RESOURCEINFO, NONE
 	};
 
 	HUDType		type = NONE;
@@ -279,6 +260,7 @@ public:
 	// MULTIPLESELECTION
 private:
 	list<Image*> multiple;
+	uint x, y;
 	int max_width = 700;;
 
 	//SINGLEINFO
@@ -292,7 +274,7 @@ private:
 	Image* sword_img;		Image* armor_img;
 
 	char armor[65], damage[65], currlife[65], maxlife[65];
-
+	uint posx, posy;
 	//BUILDINGINFO
 	Building* selected_building;
 	uint attack, defense, max_life, curr_life;
@@ -304,10 +286,11 @@ private:
 	// BUTTONS POSITIONS
 	vector<SDL_Rect> buttons_positions;
 public:
-	
+
 	void GetSelection();
 	void StartBuildingInfo();
 	void StartResourceInfo();
+	void Start();
 	void Update();
 
 	void ClearMultiple();
@@ -378,9 +361,11 @@ public:
 	bool	LoadHUDData();
 
 	UIElement* CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier Tier);
+	UIElement* CreateButton(SDL_Texture* texture, int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier Tier);
 	// Blit_Sections contains de rects from the image. Tier 1 must have 3 and Tier 2 must have 2;
 	UIElement* CreateImage(char* path, int x, int y, SDL_Rect section);
 	UIElement* CreateImage(char* path, int x, int y);
+	UIElement* CreateImage(SDL_Texture* argtexture, int x, int y, SDL_Rect section);
 	UIElement* CreateLabel(char* text, int x, int y, _TTF_Font* font);
 	UIElement* CreateLabel(string text, int x, int y, _TTF_Font* font);
 	UIElement* CreateLabel(char* text, SDL_Rect area, _TTF_Font* font);
@@ -391,18 +376,16 @@ public:
 	void DestroyUIElement(UIElement* element);
 	void DestroyALLUIElements();
 
-	SDL_Texture* GetAtlas() const;
-	void ScreenMoves(pair<int, int> movement);
+	void	ScreenMoves(pair<int, int> movement);
 	void	SetPriority();
 	void	Focus(SDL_Rect rect);
 	void	Unfocus();
 
-
-
-	SDL_Texture* atlas = nullptr;
-	string atlas_file_name;
+private:
 	list<UIElement*> Elements;
-
+	vector<Info> info;
+public:
+	vector<Info>GetElements(string scene);
 	// ----- UNIT CLASS ----- //
 	// -------------------- //
 public:
@@ -434,6 +417,25 @@ public:
 	string GetName() {
 		return name;
 	}
+};
+
+class Info {
+public:
+	string name;
+	uint id;
+	pair<int, int> position;
+	string path;
+	SDL_Rect rect;
+
+	string scene;
+	SDL_Texture* texture;
+	ElementType type;
+
+	vector<SDL_Rect> blit_sections;
+	vector<SDL_Rect> detect_sections;
+	ButtonTier tier;
+	Info::Info(string argname, uint argid, pair<int, int> argpos, string argpath, SDL_Rect argrect, string argscene, ElementType argtype) :
+		name(argname), id(argid), position(argpos), path(argpath), rect(argrect), scene(argscene), type(argtype) {}
 };
 
 #endif // __j1GUI_H__

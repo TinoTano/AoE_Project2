@@ -19,6 +19,9 @@ class Unit;
 class Building;
 class Resource;
 
+enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL };
+enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
+
 class Scene : public SceneElement
 {
 public:
@@ -58,14 +61,12 @@ private:
 	// TIMER
 
 	// UI ELEMENTS
-	Image* top, *bottom;
-	Button* menu_bt, *quit_game_bt, *back_to_menu_bt, *save_game_bt, *cancel_bt;
 	WindowUI ui_menu;
-	Image* menu_bg_img;
 	Label* back_to_menu_lbl, *quit_game_lbl, *save_game_lbl, *cancel_lbl;
 
-	vector<SDL_Rect> blit_sections;		 vector<SDL_Rect> detect_sections;
-	vector<SDL_Rect> blit_sections_menu; vector<SDL_Rect> detect_sections_menu;
+	vector<Info> elements;
+	vector<Image*> images;
+	vector<Button*> buttons;
 
 public:
 	void UpdateResources(Label* resource, uint new_val);

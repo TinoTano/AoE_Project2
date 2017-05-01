@@ -31,7 +31,6 @@ bool Gui::Awake(pugi::xml_node& conf)
 {
 	LOG("Loading GUI atlas");
 	bool ret = true;
-	atlas_file_name = conf.child("atlas").attribute("file").as_string("");
 
 	return ret;
 }
@@ -39,9 +38,6 @@ bool Gui::Awake(pugi::xml_node& conf)
 // Called before the first frame
 bool Gui::Start()
 {
-
-	atlas = App->tex->Load(atlas_file_name.c_str());
-
 	vector<SDL_Rect> sprites_cursor;
 	sprites_cursor.push_back({ 0,   0, 70, 50 });
 	sprites_cursor.push_back({ 70,   0, 70, 50 });
@@ -61,11 +57,21 @@ bool Gui::Start()
 	sprites_cursor.push_back({ 420, 50, 70, 50 });
 	sprites_cursor.push_back({ 490, 50, 70, 50 });
 	sprites_cursor.push_back({ 560, 50, 70, 50 });
+
+
+
+
 	hud = new HUD();
+	hud->Start();
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
 
 
 	LoadHUDData();
+
+	for (uint i = 0; i < info.size(); ++i)
+	{
+		info[i].texture = App->tex->Load(info[i].path.c_str());
+	}
 
 	return true;
 }
@@ -118,10 +124,16 @@ bool Gui::CleanUp()
 
 	cursor->CleanUp();
 
+	for (uint i = 0; i < info.size(); ++i)
+	{
+		App->tex->UnLoad(info[i].texture);
+	}
+
 	if (Elements.empty() != true)
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 		{
+			App->tex->UnLoad(it._Ptr->_Myval->texture);
 			App->gui->DestroyUIElement(it._Ptr->_Myval);
 		}
 	}
@@ -132,11 +144,6 @@ bool Gui::CleanUp()
 	return true;
 }
 
-// const getter for atlas
-SDL_Texture* Gui::GetAtlas() const
-{
-	return atlas;
-}
 
 bool Gui::Save(pugi::xml_node &) const
 {
@@ -158,6 +165,7 @@ void Gui::ScreenMoves(pair<int, int> movement) {
 		}
 	}
 }
+
 void Gui::SetPriority()
 {
 	list<UIElement*> Priority1;
@@ -198,6 +206,18 @@ void Gui::Unfocus()
 		it._Ptr->_Myval->focused = true;
 	}
 }
+vector<Info> Gui::GetElements(string scene)
+{
+	vector<Info> ret;
+
+	for (uint i = 0; i < info.size(); ++i)
+	{
+		if (info[i].scene == scene) {
+			ret.push_back(info[i]);
+		}
+	}
+	return ret;
+}
 // UI ELEMENT
 // methods:
 
@@ -225,9 +245,7 @@ UIElement * Gui::CreateImage(char* path, int x, int y, SDL_Rect section)
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	if (path != nullptr)
-		tex = App->tex->Load(path);
-	else tex = GetAtlas();
+	tex = App->tex->Load(path);
 
 	ret = new Image(section, x, y, tex);
 	Elements.push_back(ret);
@@ -239,13 +257,19 @@ UIElement * Gui::CreateImage(char* path, int x, int y)
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	if (path != nullptr)
-		tex = App->tex->Load(path);
-	else tex = GetAtlas();
+	tex = App->tex->Load(path);
 
 	ret = new Image(x, y, tex);
 	Elements.push_back(ret);
 
+	return ret;
+}
+
+UIElement * Gui::CreateImage(SDL_Texture * argtexture, int x, int y, SDL_Rect section)
+{
+	UIElement* ret = nullptr;
+	ret = new Image(section, x, y, argtexture);
+	Elements.push_back(ret);
 	return ret;
 }
 
@@ -280,11 +304,17 @@ UIElement * Gui::CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sec
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	if (path != nullptr)
-		tex = App->tex->Load(path);
-	else tex = GetAtlas();
+	tex = App->tex->Load(path);
 
 	ret = new Button(x, y, blit_sections, detect_sections, Tier, tex);
+	Elements.push_back(ret);
+
+	return ret;
+}
+
+UIElement * Gui::CreateButton(SDL_Texture * texture, int x, int y, vector<SDL_Rect> blit_sections, vector<SDL_Rect> detect_sections, ButtonTier Tier)
+{
+	UIElement* ret = new Button(x, y, blit_sections, detect_sections, Tier, texture);
 	Elements.push_back(ret);
 
 	return ret;
@@ -400,7 +430,7 @@ void Image::DebugMode() {
 void Image::CleanUp()
 {
 	parent = nullptr;
-	App->tex->UnLoad(texture);
+	//App->tex->UnLoad(texture);
 }
 // LABEL 
 
@@ -526,7 +556,7 @@ void Button::Update()
 void Button::CleanUp()
 {
 	parent = nullptr;
-	App->tex->UnLoad(texture);
+	//App->tex->UnLoad(texture);
 	blit_sections.clear();
 	detect_sections.clear();
 }
@@ -567,7 +597,7 @@ MouseState Button::MouseDetect()
 			ret = CLICKOUT;
 		}
 		else {
-			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
 				ret = CLICKIN;
 
 			}
@@ -958,7 +988,8 @@ void WindowUI::WindowOff()
 {
 	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
 	{
-		it._Ptr->_Myval->enabled = false;
+		if (it._Ptr->_Myval != nullptr)
+			it._Ptr->_Myval->enabled = false;
 	}
 	enabled = false;
 }

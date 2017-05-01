@@ -20,12 +20,6 @@
 
 Scene::Scene() : SceneElement("scene")
 {
-	blit_sections.push_back({ 0, 0, 220, 30 });
-	blit_sections.push_back({ 0, 30, 220, 30 });
-	detect_sections.push_back({ 0, 0, 220, 30 });
-	blit_sections_menu.push_back({ 0, 0, 50, 19 });
-	blit_sections_menu.push_back({ 50, 0, 50, 19 });
-	detect_sections_menu.push_back({ 1330 , 5, 50, 19 });
 }
 
 // Destructor
@@ -67,52 +61,76 @@ bool Scene::Start()
 
 	App->render->camera.y = STARTING_CAMERA_Y;
 
-	// LOADING FX
-
+	uint x, y;
+	App->win->GetWindowSize(x, y);
 
 	// LOADING UI BB
-	// ----------------------------------------
-	// LOADING BUTTONS RECTS
-
-
+	// ---------------------------------------
 	// LOADING SCENE UI
 
-	top = (Image*)App->gui->CreateImage("gui/ingame_layer.png", -STARTING_CAMERA_X, -STARTING_CAMERA_Y, { 0,0,1920, 30 });
-	bottom = (Image*)App->gui->CreateImage("gui/ingame_layer.png", -STARTING_CAMERA_X, -STARTING_CAMERA_Y + 622, { 0, 40, 1408, 172 });
+	elements = App->gui->GetElements("LEVEL");
 
-	menu_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", -STARTING_CAMERA_X + 1330, -STARTING_CAMERA_Y + 5, blit_sections_menu, detect_sections_menu, TIER2);
+	elements[0].position.first = -STARTING_CAMERA_X + 0;
+	elements[0].position.second = -STARTING_CAMERA_Y + 0;
 
+	elements[1].position.first = -STARTING_CAMERA_X + 0;
+	elements[1].position.second = -STARTING_CAMERA_Y + y - elements[1].rect.h;
 
+	elements[2].position.first = -STARTING_CAMERA_X + x - elements[2].rect.w;
+	elements[2].position.second = -STARTING_CAMERA_Y + y - elements[2].rect.h;
 
-	// MENU WINDOW
+	elements[3].position.first = -STARTING_CAMERA_X + x / 3 + x / 50;
+	elements[3].position.second = -STARTING_CAMERA_Y + y / 8 + y / 16;
 
-	menu_bg_img = (Image*)App->gui->CreateImage("gui/tech-tree-parchment-drop-down-background.png", -STARTING_CAMERA_X + 540, -STARTING_CAMERA_Y + 200, { 0,0, 280, 280 });
-	back_to_menu_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 210, blit_sections, detect_sections, TIER2);
-	quit_game_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 250, blit_sections, detect_sections, TIER2);
-	save_game_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 290, blit_sections, detect_sections, TIER2);
-	cancel_bt = (Button*)App->gui->CreateButton("gui/button.png", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 330, blit_sections, detect_sections, TIER2);
-	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", -STARTING_CAMERA_X + 605, -STARTING_CAMERA_Y + 213, nullptr);
-	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", -STARTING_CAMERA_X + 640, -STARTING_CAMERA_Y + 253, nullptr);
-	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", -STARTING_CAMERA_X + 640, -STARTING_CAMERA_Y + 293, nullptr);
-	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", -STARTING_CAMERA_X + 650, -STARTING_CAMERA_Y + 333, nullptr);
+	elements[4].position.first = -STARTING_CAMERA_X + x - (x / 4);
+	elements[4].position.second = -STARTING_CAMERA_Y + y / 100;
+
+	elements[5].position.first = elements[3].position.first + x / 50;
+	elements[5].position.second = elements[3].position.second + y / 50;
+
+	elements[6].position.first = elements[5].position.first;
+	elements[6].position.second = elements[5].position.second + elements[5].detect_sections.front().h + y / 100;
+
+	elements[7].position.first = elements[6].position.first;
+	elements[7].position.second = elements[6].position.second + elements[6].detect_sections.front().h + y / 100;
+
+	elements[8].position.first = elements[7].position.first;
+	elements[8].position.second = elements[7].position.second + elements[7].detect_sections.front().h + y / 100;
+
+	for (uint it = 0; it < elements.size(); ++it) {
+		switch (elements[it].type)
+		{
+		case IMAGE:
+			images.push_back((Image*)App->gui->CreateImage(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].rect));
+			break;
+		case BUTTON:
+			buttons.push_back((Button*)App->gui->CreateButton(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].blit_sections, elements[it].detect_sections, elements[it].tier));
+			break;
+		}
+	}
+
+	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", buttons[BACKTOMENU]->pos.first + x / 30, buttons[BACKTOMENU]->pos.second, nullptr);
+	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", buttons[QUITGAME]->pos.first + x / 20, buttons[QUITGAME]->pos.second, nullptr);
+	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", buttons[SAVEGAME]->pos.first + x / 20, buttons[SAVEGAME]->pos.second, nullptr);
+	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", buttons[CANCEL]->pos.first + x / 15, buttons[CANCEL]->pos.second, nullptr);
 
 	back_to_menu_lbl->SetSize(16);
 	quit_game_lbl->SetSize(16);
 	save_game_lbl->SetSize(16);
 	cancel_lbl->SetSize(16);
 
-	ui_menu.in_window.push_back(menu_bg_img);
-	ui_menu.in_window.push_back(quit_game_bt);
-	ui_menu.in_window.push_back(back_to_menu_bt);
-	ui_menu.in_window.push_back(cancel_bt);
-	ui_menu.in_window.push_back(save_game_bt);
+	ui_menu.in_window.push_back(images[WINDOW]);
+	ui_menu.in_window.push_back(buttons[BACKTOMENU]);
+	ui_menu.in_window.push_back(buttons[QUITGAME]);
+	ui_menu.in_window.push_back(buttons[SAVEGAME]);
+	ui_menu.in_window.push_back(buttons[CANCEL]);
 	ui_menu.in_window.push_back(back_to_menu_lbl);
 	ui_menu.in_window.push_back(quit_game_lbl);
 	ui_menu.in_window.push_back(save_game_lbl);
 	ui_menu.in_window.push_back(cancel_lbl);
 
 	ui_menu.WindowOff();
-	ui_menu.SetFocus(menu_bg_img->pos.first, menu_bg_img->pos.second, 280, 280);
+	ui_menu.SetFocus(images[3]->pos.first, images[3]->pos.second, 280, 280);
 
 	// RESOURCE LABELS
 	wood = (Label*)App->gui->CreateLabel(to_string(woodCount), -STARTING_CAMERA_X + 50, -STARTING_CAMERA_Y + 5, nullptr);
@@ -220,15 +238,16 @@ bool Scene::Update(float dt)
 
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
 
-	if (menu_bt->current == HOVER || menu_bt->current == CLICKIN) App->gui->cursor->SetCursor(3);
+	if (buttons[MENU]->current == HOVER || buttons[0]->current == CLICKIN) App->gui->cursor->SetCursor(3);
 	else App->gui->cursor->SetCursor(0);
 
-	if (menu_bt->current == CLICKIN) {
+	if (buttons[MENU]->current == CLICKIN) {
 		UpdateVillagers(5, 10);
 		ui_menu.WindowOn();
 	}
-	if (quit_game_bt->current == CLICKIN) App->quit = true;
-	else if (cancel_bt->current == CLICKIN) {
+	if (buttons[QUITGAME]->current == CLICKIN) App->quit = true;
+
+	else if (buttons[CANCEL]->current == CLICKIN) {
 		ui_menu.WindowOff();
 		App->gui->Unfocus();
 	}
@@ -236,6 +255,7 @@ bool Scene::Update(float dt)
 	{
 		UpdateTime(timer.ReadSec());
 	}
+
 
 	if (timer.ReadSec() > (quadtree_flag + 20)) {
 		App->collision->quadTree->UpdateTree();
@@ -259,7 +279,7 @@ bool Scene::PostUpdate()
 		Timer_lbl->SetColor({ 0, 255 ,0 , 255 });
 		game_finished = true;
 	}
-	if (back_to_menu_bt->current == CLICKIN) {
+	if (buttons[BACKTOMENU]->current == CLICKIN) {
 		App->audio->PlayFx(App->sceneManager->menu_scene->fx_button_click);
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
 	}
@@ -270,8 +290,13 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
+
 	App->gui->DestroyALLUIElements();
+	elements.clear();
+	images.clear();
+	buttons.clear();
 	ui_menu.CleanUp();
+
 	App->entityManager->selectedEntityList.clear();
 	App->entityManager->CleanUp();
 	return true;

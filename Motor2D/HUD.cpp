@@ -8,6 +8,7 @@
 #include "Window.h"
 #include "Gui.h"
 #include "SceneManager.h"
+#include "Window.h"
 #include "Orders.h"
 #include <stdlib.h>  
 
@@ -15,12 +16,21 @@
 //HUD
 HUD::HUD()
 {
-	buttons_positions.push_back({ 30 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40 });
+}
+
+void HUD::Start() {
+	App->win->GetWindowSize(x, y);
+
+	buttons_positions.push_back({ (int)x / 60 - CAMERA_OFFSET_X, (int)y / 50 - CAMERA_OFFSET_Y, 39,40 });
 	buttons_positions.push_back({ 69 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40 });
 	buttons_positions.push_back({ 108 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40 });
 
 	buttons_positions.push_back({ 200 - CAMERA_OFFSET_X, 710 - CAMERA_OFFSET_Y, 39,40 });
+
+	posx = x / 3 - x / 50;
+	posy = y - (y / 6);
 }
+
 
 void HUD::ClearBuilding() {
 	App->gui->DestroyUIElement(single);
@@ -317,8 +327,6 @@ void HUD::Update() {
 }
 
 
-
-
 void HUD::HUDBuildingMenu()
 {
 	switch (building_state) {
@@ -473,19 +481,20 @@ void HUD::GetSelection() {
 		{
 			if (it._Ptr->_Myval.GetID() == unit->GetType())
 			{
-				single = (Image*)App->gui->CreateImage("gui/UnitMiniatures.png", 310 - App->render->camera.x, 670 - App->render->camera.y, it._Ptr->_Myval.GetRect());
-				name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), 310 - App->render->camera.x, 650 - App->render->camera.y, nullptr);
+				// PENE
+				single = (Image*)App->gui->CreateImage("gui/UnitMiniatures.png", posx - App->render->camera.x, posy - App->render->camera.y, it._Ptr->_Myval.GetRect());
+				name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), posx - App->render->camera.x, posy - 25 - App->render->camera.y, nullptr);
 			}
 		}
 
 		_itoa_s(App->entityManager->selectedEntityList.front()->Defense, armor, 65, 10);
 		_itoa_s(App->entityManager->selectedEntityList.front()->Attack, damage, 65, 10);
 
-		sword_img = (Image*)App->gui->CreateImage("gui/game_scene_ui.png", 310 - App->render->camera.x, 720 - App->render->camera.y, SDL_Rect{ 0,19, 38, 22 });
-		armor_img = (Image*)App->gui->CreateImage("gui/game_scene_ui.png", 310 - App->render->camera.x, 750 - App->render->camera.y, SDL_Rect{ 0,63, 37, 19 });
+		sword_img = (Image*)App->gui->CreateImage("gui/game_scene_ui.png", posx - App->render->camera.x, posy + 50 - App->render->camera.y, SDL_Rect{ 0,19, 38, 22 });
+		armor_img = (Image*)App->gui->CreateImage("gui/game_scene_ui.png", posx- App->render->camera.x, posy + 75 - App->render->camera.y, SDL_Rect{ 0,63, 37, 19 });
 
-		damage_val = (Label*)App->gui->CreateLabel(damage, 350 - App->render->camera.x, 720 - App->render->camera.y, nullptr);
-		armor_val = (Label*)App->gui->CreateLabel(armor, 350 - App->render->camera.x, 750 - App->render->camera.y, nullptr);
+		damage_val = (Label*)App->gui->CreateLabel(damage, posx + 50 - App->render->camera.x, posy + 50 - App->render->camera.y, nullptr);
+		armor_val = (Label*)App->gui->CreateLabel(armor, posx + 50 - App->render->camera.x, posy + 75 - App->render->camera.y, nullptr);
 
 		max_life = App->entityManager->selectedEntityList.front()->MaxLife;
 		curr_life = App->entityManager->selectedEntityList.front()->Life;
@@ -497,7 +506,8 @@ void HUD::GetSelection() {
 		_itoa_s(max_life, maxlife, 65, 10);
 		life_str += maxlife;
 
-		life = (Label*)App->gui->CreateLabel(life_str, 350 - App->render->camera.x, 700 - App->render->camera.y, nullptr);
+		life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35- App->render->camera.y, nullptr);
+
 		break;
 	case MULTIPLESELECTION:
 		int x = 0, y = 0;
@@ -514,7 +524,7 @@ void HUD::GetSelection() {
 				}
 				if (it_sprite._Ptr->_Myval.GetID() == unit->GetType())
 				{
-					Image* unit = (Image*)App->gui->CreateImage("gui/UnitMiniatures.png", 310 - App->render->camera.x + x, 650 - App->render->camera.y + y, it_sprite._Ptr->_Myval.GetRect());
+					Image* unit = (Image*)App->gui->CreateImage("gui/UnitMiniatures.png", posx - App->render->camera.x + x, posy - 30 - App->render->camera.y + y, it_sprite._Ptr->_Myval.GetRect());
 					x += App->gui->SpriteUnits.front().GetRect().w;
 					multiple.push_back(unit);
 				}
@@ -583,6 +593,57 @@ bool Gui::LoadHUDData()
 
 	if (HUDData.empty() == false)
 	{
+		for (unitNodeInfo = HUDData.child("Images").child("HUD"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("HUD")) {
+			string name(unitNodeInfo.child("Info").child("Name").attribute("value").as_string());
+			uint id = unitNodeInfo.child("Info").child("ID").attribute("value").as_uint();
+			pair<int, int> position;
+			position.first = unitNodeInfo.child("Info").child("Position").attribute("x").as_uint();
+			position.second = unitNodeInfo.child("Info").child("Position").attribute("y").as_uint();
+			string path(unitNodeInfo.child("Texture").child("Path").attribute("value").as_string());
+			SDL_Rect rect;
+			rect.x = unitNodeInfo.child("Texture").child("Rect").attribute("x").as_int();
+			rect.y = unitNodeInfo.child("Texture").child("Rect").attribute("y").as_int();
+			rect.w = unitNodeInfo.child("Texture").child("Rect").attribute("w").as_int();
+			rect.h = unitNodeInfo.child("Texture").child("Rect").attribute("h").as_int();
+			string scene(unitNodeInfo.child("Scenes").child("Scene").attribute("value").as_string());
+			Info curr(name, id, position, path, rect, scene, IMAGE);
+			info.push_back(curr);
+		}
+		for (unitNodeInfo = HUDData.child("Buttons").child("HUD"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("HUD")) {
+			string name(unitNodeInfo.child("Info").child("Name").attribute("value").as_string());
+			uint id = unitNodeInfo.child("Info").child("ID").attribute("value").as_uint();
+			uint tier = unitNodeInfo.child("Info").child("Tier").attribute("value").as_uint();
+			pair<int, int> position;
+			position.first = unitNodeInfo.child("Info").child("Position").attribute("x").as_uint();
+			position.second = unitNodeInfo.child("Info").child("Position").attribute("y").as_uint();
+			string path(unitNodeInfo.child("Texture").child("Path").attribute("value").as_string());
+			string scene(unitNodeInfo.child("Scenes").child("Scene").attribute("value").as_string());
+			vector<SDL_Rect> blit;
+			for (pugi::xml_node NodeInfo = unitNodeInfo.child("Blit").child("Section"); NodeInfo; NodeInfo = NodeInfo.next_sibling("Section"))
+			{
+				SDL_Rect rect;
+				rect.x = NodeInfo.attribute("x").as_int();
+				rect.y = NodeInfo.attribute("y").as_int();
+				rect.w = NodeInfo.attribute("w").as_int();
+				rect.h = NodeInfo.attribute("h").as_int();
+				blit.push_back(rect);
+			}
+			vector<SDL_Rect> detect;
+			for (pugi::xml_node NodeInfo = unitNodeInfo.child("Detect").child("Section"); NodeInfo; NodeInfo = NodeInfo.next_sibling("Section"))
+			{
+				SDL_Rect rect;
+				rect.x = NodeInfo.attribute("x").as_int();
+				rect.y = NodeInfo.attribute("y").as_int();
+				rect.w = NodeInfo.attribute("w").as_int();
+				rect.h = NodeInfo.attribute("h").as_int();
+				detect.push_back(rect);
+			}
+			Info curr(name, id, position, path, { 0,0,0,0 }, scene, BUTTON);
+			curr.tier = (ButtonTier)tier;
+			curr.blit_sections = blit;
+			curr.detect_sections = detect;
+			info.push_back(curr);
+		}
 		SDL_Rect proportions;
 		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
 		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("height").as_uint();
@@ -623,6 +684,8 @@ bool Gui::LoadHUDData()
 			UnitSprite unit(type, proportions, id, name);
 			SpriteResources.push_back(unit);
 		}
+
+
 	}
 	return ret;
 }
