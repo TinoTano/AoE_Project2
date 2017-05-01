@@ -75,7 +75,7 @@ private:
 
 	Timer timer;
 	int quadtree_flag = 0;
-	Label* Timer_lbl = nullptr;
+	Label* Timer_lbl;
 	void UpdateTime(float time);
 	void TimeEvents();
 	Timer orc_timer, troll_timer;
@@ -83,17 +83,17 @@ private:
 	uint wave = 0, orcs_to_spawn = 0, trolls_to_spawn = 0;
 public:
 	///////
-	Building* my_townCenter = nullptr;
-	Building* enemy_townCenter = nullptr;
-	Unit* hero = nullptr;
+	Building* my_townCenter;
+	Building* enemy_townCenter;
+	Unit* hero;
 	int woodCount = 0;
 	int foodCount = 0;
 	int goldCount = 0;
 	int stoneCount = 0;
 	// RESOURCES 
-	Label* wood = nullptr , *food = nullptr , *gold = nullptr , *stone = nullptr , *villagers = nullptr;
-	Unit* guard1 = nullptr;
-	Unit* guard2 = nullptr;
+	Label* wood, *food, *gold, *stone, *villagers;
+	Unit* guard1;
+	Unit* guard2;
 };
 
 #endif // __SCENE_H__

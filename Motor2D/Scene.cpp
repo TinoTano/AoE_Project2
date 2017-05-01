@@ -144,8 +144,6 @@ bool Scene::Start()
 
 	//Test
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 150, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 220, TOWN_HALL_POS_Y + 150, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 190, TOWN_HALL_POS_Y + 150, ELF_VILLAGER);
 	
 
 	UpdateVillagers(3, 3);
@@ -154,14 +152,8 @@ bool Scene::Start()
 	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y - 180, true, TROLL_MAULER);
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
-	my_townCenter->faction = FREE_MEN;
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
-	enemy_townCenter->faction = SAURON_ARMY;
 
-	guard1 = App->entityManager->CreateUnit(3000, 2100, TROLL_MAULER);
-	guard1->isGuard = true;
-	guard2 = App->entityManager->CreateUnit(3500, 2100, TROLL_MAULER);
-	guard2->isGuard = true;
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 
@@ -197,7 +189,7 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-		debug = !debug;
+		//debug = !debug;
 	}
 
 	/*
@@ -210,9 +202,8 @@ bool Scene::Update(float dt)
 	}
 */
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
-		if (App->entityManager->selectedUnitList.size() > 0) {
-			App->entityManager->PlaceBuilding(ORC_BARRACKS);
-		}
+		if (App->entityManager->selectedEntityList.size() > 0 && App->entityManager->selectedListType == COLLIDER_UNIT) 
+			App->entityManager->placingBuilding = (App->entityManager->placingBuilding) ? false : true;
 	}
 
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
@@ -246,10 +237,10 @@ bool Scene::Update(float dt)
 		UpdateTime(timer.ReadSec());
 	}
 
-	//if (timer.ReadSec() > (quadtree_flag + 20)) {
-	//	App->collision->quadTree->UpdateTree();
-	//	quadtree_flag = timer.ReadSec();
-	//}
+	if (timer.ReadSec() > (quadtree_flag + 20)) {
+		App->collision->quadTree->UpdateTree();
+		quadtree_flag = timer.ReadSec();
+	}
 	return true;
 }
 
@@ -281,8 +272,7 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 	App->gui->DestroyALLUIElements();
 	ui_menu.CleanUp();
-	App->entityManager->selectedUnitList.clear();
-	App->entityManager->selectedBuildingList.clear();
+	App->entityManager->selectedEntityList.clear();
 	App->entityManager->CleanUp();
 	return true;
 }
@@ -340,7 +330,7 @@ void Scene::SaveScene()
 
 	pugi::xml_node unitsNode = rootNode.append_child("Units");
 	for (list<Unit*>::iterator it = App->entityManager->friendlyUnitList.begin(); it != App->entityManager->friendlyUnitList.end(); it++) {
-		if ((*it)->state != UNIT_DEAD) {
+		if ((*it)->state != DESTROYED) {
 			pugi::xml_node unitNodeInfo = unitsNode.append_child("Unit");
 			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
@@ -356,7 +346,7 @@ void Scene::SaveScene()
 	}
 
 	for (list<Unit*>::iterator it = App->entityManager->enemyUnitList.begin(); it != App->entityManager->enemyUnitList.end(); it++) {
-		if ((*it)->state != UNIT_DEAD) {
+		if ((*it)->state != DESTROYED) {
 			pugi::xml_node unitNodeInfo = unitsNode.append_child("Unit");
 			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
@@ -373,7 +363,7 @@ void Scene::SaveScene()
 
 	pugi::xml_node buildingNode = rootNode.append_child("Buildings");
 	for (list<Building*>::iterator it = App->entityManager->friendlyBuildingList.begin(); it != App->entityManager->friendlyBuildingList.end(); it++) {
-		if ((*it)->state != BUILDING_DESTROYING) {
+		if ((*it)->state != DESTROYED) {
 			pugi::xml_node buildingNodeInfo = buildingNode.append_child("Building");
 			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
@@ -385,7 +375,7 @@ void Scene::SaveScene()
 	}
 
 	for (list<Building*>::iterator it = App->entityManager->enemyBuildingList.begin(); it != App->entityManager->enemyBuildingList.end(); it++) {
-		if ((*it)->state != BUILDING_DESTROYING) {
+		if ((*it)->state != DESTROYED) {
 			pugi::xml_node buildingNodeInfo = buildingNode.append_child("Building");
 			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
@@ -438,9 +428,9 @@ void Scene::LoadScene() {
 				unitNodeInfo.child("Position").attribute("y").as_int(),
 				(unitType)unitNodeInfo.child("Type").attribute("value").as_int());
 
-			unitTemplate->direction = (unitDirection)unitNodeInfo.child("Direction").attribute("value").as_int();
+			unitTemplate->currentDirection = (unitDirection)unitNodeInfo.child("Direction").attribute("value").as_int();
 			unitTemplate->Life = unitNodeInfo.child("Life").attribute("value").as_int();
-			if (unitNodeInfo.child("State").attribute("value").as_int() == UNIT_MOVING) {
+			if (unitNodeInfo.child("State").attribute("value").as_int() == MOVING) {
 				unitTemplate->SetDestination({ unitNodeInfo.child("DestinationTile").attribute("x").as_int(), unitNodeInfo.child("DestinationTile").attribute("y").as_int() });
 			}
 		}

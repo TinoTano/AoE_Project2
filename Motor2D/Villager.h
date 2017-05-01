@@ -11,15 +11,16 @@ public:
 	Villager();
 	Villager(int posx, int posy, Villager* unit = nullptr);
 
-	void GatherResource(float dt);
-	void Constructing(float dt);
 
 public:
+	//STATS
 	int gathering_speed = 0;
 	int max_capacity = 0;
 	int curr_capacity = 0;
 	resourceType resource_carried = NONE;
+	int buildingSpeed = 20;
 
+	//ANIMATIONS
 	SDL_Texture* unitChoppingTexture = nullptr;
 
 	vector<Animation> choppingAnimations;
@@ -27,10 +28,6 @@ public:
 	vector<Animation> collectingAnimalsAnimations;
 	vector<Animation> collectingPlantsAnimations;
 
-	bool isConstructor = false;
-	bool isSelected = false;
-	Building* constructingTarget = nullptr;
-	int buildingSpeed = 200;
 };
 
 

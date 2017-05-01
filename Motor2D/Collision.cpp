@@ -13,8 +13,8 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_UNIT][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_BUILDING] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_RESOURCE] = true;
-	matrix[COLLIDER_UNIT][COLLIDER_RANGE] = true;
-	matrix[COLLIDER_UNIT][COLLIDER_LOS] = true;
+	matrix[COLLIDER_UNIT][COLLIDER_RANGE] = false;
+	matrix[COLLIDER_UNIT][COLLIDER_LOS] = false;
 
 	matrix[COLLIDER_BUILDING][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_BUILDING][COLLIDER_BUILDING] = false;
@@ -56,7 +56,7 @@ bool Collision::Start()
 {
 	uint w, h;
 	App->win->GetWindowSize(w, h);
-	quadTree = new QuadTree({ -4800, 0, 4800, 4800 }, 0);
+	quadTree = new QuadTree({ -4800, 0, 9600, 4800 }, 0);
 	return true;
 }
 
@@ -81,7 +81,7 @@ bool Collision::PreUpdate()
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
 
-		if ((*col1)->type == COLLIDER_UNIT) {
+		if ((*col1)->type == COLLIDER_UNIT){// || (*col1)->type == COLLIDER_RANGE) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
@@ -93,7 +93,7 @@ bool Collision::PreUpdate()
 				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback) {
 
 					if (!FindCollision(c1, c2)) {
-						Collision_data* collision = new Collision_data(c1, c2);
+						Collision_data* collision = new Collision_data(c1, c2);   // c1 can only be unit or range
 						collision_list.push_back(collision);
 					}
 				}
@@ -235,6 +235,10 @@ Collider* Collision::FindNearestCollider(iPoint point) {
 	if (colliders.size() > 0) {
 		col = colliders.front();
 		for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
+
+			if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)
+				continue;
+
 			if ((*it)->pos.DistanceTo(point) < col->pos.DistanceTo(point))
 				col = (*it);
 		}

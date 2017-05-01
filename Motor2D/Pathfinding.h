@@ -58,7 +58,7 @@ public:
 
 	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 1, const iPoint& target = { -1, -1 }, list<iPoint>* cells_to_ignore = nullptr) const;
 	void CalculatePath(Path* path);
-	void SharePath(Unit* commander, list<Unit*> followers);
+	void SharePath(Unit* commander, list<Entity*> followers);
 	bool DeletePath(list<iPoint>* path_to_delete);
 	Collision_state SolveCollision(Unit* unit1, Unit* unit2);
 	bool PushUnit(Unit* pushing_unit, Unit* pushed_unit);
@@ -66,10 +66,10 @@ public:
 private:
 
 	// size of the map
-	uint width = 0;
-	uint height = 0;
+	uint width;
+	uint height;
 	// all map walkability values [0..255]
-	uchar* map = nullptr;
+	uchar* map;
 	// we store the created path here
 	list<iPoint> lastPath;
 	list<list<iPoint>*> paths;
@@ -97,10 +97,10 @@ struct PathNode
 
 	void IdentifySuccessors(PathList& list_to_fill, iPoint startNode, iPoint endNode, PathFinding* path_finder) const;
 	// -----------
-	int g = 0;
-	int h = 0;
-	iPoint pos = { 0,0 };
-	const PathNode* parent = nullptr; // needed to reconstruct the path in the end
+	int g;
+	int h;
+	iPoint pos;
+	const PathNode* parent; // needed to reconstruct the path in the end
 };
 
 // ---------------------------------------------------------------------
@@ -126,8 +126,8 @@ struct Path {
 	PathList closed;
 	PathList adjacent;
 
-	iPoint origin = { 0,0 };
-	iPoint destination = { 0,0 };
+	iPoint origin;
+	iPoint destination;
 
 	list<iPoint> finished_path;
 

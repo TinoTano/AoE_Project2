@@ -7,8 +7,8 @@
 #include "EntityManager.h"
 #include "Collision.h"
 #include "p2Log.h"
+#include "Orders.h"
 #include "math.h"
-
 
 
 Building::Building()
@@ -55,40 +55,37 @@ bool Building::IsEnemy() const
 
 bool Building::Update(float dt)
 {
-	iPoint mouse;
-	App->input->GetMousePosition(mouse.x, mouse.x);
-	mouse.x -= App->render->camera.x;
-	mouse.y -= App->render->camera.y;
 
-	switch (state) {
-	case BUILDING_ATTACKING:
-		AttackEnemy(dt);
-		break;
-	case BUILDING_DESTROYING:
-		//if (currentAnim->Finished()) {
+	if (Life == -1) {
+		App->collision->DeleteCollider(collider);
+		App->collision->DeleteCollider(range);
+		state = DESTROYED;
 		App->entityManager->DeleteBuilding(this);
-		//}
-		break;
+		return false;
+	}
+
+	if (state != BEING_BUILT) {
+
+		if (!order_list.empty()) {
+			Order* current_order = order_list.front();
+
+			if (current_order->state == NEEDS_START)
+				current_order->Start((Entity*)this);
+
+			if (current_order->state == EXECUTING)
+				current_order->Execute();
+
+			if (current_order->state == COMPLETED)
+				order_list.pop_front();
+		}
+		else {
+			if (state != IDLE)
+				state = IDLE;
+		}
 	}
 
 	if (Life < MaxLife / 2) {
 		//blit fire animation
-	}
-
-	
-	/*if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-
-		if (mouse.y > NOTHUD.y - CAMERA_OFFSET_Y && mouse.y < NOTHUD.h - CAMERA_OFFSET_Y) {
-
-			if (collider->pos.DistanceTo(mouse) < collider->r)
-				App->entityManager->selectedBuildingList.push_back(this);
-
-		}
-	}*/
-
-	if (onConstruction && Life >= MaxLife) {
-		isSelected = false;
-		onConstruction = false;
 	}
 
 	return true;
@@ -106,7 +103,7 @@ bool Building::Draw()
 	aux.rect.w = imageWidth;
 	aux.rect.h = imageHeight;
 
-	if (isSelected)
+	/*if (isSelected)
 	{
 		Sprite bar;
 
@@ -136,7 +133,7 @@ bool Building::Draw()
 		bar2.b = 0;
 
 		App->render->sprites_toDraw.push_back(bar2);
-	}
+	}*/
 
 	App->render->sprites_toDraw.push_back(aux);
 	
@@ -144,25 +141,6 @@ bool Building::Draw()
 	return true;
 }
 
-void Building::AttackEnemy(float dt)
-{
-	if (attack_timer.ReadSec() >= buildingAttackSpeed) {
-		attackTarget->Life -= Attack - attackTarget->Defense;
-		if (attackTarget->Life <= 0) {
-			attackTarget->Dead();
-			if (Life > 0) {
-				state = BUILDING_IDLE;
-			}
-		}
-		attack_timer.Start();
-	}
-}
-
-void Building::Dead()
-{
-	state = BUILDING_DESTROYING;
-	App->collision->DeleteCollider(collider);
-}
 
 pugi::xml_node Building::LoadBuildingInfo(buildingType type)
 {

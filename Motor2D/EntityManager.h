@@ -8,6 +8,7 @@
 #include "Resource.h"
 #include "Render.h"
 #include "Villager.h"
+#include "Collision.h"
 
 #define NOTHUD SDL_Rect{0, 30, 1920 , 622}
 #define CAMERA_OFFSET_X App->render->camera.x
@@ -52,9 +53,9 @@ public:
 	void DeleteBuilding(Building* building);
 	void DeleteResource(Resource* resource);
 	void OnCollision(Collision_data& col_data);
-	void PlaceBuilding(buildingType type);
+	void FillSelectedList();
 
-	iPoint FindNearestResource(resourceType type, iPoint pos);
+	Resource* FindNearestResource(resourceType type, iPoint pos);
 
 private:
 	void DestroyEntity(Entity* entity);
@@ -72,27 +73,22 @@ private:
 	map<int, Resource*> resourcesDB;
 
 	Entity* clicked_entity = nullptr;
-	Entity* right_clicked_entity = nullptr;
 
-	int mouseX = 0;
-	int mouseY = 0;
+	int mouseX;
+	int mouseY;
 
-	bool placingBuilding = false;
-	Sprite placingBuildingSprite;
-	buildingType creatingBuildingType = ORC_BARRACKS;
-	list<Villager*> constructors;
-	bool clearSelectedUnits = true;
-	
 public:
-	int nextID = 0;
-	list<Unit*> selectedUnitList;
-	list<Building*> selectedBuildingList;
-	Resource* selectedResource = nullptr;
+	int nextID;
+	list<Entity*> selectedEntityList;
+	COLLIDER_TYPE selectedListType = COLLIDER_NONE;
 	list<Unit*> friendlyUnitList;
 	list<Unit*> enemyUnitList;
 	list<Building*> friendlyBuildingList;
 	list<Building*> enemyBuildingList;
 	list<Resource*> resourceList;
+
+	bool placingBuilding = false;
+	buildingType creatingBuildingType = ORC_BARRACKS;
 };
 
 #endif // !__ENTITY_MANAGER__

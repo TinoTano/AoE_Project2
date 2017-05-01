@@ -18,41 +18,4 @@ Villager::Villager(int posx, int posy, Villager* unit) : Unit(posx, posy, (Unit*
 
 
 
-void Villager::GatherResource(float dt)
-{
-
-	if (currentAnim->Finished()) {
-		curr_capacity += MIN(attackTarget->Life, gathering_speed);
-		attackTarget->Life -= MIN(attackTarget->Life, gathering_speed);
-	}
-
-	if (curr_capacity >= max_capacity || attackTarget->Life <= 0) {
-
-		if (attackTarget->Life <= 0 && attackTarget) 
-			attackTarget->Dead();
-		
-
-		iPoint destination = App->map->WorldToMap(TOWN_HALL_POS_X, TOWN_HALL_POS_Y);
-		SetDestination(destination);
-		SetState(UNIT_MOVING);
-
-	}
-
-}
-
-void Villager::Constructing(float dt)
-{
-	if (currentAnim->Finished()) {
-		constructingTarget->Life += buildingSpeed;
-	}
-
-	if (constructingTarget->Life >= constructingTarget->MaxLife) {
-		SetState(UNIT_IDLE);
-		constructingTarget->Life = constructingTarget->MaxLife;
-		constructingTarget = nullptr;
-	}
-
-}
-
-
 

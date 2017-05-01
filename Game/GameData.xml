@@ -1049,7 +1049,7 @@
 				<Die value="textures/Units/troll/trollDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
+				<Faction value="2"/>
 				<Life value="250"/>
 				<Attack value="10"/>
 				<AttackSpeed value="1.5"/>
@@ -1186,7 +1186,7 @@
         <FoodCost value=""/>
         <GoldCost value=""/>
         <BuildTime value=""/>
-	<GatheringSpeed value="10"/>
+	<GatheringSpeed value="30"/>
 	<MaxCapacity value="50"/>
       </Stats>
       <Animations>
@@ -1551,6 +1551,7 @@
 				<Die value="textures/Buildings/TowerOfSauron.png"/>
 			</Textures>
 			<Stats>
+				<Faction value="2"/>
 				<Life value="4800"/>
 				<WoodCost value="0"/>
 				<StoneCost value="650"/>

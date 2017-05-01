@@ -11,7 +11,7 @@
 #include "Timer.h"
 
 class Building;
-class Villager;
+class Order;
 
 enum unitType {
 	ELVEN_LONGBLADE, DWARVEN_MAULER, GONDOR_SPEARMAN, ELVEN_ARCHER, DUNEDAIN_RANGE, ELVEN_CAVALRY, GONDOR_KNIGHT,
@@ -22,11 +22,6 @@ enum unitType {
 	VILLAGER, ELF_VILLAGER,
 
 	GONDOR_HERO
-};
-
-enum unitState
-{
-	UNIT_IDLE, UNIT_MOVING, UNIT_ATTACKING, UNIT_GATHERING, UNIT_BUILDING, UNIT_DEAD
 };
 
 enum unitDirection {
@@ -48,20 +43,16 @@ public:
 	void SetPos(int posX, int posY);
 	void SetSpeed(int amount);
 	void SetDestination(iPoint destination);
-	void Move(float dt);
 	void CalculateVelocity();
 	void LookAt();
-	void SetAnim(unitDirection currentDirection);
-	void AttackEnemy(float dt);
-	void Dead();
-	void SetState(unitState state);
+	void SetAnim(EntityState state);
+	void SetTexture(EntityState state);
 
 private:
 
 public:
 	// STATS
 	unitType type = ELVEN_ARCHER;
-	unitDirection direction = RIGHT;
 	float unitAttackSpeed = 0;
 	int unitPiercingDamage = 0;
 	float unitMovementSpeed = 0;
@@ -71,23 +62,18 @@ public:
 	bool isGuard = false;
 	
 	// Utilities
-	unitState state = UNIT_IDLE;
-	Entity* attackTarget = nullptr;
-	Resource* resourceTarget = nullptr;
-	int unitRange = 0;
+	EntityState state = IDLE;
 	SDL_Rect r = { 0,0,0,0 };
-	int unitRangeOffset = 0;
 	iPoint next_step = { 0,0 };
 	int hpBarWidth = 40;
 	unitDirection currentDirection = RIGHT;
 	list<iPoint>* path;
-	bool destinationReached = true;
 	fPoint velocity = { 0,0 };
 	iPoint destinationTileWorld = { 0,0 };
-	Collider* LineOfSight = nullptr;
+	Collider* los = nullptr;
 	Collider* range = nullptr;
+	list<Order*> order_list;
 
-	Villager* villager = nullptr;
 
 	//Animations
 	vector<Animation> idleAnimations;

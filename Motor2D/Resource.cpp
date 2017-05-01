@@ -37,8 +37,9 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	}
 
 
-	collider = App->collision->AddCollider(entityPosition, resourceRect.w / 4, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - (resourceRect.w / 2)}, resourceRect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
 	entityTexture = resourceIdleTexture;
+	faction = NATURE;
 }
 
 
@@ -55,7 +56,7 @@ bool Resource::Draw()
 {
 	Sprite resource;
 	resource.pos.x = entityPosition.x - (resourceRect.w / 2);
-	resource.pos.y = entityPosition.y - (resourceRect.h / 2);
+	resource.pos.y = entityPosition.y - resourceRect.h;
 	resource.texture = entityTexture;
 	resource.priority = entityPosition.y;
 	resource.rect = resourceRect;
@@ -71,21 +72,4 @@ void Resource::Damaged() {
 	App->tex->GetSize(resourceGatheringTexture, w, h);
 	resourceRect.x = 0, resourceRect.y = 0, resourceRect.w = w, resourceRect.h = h;
 
-}
-
-void Resource::Dead()
-{
-	App->entityManager->DeleteResource(this);
-	App->collision->DeleteCollider(collider);
-
-	for (list<Unit*>::iterator it = App->entityManager->friendlyUnitList.begin(); it != App->entityManager->friendlyUnitList.end(); it++) {
-		if ((*it)->IsVillager) {
-			if ((*it)->attackTarget == this) {
-				iPoint destination = App->map->WorldToMap(TOWN_HALL_POS_X, TOWN_HALL_POS_Y);
-				(*it)->SetDestination(destination);
-				(*it)->SetState(UNIT_MOVING);
-
-			}
-		}
-	}
 }

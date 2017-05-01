@@ -26,7 +26,6 @@ public:
 	bool Draw();
 
 	void Damaged();
-	void Dead();
 
 private:
 
@@ -36,7 +35,7 @@ public:
 	SDL_Texture* resourceIdleTexture = nullptr;
 	SDL_Texture* resourceGatheringTexture = nullptr;
 	vector<SDL_Rect> resourceRectVector;
-	SDL_Rect resourceRect = { 0,0,0,0 };
+	SDL_Rect resourceRect;
 };
 
 #endif

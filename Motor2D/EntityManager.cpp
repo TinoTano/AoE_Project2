@@ -13,6 +13,7 @@
 #include "SceneManager.h"
 #include "Hero.h"
 #include "Villager.h"
+#include "Orders.h"
 #include <algorithm>
 
 EntityManager::EntityManager() : Module()
@@ -82,203 +83,117 @@ bool EntityManager::Update(float dt)
 	}
 
 	// AI for enemies
+	Unit* unit = nullptr;
 
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedUnitList.empty()) {
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
 
-		if (!placingBuilding) {
-			iPoint destination = App->map->WorldToMap(mouseX, mouseY);
+		for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+			Unit* unit = (Unit*)(*it);
+			for (list<Order*>::iterator it2 = unit->order_list.begin(); it2 != unit->order_list.end(); it2++) {
+				RELEASE(*it2);
 
-			Unit* commander = selectedUnitList.front();
-
-			commander->SetDestination(destination);
-
-			if (selectedUnitList.size() > 1) {
-
-				selectedUnitList.pop_front();
-				App->pathfinding->SharePath(commander, selectedUnitList);
-				selectedUnitList.push_front(commander);
-
+				unit->order_list.clear();
 			}
 
-			fPoint mouse = { (float)mouseX, (float)mouseY };
-			Collider* nearest_col = App->collision->FindNearestCollider({ (int)mouse.x, (int)mouse.y });
+			iPoint mouse = { mouseX, mouseY };
+			Collider* nearest_col = App->collision->FindNearestCollider(mouse);
 
-			if (mouse.DistanceTo({ (float)nearest_col->pos.x, (float)nearest_col->pos.y }) < nearest_col->r) {
-				if (nearest_col->type == COLLIDER_BUILDING) {
-					right_clicked_entity = nearest_col->entity;
+			if (mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
+
+				if (nearest_col->entity->faction != selectedEntityList.front()->faction) {
+					if (nearest_col->type == COLLIDER_RESOURCE) {
+
+						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+							unit = (Unit*)(*it);
+							if (unit->IsVillager) {
+								Order* new_order = (Order*)new GatherOrder((Resource*)nearest_col->entity);
+								unit->order_list.push_front(new_order);
+							}
+						}
+					}
+					else {
+						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+							unit = (Unit*)(*it);
+							Order* new_order = (Order*)new AttackOrder(nearest_col->entity);
+							unit->order_list.push_front(new_order);
+						}
+					}
+				}
+
+				if (nearest_col->type == COLLIDER_BUILDING && nearest_col->entity->state == BEING_BUILT) {
+					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+						Unit* unit = (Unit*)(*it);
+						if (unit->IsVillager) {
+							Order* new_order = (Order*)new BuildOrder((Building*)nearest_col->entity);
+							unit->order_list.push_front(new_order);
+						}
+					}
 				}
 			}
 			else {
-				right_clicked_entity = nullptr;
-			}
+				iPoint destination = App->map->WorldToMap(mouseX, mouseY);
+				Unit* commander = (Unit*)selectedEntityList.front();
 
-			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
-				if (right_clicked_entity != nullptr) {
-					if ((*it)->type == VILLAGER || ELF_VILLAGER) {
-						Villager* villager = (Villager*)*it;
-						villager->constructingTarget = (Building*)right_clicked_entity;
-						placingBuildingSprite.pos = { villager->constructingTarget->collider->pos.x - ((int)villager->constructingTarget->imageWidth / 2), villager->constructingTarget->collider->pos.y - ((int)villager->constructingTarget->imageHeight / 2) };
-						constructors.push_back(villager);
-						right_clicked_entity = nullptr;
-					}
+				commander->SetDestination(destination);
+
+				if (selectedEntityList.size() > 1) {
+
+					selectedEntityList.pop_front();
+					App->pathfinding->SharePath(commander, selectedEntityList);
+					selectedEntityList.push_front(commander);
+
 				}
-				else {
-					if ((*it)->type == VILLAGER || ELF_VILLAGER) {
-						Villager* villager = (Villager*)*it;
-						villager->constructingTarget = nullptr;
-					}
+
+				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+					unit = (Unit*)(*it);
+					Order* new_order = (Order*)new FollowPathOrder();
+					unit->order_list.push_front(new_order);
 				}
-				(*it)->SetState(UNIT_MOVING);
 			}
-		}
-		else {
-			placingBuilding = false;
 		}
 	}
 
 	if (mouseY > NOTHUD.y - CAMERA_OFFSET_Y && mouseY < NOTHUD.h - CAMERA_OFFSET_Y) {
 
-		switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
-		{
+		if (placingBuilding) {
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+				Building* building = CreateBuilding(mouseX, mouseY, creatingBuildingType);
+				building->Life = 1;
+				building->state = BEING_BUILT;
 
-		case KEY_DOWN:
-			multiSelectionRect.x = mouseX;
-			multiSelectionRect.y = mouseY;
-			break;
+				if (!selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
 
-		case KEY_REPEAT:
-			multiSelectionRect.w = mouseX - multiSelectionRect.x;
-			multiSelectionRect.h = mouseY - multiSelectionRect.y;
-			break;
-
-		case KEY_UP:
-			if (clearSelectedUnits) {
-				selectedUnitList.clear();
+					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+						unit = (Unit*)(*it);
+						if (unit->IsVillager) {
+							Order* new_order = (Order*)new BuildOrder(building);
+							unit->order_list.push_front(new_order);
+						}
+					}
+				}
+				placingBuilding = false;
 			}
-			else {
-				clearSelectedUnits = true;
-			}
-			selectedBuildingList.clear();
-			selectedResource = nullptr;
+		}
+		else {
+			switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
+			{
 
-			if (multiSelectionRect.x == mouseX && multiSelectionRect.y == mouseY) {   // if there's no selection rect... (only clicked)
+			case KEY_DOWN:
+				multiSelectionRect.x = mouseX;
+				multiSelectionRect.y = mouseY;
+				break;
 
-				fPoint mouse = { (float)mouseX, (float)mouseY };
-				Collider* nearest_col = App->collision->FindNearestCollider({ (int)mouse.x, (int)mouse.y });
+			case KEY_REPEAT:
+				multiSelectionRect.w = mouseX - multiSelectionRect.x;
+				multiSelectionRect.h = mouseY - multiSelectionRect.y;
+				break;
 
-				if (mouse.DistanceTo({ (float)nearest_col->pos.x, (float)nearest_col->pos.y }) < nearest_col->r) {
-					Unit* unit = nullptr;
-					switch (nearest_col->type) {
+			case KEY_UP:
 
-					case COLLIDER_UNIT:
-						
-						unit = (Unit*)nearest_col->entity;
-						if (click_timer.ReadSec() < 0.5 && nearest_col->entity == clicked_entity) { // double click
-
-							for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-
-								if (unit->type == (*it)->type)
-									selectedUnitList.push_back((*it));
-							}
-							clicked_entity = nullptr;
-						}
-						else {   // single click
-							selectedUnitList.push_back(unit);
-							clicked_entity = nearest_col->entity;
-						}
-						break;
-					case COLLIDER_BUILDING:
-						clicked_entity = nearest_col->entity;
-						selectedBuildingList.push_back((Building*)clicked_entity);
-						break;
-					case COLLIDER_RESOURCE:
-						clicked_entity = nearest_col->entity;
-						selectedResource = (Resource*)clicked_entity;
-						break;
-					}
-				}
-
-				click_timer.Start();
-			}
-			else {    // if there's selection rect (clicked and dragged)
-
-				int selectedCount = 0;
-				clicked_entity = nullptr;
-
-				if (multiSelectionRect.w < 0) {
-					multiSelectionRect.x += multiSelectionRect.w;
-					multiSelectionRect.w *= -1;
-				}
-				if (multiSelectionRect.h < 0) {
-					multiSelectionRect.y += multiSelectionRect.h;
-					multiSelectionRect.h *= -1;
-				}
-
-
-				for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-					SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-					if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-						selectedUnitList.push_back((*it));
-						selectedCount++;
-					}
-				}
-
-				if (selectedCount == 0) {
-
-					for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
-						SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-						if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-							selectedBuildingList.push_back((*it));
-							selectedCount++;
-						}
-					}
-				}
-
-				if (selectedCount == 0) {
-
-					for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-						SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-						if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-							selectedUnitList.push_back((*it));
-							selectedCount++;
-						}
-					}
-				}
-
-				if (selectedCount == 0) {
-
-					for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
-						SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-						if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-							selectedBuildingList.push_back((*it));
-							selectedCount++;
-						}
-					}
-				}
-
-				/*if (selectedCount == 0) {
-
-					for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-						SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-						if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
-							resourceList.push_back((*it));
-					}
-				}*/
-
-				multiSelectionRect = { 0,0,0,0 };
+				FillSelectedList();
 				break;
 			}
 		}
-	}
-
-	for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
-		if ((*it)->state == UNIT_DEAD) 
-			selectedUnitList.erase(it);
 	}
 
 	if (multiSelectionRect.w != 0) {
@@ -293,48 +208,20 @@ bool EntityManager::Update(float dt)
 		App->render->sprites_toDraw.push_back(square);
 	}
 
-
 	if (placingBuilding) {
-		placingBuildingSprite.pos = { mouseX - placingBuildingSprite.rect.w / 2, mouseY - placingBuildingSprite.rect.h / 2 };
-		App->render->sprites_toDraw.push_back(placingBuildingSprite);
-		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-			iPoint dest = App->map->WorldToMap(mouseX, mouseY);
-			for (list<Unit*>::iterator it = selectedUnitList.begin(); it != selectedUnitList.end(); it++) {
-				if ((*it)->type == VILLAGER || (*it)->type == ELF_VILLAGER) {
-					Villager* villager = (Villager*)*it;
-					villager->SetDestination(dest);
-					villager->SetState(UNIT_MOVING);
-					constructors.push_back(villager);
-					villager->constructingTarget = nullptr;
-				}
-			}
-			placingBuilding = false;
-			clearSelectedUnits = false;
-		}
-	}
+		Sprite aux;
 
-	if (constructors.size() > 0) {
-		for (list<Villager*>::iterator it = constructors.begin(); it != constructors.end(); it++) {
-			fPoint buildingCenterPos((float)placingBuildingSprite.pos.x + ((float)placingBuildingSprite.rect.w / 2), (float)placingBuildingSprite.pos.y + ((float)placingBuildingSprite.rect.h / 2));
-			if (buildingCenterPos.DistanceTo({ (float)(*it)->entityPosition.x, (float)(*it)->entityPosition.y }) < 60) {
-				if ((*it)->constructingTarget == nullptr) {
-					Building* building = CreateBuilding(buildingCenterPos.x, buildingCenterPos.y, creatingBuildingType);
-					building->Life = 1;
-					building->faction = FREE_MEN; //just for testing;
-					building->isSelected = true;
-					building->onConstruction = true;
-					for (list<Villager*>::iterator it2 = constructors.begin(); it2 != constructors.end(); it2++) {
-						(*it)->constructingTarget = building;
-					}
-				}
-				(*it)->SetState(UNIT_BUILDING);
-				constructors.remove(*it);
-			}
-		}
+		aux.texture = buildingsDB[creatingBuildingType]->buildingIdleTexture;
+		uint width, height;
+		App->tex->GetSize(aux.texture, width, height);
+		aux.rect = { 0,0,(int)width,(int)height };
+		aux.priority = 12500;
+		aux.pos = { mouseX - aux.rect.w / 2, mouseY - aux.rect.h / 2 };
+		App->render->sprites_toDraw.push_back(aux);
+
 	}
 
 	return true;
-
 }
 
 bool EntityManager::PostUpdate()
@@ -485,8 +372,6 @@ bool EntityManager::LoadGameData()
 			unitTemplate->Defense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
 			unitTemplate->unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
 			unitTemplate->unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
-			unitTemplate->unitRange = unitNodeInfo.child("Stats").child("Range").attribute("value").as_int();
-			unitTemplate->unitRangeOffset = unitNodeInfo.child("Stats").child("RangeOffset").attribute("value").as_int();
 
 			pugi::xml_node animationNode;
 			int width;
@@ -623,6 +508,7 @@ bool EntityManager::LoadGameData()
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
 
+			buildingTemplate->faction = (Faction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			buildingTemplate->buildingWoodCost = buildingNodeInfo.child("Stats").child("WoodCost").attribute("value").as_int();
 			buildingTemplate->buildingStoneCost = buildingNodeInfo.child("Stats").child("StoneCost").attribute("value").as_int();
@@ -688,16 +574,6 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	return unit;
 }
 
-void EntityManager::PlaceBuilding(buildingType type)
-{
-	placingBuildingSprite.texture = buildingsDB[type]->buildingIdleTexture;
-	placingBuilding = true;
-	uint width, height;
-	App->tex->GetSize(placingBuildingSprite.texture, width, height);
-	placingBuildingSprite.rect = { 0,0,(int)width,(int)height };
-	placingBuildingSprite.priority = 12500;
-	creatingBuildingType = type;
-}
 
 Building* EntityManager::CreateBuilding(int posX, int posY,  buildingType type)
 {
@@ -755,14 +631,44 @@ void EntityManager::DeleteResource(Resource* resource)
 		removeResourceList.push_back(resource);
 		resourceList.remove(resource);
 	}
+
+	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+
+		if ((*it)->IsVillager && (*it)->state == GATHERING) {
+			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+
+				if ((*it2)->order_type == GATHER) {
+
+					GatherOrder* gth_order = (GatherOrder*)(*it2);
+					if (gth_order->resource = resource)
+						gth_order->resource = nullptr;
+				}
+			}
+		}
+	}
+
+
+	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+
+		if ((*it)->IsVillager && (*it)->state == GATHERING) {
+			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+
+				if ((*it2)->order_type == GATHER) {
+
+					GatherOrder* gth_order = (GatherOrder*)(*it2);
+					if (gth_order->resource = resource)
+						gth_order->resource = nullptr;
+				}
+			}
+		}
+	}
 }
 
 void EntityManager::OnCollision(Collision_data& col_data)
 {
 
 	//possible colliding elements
-	Unit* unit = col_data.c1->GetUnit();
-	Unit* unit2 = nullptr;
+	Unit* unit = nullptr;
 	Building* building = nullptr;
 	Resource* resource = nullptr;
 
@@ -770,108 +676,135 @@ void EntityManager::OnCollision(Collision_data& col_data)
 	col_data.c2->colliding = true;
 	col_data.state = SOLVING;
 
-	switch (col_data.c2->type) {
+	if (col_data.c1->type == COLLIDER_RANGE) {
 
-	case COLLIDER_RANGE:
+		if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
 
-		if (col_data.c2->entity->faction != unit->faction) {
+			if (building = col_data.c1->entity->collider->GetBuilding()) {
+				Order* new_order = (Order*)new AttackOrder(col_data.c2->entity);
+				building->order_list.push_front(new_order);
+			}
+			else if(unit = col_data.c1->entity->collider->GetUnit()){
 
-			if (unit2 = col_data.c2->GetUnit()) {
+				if (unit->state == ATTACKING || unit->state == IDLE || unit->state == PATROLLING) {
 
-				if (unit2->attackTarget == nullptr) {
-					unit2->attackTarget = unit;
-					unit2->SetState(UNIT_ATTACKING);
+					if (unit->state == ATTACKING || unit->state == PATROLLING) {
+
+						if (unit->state == ATTACKING) {
+
+							for (list<Order*>::iterator it = unit->order_list.begin(); it != unit->order_list.end(); it++) {
+								if ((*it)->order_type == ATTACK) {
+									AttackOrder* atk_order = (AttackOrder*)(*it);
+									if (atk_order->target == col_data.c2->entity)
+										unit->order_list.erase(it);
+								}
+							}
+						}
+
+						if (!unit->order_list.empty()) {
+							if (unit->order_list.front()->order_type == MOVETO)
+								unit->order_list.pop_front();
+						}
+					}
+					
+					Order* new_order = (Order*)new AttackOrder(col_data.c2->entity);
+					unit->order_list.push_front(new_order);
 				}
-				else
-					col_data.state = UNSOLVED;
 			}
-			else if (building = col_data.c2->GetBuilding()) {
+		}
+	}
+	else {    // c1->type == COLLIDER_UNIT
 
-				if (building->attackTarget == nullptr) {
-					building->attackTarget = unit;
-					building->state = BUILDING_ATTACKING;
+		unit = col_data.c1->GetUnit();
+		Unit* unit2 = nullptr;
+
+		switch (col_data.c2->type) {
+
+		case COLLIDER_UNIT:
+
+			//if (col_data.c2->entity->faction == unit->faction) {
+			//	unit2 = col_data.c2->GetUnit();
+			//	col_data.state = App->pathfinding->SolveCollision(unit, unit2);// first parameter should be the higher priority unit!
+			//}
+			break;
+
+		case COLLIDER_BUILDING:
+
+			building = col_data.c2->GetBuilding();
+
+			if (unit->IsVillager && building->type == TOWN_CENTER && unit->state == GATHERING) {
+
+				Villager* villager = (Villager*)unit;
+				if (villager->curr_capacity > 0 && villager->order_list.front()->order_type == MOVETO) {
+
+					switch (villager->resource_carried) {
+					case WOOD:
+						App->sceneManager->level1_scene->woodCount += villager->curr_capacity;
+						App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+						break;
+					}
+
+					villager->curr_capacity = 0;
+					villager->order_list.pop_front();
 				}
-				else
-					col_data.state = UNSOLVED;
 			}
-		}
-		break;
+			else if (unit->IsVillager && unit->state == CONSTRUCTING) {
 
-	case COLLIDER_UNIT:
-
-		if (col_data.c2->entity->faction == unit->faction) {
-			unit2 = col_data.c2->GetUnit();
-			col_data.state = App->pathfinding->SolveCollision(unit, unit2);// first parameter should be the higher priority unit!
-		}
-		break;
-
-	case COLLIDER_BUILDING:
-		
-		building = col_data.c2->GetBuilding();
-
-		if (unit->IsVillager && building->type == TOWN_CENTER) {
-
-			Villager* villager = (Villager*)unit;
-			if (villager->curr_capacity > 0) {
-
-				switch (villager->resource_carried) {
-				case WOOD:
-					App->sceneManager->level1_scene->woodCount += villager->curr_capacity;
-					App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
-					break;
+				for (list<Order*>::iterator it = unit->order_list.begin(); it != unit->order_list.end(); it++) {
+					if ((*it)->order_type == BUILD) {
+						BuildOrder* bld_order = (BuildOrder*)(*it);
+						if (bld_order->building == building) {
+							if (unit->order_list.front()->order_type == MOVETO)
+								unit->order_list.pop_front();
+						}
+					}
 				}
 
-				villager->curr_capacity = 0;
-
-				villager->SetDestination(FindNearestResource(villager->resource_carried, villager->entityPosition));
-				villager->SetState(UNIT_MOVING);
 			}
+			break;
+
+		case COLLIDER_RESOURCE:
+
+			if (unit->IsVillager && unit->state == GATHER) {
+				resource = col_data.c2->GetResource();
+
+				for (list<Order*>::iterator it = unit->order_list.begin(); it != unit->order_list.end(); it++) {
+					if ((*it)->order_type == GATHER) {
+						GatherOrder* gth_order = (GatherOrder*)(*it);
+						if (gth_order->resource == resource) {
+							if (unit->order_list.front()->order_type == MOVETO)
+								unit->order_list.pop_front();
+						}
+					}
+				}
+
+			}
+			break;
+		default:
+			break;
 		}
-
-		break;
-
-	case COLLIDER_RESOURCE:
-
-		resource = col_data.c2->GetResource();
-		if (unit->IsVillager/* && unit->state == UNIT_IDLE*/) {
-			Villager* villager = (Villager*)unit;
-			if (villager->curr_capacity == 0) {
-				villager->resource_carried = resource->type;
-				villager->attackTarget = resource;
-				villager->LookAt();
-				villager->SetState(UNIT_GATHERING);
-				resource->Damaged();
-			}
-			else {
-				iPoint destination = App->map->WorldToMap(TOWN_HALL_POS_X, TOWN_HALL_POS_Y);
-				villager->SetDestination(destination);
-				villager->SetState(UNIT_MOVING);
-			}
-		}
-
-		break;
-
-	default:
-		break;
 	}
 
 }
 
 
 
-iPoint EntityManager::FindNearestResource(resourceType type, iPoint pos) {
+Resource* EntityManager::FindNearestResource(resourceType type, iPoint pos) {
 
-	iPoint ret(-1, -1);
+	Resource* ret = resourceList.front();
 
-	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-		if ((*it)->type == type) {
-			if (pos.DistanceTo((*it)->entityPosition) < pos.DistanceTo(ret))
-				ret = (*it)->entityPosition;
+	if (type != NONE) {
+		for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
+			if ((*it)->type == type) {
+				if (pos.DistanceTo((*it)->entityPosition) < pos.DistanceTo(ret->entityPosition))
+					ret = (*it);
+			}
 		}
 	}
+	else
+		ret = nullptr;
 
-	iPoint ret_map = App->map->WorldToMap(ret.x, ret.y);
-	return ret_map;
+	return ret;
 }
 
 
@@ -891,4 +824,133 @@ void EntityManager::DestroyEntity(Entity* entity)
 			++it;
 		}
 	}
+}
+
+void EntityManager::FillSelectedList() {
+
+	selectedEntityList.clear();
+
+	if (multiSelectionRect.w == mouseX && multiSelectionRect.y == mouseY) {   // if there's no selection rect... (only clicked)
+
+		iPoint mouse = { mouseX, mouseY };
+		Collider* nearest_col = App->collision->FindNearestCollider(mouse);
+
+		if (mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
+			Unit* unit = nullptr;
+			switch (nearest_col->type) {
+
+			case COLLIDER_UNIT:
+
+				unit = (Unit*)nearest_col->entity;
+				if (click_timer.ReadSec() < 0.5 && nearest_col->entity == clicked_entity) { // double click
+
+					for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+
+						if (unit->type == (*it)->type)
+							selectedEntityList.push_back((Entity*)(*it));
+					}
+					clicked_entity = nullptr;
+				}
+				else {   // single click
+					selectedEntityList.push_back(clicked_entity);
+					clicked_entity = nearest_col->entity;
+				}
+				selectedListType = COLLIDER_UNIT;
+				break;
+			case COLLIDER_BUILDING:
+				selectedEntityList.push_back(clicked_entity);
+				clicked_entity = nearest_col->entity;
+				selectedListType = COLLIDER_BUILDING;
+				break;
+			case COLLIDER_RESOURCE:
+				selectedEntityList.push_back(clicked_entity);
+				clicked_entity = nearest_col->entity;
+				selectedListType = COLLIDER_BUILDING;
+				break;
+			}
+		}
+
+		click_timer.Start();
+	}
+	else {    // if there's selection rect (clicked and dragged)
+
+		int selectedCount = 0;
+		clicked_entity = nullptr;
+
+		if (multiSelectionRect.w < 0) {
+			multiSelectionRect.x += multiSelectionRect.w;
+			multiSelectionRect.w *= -1;
+		}
+		if (multiSelectionRect.h < 0) {
+			multiSelectionRect.y += multiSelectionRect.h;
+			multiSelectionRect.h *= -1;
+		}
+
+
+		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+			SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+
+			if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+				selectedEntityList.push_back((Entity*)(*it));
+				selectedCount++;
+			}
+		}
+
+		if (selectedCount == 0) {
+
+			for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
+				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+
+				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+					selectedEntityList.push_back((Entity*)(*it));
+					selectedCount++;
+				}
+			}
+		}
+
+		if (selectedCount == 0) {
+
+			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+
+				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+					selectedEntityList.push_back((Entity*)(*it));
+					selectedCount++;
+				}
+			}
+		}
+
+		if (selectedCount == 0) {
+
+			for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
+				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+
+				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+					selectedEntityList.push_back((Entity*)(*it));
+					selectedCount++;
+				}
+			}
+		}
+
+		if (selectedCount == 0) {
+
+			for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
+				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+
+				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
+					selectedEntityList.push_back((Entity*)(*it));
+			}
+		}
+	}
+
+	if (!selectedEntityList.empty())
+		selectedListType = selectedEntityList.front()->collider->type;
+
+	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+		if ((*it)->state == DESTROYED)
+			selectedEntityList.erase(it);
+	}
+
+
+	multiSelectionRect = { 0,0,0,0 };
 }

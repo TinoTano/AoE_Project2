@@ -15,6 +15,7 @@
 #include "SceneManager.h"
 #include "Hero.h"
 #include "QuadTree.h"
+#include "Orders.h"
 #include "Villager.h"
 
 Unit::Unit()
@@ -28,7 +29,6 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	entityPosition.y = posY;
 	type = unit->type;
 	faction = unit->faction;
-	direction = unit->direction;
 	unitAttackSpeed = unit->attackSpeed;
 	unitPiercingDamage = unit->unitPiercingDamage;
 	unitMovementSpeed = unit->unitMovementSpeed;
@@ -38,8 +38,6 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	unitMoveTexture = unit->unitMoveTexture;
 	unitAttackTexture = unit->unitAttackTexture;
 	unitDieTexture = unit->unitDieTexture;
-	unitRange = unit->unitRange;
-	unitRangeOffset = unit->unitRangeOffset;
 
 	Life = unit->Life;
 	MaxLife = unit->MaxLife;
@@ -54,45 +52,56 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	entityTexture = unitIdleTexture;
 
-	SetAnim(currentDirection);
+	SetAnim(state);
 
 	SDL_Rect r = currentAnim->GetCurrentFrame();
 
 	collider = App->collision->AddCollider(entityPosition, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider(entityPosition, r.w , COLLIDER_RANGE, App->entityManager, (Entity*)this);
+
 }
 
 Unit::~Unit()
 {
+	for (list<Order*>::iterator it = order_list.begin(); it != order_list.end(); it++) 
+		RELEASE(*it);
 }
 
 bool Unit::Update(float dt)
 {
 	r = currentAnim->GetCurrentFrame();
-	
-	if (type == VILLAGER || ELF_VILLAGER) {
-		villager = (Villager*)this;
+
+	if (Life == -1) {
+		SetTexture(DESTROYED);
+		App->collision->DeleteCollider(collider);
+		App->collision->DeleteCollider(range);
+		state = DESTROYED;
 	}
 
-	switch (state) {
-	case UNIT_MOVING:
-		Move(dt);
-		break;
-	case UNIT_ATTACKING:
-		if (attackTarget != nullptr) {
-			AttackEnemy(dt);
+	if (state != DESTROYED) {
+
+		if (!order_list.empty()) {
+			Order* current_order = order_list.front();
+
+			if (current_order->state == NEEDS_START)
+				current_order->Start((Entity*)this);
+
+			if (current_order->state == EXECUTING)
+				current_order->Execute();
+
+			if (current_order->state == COMPLETED) 
+				order_list.pop_front();
 		}
-		break;
-	case UNIT_DEAD:
-		if (currentAnim->Finished()) {
+		else {
+			if (state != IDLE) {
+				SetTexture(IDLE);
+				state = IDLE;
+			}
+		}
+	}
+	else {
+		if (currentAnim->Finished()) 
 			App->entityManager->DeleteUnit(this);
-		}
-	case UNIT_GATHERING:
-		villager->GatherResource(dt);
-		break;
-	case UNIT_BUILDING:
-		villager->Constructing(dt);
-		break;
 	}
 
 	if (IsHero) {
@@ -164,8 +173,8 @@ bool Unit::Draw()
 
 			App->render->sprites_toDraw.push_back(bar2);
 		}
-*/
-		if (attackTarget != nullptr)
+
+		if (state == ATTACKING)
 		{
 			Sprite bar;
 
@@ -204,7 +213,7 @@ bool Unit::Draw()
 
 			App->render->sprites_toDraw.push_back(bar2);
 		}
-
+*/
 	App->render->sprites_toDraw.push_back(aux);
 	
 	
@@ -244,48 +253,10 @@ void Unit::SetDestination(iPoint destination)
 	path = App->pathfinding->CreatePath(origin, destination);
 }
 
-void Unit::Move(float dt)
-{
-	entityPosition = next_step;
-	collider->pos = entityPosition;
-	range->pos = entityPosition;
-
-	if (collider->pos.DistanceTo(destinationTileWorld) < 10) {
-		if (path->size() > 0) {
-			destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
-			destinationTileWorld.x += 48;             // to center the unit in the tile
-			destinationTileWorld.y += 48;
-			path->erase(path->begin());
-		}
-		else {
-			App->pathfinding->DeletePath(path);
-			SetState(UNIT_IDLE);
-		}
-	}
-
-	CalculateVelocity();
-
-	fPoint vel = velocity * unitMovementSpeed * dt;
-	roundf(vel.x);
-	roundf(vel.y);
-
-	next_step.x = entityPosition.x + int(vel.x);
-	next_step.y = entityPosition.y + int(vel.y);
-
-	App->collision->quadTree->UpdateCol(collider);
-}
-
 void Unit::CalculateVelocity()
 {
-	if (state == UNIT_ATTACKING && attackTarget != nullptr)
-	{
-		velocity.x = attackTarget->entityPosition.x - collider->pos.x;
-		velocity.y = attackTarget->entityPosition.y - collider->pos.y;
-	}
-	else {
-		velocity.x = destinationTileWorld.x - collider->pos.x;
-		velocity.y = destinationTileWorld.y - collider->pos.y;
-	}
+	velocity.x = destinationTileWorld.x - entityPosition.x;
+	velocity.y = destinationTileWorld.y - entityPosition.y;
 
 	if(velocity.x != 0 || velocity.y != 0)
 		velocity.Normalize();
@@ -295,6 +266,7 @@ void Unit::CalculateVelocity()
 
 void Unit::LookAt()
 {
+	unitDirection direction;
 
 	float angle = atan2f(velocity.y, velocity.x) * RADTODEG;
 
@@ -316,105 +288,67 @@ void Unit::LookAt()
 		direction = UP_RIGHT;
 
 	if (direction != currentDirection)
-	{
 		currentDirection = direction;
-		SetAnim(currentDirection);
-	}
+	
 }
 
-void Unit::AttackEnemy(float dt)
+
+
+void Unit::SetTexture(EntityState texture_of)
 {
-	CalculateVelocity();
+	Villager* villager = nullptr;
 
-	if (currentAnim->Finished()) {
-		attackTarget->Life -= Attack - attackTarget->Defense;
-
-		if (attackTarget->Life <= 0) {
-			attackTarget->Life = -1;
-			attackTarget->Dead();
-			if (Life > 0) {
-				SetState(UNIT_IDLE);
-				attackTarget = nullptr;
-			}
-		}
-	}
-}
-
-
-
-void Unit::Dead() {
-	SetState(UNIT_DEAD);
-	App->collision->DeleteCollider(collider);
-	App->collision->DeleteCollider(range);
-}
-
-void Unit::SetState(unitState newState)
-{
-	if (type == VILLAGER || ELF_VILLAGER) {
-		villager = (Villager*)this;
-	}
-
-	switch (newState) {
-	case UNIT_IDLE:
+	switch (texture_of) {
+	case IDLE:
 		entityTexture = unitIdleTexture;
 		break;
-	case UNIT_MOVING:
-
-		destinationTileWorld = App->map->MapToWorld(path->front().x, path->front().y);
-		destinationTileWorld.x += 48;             // to center the unit in the tile
-		destinationTileWorld.y += 48;
-
-		if (path->size() > 0)
-			path->erase(path->begin());
-
-		next_step = entityPosition;
-
-		if (collider->pos.DistanceNoSqrt(destinationTileWorld) > 1) 
-			entityTexture = unitMoveTexture;
-
-		if (attackTarget != nullptr)
-			attackTarget = nullptr;
-
+	case MOVING:
+		entityTexture = unitMoveTexture;
 		break;
-	case UNIT_ATTACKING:
+	case ATTACKING:
 		entityTexture = unitAttackTexture;
 		break;
-	case UNIT_DEAD:
+	case DESTROYED:
 		entityTexture = unitDieTexture;
 		break;
-	case UNIT_GATHERING:
+	case GATHERING:
+		villager = (Villager*)this;
 		entityTexture = villager->unitChoppingTexture;
 		break;
-	case UNIT_BUILDING:
+	case CONSTRUCTING:
+		villager = (Villager*)this;
 		entityTexture = villager->unitChoppingTexture;
 		break;
 	}
-	this->state = newState;
-	SetAnim(currentDirection);
+
+	SetAnim(texture_of);
 }
 
-void Unit::SetAnim(unitDirection currentDirection) {
-	if (type == VILLAGER || ELF_VILLAGER) {
-		villager = (Villager*)this;
-	}
-	switch (state) {
-	case UNIT_IDLE:
+void Unit::SetAnim(EntityState anim_of) {
+
+	Villager* villager = nullptr;
+
+	switch (anim_of) {
+	case IDLE:
 		currentAnim = &idleAnimations[currentDirection];
 		break;
-	case UNIT_MOVING:
+	case MOVING:
 		currentAnim = &movingAnimations[currentDirection];
 		break;
-	case UNIT_ATTACKING:
+	case ATTACKING:
 		currentAnim = &attackingAnimations[currentDirection];
 		break;
-	case UNIT_DEAD:
+	case DESTROYED:
 		currentAnim = &dyingAnimations[currentDirection];
 		break;
-	case UNIT_GATHERING:
-		villager->currentAnim = &villager->choppingAnimations[currentDirection];
-		break;
-	case UNIT_BUILDING:
-		villager->currentAnim = &villager->choppingAnimations[currentDirection];
+	case GATHERING:
+		villager = (Villager*)this;
+		currentAnim = &villager->choppingAnimations[currentDirection];
+	case CONSTRUCTING:
+		villager = (Villager*)this;
+		currentAnim = &villager->choppingAnimations[currentDirection];
+	default: 
 		break;
 	}
+
 }

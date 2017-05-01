@@ -1,5 +1,5 @@
-#ifndef __ENTITY_H__
-#define __ENTITY_H__
+#ifndef _ENTITY_
+#define _ENTITY_
 
 #include "p2Point.h"
 #include "SDL\include\SDL.h"
@@ -12,19 +12,12 @@ struct Collider;
 enum Faction {
 	FREE_MEN, NATURE, SAURON_ARMY
 };
-//
-//class Order {
-//public:
-//
-//	bool completed = false;
-//	Entity* entity = nullptr;
-//
-//public:
-//
-//	virtual void Execute() {};
-//	virtual void CheckCompletion() {};
-//
-//};
+
+enum EntityState {
+	DESTROYED = 0, CONSTRUCTING, CREATING, MOVING, ATTACKING, PATROLLING, GATHERING, IDLE, BEING_BUILT
+};
+
+
 
 class Entity
 {
@@ -38,20 +31,19 @@ public:
 	virtual bool Update(float dt);
 	virtual bool Draw();
 	virtual bool HandleInput();
-	virtual void Dead();
 	 
 	virtual bool Load(pugi::xml_node&);
 	virtual bool Save(pugi::xml_node&) const;
 
 
 public:
-	int entityID = 0;
+	int entityID;
 	bool isActive = false;
-	SDL_Texture* entityTexture = nullptr;
-	iPoint entityPosition = { 0, 0};
-	Collider* collider = nullptr;
-	Faction faction = NATURE;
-
+	SDL_Texture* entityTexture;
+	iPoint entityPosition;
+	Collider* collider;
+	EntityState state = IDLE;
+	Faction faction = FREE_MEN;
 	int Life = 0;
 	int MaxLife = 0;
 	int Attack = 0;
@@ -59,21 +51,3 @@ public:
 };
 
 #endif // !__ENTITY_H__
-
-//
-//class MoveOrder : public Order {
-//
-//public:
-//
-//	iPoint destinationMap = { -1, -1 };
-//
-//public:
-//
-//	void Execute() {
-//
-//		Unit* unit = (Unit*)entity;
-//		unit->destinationTileWorld = App->map->MapToWorld(destinationMap.x, destinationMap.y);
-//
-//	}
-//};
-

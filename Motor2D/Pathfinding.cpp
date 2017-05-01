@@ -2,6 +2,7 @@
 #include "Map.h"
 #include "EntityManager.h"
 #include "PathFinding.h"
+#include "Orders.h"
 #include "p2Log.h"
 
 PathFinding::PathFinding() : Module(), map(NULL), lastPath(DEFAULT_PATH_LENGTH), width(0), height(0)
@@ -335,8 +336,8 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	iPoint adjusted_dest = destination;
 	list<iPoint>* ret = new list<iPoint>;
 
-	//if (!IsWalkable(origin) || App->entityManager->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
-	//	adjusted_orig = FindNearestAvailable(origin);    
+	if (!IsWalkable(origin) || App->entityManager->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
+		adjusted_orig = FindNearestAvailable(origin);    
 
 	if (!IsWalkable(destination) || App->entityManager->IsOccupied(destination, origin))
 		adjusted_dest = FindNearestAvailable(destination);
@@ -361,12 +362,12 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	return ret;
 }
 
-void PathFinding::SharePath(Unit* commander, list<Unit*> followers) {
+void PathFinding::SharePath(Unit* commander, list<Entity*> followers) {
 
 	iPoint no_space(-1, -1);
 
 	list<list<iPoint>*> new_paths;
-	for (list<Unit*>::iterator it0 = followers.begin(); it0 != followers.end(); it0++) {
+	for (list<Entity*>::iterator it0 = followers.begin(); it0 != followers.end(); it0++) {
 		list<iPoint>* new_path = new list<iPoint>;
 		new_paths.push_back(new_path);
 	}
@@ -397,14 +398,15 @@ void PathFinding::SharePath(Unit* commander, list<Unit*> followers) {
 	}
 
 	list<list<iPoint>*>::iterator it4 = new_paths.begin();
-	for (list<Unit*>::iterator it5 = followers.begin(); it5 != followers.end(); it5++) {
+	for (list<Entity*>::iterator it5 = followers.begin(); it5 != followers.end(); it5++) {
+		Unit* unit = (Unit*)(*it5);
 
-		if ((*it5)->path != nullptr) {
-			App->pathfinding->DeletePath((*it5)->path);
-			(*it5)->path = nullptr;
+		if (unit->path != nullptr) {
+			App->pathfinding->DeletePath(unit->path);
+			unit->path = nullptr;
 		}
 
-		(*it5)->path = (*it4);
+		unit->path = (*it4);
 		paths.push_back((*it4));
 		it4++;
 	}
@@ -482,9 +484,9 @@ Collision_state PathFinding::SolveCollision(Unit* unit1, Unit* unit2) {
 
 	Collision_state col_state = UNSOLVED;
 
-	if (unit2->state != UNIT_ATTACKING || unit1->state != UNIT_ATTACKING) {        // if both are attacking, we do nothing
+	if (unit2->state != ATTACKING || unit1->state != ATTACKING) {        // if both are attacking, we do nothing
 
-		if ((unit2->state == UNIT_ATTACKING && unit1->state != UNIT_ATTACKING) || unit1->state == UNIT_IDLE) {    // if unit2 is attacking, we push unit 1
+		if ((unit2->state == ATTACKING && unit1->state != ATTACKING) || unit1->state == IDLE) {    // if unit2 is attacking, we push unit 1
 			if (PushUnit(unit2, unit1))
 				col_state = SOLVING;
 		}
@@ -502,7 +504,7 @@ bool PathFinding::PushUnit(Unit* pushing_unit, Unit* pushed_unit) {
 
 	iPoint nearest_tile;
 
-	if (pushed_unit->state == UNIT_IDLE) {
+	if (pushed_unit->state == IDLE) {
 
 		nearest_tile = FindNearestAvailable(App->map->WorldToMap(pushed_unit->entityPosition.x, pushed_unit->entityPosition.y));
 
@@ -525,7 +527,6 @@ bool PathFinding::PushUnit(Unit* pushing_unit, Unit* pushed_unit) {
 			path->push_back(App->map->WorldToMap(pushed_unit->entityPosition.x, pushed_unit->entityPosition.y));
 
 		pushed_unit->path = path;
-		pushed_unit->SetState(UNIT_MOVING);
 	}
 	else {
 
@@ -537,8 +538,11 @@ bool PathFinding::PushUnit(Unit* pushing_unit, Unit* pushed_unit) {
 			return false;
 
 		pushed_unit->path->push_front(App->map->WorldToMap(next_tile.x, next_tile.y));
-		pushed_unit->destinationTileWorld = App->map->MapToWorld(nearest_tile.x, nearest_tile.y);
 	}
+
+	Order* new_order = new FollowPathOrder();
+	pushed_unit->order_list.push_front(new_order);
+
 	return true;
 }
 
