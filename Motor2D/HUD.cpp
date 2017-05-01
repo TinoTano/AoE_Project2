@@ -21,11 +21,11 @@ HUD::HUD()
 void HUD::Start() {
 	App->win->GetWindowSize(x, y);
 
-	buttons_positions.push_back({ (int)x / 60 - CAMERA_OFFSET_X, (int)y / 50 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ 69 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ 108 - CAMERA_OFFSET_X, 650 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 40 - CAMERA_OFFSET_X, (int) y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 15 - CAMERA_OFFSET_X, (int) y - (int) y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int) x / 10 - CAMERA_OFFSET_X, (int) y -  (int) y / 5 - CAMERA_OFFSET_Y, 39,40 });
 
-	buttons_positions.push_back({ 200 - CAMERA_OFFSET_X, 710 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int) x / 8 - CAMERA_OFFSET_X, (int) y - (int) y / 8 - CAMERA_OFFSET_Y, 39,40 });
 
 	posx = x / 3 - x / 50;
 	posy = y - (y / 6);
@@ -90,8 +90,8 @@ void HUD::Update() {
 								if (it_unit._Ptr->_Myval->MaxLife == 0) it_unit._Ptr->_Myval->MaxLife = it_unit._Ptr->_Myval->Life;
 								percent = ((it_unit._Ptr->_Myval->MaxLife - it_unit._Ptr->_Myval->Life) * 100) / it_unit._Ptr->_Myval->MaxLife;
 								barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
-								bar.rect.x = 310 + x - App->render->camera.x;
-								bar.rect.y = 650 + y - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+								bar.rect.x = posx + x - App->render->camera.x;
+								bar.rect.y = posy + y - 30 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
 								bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
 								bar.rect.h = 5;
 								bar.r = 255;
@@ -172,8 +172,8 @@ void HUD::Update() {
 					if (max_life <= 0) max_life = curr_life;
 					percent = ((max_life - curr_life) * 100) / max_life;
 					barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
-					bar.rect.x = 310 - App->render->camera.x;
-					bar.rect.y = 670 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+					bar.rect.x = posx - App->render->camera.x;
+					bar.rect.y = posy - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
 					bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
 					bar.rect.h = 5;
 					bar.r = 255;
@@ -218,8 +218,8 @@ void HUD::Update() {
 				if (max_life == 0) max_life = curr_life;
 				percent = ((max_life - curr_life) * 100) / max_life;
 				barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
-				bar.rect.x = 310 - App->render->camera.x;
-				bar.rect.y = 670 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+				bar.rect.x = posx - App->render->camera.x;
+				bar.rect.y = posy - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
 				bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
 				bar.rect.h = 5;
 				bar.r = 255;
@@ -418,8 +418,8 @@ void HUD::StartResourceInfo()
 	{
 		if (it._Ptr->_Myval.GetID() == resource->type)
 		{
-			single = (Image*)App->gui->CreateImage("gui/ResourcesMiniatures.png", 310 - App->render->camera.x, 670 - App->render->camera.y, it._Ptr->_Myval.GetRect());
-			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), 310 - App->render->camera.x, 650 - App->render->camera.y, nullptr);
+			single = (Image*)App->gui->CreateImage("gui/ResourcesMiniatures.png", posx - App->render->camera.x, posy - App->render->camera.y, it._Ptr->_Myval.GetRect());
+			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), posx - App->render->camera.x, posy - 20 - App->render->camera.y, nullptr);
 		}
 	}
 
@@ -428,8 +428,6 @@ void HUD::StartResourceInfo()
 	life_str += maxlife;
 
 	life = (Label*)App->gui->CreateLabel(life_str, 350 - App->render->camera.x, 700 - App->render->camera.y, nullptr);
-
-	//HUDResourceMenu();
 }
 
 
@@ -444,8 +442,8 @@ void HUD::StartBuildingInfo()
 	{
 		if (it._Ptr->_Myval.GetID() == building->type)
 		{
-			single = (Image*)App->gui->CreateImage("gui/BuildingMiniatures.png", 310 - App->render->camera.x, 670 - App->render->camera.y, it._Ptr->_Myval.GetRect());
-			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), 310 - App->render->camera.x, 650 - App->render->camera.y, nullptr);
+			single = (Image*)App->gui->CreateImage("gui/BuildingMiniatures.png", posx - App->render->camera.x, posy - App->render->camera.y, it._Ptr->_Myval.GetRect());
+			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), posx - App->render->camera.x, posy - 20 - App->render->camera.y, nullptr);
 		}
 	}
 
@@ -459,7 +457,7 @@ void HUD::StartBuildingInfo()
 	_itoa_s(max_life, maxlife, 65, 10);
 	life_str += maxlife;
 
-	life = (Label*)App->gui->CreateLabel(life_str, 350 - App->render->camera.x, 700 - App->render->camera.y, nullptr);
+	life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
 
 	if (name->str == "TOWN CENTER")
 	HUDBuildingMenu();

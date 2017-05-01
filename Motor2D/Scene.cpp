@@ -79,6 +79,9 @@ bool Scene::Start()
 	elements[2].position.first = -STARTING_CAMERA_X + x - elements[2].rect.w;
 	elements[2].position.second = -STARTING_CAMERA_Y + y - elements[2].rect.h;
 
+	SDL_Rect NotHUD{ 0,30, x, y - elements[2].rect.h };
+
+	App->entityManager->NotHUD = NotHUD;
 	elements[3].position.first = -STARTING_CAMERA_X + x / 3 + x / 50;
 	elements[3].position.second = -STARTING_CAMERA_Y + y / 8 + y / 16;
 

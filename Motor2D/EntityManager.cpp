@@ -38,7 +38,6 @@ bool EntityManager::Start()
 
 	bool ret = LoadGameData();
 	click_timer.Start();
-
 	return ret;
 }
 
@@ -153,7 +152,7 @@ bool EntityManager::Update(float dt)
 		}
 	}
 
-	if (mouseY > NOTHUD.y - CAMERA_OFFSET_Y && mouseY < NOTHUD.h - CAMERA_OFFSET_Y) {
+	if (mouseY > NotHUD.y - CAMERA_OFFSET_Y && mouseY < NotHUD.h - CAMERA_OFFSET_Y) {
 
 		if (placingBuilding) {
 			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {

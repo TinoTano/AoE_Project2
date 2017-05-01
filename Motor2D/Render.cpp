@@ -192,8 +192,8 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 			movement.second = 0;
 	}
 
-	LOG("cam: %d, %d", camera.x, camera.y);
-	LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
+	//LOG("cam: %d, %d", camera.x, camera.y);
+	//LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
 	camera.x += movement.first;
 	camera.y += movement.second;
 

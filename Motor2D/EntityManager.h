@@ -10,7 +10,8 @@
 #include "Villager.h"
 #include "Collision.h"
 
-#define NOTHUD SDL_Rect{0, 30, 1920 , 622}
+
+
 #define CAMERA_OFFSET_X App->render->camera.x
 #define CAMERA_OFFSET_Y App->render->camera.y
 
@@ -89,6 +90,7 @@ public:
 
 	bool placingBuilding = false;
 	buildingType creatingBuildingType = ORC_BARRACKS;
+	SDL_Rect NotHUD;
 };
 
 #endif // !__ENTITY_MANAGER__
