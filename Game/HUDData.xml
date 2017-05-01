@@ -71,7 +71,20 @@
 					<Scene value = "LEVEL"/>
 				</Scenes>
 			</HUD>
-
+			<HUD>
+				<Info>
+					<Name value = "WINDOW"/>
+					<ID value = "3"/>
+					<Position x = "0" y = "0"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/tech-tree-parchment-drop-down-background.png"/>
+					<Rect x = "0" y = "0" w="280" h="280"/>
+				</Texture>
+				<Scenes>
+					<Scene value = "LEVEL"/>
+				</Scenes>
+			</HUD>
 	</Images>
 	<Buttons>
 	<HUD>
@@ -137,11 +150,10 @@
 					<Scene value = "MENUSCENE"/>
 				</Scenes>
 			</HUD>
-			
 			<HUD>
 				<Info>
 					<Name value = "MENU"/>
-					<ID value = "3"/>
+					<ID value = "4"/>
 					<Position x = "0" y = "0"/>
 					<Tier value = "2"/>
 				</Info>
@@ -154,6 +166,90 @@
 				</Blit>
 				<Detect>
 					<Section x = "1330" y = "5" w="50" h="19"/>
+				</Detect>
+				<Scenes>
+					<Scene value = "LEVEL"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "BACK TO MENU"/>
+					<ID value = "5"/>
+					<Position x = "0" y = "0"/>
+					<Tier value = "2"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/button.png"/>
+				</Texture>
+				<Blit>
+					<Section x = "0" y = "0" w="220" h="30"/>
+					<Section x = "0" y = "30" w="220" h="30"/>
+				</Blit>
+				<Detect>
+					<Section x = "0" y = "0" w="220" h="30"/>
+				</Detect>
+				<Scenes>
+					<Scene value = "LEVEL"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "QUIT GAME"/>
+					<ID value = "6"/>
+					<Position x = "0" y = "0"/>
+					<Tier value = "2"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/button.png"/>
+				</Texture>
+				<Blit>
+					<Section x = "0" y = "0" w="220" h="30"/>
+					<Section x = "0" y = "30" w="220" h="30"/>
+				</Blit>
+				<Detect>
+					<Section x = "0" y = "0" w="220" h="30"/>
+				</Detect>
+				<Scenes>
+					<Scene value = "LEVEL"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "SAVE GAME"/>
+					<ID value = "7"/>
+					<Position x = "0" y = "0"/>
+					<Tier value = "2"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/button.png"/>
+				</Texture>
+				<Blit>
+					<Section x = "0" y = "0" w="220" h="30"/>
+					<Section x = "0" y = "30" w="220" h="30"/>
+				</Blit>
+				<Detect>
+					<Section x = "0" y = "0" w="220" h="30"/>
+				</Detect>
+				<Scenes>
+					<Scene value = "LEVEL"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "CANCEL"/>
+					<ID value = "8"/>
+					<Position x = "0" y = "0"/>
+					<Tier value = "2"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/button.png"/>
+				</Texture>
+				<Blit>
+					<Section x = "0" y = "0" w="220" h="30"/>
+					<Section x = "0" y = "30" w="220" h="30"/>
+				</Blit>
+				<Detect>
+					<Section x = "0" y = "0" w="220" h="30"/>
 				</Detect>
 				<Scenes>
 					<Scene value = "LEVEL"/>

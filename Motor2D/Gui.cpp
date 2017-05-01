@@ -269,7 +269,7 @@ UIElement * Gui::CreateImage(SDL_Texture * argtexture, int x, int y, SDL_Rect se
 	UIElement* ret = nullptr;
 	ret = new Image(section, x, y,argtexture);
 	Elements.push_back(ret);
-	return nullptr;
+	return ret;
 }
 
 UIElement * Gui::CreateLabel(char * text, int x, int y, _TTF_Font * font)
@@ -596,7 +596,7 @@ MouseState Button::MouseDetect()
 			ret = CLICKOUT;
 		}
 		else {
-			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
 				ret = CLICKIN;
 
 			}
@@ -987,6 +987,7 @@ void WindowUI::WindowOff()
 {
 	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
 	{
+		if (it._Ptr->_Myval != nullptr)
 		it._Ptr->_Myval->enabled = false;
 	}
 	enabled = false;
