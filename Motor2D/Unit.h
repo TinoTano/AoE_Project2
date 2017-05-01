@@ -65,7 +65,6 @@ public:
 	EntityState state = IDLE;
 	SDL_Rect r = { 0,0,0,0 };
 	iPoint next_step = { 0,0 };
-	int hpBarWidth = 40;
 	unitDirection currentDirection = RIGHT;
 	list<iPoint>* path;
 	fPoint velocity = { 0,0 };

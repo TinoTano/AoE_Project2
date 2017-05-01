@@ -41,8 +41,6 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	bool IsOccupied(iPoint tile, iPoint ignore_tile = { -1,-1 });
-
 	bool LoadGameData();
 
 	Unit* CreateUnit(int posX, int posY, unitType type);
@@ -53,7 +51,9 @@ public:
 	void DeleteBuilding(Building* building);
 	void DeleteResource(Resource* resource);
 	void OnCollision(Collision_data& col_data);
+
 	void FillSelectedList();
+	void DrawSelectedList();
 
 	Resource* FindNearestResource(resourceType type, iPoint pos);
 

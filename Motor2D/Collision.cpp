@@ -246,3 +246,17 @@ Collider* Collision::FindNearestCollider(iPoint point) {
 	return col;
 
 }
+
+bool Collision::IsOccupied(iPoint worldPos) {
+
+	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
+
+		if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)
+			continue;
+
+		if ((*it)->pos.DistanceTo(worldPos) < (*it)->r)
+			return true;
+	}
+
+	return false;
+}

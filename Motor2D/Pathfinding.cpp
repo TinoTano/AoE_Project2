@@ -336,10 +336,10 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	iPoint adjusted_dest = destination;
 	list<iPoint>* ret = new list<iPoint>;
 
-	if (!IsWalkable(origin) || App->entityManager->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
+	if (!IsWalkable(origin) || App->collision->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
 		adjusted_orig = FindNearestAvailable(origin);    
 
-	if (!IsWalkable(destination) || App->entityManager->IsOccupied(destination, origin))
+	if (!IsWalkable(destination) || App->collision->IsOccupied(destination))
 		adjusted_dest = FindNearestAvailable(destination);
 
 	if (adjusted_orig.x == -1 || adjusted_dest.x == -1 || adjusted_dest == adjusted_orig) {
@@ -449,7 +449,7 @@ iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, con
 
 				adj.create(tile.x + i, tile.y + j);
 
-				if (App->pathfinding->IsWalkable(adj) && !App->entityManager->IsOccupied(adj, tile)) {
+				if (App->pathfinding->IsWalkable(adj) && !App->collision->IsOccupied(adj)) {
 
 					if (cells_to_ignore != nullptr) {
 						for (list<iPoint>::iterator it = cells_to_ignore->begin(); it != cells_to_ignore->end(); it++) {

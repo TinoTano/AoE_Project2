@@ -41,7 +41,6 @@ Building::Building(int posX, int posY, Building* building)
 	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider(entityPosition, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 
-	hpBarWidth = 50;
 	attack_timer.Start();
 }
 
@@ -64,7 +63,7 @@ bool Building::Update(float dt)
 		return false;
 	}
 
-	if (state != BEING_BUILT) {
+	if (state != BEING_BUILT && state != DESTROYED) {
 
 		if (!order_list.empty()) {
 			Order* current_order = order_list.front();
@@ -93,7 +92,6 @@ bool Building::Update(float dt)
 
 bool Building::Draw()
 {
-
 	Sprite aux;
 
 	aux.texture = entityTexture;
@@ -103,40 +101,17 @@ bool Building::Draw()
 	aux.rect.w = imageWidth;
 	aux.rect.h = imageHeight;
 
-	/*if (isSelected)
-	{
-		Sprite bar;
-
-		int percent = ((MaxLife - Life) * 100) / MaxLife;
-		int barPercent = (percent * hpBarWidth) / 100;
-
-		bar.rect.x = entityPosition.x - (hpBarWidth / 2);
-		bar.rect.y = entityPosition.y - collider->r;
-		bar.rect.w = hpBarWidth;
-		bar.rect.h = 5;
-		bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight + 10;
-		bar.r = 255;
-		bar.g = 0;
-		bar.b = 0;
-
-		App->render->sprites_toDraw.push_back(bar);
-
-		Sprite bar2;
-
-		bar2.rect.x = entityPosition.x - (hpBarWidth / 2);
-		bar2.rect.y = entityPosition.y - collider->r;
-		bar2.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
-		bar2.rect.h = 5;
-		bar2.priority = entityPosition.y - (imageHeight / 2) + imageHeight + 11;
-		bar2.r = 0;
-		bar2.g = 255;
-		bar2.b = 0;
-
-		App->render->sprites_toDraw.push_back(bar2);
-	}*/
-
 	App->render->sprites_toDraw.push_back(aux);
 	
+	if (last_life != Life) {
+		lifebar_timer.Start();
+		last_life = Life;
+	}
+
+	if (lifebar_timer.ReadSec() < 5) {
+		iPoint p( entityPosition.x , entityPosition.y - (imageHeight / 2) );
+		drawLife(p);
+	}
 
 	return true;
 }

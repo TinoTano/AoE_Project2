@@ -123,100 +123,16 @@ bool Unit::Draw()
 	aux.priority = entityPosition.y - (r.h / 2) + r.h;
 	aux.flip = currentAnim->flip;
 
-	/*	if (isSelected)
-		{
-			Sprite circle;
-
-			circle.pos = { entityPosition.x, entityPosition.y + (r.h / 2) };
-			circle.priority = entityPosition.y - (r.h / 2) + r.h - 1;
-			circle.radius = 15;
-			circle.r = 255;
-			circle.g = 255;
-			circle.b = 255;
-
-			App->render->sprites_toDraw.push_back(circle);
-
-			int percent;
-			int barPercent;
-
-			if (MaxLife > 0) {
-				percent = ((MaxLife - Life) * 100) / MaxLife;
-				barPercent = (percent * hpBarWidth) / 100;
-			}
-			else {
-				barPercent = 0;
-			}
-
-			Sprite bar;
-
-			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = entityPosition.y - ((int)(aux.rect.h / 1.5f));
-			bar.rect.w = hpBarWidth;
-			bar.rect.h = 5;
-			bar.priority = entityPosition.y - (r.h / 2) + r.h + 1;
-			bar.r = 255;
-			bar.g = 0;
-			bar.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar);
-
-			Sprite bar2;
-
-			bar2.rect.x = entityPosition.x - (hpBarWidth / 2);
-			bar2.rect.y = entityPosition.y - ((int)(aux.rect.h / 1.5f));
-			bar2.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
-			bar2.rect.h = 5;
-			bar2.priority = entityPosition.y - (r.h / 2) + r.h + 2;
-			bar2.r = 0;
-			bar2.g = 255;
-			bar2.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar2);
-		}
-
-		if (state == ATTACKING)
-		{
-			Sprite bar;
-
-			int percent;
-			int barPercent;
-
-			if (attackTarget->MaxLife > 0) {
-				percent = ((attackTarget->MaxLife - attackTarget->Life) * 100) / attackTarget->MaxLife;
-				barPercent = (percent * hpBarWidth) / 100;
-			}
-			else {
-				barPercent = 0;
-			}
-
-			bar.rect.x = attackTarget->entityPosition.x - (hpBarWidth / 2);
-			bar.rect.y = attackTarget->entityPosition.y; //- ((int)(attackTarget->collider->rect.h / 1.5f));
-			bar.rect.w = hpBarWidth;
-			bar.rect.h = 5;
-			bar.priority = attackTarget->entityPosition.y - (r.h / 2) + r.h + 1;
-			bar.r = 255;
-			bar.g = 0;
-			bar.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar);
-
-			Sprite bar2;
-
-			bar2.rect.x = attackTarget->entityPosition.x - (hpBarWidth / 2);
-			bar2.rect.y = attackTarget->entityPosition.y; //- ((int)(attackTarget->collider->rect.h / 1.5f));
-			bar2.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
-			bar2.rect.h = 5;
-			bar2.priority = attackTarget->entityPosition.y - (r.h / 2) + r.h + 2;
-			bar2.r = 0;
-			bar2.g = 255;
-			bar2.b = 0;
-
-			App->render->sprites_toDraw.push_back(bar2);
-		}
-*/
 	App->render->sprites_toDraw.push_back(aux);
-	
-	
+
+	if (last_life != Life) {
+		lifebar_timer.Start();
+		last_life = Life;
+	}
+
+	if (lifebar_timer.ReadSec() < 5)
+		drawLife({ entityPosition.x , entityPosition.y - (r.h / 2) });
+
 	return true;
 }
 

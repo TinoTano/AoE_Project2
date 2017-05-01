@@ -196,6 +196,9 @@ bool EntityManager::Update(float dt)
 		}
 	}
 
+	if (!selectedEntityList.empty())
+		DrawSelectedList();
+
 	if (multiSelectionRect.w != 0) {
 		Sprite square;
 
@@ -315,18 +318,6 @@ bool EntityManager::CleanUp()
 	return true;
 }
 
-bool EntityManager::IsOccupied(iPoint tile, iPoint ignore_tile) {
-
-	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-		if (tile == App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y)) {
-			if (ignore_tile != tile)
-				return true;
-		}
-	}
-
-	return false;
-
-}
 
 bool EntityManager::LoadGameData()
 {
@@ -953,4 +944,29 @@ void EntityManager::FillSelectedList() {
 
 
 	multiSelectionRect = { 0,0,0,0 };
+}
+
+void EntityManager::DrawSelectedList() {
+
+	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+
+		Sprite circle;
+
+		if (selectedListType == COLLIDER_UNIT) {
+			Unit* unit = (Unit*)(*it);
+			circle.pos = { unit->entityPosition.x, unit->entityPosition.y + (unit->r.h / 2) };
+			circle.priority = (*it)->entityPosition.y - (unit->r.h / 2) + unit->r.h - 1;
+		}
+		else {
+			circle.pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
+			circle.priority = (*it)->entityPosition.y;// -(r.h / 2) + r.h - 1;
+		}
+
+		circle.radius = (*it)->collider->r;
+		circle.r = 255;
+		circle.g = 255;
+		circle.b = 255;
+
+		App->render->sprites_toDraw.push_back(circle);
+	}
 }

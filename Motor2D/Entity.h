@@ -3,6 +3,7 @@
 
 #include "p2Point.h"
 #include "SDL\include\SDL.h"
+#include "Timer.h"
 #include "PugiXml\src\pugixml.hpp"
 
 using namespace std;
@@ -34,6 +35,7 @@ public:
 	 
 	virtual bool Load(pugi::xml_node&);
 	virtual bool Save(pugi::xml_node&) const;
+	void drawLife(iPoint barPos);
 
 
 public:
@@ -44,10 +46,14 @@ public:
 	Collider* collider;
 	EntityState state = IDLE;
 	Faction faction = FREE_MEN;
+
 	int Life = 0;
 	int MaxLife = 0;
 	int Attack = 0;
 	int Defense = 0;
+
+	int last_life = 0;
+	Timer lifebar_timer;
 };
 
 #endif // !__ENTITY_H__

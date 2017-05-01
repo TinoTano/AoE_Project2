@@ -44,7 +44,6 @@ public:
 	//Utilities
 	Timer attack_timer;
 	list<Unit*> availableUnitsToCreateList;
-	int hpBarWidth = 0;
 	SDL_Texture* buildingIdleTexture = nullptr;
 	SDL_Texture* buildingDieTexture = nullptr;
 	uint imageWidth = 0;
