@@ -345,15 +345,15 @@ public:
 				break;
 			case GOLD:
 				App->sceneManager->level1_scene->goldCount += villager->curr_capacity;
-				App->sceneManager->level1_scene->gold->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+				App->sceneManager->level1_scene->gold->SetString(to_string(App->sceneManager->level1_scene->goldCount));
 				break;
 			case FOOD:
 				App->sceneManager->level1_scene->foodCount += villager->curr_capacity;
-				App->sceneManager->level1_scene->food->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+				App->sceneManager->level1_scene->food->SetString(to_string(App->sceneManager->level1_scene->foodCount));
 				break;
 			case STONE:
-				App->sceneManager->level1_scene->woodCount += villager->curr_capacity;
-				App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+				App->sceneManager->level1_scene->stoneCount += villager->curr_capacity;
+				App->sceneManager->level1_scene->stone->SetString(to_string(App->sceneManager->level1_scene->stoneCount));
 				break;
 			}
 
