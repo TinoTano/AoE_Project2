@@ -722,55 +722,32 @@ void EntityManager::OnCollision(Collision_data& col_data)
 
 		case COLLIDER_BUILDING:
 
-			building = col_data.c2->GetBuilding();
+			if (unit->path)
+				App->pathfinding->Repath(unit->path, unit->entityPosition);
 
-			if (unit->IsVillager && building->type == TOWN_CENTER && unit->state == GATHERING) {
+			if (!unit->order_list.empty()) {
+				if (unit->order_list.front()->order_type == MOVING) {
 
-				Villager* villager = (Villager*)unit;
-				if (villager->curr_capacity > 0 && villager->order_list.front()->order_type == MOVETO) {
+					unit->order_list.pop_front();
+					unit->SetDestination(unit->destinationTileWorld);
 
-					switch (villager->resource_carried) {
-					case WOOD:
-						App->sceneManager->level1_scene->woodCount += villager->curr_capacity;
-						App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
-						break;
-					}
+					Order* new_order = new FollowPathOrder();
+					unit->order_list.push_front(new_order);
+				}
+				else if (unit->order_list.front()->order_type == REACH) {
 
-					villager->curr_capacity = 0;
-					villager->order_list.pop_front();
+					ReachOrder* old_order = (ReachOrder*)unit->order_list.front();
+					Order* new_order = new ReachOrder(old_order->entity);
+
+					unit->order_list.pop_front();
+					unit->order_list.push_front(new_order);
 				}
 			}
-			else if (unit->IsVillager && unit->state == CONSTRUCTING) {
-
-				for (list<Order*>::iterator it = unit->order_list.begin(); it != unit->order_list.end(); it++) {
-					if ((*it)->order_type == BUILD) {
-						BuildOrder* bld_order = (BuildOrder*)(*it);
-						if (bld_order->building == building) {
-							if (unit->order_list.front()->order_type == MOVETO)
-								unit->order_list.pop_front();
-						}
-					}
-				}
-
-			}
+		
 			break;
 
 		case COLLIDER_RESOURCE:
 
-			if (unit->IsVillager && unit->state == GATHER) {
-				resource = col_data.c2->GetResource();
-
-				for (list<Order*>::iterator it = unit->order_list.begin(); it != unit->order_list.end(); it++) {
-					if ((*it)->order_type == GATHER) {
-						GatherOrder* gth_order = (GatherOrder*)(*it);
-						if (gth_order->resource == resource) {
-							if (unit->order_list.front()->order_type == MOVETO)
-								unit->order_list.pop_front();
-						}
-					}
-				}
-
-			}
 			break;
 		default:
 			break;

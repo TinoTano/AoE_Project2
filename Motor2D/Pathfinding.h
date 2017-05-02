@@ -58,6 +58,7 @@ public:
 
 	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 1, const iPoint& target = { -1, -1 }, list<iPoint>* cells_to_ignore = nullptr) const;
 	void CalculatePath(Path* path);
+	void Repath(list<iPoint>* path, iPoint starting_pos);
 	void SharePath(Unit* commander, list<Entity*> followers);
 	bool DeletePath(list<iPoint>* path_to_delete);
 	Collision_state SolveCollision(Unit* unit1, Unit* unit2);

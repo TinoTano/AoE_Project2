@@ -365,6 +365,30 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	return ret;
 }
 
+void PathFinding::Repath(list<iPoint>* path, iPoint starting_pos) {
+
+	list<iPoint>* new_path = nullptr;
+
+	if (!path->empty()) {
+
+		for (list<iPoint>::iterator it = path->begin(); it != path->end(); it++) {
+			iPoint tileWorld = App->map->MapToWorld((*it).x, (*it).y);
+			if (App->collision->IsOccupied(tileWorld))
+				path->pop_front();
+		}
+	}
+
+	if (!path->empty()) {
+
+		new_path = CreatePath(starting_pos, path->front());
+		for (list<iPoint>::iterator it = path->begin(); it != path->end(); it++)
+			new_path->push_back(*it);
+
+		DeletePath(path);
+		path = new_path;
+	}
+}
+
 void PathFinding::SharePath(Unit* commander, list<Entity*> followers) {
 
 	iPoint no_space(-1, -1);
@@ -428,6 +452,7 @@ bool PathFinding::DeletePath(list<iPoint>* path_to_delete) {
 
 			RELEASE(path_to_delete);
 			paths.erase(it);
+			path_to_delete = nullptr;
 
 			return true;
 		}
