@@ -46,6 +46,7 @@ public:
 	Collider* collider;
 	EntityState state = IDLE;
 	Faction faction = FREE_MEN;
+	bool is_on_fow = false;
 
 	int Life = 0;
 	int MaxLife = 0;

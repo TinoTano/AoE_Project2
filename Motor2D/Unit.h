@@ -87,6 +87,9 @@ public:
 
 	Animation* currentAnim = nullptr;
 
+	iPoint				prev_pos;
+	iPoint				next_pos;
+
 };
 
 #endif // !__UNIT_H__

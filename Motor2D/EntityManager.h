@@ -57,6 +57,7 @@ public:
 	void DrawSelectedList();
 
 	Resource* FindNearestResource(resourceType type, iPoint pos);
+	void ManageCharactersVisibility();
 
 private:
 	void DestroyEntity(Entity* entity);

@@ -11,6 +11,7 @@
 #include "Pathfinding.h"
 #include "Villager.h"
 #include "EntityManager.h"
+#include "FogOfWar.h"
 #include "Scene.h"
 #include "Animation.h"
 #include "SceneManager.h"
@@ -78,6 +79,14 @@ public:
 
 			unit->next_step.x = unit->entityPosition.x + int(vel.x);
 			unit->next_step.y = unit->entityPosition.y + int(vel.y);
+
+			// ===============================================================
+			// Moving fog of war
+			App->fog->Update(unit->prev_pos, unit->next_pos, unit->entityID);			        // This updates the FOW
+			App->entityManager->ManageCharactersVisibility();		        // This updates the entities visibility
+			unit->prev_pos = unit->next_pos;
+			unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
+			// ===============================================================
 
 			App->collision->quadTree->UpdateCol(unit->collider);
 		}

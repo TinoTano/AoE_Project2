@@ -26,7 +26,7 @@
 	<map>
 		<folder>maps/</folder>
 	</map>
-	<console>
-		
-	</console>
+  <fog>
+    <texture file="maps/FOW.png" />
+  </fog>
 </config>

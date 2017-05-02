@@ -7,6 +7,7 @@
 #include <math.h>
 #include "EntityManager.h"
 #include "Resource.h"
+#include "FogOfWar.h"
 
 Map::Map() : Module(), map_loaded(false)
 {
@@ -30,34 +31,56 @@ bool Map::Awake(pugi::xml_node& config)
 
 void Map::Draw()
 {
-	if(map_loaded == false)
+	if (map_loaded == false)
 		return;
 
 	SDL_Rect cam = App->render->culling_cam;
 
-	for(list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); it++)
+	for (list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); it++)
 	{
 		MapLayer* layer = *it;
 
-		if(layer->properties.Get("Nodraw") != 0)
+		if (layer->properties.Get("Nodraw") != 0)
 			continue;
 
-		for(int y = 0; y < data.height; ++y)
+		for (int y = 0; y < data.height; ++y)
 		{
-			for(int x = 0; x < data.width; ++x)
+			for (int x = 0; x < data.width; ++x)
 			{
 
 				iPoint tileWorld = MapToWorld(x, y);
-				if (App->render->CullingCam(tileWorld)){
+				if (App->render->CullingCam(tileWorld)) {
 
 					int tile_id = layer->Get(x, y);
+					int visibility = App->fog->Get(x, y);
 
-					if (tile_id > 0)
+					if (tile_id > 0 && visibility != 0)
 					{
 						TileSet* tileset = GetTilesetFromTileId(tile_id);
-
 						SDL_Rect r = tileset->GetTileRect(tile_id);
+						iPoint pos = MapToWorld(x, y);
 						App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
+
+						if (visibility != 40 /*&& visibility < dark_middle*/)
+						{
+							r = App->fog->GetRect(visibility);
+							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
+						}
+
+						if (visibility >= darkd_middle && visibility <= darkd_inner_bottom_right)
+						{
+							r = App->fog->GetRect(1);
+							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
+
+							r = App->fog->GetRect(visibility);
+							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
+						}
+
+						if (visibility > darkd_inner_bottom_right && visibility <= darkc_inner_bottom_right)
+						{
+							r = App->fog->GetRect(visibility);
+							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
+						}
 					}
 				}
 			}
@@ -537,5 +560,67 @@ bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 	}
 
 	return ret;
+}
+
+list<iPoint> Map::PropagateBFS(iPoint origin, int field_of_view)
+{
+	list<iPoint>		frontier;
+	vector<iPoint>		visited;
+
+	frontier.push_back(origin);
+	visited.push_back(origin);
+
+	int count = 0;
+
+	int current_layer = 0;
+	int layer_done = 4;
+
+	while (current_layer < field_of_view)
+	{
+		iPoint curr = frontier.front();
+		bool is_on_list = false;
+
+		if (curr != iPoint(0, 0))
+		{
+			iPoint neighbors[4];
+			neighbors[0].create(curr.x + 1, curr.y);
+			neighbors[1].create(curr.x, curr.y + 1);
+			neighbors[2].create(curr.x - 1, curr.y);
+			neighbors[3].create(curr.x, curr.y - 1);
+
+			frontier.pop_front();
+
+			for (uint i = 0; i < 4; i++)
+			{
+				for (vector<iPoint>::const_iterator it = visited.cbegin(); it != visited.cend(); it++)
+				{
+					is_on_list = false;
+
+					if (neighbors[i] == *it)
+					{
+						is_on_list = true;
+						break;
+					}
+				}
+
+				if (!is_on_list)
+				{
+					frontier.push_back(neighbors[i]);
+					visited.push_back(neighbors[i]);
+					count++;
+				}
+			}
+		}
+
+		if (count == layer_done)
+		{
+			layer_done = layer_done + 4;
+			count = 0;
+			current_layer++;
+		}
+	}
+
+	return frontier;
+
 }
 

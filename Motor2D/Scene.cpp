@@ -17,6 +17,7 @@
 #include "SceneManager.h"
 #include "QuadTree.h"
 #include "Building.h"
+#include "FogOfWar.h"
 
 Scene::Scene() : SceneElement("scene")
 {
@@ -165,18 +166,22 @@ bool Scene::Start()
 
 	App->map->LoadResources(App->map->map_file.child("map"));
 
-	//Test
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 250, TOWN_HALL_POS_Y + 150, ELF_VILLAGER);
-	
+	// Fog of war, entities & resources
+
+	App->fog->Start(); // Goes first!
+
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 180, GONDOR_HERO);
+	App->fog->AddEntity(hero);
+	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X - 100, TOWN_HALL_POS_Y + 150, ELF_VILLAGER));
+	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X + 220, TOWN_HALL_POS_Y + 150, GOBLIN_SOLDIER));
+	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER));
 
 	UpdateVillagers(3, 3);
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y + 180, GONDOR_HERO);
 
 	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y - 180, true, TROLL_MAULER);
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
-
 
 	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 

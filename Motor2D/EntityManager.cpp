@@ -78,7 +78,7 @@ bool EntityManager::Update(float arg_dt)
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition))
+		if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
 			(*it)->Draw();
 	}
 
@@ -948,3 +948,23 @@ void EntityManager::DrawSelectedList() {
 		App->render->sprites_toDraw.push_back(circle);
 	}
 }
+
+// Fog of War ===============================================================================
+
+void EntityManager::ManageCharactersVisibility()
+{
+	for (list<enemy_unit>::iterator it = App->fog->simple_char_on_fog_pos.begin(); it != App->fog->simple_char_on_fog_pos.end(); it++)
+	{
+		for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++)
+		{
+			if (it->id == (*it2)->entityID)
+			{
+				if (it->visible == false) (*it2)->isActive = false;
+				else (*it2)->isActive = true;
+				break;
+			}
+
+		}
+	}
+}
+

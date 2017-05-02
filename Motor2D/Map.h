@@ -126,6 +126,8 @@ public:
 	bool CreateWalkabilityMap(int& width, int& height, uchar** buffer) const;
 	bool LoadResources(pugi::xml_node& node);
 
+	list<iPoint> PropagateBFS(iPoint origin, int limit);
+
 private:
 
 	bool LoadMap();
