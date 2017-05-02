@@ -94,66 +94,66 @@ bool EntityManager::Update(float arg_dt)
 
 				unit->order_list.clear();
 			}
+		}
 
-			iPoint mouse = { mouseX, mouseY };
-			Collider* nearest_col = App->collision->FindNearestCollider(mouse);
+		iPoint mouse = { mouseX, mouseY };
+		Collider* nearest_col = App->collision->FindNearestCollider(mouse);
 
-			if (mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
+		if (mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
 
-				if (nearest_col->entity->faction != selectedEntityList.front()->faction) {
-					if (nearest_col->type == COLLIDER_RESOURCE) {
-
-						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-							unit = (Unit*)(*it);
-							if (unit->IsVillager) {
-								Order* new_order = (Order*)new GatherOrder((Resource*)nearest_col->entity);
-								unit->order_list.push_front(new_order);
-							}
-						}
-					}
-					else {
-						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-							unit = (Unit*)(*it);
-							Order* new_order = (Order*)new AttackOrder(nearest_col->entity);
-							unit->order_list.push_front(new_order);
-						}
-					}
-				}
-
-				if (nearest_col->type == COLLIDER_BUILDING && nearest_col->entity->state == BEING_BUILT) {
-					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-						Unit* unit = (Unit*)(*it);
-						if (unit->IsVillager) {
-							Order* new_order = (Order*)new BuildOrder((Building*)nearest_col->entity);
-							unit->order_list.push_front(new_order);
-						}
-					}
-				}
-			}
-			else {
-				iPoint destination = App->map->WorldToMap(mouseX, mouseY);
-				Unit* commander = (Unit*)selectedEntityList.front();
-
-				if (commander->SetDestination(destination)) {
-
-					if (selectedEntityList.size() > 1) {
-
-						selectedEntityList.pop_front();
-						App->pathfinding->SharePath(commander, selectedEntityList);
-						selectedEntityList.push_front(commander);
-
-					}
+			if (nearest_col->entity->faction != selectedEntityList.front()->faction) {
+				if (nearest_col->type == COLLIDER_RESOURCE) {
 
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
-						Order* new_order = (Order*)new FollowPathOrder();
+						if (unit->IsVillager) {
+							Order* new_order = (Order*)new GatherOrder((Resource*)nearest_col->entity);
+							unit->order_list.push_front(new_order);
+						}
+					}
+				}
+				else {
+					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+						unit = (Unit*)(*it);
+						Order* new_order = (Order*)new AttackOrder(nearest_col->entity);
+						unit->order_list.push_front(new_order);
+					}
+				}
+			}
+
+			if (nearest_col->type == COLLIDER_BUILDING && nearest_col->entity->state == BEING_BUILT) {
+				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+					Unit* unit = (Unit*)(*it);
+					if (unit->IsVillager) {
+						Order* new_order = (Order*)new BuildOrder((Building*)nearest_col->entity);
 						unit->order_list.push_front(new_order);
 					}
 				}
 			}
 		}
-	}
+		else {
+			iPoint destination = App->map->WorldToMap(mouseX, mouseY);
+			Unit* commander = (Unit*)selectedEntityList.front();
 
+			if (commander->SetDestination(destination)) {
+
+				if (selectedEntityList.size() > 1) {
+
+					selectedEntityList.pop_front();
+					App->pathfinding->SharePath(commander, selectedEntityList);
+					selectedEntityList.push_front(commander);
+
+				}
+
+				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+					unit = (Unit*)(*it);
+					Order* new_order = (Order*)new FollowPathOrder();
+					unit->order_list.push_front(new_order);
+				}
+			}
+		}
+	}
+	
 	if (mouseY > NotHUD.y - CAMERA_OFFSET_Y && mouseY < NotHUD.h - CAMERA_OFFSET_Y) {
 
 		if (placingBuilding) {
