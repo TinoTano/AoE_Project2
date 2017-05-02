@@ -355,17 +355,17 @@
 		<Building>
         <Name value = "TOWN CENTER"/>
         <ID value = "0"/>
-	<Position x = "0" y = "0"/>
+		<Position x = "0" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "HOUSE"/>
         <ID value = "1"/>
-	<Position x = "33" y = "0"/>
+		<Position x = "33" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "ORC BARRACKS"/>
         <ID value = "2"/>
-	<Position x="99" y="0"/>
+		<Position x="99" y="0"/>
 		</Building>
 		<Building>
         <Name value = "ARCHERY RANGE"/>
@@ -416,4 +416,26 @@
         <ID value = "14"/>
 		</Building>
 	</Buildings>
+	<Resources>
+		<Resource>
+			<Name value = "BLACK TREE"/>
+			<ID value = "0"/>
+		</Resource>
+		<Resource>
+			<Name value = "GREEN TREE"/>
+			<ID value = "1"/>
+		</Resource>
+		<Resource>
+			<Name value = "GOLD MINE"/>
+			<ID value = "2"/>
+		</Resource>
+		<Resource>
+			<Name value = "BUSH"/>
+			<ID value = "3"/>
+		</Resource>
+		<Resource>
+			<Name value = "STONE MINE"/>
+			<ID value = "4"/>
+		</Resource>
+	</Resources>
 </HUDData>

@@ -48,9 +48,11 @@ bool MenuScene::Start()
 		{
 		case IMAGE:
 			images.push_back((Image*)App->gui->CreateImage(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].rect));
+			images.back()->loaded_tex = true;
 			break;
 		case BUTTON:
 			buttons.push_back((Button*)App->gui->CreateButton(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].blit_sections, elements[it].detect_sections, elements[it].tier));
+			buttons.back()->loaded_tex = true;
 			break;
 		}
 	}
@@ -78,9 +80,11 @@ bool MenuScene::PostUpdate()
 	if (buttons[0]->current == CLICKIN)
 	{
 		App->audio->PlayFx(fx_button_click);
+	} else if (buttons[0]->current == CLICKUP)
+	{
 		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
 	}
-	else if (buttons[2]->current == CLICKIN)
+	else if (buttons[2]->current == CLICKUP)
 	{
 		App->quit = true;
 	}

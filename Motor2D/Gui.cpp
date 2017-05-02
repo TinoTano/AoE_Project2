@@ -412,7 +412,9 @@ MouseState Image::MouseDetect()
 		else {
 			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 				ret = CLICKIN;
-
+			}
+			else if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+				ret = CLICKUP;
 			}
 		}
 	}
@@ -430,7 +432,8 @@ void Image::DebugMode() {
 void Image::CleanUp()
 {
 	parent = nullptr;
-	//App->tex->UnLoad(texture);
+	if (!loaded_tex)
+		App->tex->UnLoad(texture);
 }
 // LABEL 
 
@@ -556,7 +559,8 @@ void Button::Update()
 void Button::CleanUp()
 {
 	parent = nullptr;
-	//App->tex->UnLoad(texture);
+	if (!loaded_tex)
+		App->tex->UnLoad(texture);
 	blit_sections.clear();
 	detect_sections.clear();
 }
@@ -585,26 +589,34 @@ MouseState Button::MouseDetect()
 {
 	MouseState ret = FREE;
 	if (focused) {
-		for (int it = 0; it < detect_sections.size(); ++it) {
-			pair<int, int> mouse_pos;
-			App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
-			if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + detect_sections[it].w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + detect_sections[it].h)) {
-				ret = HOVER;
-				break;
-			}
-		}
-		if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-			ret = CLICKOUT;
+		if (current == CLICKIN && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_IDLE) {
+			ret = CLICKUP;
 		}
 		else {
-			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-				ret = CLICKIN;
-
+			for (int it = 0; it < detect_sections.size(); ++it) {
+				pair<int, int> mouse_pos;
+				App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
+				if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + detect_sections[it].w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + detect_sections[it].h)) {
+					ret = HOVER;
+					break;
+				}
+			}
+			if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+				ret = CLICKOUT;
+			}
+			else {
+				if (ret == HOVER)
+				{
+					if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+						ret = CLICKIN;
+					}
+				}
 			}
 		}
 	}
 	return ret;
 }
+
 void Button::DebugMode() {
 	for (int it = 0; it < detect_sections.size(); ++it) {
 		SDL_Rect debug_rect{ pos.first, pos.second, detect_sections[it].w, detect_sections[it].h };
@@ -1007,7 +1019,6 @@ void WindowUI::CleanUp()
 {
 	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
 	{
-		//RELEASE((*it));
 		App->gui->DestroyUIElement(it._Ptr->_Myval);
 		in_window.remove(it._Ptr->_Myval);
 	}

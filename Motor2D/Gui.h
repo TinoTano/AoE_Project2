@@ -29,7 +29,7 @@ enum ElementType {
 };
 
 enum MouseState {
-	FREE, HOVER, CLICKIN, CLICKOUT
+	FREE, HOVER, CLICKIN, CLICKOUT, CLICKUP
 };
 
 enum ButtonTier {
@@ -59,7 +59,7 @@ public:
 	void			SetPos(int x, int y);
 	void			SetParentPos(int x, int y);
 	void			Move(int x, int y);
-	bool			enabled, focused = true, debug = false;
+	bool			enabled, focused = true, debug = false, loaded_tex = false;
 
 	UIElement* parent = nullptr;
 	pair<int, int> pos, parent_pos;
@@ -296,6 +296,7 @@ public:
 	void ClearMultiple();
 	void ClearSingle();
 	void ClearBuilding();
+	void ClearResource();
 	void CleanUp();
 private:
 	//

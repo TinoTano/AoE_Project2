@@ -105,9 +105,11 @@ bool Scene::Start()
 		{
 		case IMAGE:
 			images.push_back((Image*)App->gui->CreateImage(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].rect));
+			images.back()->loaded_tex = true;
 			break;
 		case BUTTON:
 			buttons.push_back((Button*)App->gui->CreateButton(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].blit_sections, elements[it].detect_sections, elements[it].tier));
+			buttons.back()->loaded_tex = true;
 			break;
 		}
 	}
@@ -244,13 +246,13 @@ bool Scene::Update(float dt)
 	if (buttons[MENU]->current == HOVER || buttons[0]->current == CLICKIN) App->gui->cursor->SetCursor(3);
 	else App->gui->cursor->SetCursor(0);
 
-	if (buttons[MENU]->current == CLICKIN) {
+	if (buttons[MENU]->current == CLICKUP) {
 		UpdateVillagers(5, 10);
 		ui_menu.WindowOn();
 	}
-	if (buttons[QUITGAME]->current == CLICKIN) App->quit = true;
+	if (buttons[QUITGAME]->current == CLICKUP) App->quit = true;
 
-	else if (buttons[CANCEL]->current == CLICKIN) {
+	else if (buttons[CANCEL]->current == CLICKUP) {
 		ui_menu.WindowOff();
 		App->gui->Unfocus();
 	}
@@ -284,6 +286,8 @@ bool Scene::PostUpdate()
 	}
 	if (buttons[BACKTOMENU]->current == CLICKIN) {
 		App->audio->PlayFx(App->sceneManager->menu_scene->fx_button_click);
+	}
+	else if (buttons[BACKTOMENU]->current == CLICKUP) {
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
 	}
 	return ret;
