@@ -48,7 +48,7 @@ bool EntityManager::PreUpdate()
 
 bool EntityManager::Update(float dt)
 {
-
+	BROFILER_CATEGORY("UpdateLogic", Profiler::Color::YellowGreen);
 	App->input->GetMousePosition(mouseX, mouseY);
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;

@@ -27,6 +27,7 @@ bool FogOfWar::Start()
 
 bool FogOfWar::Update(float dt)
 {
+	BROFILER_CATEGORY("UpdateLogic", Profiler::Color::Azure);
 	DrawFog();
 	return true;
 }

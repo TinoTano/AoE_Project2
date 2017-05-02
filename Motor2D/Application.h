@@ -6,6 +6,7 @@
 #include "Timer.h"
 #include "PugiXml\src\pugixml.hpp"
 #include "p2Defs.h"
+#include "Brofiler\Brofiler.h"
 
 // Modules
 class Window;
