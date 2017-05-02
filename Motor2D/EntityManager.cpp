@@ -820,7 +820,7 @@ void EntityManager::FillSelectedList() {
 
 	selectedEntityList.clear();
 
-	if (multiSelectionRect.w == mouseX && multiSelectionRect.y == mouseY) {   // if there's no selection rect... (only clicked)
+	if (multiSelectionRect.w == 0 && multiSelectionRect.h == 0) {   // if there's no selection rect... (only clicked)
 
 		iPoint mouse = { mouseX, mouseY };
 		Collider* nearest_col = App->collision->FindNearestCollider(mouse);
@@ -842,19 +842,19 @@ void EntityManager::FillSelectedList() {
 					clicked_entity = nullptr;
 				}
 				else {   // single click
-					selectedEntityList.push_back(clicked_entity);
 					clicked_entity = nearest_col->entity;
+					selectedEntityList.push_back(clicked_entity);
 				}
 				selectedListType = COLLIDER_UNIT;
 				break;
 			case COLLIDER_BUILDING:
-				selectedEntityList.push_back(clicked_entity);
 				clicked_entity = nearest_col->entity;
+				selectedEntityList.push_back(clicked_entity);
 				selectedListType = COLLIDER_BUILDING;
 				break;
 			case COLLIDER_RESOURCE:
-				selectedEntityList.push_back(clicked_entity);
 				clicked_entity = nearest_col->entity;
+				selectedEntityList.push_back(clicked_entity);
 				selectedListType = COLLIDER_BUILDING;
 				break;
 			}
