@@ -42,7 +42,7 @@ public:
 	int GetLife() const;
 	void SetPos(int posX, int posY);
 	void SetSpeed(int amount);
-	void SetDestination(iPoint destination);
+	bool SetDestination(iPoint destination);
 	void CalculateVelocity();
 	void LookAt();
 	void SetAnim(EntityState state);

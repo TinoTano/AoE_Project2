@@ -21,7 +21,7 @@ enum Order_state {
 };
 
 enum OrderType {
-	MOVETO, ATTACK, FOLLOWPATH, GATHER, BUILD, CREATE
+	MOVETO, ATTACK, FOLLOWPATH, GATHER, BUILD, CREATE, REACH
 
 };
 
@@ -38,6 +38,7 @@ public:
 	virtual bool CheckCompletion() { return true; };
 
 };
+
 
 class MoveToOrder : public Order {
 
@@ -71,7 +72,7 @@ public:
 
 			unit->CalculateVelocity();
 
-			fPoint vel = unit->velocity * unit->unitMovementSpeed * 0.1;// * dt;
+			fPoint vel = unit->velocity * unit->unitMovementSpeed * App->entityManager->dt;
 			roundf(vel.x);
 			roundf(vel.y);
 
@@ -85,12 +86,9 @@ public:
 
 	}
 
-	bool CheckCompletion() {
-
-		if (unit->entityPosition.DistanceTo(unit->destinationTileWorld) < 10)
-			return true;
-		else
-			return false;
+	bool CheckCompletion() 
+	{
+		return (unit->entityPosition.DistanceTo(unit->destinationTileWorld) < 10);
 	}
 
 };
@@ -144,6 +142,75 @@ public:
 
 };
 
+
+class ReachOrder : public Order {
+
+public:
+
+	Entity* entity = nullptr;
+	Unit* unit = nullptr;
+
+public:
+
+	ReachOrder(Entity* argentity) : entity(argentity) { order_type = REACH; }
+
+	void Start(Entity* argunit) {
+
+		unit = (Unit*)argunit;
+
+		if(unit->SetDestination(entity->collider->pos)){
+
+			for (list<iPoint>::iterator it = unit->path->end(); it != unit->path->begin(); it--) {
+
+				if (entity->collider->pos.DistanceTo(*it) < entity->collider->r)
+					unit->path->pop_back();
+			}
+		}
+
+		if (!unit->path->empty()) {
+			Order* new_order = new FollowPathOrder();
+			unit->order_list.push_front(new_order);
+		}
+		
+		state = EXECUTING;
+		unit->next_step = unit->entityPosition;
+	}
+
+	void Execute() {
+
+		if (!CheckCompletion()) {
+
+			if (unit->destinationTileWorld != entity->entityPosition) {
+				unit->destinationTileWorld = entity->collider->pos;
+				unit->SetTexture(MOVING);
+			}
+
+			unit->entityPosition = unit->next_step;
+			unit->collider->pos = unit->next_step;
+			unit->range->pos = unit->entityPosition;
+
+			unit->CalculateVelocity();
+
+			fPoint vel = unit->velocity * unit->unitMovementSpeed * App->entityManager->dt;
+			roundf(vel.x);
+			roundf(vel.y);
+
+			unit->next_step.x = unit->entityPosition.x + int(vel.x);
+			unit->next_step.y = unit->entityPosition.y + int(vel.y);
+
+			App->collision->quadTree->UpdateCol(unit->collider);
+		}
+		else
+			state = COMPLETED;
+
+	}
+
+	bool CheckCompletion() 
+	{
+		return (entity->collider->pos.DistanceTo(unit->entityPosition) < entity->collider->r);
+	}
+
+};
 
 class AttackOrder : public Order {
 
@@ -282,7 +349,7 @@ public:
 		}
 
 		if (!villager->collider->CheckCollision(resource->collider)) {
-			Order* new_order = new MoveToOrder(resource->entityPosition);  // should pathfind
+			Order* new_order = new ReachOrder(resource);  
 			villager->order_list.push_front(new_order);
 			state = NEEDS_START;
 		}
@@ -303,7 +370,7 @@ public:
 		else {
 			state = NEEDS_START;
 			iPoint town_hall_pos(TOWN_HALL_POS_X, TOWN_HALL_POS_Y);
-			Order* new_order = new MoveToOrder(town_hall_pos);  // should pathfind
+			Order* new_order = new ReachOrder(App->sceneManager->level1_scene->my_townCenter); 
 			villager->order_list.push_front(new_order);
 		}
 	}
@@ -343,7 +410,7 @@ public:
 		villager->state = CONSTRUCTING;
 
 		if (!villager->collider->CheckCollision(building->collider)) {
-			Order* new_order = new MoveToOrder(building->entityPosition);  // should pathfind
+			Order* new_order = new ReachOrder(building);  // should pathfind
 			villager->order_list.push_front(new_order);
 			state = NEEDS_START;
 		}
@@ -394,19 +461,17 @@ public:
 	void Execute()
 	{
 		if (CheckCompletion()) {
-			iPoint creation_place = { building->entityPosition.x , building->entityPosition.y + 150 };
-			creation_place = App->pathfinding->FindNearestAvailable(creation_place, 5);
+			iPoint creation_place = App->map->WorldToMap(building->entityPosition.x , building->entityPosition.y + 150 );
+			creation_place = App->pathfinding->FindNearestAvailable(creation_place, 10);
+			creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
 			App->entityManager->CreateUnit(creation_place.x, creation_place.y, type);
 			state = COMPLETED;
 		}
 	}
 
-	bool CheckCompletion() {
-
-		if (timer.ReadSec() > 3) //  3: unit creation time (temporal)
-			return true;
-		else
-			return false;
+	bool CheckCompletion() 
+	{
+		return (timer.ReadSec() > 3); //  3: unit creation time (temporal)
 	}
 
 };

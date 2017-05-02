@@ -225,8 +225,8 @@ bool Scene::Update(float dt)
 	}
 */
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
-		if (App->entityManager->selectedEntityList.size() > 0 && App->entityManager->selectedListType == COLLIDER_UNIT) 
-			App->entityManager->placingBuilding = (App->entityManager->placingBuilding) ? false : true;
+		if (App->entityManager->selectedEntityList.size() > 0 && App->entityManager->selectedListType == COLLIDER_UNIT)
+			App->entityManager->placingBuilding = !App->entityManager->placingBuilding;
 	}
 
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));

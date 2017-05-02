@@ -89,6 +89,7 @@ public:
 	list<Resource*> resourceList;
 
 	bool placingBuilding = false;
+	float dt = 0;
 	buildingType creatingBuildingType = ORC_BARRACKS;
 	SDL_Rect NotHUD;
 };

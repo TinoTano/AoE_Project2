@@ -46,9 +46,10 @@ bool EntityManager::PreUpdate()
 	return true;
 }
 
-bool EntityManager::Update(float dt)
+bool EntityManager::Update(float arg_dt)
 {
-	BROFILER_CATEGORY("UpdateLogic", Profiler::Color::YellowGreen);
+	dt = arg_dt;
+
 	App->input->GetMousePosition(mouseX, mouseY);
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;
@@ -133,20 +134,21 @@ bool EntityManager::Update(float dt)
 				iPoint destination = App->map->WorldToMap(mouseX, mouseY);
 				Unit* commander = (Unit*)selectedEntityList.front();
 
-				commander->SetDestination(destination);
+				if (commander->SetDestination(destination)) {
 
-				if (selectedEntityList.size() > 1) {
+					if (selectedEntityList.size() > 1) {
 
-					selectedEntityList.pop_front();
-					App->pathfinding->SharePath(commander, selectedEntityList);
-					selectedEntityList.push_front(commander);
+						selectedEntityList.pop_front();
+						App->pathfinding->SharePath(commander, selectedEntityList);
+						selectedEntityList.push_front(commander);
 
-				}
+					}
 
-				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-					unit = (Unit*)(*it);
-					Order* new_order = (Order*)new FollowPathOrder();
-					unit->order_list.push_front(new_order);
+					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+						unit = (Unit*)(*it);
+						Order* new_order = (Order*)new FollowPathOrder();
+						unit->order_list.push_front(new_order);
+					}
 				}
 			}
 		}

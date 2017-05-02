@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Input.h"
 #include "p2Log.h"
+#include "Entity.h"
 #include "Render.h"
 #include "Window.h"
 #include "QuadTree.h"
@@ -126,14 +127,12 @@ bool Collision::PreUpdate()
 
 bool Collision::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) 
 		debug = !debug;
-	}
-
-	if (debug) {
+	
+	if (debug) 
 		DebugDraw();
-	}
-
+	
 	return true;
 }
 

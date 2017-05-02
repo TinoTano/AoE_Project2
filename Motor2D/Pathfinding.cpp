@@ -59,7 +59,7 @@ bool PathFinding::CheckBoundaries(const iPoint& pos) const
 bool PathFinding::IsWalkable(const iPoint& pos) const
 {
 	uchar t = GetTileAt(pos);
-	return t != INVALID_WALK_CODE && t > 0;
+	return t != INVALID_WALK_CODE;
 }
 
 // Utility: return the walkability value of a tile
@@ -333,13 +333,16 @@ void PathFinding::CalculatePath(Path * path)
 list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
 	iPoint adjusted_orig = origin;
+	iPoint adjusted_origWorld = App->map->MapToWorld(adjusted_orig.x, adjusted_orig.y);
 	iPoint adjusted_dest = destination;
+	iPoint adjusted_destWorld = App->map->MapToWorld(adjusted_dest.x, adjusted_dest.y);
+
 	list<iPoint>* ret = new list<iPoint>;
 
-	if (!IsWalkable(origin) || App->collision->IsOccupied(origin)) //this shouldn't happen, just as safety mesure
+	if (!IsWalkable(origin) || App->collision->IsOccupied(adjusted_origWorld)) //this shouldn't happen, just as safety mesure
 		adjusted_orig = FindNearestAvailable(origin);    
 
-	if (!IsWalkable(destination) || App->collision->IsOccupied(destination))
+	if (!IsWalkable(destination) || App->collision->IsOccupied(adjusted_destWorld))
 		adjusted_dest = FindNearestAvailable(destination);
 
 	if (adjusted_orig.x == -1 || adjusted_dest.x == -1 || adjusted_dest == adjusted_orig) {
@@ -437,7 +440,7 @@ bool PathFinding::DeletePath(list<iPoint>* path_to_delete) {
 
 iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, const iPoint& target, list<iPoint>* cells_to_ignore) const {
 
-	iPoint adj;
+	iPoint adj, adjWorld;
 	iPoint ret{ -1, -1 };
 	bool must_ignore = false;
 
@@ -448,8 +451,9 @@ iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, con
 				must_ignore = false;
 
 				adj.create(tile.x + i, tile.y + j);
+				adjWorld = App->map->MapToWorld(adj.x, adj.y);
 
-				if (App->pathfinding->IsWalkable(adj) && !App->collision->IsOccupied(adj)) {
+				if (App->pathfinding->IsWalkable(adj) && !App->collision->IsOccupied(adjWorld)) {
 
 					if (cells_to_ignore != nullptr) {
 						for (list<iPoint>::iterator it = cells_to_ignore->begin(); it != cells_to_ignore->end(); it++) {
@@ -475,6 +479,9 @@ iPoint PathFinding::FindNearestAvailable(const iPoint& tile, int max_radius, con
 				}
 			}
 		}
+
+		if(ret.x != -1 && ret.y != -1)
+			return ret;
 	}
 	return ret;
 

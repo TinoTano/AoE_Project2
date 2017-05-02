@@ -157,7 +157,7 @@ void Unit::SetSpeed(int amount)
 	unitMovementSpeed = amount;
 }
 
-void Unit::SetDestination(iPoint destination)
+bool Unit::SetDestination(iPoint destination)
 {
 
 	if (path != nullptr) {
@@ -167,6 +167,8 @@ void Unit::SetDestination(iPoint destination)
 
 	iPoint origin = App->map->WorldToMap(collider->pos.x, collider->pos.y);
 	path = App->pathfinding->CreatePath(origin, destination);
+
+	return (!path->empty());
 }
 
 void Unit::CalculateVelocity()
