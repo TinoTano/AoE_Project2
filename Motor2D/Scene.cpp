@@ -170,9 +170,9 @@ bool Scene::Start()
 
 	App->fog->Start(); // Goes first!
 
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 180, GONDOR_HERO);
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
 	App->fog->AddEntity(hero);
-	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X - 100, TOWN_HALL_POS_Y + 150, ELF_VILLAGER));
+	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER));
 	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X + 220, TOWN_HALL_POS_Y + 150, GOBLIN_SOLDIER));
 	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER));
 
@@ -229,9 +229,18 @@ bool Scene::Update(float dt)
 		LoadScene();
 	}
 */
+
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 		if (App->entityManager->selectedEntityList.size() > 0 && App->entityManager->selectedListType == COLLIDER_UNIT)
-			App->entityManager->placingBuilding = !App->entityManager->placingBuilding;
+			if (!App->entityManager->placingBuilding) {
+				int x, y;
+				App->input->GetMousePosition(x, y);
+				App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, ORC_BARRACKS);
+				App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+				App->entityManager->placingBuilding = true;
+				App->entityManager->buildingToCreate->waitingToPlace = true;
+				App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+			}
 	}
 
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));

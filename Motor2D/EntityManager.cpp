@@ -157,18 +157,23 @@ bool EntityManager::Update(float arg_dt)
 	if (mouseY > NotHUD.y - CAMERA_OFFSET_Y && mouseY < NotHUD.h - CAMERA_OFFSET_Y) {
 
 		if (placingBuilding) {
-			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-				Building* building = CreateBuilding(mouseX, mouseY, creatingBuildingType);
-				building->Life = 1;
-				building->state = BEING_BUILT;
+			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP && buildingToCreate->canBePlaced) {
+				buildingToCreate->Life = 1;
+				buildingToCreate->state = BEING_BUILT;
+				buildingToCreate->entityTexture = buildingToCreate->constructingPhase1;
+				buildingToCreate->GetBuildingBoundaries();
+				buildingToCreate->collider->type = COLLIDER_BUILDING;
+				buildingToCreate->waitingToPlace = false;
+				App->fog->AddEntity(buildingToCreate);
 
 				if (!selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
 
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
 						if (unit->IsVillager) {
-							Order* new_order = (Order*)new BuildOrder(building);
+							Order* new_order = (Order*)new BuildOrder(buildingToCreate);
 							unit->order_list.push_front(new_order);
+							unit->buildingToCreate = buildingToCreate;
 						}
 					}
 				}
@@ -213,16 +218,9 @@ bool EntityManager::Update(float arg_dt)
 	}
 
 	if (placingBuilding) {
-		Sprite aux;
-
-		aux.texture = buildingsDB[creatingBuildingType]->buildingIdleTexture;
-		uint width, height;
-		App->tex->GetSize(aux.texture, width, height);
-		aux.rect = { 0,0,(int)width,(int)height };
-		aux.priority = 12500;
-		aux.pos = { mouseX - aux.rect.w / 2, mouseY - aux.rect.h / 2 };
-		App->render->sprites_toDraw.push_back(aux);
-
+		buildingToCreate->entityPosition = { mouseX, mouseY };
+		buildingToCreate->collider->pos = { buildingToCreate->entityPosition.x,buildingToCreate->entityPosition.y };
+		buildingToCreate->range->pos = { buildingToCreate->entityPosition.x,buildingToCreate->entityPosition.y };
 	}
 
 	return true;
@@ -499,6 +497,9 @@ bool EntityManager::LoadGameData()
 
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
+			string constructingPhase1Path = buildingNodeInfo.child("Textures").child("ConstructingPhase1").attribute("value").as_string();
+			string constructingPhase2Path = buildingNodeInfo.child("Textures").child("ConstructingPhase2").attribute("value").as_string();
+			string constructingPhase3Path = buildingNodeInfo.child("Textures").child("ConstructingPhase3").attribute("value").as_string();
 
 			buildingTemplate->faction = (Faction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
@@ -509,6 +510,9 @@ bool EntityManager::LoadGameData()
 
 			buildingTemplate->buildingIdleTexture = App->tex->Load(idleTexturePath.c_str());
 			buildingTemplate->buildingDieTexture = App->tex->Load(dieTexturePath.c_str());
+			buildingTemplate->constructingPhase1 = App->tex->Load(constructingPhase1Path.c_str());
+			buildingTemplate->constructingPhase2 = App->tex->Load(constructingPhase2Path.c_str());
+			buildingTemplate->constructingPhase3 = App->tex->Load(constructingPhase3Path.c_str());
 
 			buildingTemplate->type = (buildingType)buildingNodeInfo.child("Info").child("ID").attribute("value").as_int();
 
@@ -705,7 +709,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 			}
 		}
 	}
-	else {    // c1->type == COLLIDER_UNIT
+	else if (col_data.c1->type == COLLIDER_UNIT) {    // c1->type == COLLIDER_UNIT
 
 		unit = col_data.c1->GetUnit();
 		Unit* unit2 = nullptr;

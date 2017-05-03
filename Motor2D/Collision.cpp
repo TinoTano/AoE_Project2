@@ -16,30 +16,41 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_UNIT][COLLIDER_RESOURCE] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_UNIT][COLLIDER_LOS] = false;
+	matrix[COLLIDER_UNIT][COLLIDER_CREATING_BUILDING] = true;
 
 	matrix[COLLIDER_BUILDING][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_BUILDING][COLLIDER_BUILDING] = false;
 	matrix[COLLIDER_BUILDING][COLLIDER_RESOURCE] = false;
 	matrix[COLLIDER_BUILDING][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_BUILDING][COLLIDER_LOS] = false;
+	matrix[COLLIDER_BUILDING][COLLIDER_CREATING_BUILDING] = true;
 
 	matrix[COLLIDER_RESOURCE][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_RESOURCE][COLLIDER_BUILDING] = false;
 	matrix[COLLIDER_RESOURCE][COLLIDER_RESOURCE] = false;
 	matrix[COLLIDER_RESOURCE][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_RESOURCE][COLLIDER_LOS] = false;
+	matrix[COLLIDER_RESOURCE][COLLIDER_CREATING_BUILDING] = true;
 
 	matrix[COLLIDER_RANGE][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_RANGE][COLLIDER_BUILDING] = true;
 	matrix[COLLIDER_RANGE][COLLIDER_RESOURCE] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_LOS] = false;
+	matrix[COLLIDER_RANGE][COLLIDER_CREATING_BUILDING] = false;
 
 	matrix[COLLIDER_LOS][COLLIDER_UNIT] = false;
 	matrix[COLLIDER_LOS][COLLIDER_BUILDING] = false;
 	matrix[COLLIDER_LOS][COLLIDER_RESOURCE] = false;
 	matrix[COLLIDER_LOS][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_LOS][COLLIDER_LOS] = false;
+	matrix[COLLIDER_LOS][COLLIDER_CREATING_BUILDING] = false;
+
+	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_UNIT] = true;
+	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_BUILDING] = true;
+	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_RESOURCE] = true;
+	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_RANGE] = false;
+	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_LOS] = false;
 
 }
 
@@ -82,7 +93,7 @@ bool Collision::PreUpdate()
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
 
-		if ((*col1)->type == COLLIDER_UNIT){// || (*col1)->type == COLLIDER_RANGE) {
+		if ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING) {// || (*col1)->type == COLLIDER_RANGE) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
@@ -185,7 +196,7 @@ Building* Collider::GetBuilding() {
 
 	Building* building = nullptr;
 
-	if (type == COLLIDER_BUILDING)
+	if (type == COLLIDER_BUILDING || type == COLLIDER_CREATING_BUILDING)
 		building = (Building*)entity;
 
 	return building;

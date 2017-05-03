@@ -450,8 +450,13 @@ public:
 	bool CheckCompletion() {
 
 		if (building != nullptr) {
-			if (building->Life == building->MaxLife)
+			if (building->Life >= building->MaxLife) {
+				building->Life = building->MaxLife;
+				building->entityTexture = building->buildingIdleTexture;
+				building->GetBuildingBoundaries();
+				building->collider->type = COLLIDER_BUILDING;
 				return true;
+			}
 		}
 		return false;
 	}

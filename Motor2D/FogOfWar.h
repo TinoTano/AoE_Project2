@@ -70,7 +70,7 @@ struct my_unit
 {
 	list<iPoint>	frontier;
 	list<iPoint>	current_points;
-	iPoint			pos;
+	iPoint			pos = { 0,0 };
 	int				id = -1;
 };
 
@@ -123,10 +123,10 @@ public:
 
 	// Atlas
 
-	SDL_Texture*				texture;
+	SDL_Texture*				texture = nullptr;
 	list<enemy_unit>	        simple_char_on_fog_pos;
-	iPoint				        prev_pos;
-	iPoint				        next_pos;
+	iPoint				        prev_pos = { 0,0 };
+	iPoint				        next_pos = { 0,0 };
 	vector<my_unit>			    players_on_fog;
 	uint*						data = nullptr;
 
