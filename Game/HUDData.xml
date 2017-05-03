@@ -31,6 +31,20 @@
 			</HUD>
 			<HUD>
 				<Info>
+					<Name value = "WINDOW"/>
+					<ID value = "2"/>
+					<Position x = "0" y = "0"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/tech-tree-parchment-drop-down-background.png"/>
+					<Rect x = "0" y = "0" w="120" h="266"/>
+				</Texture>
+				<Scenes>
+					<Scene value = "MENUSCENE"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
 					<Name value = "TOP"/>
 					<ID value = "0"/>
 					<Position x = "0" y = "0"/>
@@ -90,7 +104,7 @@
 	<HUD>
 				<Info>
 					<Name value = "SKIRMISH"/>
-					<ID value = "2"/>
+					<ID value = "3"/>
 					<Position x = "200" y = "30"/>
 					<Tier value = "2"/>
 				</Info>
@@ -111,7 +125,7 @@
 			<HUD>
 				<Info>
 					<Name value = "OPTIONS"/>
-					<ID value = "3"/>
+					<ID value = "4"/>
 					<Position x = "200" y = "100"/>
 					<Tier value = "2"/>
 				</Info>
@@ -132,7 +146,7 @@
 			<HUD>
 				<Info>
 					<Name value = "QUIT"/>
-					<ID value = "4"/>
+					<ID value = "5"/>
 					<Position x = "200" y = "200"/>
 					<Tier value = "2"/>
 				</Info>
@@ -145,6 +159,48 @@
 				</Blit>
 				<Detect>
 					<Section x = "200" y = "200" w="356" h="59"/>
+				</Detect>
+				<Scenes>
+					<Scene value = "MENUSCENE"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "MUTE"/>
+					<ID value = "6"/>
+					<Position x = "0" y = "0"/>
+					<Tier value = "2"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/button.png"/>
+				</Texture>
+				<Blit>
+					<Section x = "20" y = "0" w="100" h="30"/>
+					<Section x = "20" y = "30" w="100" h="30"/>
+				</Blit>
+				<Detect>
+					<Section x = "0" y = "0" w="100" h="30"/>
+				</Detect>
+				<Scenes>
+					<Scene value = "MENUSCENE"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "FULLSCREEN"/>
+					<ID value = "7"/>
+					<Position x = "0" y = "0"/>
+					<Tier value = "2"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/button.png"/>
+				</Texture>
+				<Blit>
+					<Section x = "20" y = "0" w="100" h="30"/>
+					<Section x = "20" y = "30" w="100" h="30"/>
+				</Blit>
+				<Detect>
+					<Section x = "0" y = "0" w="100" h="30"/>
 				</Detect>
 				<Scenes>
 					<Scene value = "MENUSCENE"/>

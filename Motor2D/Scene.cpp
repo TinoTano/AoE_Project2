@@ -160,7 +160,7 @@ bool Scene::Start()
 
 	// MUSIC
 
-	App->audio->PlayMusic("audio/music/m_scene.ogg");
+	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
 	// ---------------------
 	// DONE!
 
@@ -246,10 +246,10 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	// --------------------------------------------
+	//						UI
+	//---------------------------------------------
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
-
-	if (buttons[MENU]->current == HOVER || buttons[0]->current == CLICKIN) App->gui->cursor->SetCursor(3);
-	else App->gui->cursor->SetCursor(0);
 
 	if (buttons[MENU]->current == CLICKUP) {
 		UpdateVillagers(5, 10);
@@ -261,10 +261,19 @@ bool Scene::Update(float dt)
 		ui_menu.WindowOff();
 		App->gui->Unfocus();
 	}
-	if (game_finished == false)
-	{
-		UpdateTime(timer.ReadSec());
+
+	bool cursoron = false;
+	for (uint i = 0; i < buttons.size(); ++i) {
+		if (buttons[i]->current == HOVER || buttons[i]->current == CLICKIN)
+			cursoron = true;
 	}
+
+	if (cursoron == true)
+		App->gui->cursor->SetCursor(3);
+	else App->gui->cursor->SetCursor(0);
+
+
+	// ---------------------------------------
 
 
 	if (timer.ReadSec() > (quadtree_flag + 20)) {

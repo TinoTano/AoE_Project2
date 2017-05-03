@@ -18,10 +18,6 @@ struct SDL_Texture;
 class Unit;
 class Building;
 class Resource;
-
-enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL };
-enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
-
 class Scene : public SceneElement
 {
 public:
@@ -95,6 +91,10 @@ public:
 	Label* wood, *food, *gold, *stone, *villagers;
 	Unit* guard1;
 	Unit* guard2;
+
+	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL };
+	enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
+
 };
 
 #endif // __SCENE_H__
