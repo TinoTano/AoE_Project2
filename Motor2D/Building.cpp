@@ -65,10 +65,7 @@ bool Building::Update(float dt)
 {
 
 	if (Life == -1) {
-		App->collision->DeleteCollider(collider);
-		App->collision->DeleteCollider(range);
-		state = DESTROYED;
-		App->entityManager->DeleteBuilding(this);
+		Destroy();
 		return false;
 	}
 
@@ -147,6 +144,15 @@ bool Building::Draw()
 	return true;
 }
 
+void Building::Destroy() {
+
+	App->collision->DeleteCollider(collider);
+	App->collision->DeleteCollider(range);
+	App->collision->DeleteCollider(los);
+	state = DESTROYED;
+	App->entityManager->DeleteBuilding(this);
+
+}
 
 pugi::xml_node Building::LoadBuildingInfo(buildingType type)
 {

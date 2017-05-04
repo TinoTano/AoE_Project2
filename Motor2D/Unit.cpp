@@ -73,10 +73,8 @@ bool Unit::Update(float dt)
 	r = currentAnim->GetCurrentFrame();
 
 	if (Life == -1) {
-		SetTexture(DESTROYED);
-		App->collision->DeleteCollider(collider);
-		App->collision->DeleteCollider(range);
-		state = DESTROYED;
+		Destroy();
+		return false;
 	}
 
 	if (state != DESTROYED) {
@@ -111,6 +109,17 @@ bool Unit::Update(float dt)
 	}
 
 	return true;
+}
+
+void Unit::Destroy() {
+
+	SetTexture(DESTROYED);
+	App->collision->DeleteCollider(collider);
+	App->collision->DeleteCollider(range);
+	App->collision->DeleteCollider(los);
+	state = DESTROYED;
+	App->entityManager->DeleteUnit(this);
+
 }
 
 bool Unit::Draw()

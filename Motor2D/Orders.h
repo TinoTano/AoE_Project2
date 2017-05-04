@@ -415,10 +415,8 @@ public:
 		if (resource != nullptr) {
 			if (villager->curr_capacity >= villager->max_capacity || resource->Life <= 0) {
 
-				if (resource->Life <= 0) {
-					App->collision->DeleteCollider(resource->collider);
-					App->entityManager->DeleteResource(resource);
-				}
+				if (resource->Life <= 0)
+					resource->Destroy();
 
 				return true;
 			}
@@ -460,11 +458,8 @@ public:
 				//building->Life += MIN(building->MaxLife - building->Life, villager->buildingSpeed);
 				building->Life += 200;
 		}
-		else {
+		else 
 			state = COMPLETED;
-			building = nullptr;
-			villager = nullptr;
-		}
 	}
 
 	bool CheckCompletion() {

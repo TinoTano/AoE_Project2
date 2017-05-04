@@ -24,7 +24,7 @@ public:
 	bool Update(float dt);
 	
 	bool Draw();
-
+	void Destroy();
 	void Damaged();
 
 private:

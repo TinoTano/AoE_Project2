@@ -37,6 +37,7 @@ public:
 
 	bool Update(float dt);
 	bool Draw();
+	void Destroy();
 
 	unitType GetType()const;
 	int GetLife() const;

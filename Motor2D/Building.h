@@ -24,6 +24,7 @@ public:
 	bool Update(float dt);
 	bool Draw();
 	bool IsEnemy() const;
+	void Destroy();
 	void GetBuildingBoundaries();
 	pugi::xml_node LoadBuildingInfo(buildingType type);
 

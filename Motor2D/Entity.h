@@ -32,6 +32,7 @@ public:
 	virtual bool Update(float dt);
 	virtual bool Draw();
 	virtual bool HandleInput();
+	virtual void Destroy();
 	 
 	virtual bool Load(pugi::xml_node&);
 	virtual bool Save(pugi::xml_node&) const;

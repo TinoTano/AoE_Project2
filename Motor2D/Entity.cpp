@@ -73,6 +73,9 @@ bool Entity::HandleInput()
 	return true;
 }
 
+void Entity::Destroy()
+{}
+
 
 bool Entity::Load(pugi::xml_node &)
 {

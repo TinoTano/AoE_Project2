@@ -73,3 +73,10 @@ void Resource::Damaged() {
 	resourceRect.x = 0, resourceRect.y = 0, resourceRect.w = w, resourceRect.h = h;
 
 }
+
+void Resource::Destroy() {
+
+	App->collision->DeleteCollider(collider);
+	App->entityManager->DeleteResource(this);
+
+}
