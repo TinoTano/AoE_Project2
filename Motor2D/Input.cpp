@@ -62,13 +62,17 @@ bool Input::PreUpdate()
 		}
 		else
 		{
-			if (keys[i] == 0)
+			/*if (keys[i] == 0)
 			{
 				if (keyboard[i] != KEY_IDLE)
 					keyboard[i] = KEY_UP;
 				else
 					keyboard[i] = KEY_IDLE;
-			}
+			}*/
+			if (keyboard[i] == KEY_REPEAT || keyboard[i] == KEY_DOWN)
+				keyboard[i] = KEY_UP;
+			else
+				keyboard[i] = KEY_IDLE;
 		}
 	}
 

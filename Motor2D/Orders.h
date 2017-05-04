@@ -442,8 +442,14 @@ public:
 	void Execute()
 	{
 		if (!CheckCompletion()) {
-			if (villager->currentAnim->Finished()) 
-				building->Life += MIN(building->MaxLife - building->Life, villager->buildingSpeed);
+			if (villager->currentAnim->Finished())
+				//building->Life += MIN(building->MaxLife - building->Life, villager->buildingSpeed);
+				building->Life += 200;
+		}
+		else {
+			state = COMPLETED;
+			building = nullptr;
+			villager = nullptr;
 		}
 	}
 
@@ -455,6 +461,7 @@ public:
 				building->entityTexture = building->buildingIdleTexture;
 				building->GetBuildingBoundaries();
 				building->collider->type = COLLIDER_BUILDING;
+				building->state = IDLE;
 				return true;
 			}
 		}
