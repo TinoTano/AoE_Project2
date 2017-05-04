@@ -37,8 +37,6 @@ void Entity::drawLife(iPoint barPos) {
 	int percent = ((MaxLife - Life) * 100) / MaxLife;
 	int barPercent = (percent * HPBAR_WIDTH) / 100;
 
-	entityPosition.x - (HPBAR_WIDTH / 2);
-
 	bar.rect.x = bar2.rect.x = barPos.x;
 	bar.rect.y = bar2.rect.y = barPos.y;
 	bar.rect.w = HPBAR_WIDTH;

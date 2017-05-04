@@ -40,6 +40,7 @@ Building::Building(int posX, int posY, Building* building)
 
 	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider(entityPosition, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
+	los = App->collision->AddCollider(entityPosition, imageWidth * 1.5, COLLIDER_LOS, App->entityManager, (Entity*)this);
 
 	attack_timer.Start();
 }
@@ -109,7 +110,7 @@ bool Building::Draw()
 	}
 
 	if (lifebar_timer.ReadSec() < 5) {
-		iPoint p( entityPosition.x , entityPosition.y - (imageHeight / 2) );
+		iPoint p( entityPosition.x - 25, entityPosition.y - (imageHeight / 2) );
 		drawLife(p);
 	}
 

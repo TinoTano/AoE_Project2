@@ -1,4 +1,4 @@
-#ifndef _Order_
+#ifndef _Oder_
 #define _Order_
 
 #include "Unit.h"
@@ -207,6 +207,14 @@ public:
 			unit->next_step.x = unit->entityPosition.x + int(vel.x);
 			unit->next_step.y = unit->entityPosition.y + int(vel.y);
 
+			// ===============================================================
+			// Moving fog of war
+			App->fog->Update(unit->prev_pos, unit->next_pos, unit->entityID);			        // This updates the FOW
+			App->entityManager->ManageCharactersVisibility();		        // This updates the entities visibility
+			unit->prev_pos = unit->next_pos;
+			unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
+			// ===============================================================
+
 			App->collision->quadTree->UpdateCol(unit->collider);
 		}
 		else
@@ -216,7 +224,10 @@ public:
 
 	bool CheckCompletion() 
 	{
-		return (entity->collider->pos.DistanceTo(unit->entityPosition) < entity->collider->r);
+		if (entity->collider->GetUnit())
+			return (entity->collider->pos.DistanceTo(unit->entityPosition) < unit->range->r);
+		else
+			return (entity->collider->pos.DistanceTo(unit->entityPosition) < (entity->collider->r + unit->collider->r));
 	}
 
 };
@@ -235,11 +246,19 @@ public:
 
 	void Start(Entity* entity)
 	{
-		state = EXECUTING;
 
 		if (unit = entity->collider->GetUnit()) {
-			unit->SetTexture(ATTACKING);
-			unit->state = ATTACKING;
+		unit->state = ATTACKING;
+
+			if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->range->r) {
+
+				Order* new_order = new ReachOrder(target);  // should pathfind
+				unit->order_list.push_front(new_order);
+			}
+			else {
+				unit->SetTexture(ATTACKING);
+				state = EXECUTING;
+			}
 		}
 		else if (building = entity->collider->GetBuilding()) {
 			building->attack_timer.Start();
@@ -248,44 +267,39 @@ public:
 
 		Unit* enemy_unit = nullptr;
 		if (enemy_unit = target->collider->GetUnit()) {
+			if (enemy_unit->entityPosition.DistanceTo(unit->entityPosition) < enemy_unit->los->r) {
 
-			if (enemy_unit->state == ATTACKING) {
-
-				for (list<Order*>::iterator it = enemy_unit->order_list.begin(); it != enemy_unit->order_list.end(); it++) {
-					if ((*it)->order_type == ATTACK) {
-						AttackOrder* atk_order = (AttackOrder*)(*it);
-						if (atk_order->target == entity)
-							enemy_unit->order_list.erase(it);
+					for (list<Order*>::iterator it = enemy_unit->order_list.begin(); it != enemy_unit->order_list.end(); it++) {
+						if ((*it)->order_type == ATTACK) {
+							AttackOrder* atk_order = (AttackOrder*)(*it);
+							if (atk_order->target == entity)
+								return;
+						}
 					}
-				}
+
+					Order* new_order = (Order*)new AttackOrder(entity);
+					enemy_unit->order_list.push_back(new_order);
 			}
-
-			if (enemy_unit->order_list.front()->order_type == MOVETO)
-				enemy_unit->order_list.pop_front();
 		}
-
-		Order* new_order = (Order*)new AttackOrder(entity);
-		enemy_unit->order_list.push_front(new_order);
 	}
+
 
 	void Execute() {
 
 		if (!CheckCompletion()) {
 
 			if (unit) {
-				if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->range->r) {
-
-					Order* new_order = new MoveToOrder(target->entityPosition);  // should pathfind
+				if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->los->r) {
+					Order* new_order = new ReachOrder(target);
 					unit->order_list.push_front(new_order);
+					state = NEEDS_START;
 				}
 				else if (unit->currentAnim->Finished())
 					target->Life -= unit->Attack - target->Defense;
 			}
 			else if (building) {
 
-				if (building->entityPosition.DistanceTo(target->entityPosition) < building->range->r &&
-					building->attack_timer.ReadSec() > 0.5) {
-
+				if (building->attack_timer.ReadSec() > 0.5) {
 					target->Life -= building->Attack - target->Defense;
 					building->attack_timer.Start();
 				}

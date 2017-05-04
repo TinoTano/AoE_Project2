@@ -676,32 +676,24 @@ void EntityManager::OnCollision(Collision_data& col_data)
 				Order* new_order = (Order*)new AttackOrder(col_data.c2->entity);
 				building->order_list.push_front(new_order);
 			}
-			else if(unit = col_data.c1->entity->collider->GetUnit()){
+			else if (unit = col_data.c1->entity->collider->GetUnit()) {
 
 				if (unit->state == ATTACKING || unit->state == IDLE || unit->state == PATROLLING) {
 
-					if (unit->state == ATTACKING || unit->state == PATROLLING) {
+					if (unit->state == ATTACKING) {
 
-						if (unit->state == ATTACKING) {
-
-							for (list<Order*>::iterator it = unit->order_list.begin(); it != unit->order_list.end(); it++) {
-								if ((*it)->order_type == ATTACK) {
-									AttackOrder* atk_order = (AttackOrder*)(*it);
-									if (atk_order->target == col_data.c2->entity)
-										unit->order_list.erase(it);
-								}
+						for (list<Order*>::iterator it = unit->order_list.begin(); it != unit->order_list.end(); it++) {
+							if ((*it)->order_type == ATTACK) {
+								AttackOrder* atk_order = (AttackOrder*)(*it);
+								if (atk_order->target == col_data.c2->entity)
+									unit->order_list.erase(it);
 							}
 						}
-
-						if (!unit->order_list.empty()) {
-							if (unit->order_list.front()->order_type == MOVETO)
-								unit->order_list.pop_front();
-						}
 					}
-					
-					Order* new_order = (Order*)new AttackOrder(col_data.c2->entity);
-					unit->order_list.push_front(new_order);
 				}
+
+				Order* new_order = (Order*)new AttackOrder(col_data.c2->entity);
+				unit->order_list.push_front(new_order);
 			}
 		}
 	}

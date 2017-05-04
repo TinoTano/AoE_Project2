@@ -58,6 +58,7 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	collider = App->collision->AddCollider(entityPosition, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider(entityPosition, r.w , COLLIDER_RANGE, App->entityManager, (Entity*)this);
+	los = App->collision->AddCollider(entityPosition, r.w * 4, COLLIDER_LOS, App->entityManager, (Entity*)this);
 
 }
 
@@ -123,7 +124,31 @@ bool Unit::Draw()
 	aux.priority = entityPosition.y - (r.h / 2) + r.h;
 	aux.flip = currentAnim->flip;
 
+	Sprite bar;
+	Sprite bar2;
+
+	bar.rect.x = destinationTileWorld.x;
+	bar.rect.y = destinationTileWorld.y;
+
+	iPoint p_map = App->map->WorldToMap(entityPosition.x, entityPosition.y);
+	iPoint p_world = App->map->MapToWorld(p_map.x, p_map.y);
+	bar2.rect.x = p_world.x;
+	bar2.rect.y = p_world.y;
+	bar.rect.w = bar2.rect.w = 5; 
+	bar.rect.h = bar2.rect.h = 5;
+	bar.priority = entityPosition.y + 10;
+	bar.r = 255;
+	bar.g = 0;
+	bar.b = 0;
+
+	bar2.priority = entityPosition.y + 11;
+	bar2.r = 0;
+	bar2.g = 255;
+	bar2.b = 0;
+
 	App->render->sprites_toDraw.push_back(aux);
+	App->render->sprites_toDraw.push_back(bar);
+	App->render->sprites_toDraw.push_back(bar2);
 
 	if (last_life != Life) {
 		lifebar_timer.Start();
@@ -131,7 +156,7 @@ bool Unit::Draw()
 	}
 
 	if (lifebar_timer.ReadSec() < 5)
-		drawLife({ entityPosition.x , entityPosition.y - (r.h / 2) });
+		drawLife({ entityPosition.x - 25, entityPosition.y - (r.h / 2) }); //25:  HPBAR_WIDTH / 2
 
 	return true;
 }

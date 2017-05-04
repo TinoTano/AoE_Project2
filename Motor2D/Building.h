@@ -48,7 +48,7 @@ public:
 	SDL_Texture* buildingDieTexture = nullptr;
 	uint imageWidth = 0;
 	uint imageHeight = 0;
-	Collider* LineOfSight = nullptr;
+	Collider* los = nullptr;
 	Collider* range = nullptr;
 	list<Order*> order_list;
 
