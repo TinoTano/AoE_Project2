@@ -133,18 +133,14 @@ bool Building::Draw()
 	aux.rect.h = imageHeight;
 
 	App->render->sprites_toDraw.push_back(aux);
-	
+
 	if (last_life != Life) {
 		lifebar_timer.Start();
 		last_life = Life;
 	}
 
 	if (lifebar_timer.ReadSec() < 5) {
-<<<<<<< HEAD
-		iPoint p( entityPosition.x - 25, entityPosition.y - (imageHeight / 2) );
-=======
-		iPoint p( entityPosition.x, entityPosition.y - (imageHeight / 2) );
->>>>>>> origin/master
+		iPoint p(entityPosition.x - 25, entityPosition.y - (imageHeight / 2));
 		drawLife(p);
 	}
 
@@ -166,4 +162,3 @@ bool Building::Save(pugi::xml_node &) const
 {
 	return true;
 }
-
