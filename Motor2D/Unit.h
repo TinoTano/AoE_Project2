@@ -72,6 +72,7 @@ public:
 	Collider* los = nullptr;
 	Collider* range = nullptr;
 	list<Order*> order_list;
+	Building* buildingToCreate = nullptr;
 
 
 	//Animations
@@ -87,8 +88,8 @@ public:
 
 	Animation* currentAnim = nullptr;
 
-	iPoint				prev_pos;
-	iPoint				next_pos;
+	iPoint				prev_pos = { 0,0 };
+	iPoint				next_pos = { 0,0 };
 
 };
 

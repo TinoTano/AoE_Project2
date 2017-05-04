@@ -29,6 +29,9 @@ Building::Building(int posX, int posY, Building* building)
 	buildingBuildTime = building->buildingBuildTime;
 	buildingIdleTexture = building->buildingIdleTexture;
 	buildingDieTexture = building->buildingDieTexture;
+	constructingPhase1 = building->constructingPhase1;
+	constructingPhase2 = building->constructingPhase2;
+	constructingPhase3 = building->constructingPhase3;
 	Life = building->Life;
 	MaxLife = building->MaxLife;
 	Attack = building->Attack;
@@ -36,7 +39,7 @@ Building::Building(int posX, int posY, Building* building)
 	canAttack = building->canAttack;
 
 	entityTexture = buildingIdleTexture;
-	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
+	GetBuildingBoundaries();
 
 	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider(entityPosition, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
@@ -51,6 +54,11 @@ Building::~Building()
 bool Building::IsEnemy() const
 {
 	return (bool)faction;
+}
+
+void Building::GetBuildingBoundaries()
+{
+	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
 }
 
 bool Building::Update(float dt)
@@ -88,6 +96,28 @@ bool Building::Update(float dt)
 		//blit fire animation
 	}
 
+	if (state == BEING_BUILT) {
+		if (Life > MaxLife / 1.5f) {
+			entityTexture = constructingPhase3;
+			GetBuildingBoundaries();
+		}
+		else if (Life > MaxLife / 3) {
+			entityTexture = constructingPhase2;
+			GetBuildingBoundaries();
+		}
+	}
+
+	if (waitingToPlace) {
+		if (collider->colliding) {
+			SDL_SetTextureColorMod(entityTexture, 255, 0, 0);
+			canBePlaced = false;
+		}
+		else {
+			SDL_SetTextureColorMod(entityTexture, 255, 255, 255);
+			canBePlaced = true;
+		}
+	}
+
 	return true;
 }
 
@@ -110,7 +140,11 @@ bool Building::Draw()
 	}
 
 	if (lifebar_timer.ReadSec() < 5) {
+<<<<<<< HEAD
 		iPoint p( entityPosition.x - 25, entityPosition.y - (imageHeight / 2) );
+=======
+		iPoint p( entityPosition.x, entityPosition.y - (imageHeight / 2) );
+>>>>>>> origin/master
 		drawLife(p);
 	}
 

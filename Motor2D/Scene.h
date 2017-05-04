@@ -18,10 +18,6 @@ struct SDL_Texture;
 class Unit;
 class Building;
 class Resource;
-
-enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL };
-enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
-
 class Scene : public SceneElement
 {
 public:
@@ -54,15 +50,15 @@ public:
 	uint villagers_curr = 0, villagers_total = 0;
 	bool game_finished;
 private:
-	SDL_Texture* debug_tex;
+	SDL_Texture* debug_tex = nullptr;
 	bool debug = false;
-	Resource* tree;
+	Resource* tree = nullptr;
 	bool start = false;
 	// TIMER
 
 	// UI ELEMENTS
 	WindowUI ui_menu;
-	Label* back_to_menu_lbl, *quit_game_lbl, *save_game_lbl, *cancel_lbl;
+	Label* back_to_menu_lbl = nullptr, *quit_game_lbl = nullptr, *save_game_lbl = nullptr, *cancel_lbl = nullptr;
 
 	vector<Info> elements;
 	vector<Image*> images;
@@ -76,7 +72,7 @@ private:
 
 	Timer timer;
 	int quadtree_flag = 0;
-	Label* Timer_lbl;
+	Label* Timer_lbl = nullptr;
 	void UpdateTime(float time);
 	void TimeEvents();
 	Timer orc_timer, troll_timer;
@@ -84,17 +80,21 @@ private:
 	uint wave = 0, orcs_to_spawn = 0, trolls_to_spawn = 0;
 public:
 	///////
-	Building* my_townCenter;
-	Building* enemy_townCenter;
-	Unit* hero;
+	Building* my_townCenter = nullptr;
+	Building* enemy_townCenter = nullptr;
+	Unit* hero = nullptr;
 	int woodCount = 0;
 	int foodCount = 0;
 	int goldCount = 0;
 	int stoneCount = 0;
 	// RESOURCES 
-	Label* wood, *food, *gold, *stone, *villagers;
-	Unit* guard1;
-	Unit* guard2;
+	Label* wood = nullptr, *food = nullptr, *gold = nullptr, *stone = nullptr, *villagers = nullptr;
+	Unit* guard1= nullptr;
+	Unit* guard2= nullptr;
+
+	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL };
+	enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
+
 };
 
 #endif // __SCENE_H__

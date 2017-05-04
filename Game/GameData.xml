@@ -1298,6 +1298,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/TownHall.png"/>
 				<Die value="textures/Buildings/TownHall.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="2400"/>
@@ -1316,6 +1319,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="550"/>
@@ -1326,7 +1332,7 @@
 			</Stats>
 		</Building>
 		
-		<Building value="ORC_BARRACKS" BuildingID = "2">
+		<Building>
       <Info>
         <Name value = "ORC_BARRACKS"/>
         <ID value = "2"/>
@@ -1334,6 +1340,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/barracksOrcs.png"/>
 				<Die value="textures/Buildings/barracksOrcs.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1200"/>
@@ -1352,6 +1361,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1500"/>
@@ -1370,6 +1382,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1500"/>
@@ -1388,6 +1403,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
@@ -1406,6 +1424,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
@@ -1424,6 +1445,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
@@ -1442,6 +1466,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="600"/>
@@ -1460,6 +1487,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value=""/>
@@ -1478,6 +1508,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value=""/>
@@ -1496,6 +1529,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1020"/>
@@ -1514,6 +1550,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="2100"/>
@@ -1532,6 +1571,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="4800"/>
@@ -1549,6 +1591,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/TowerOfSauron.png"/>
 				<Die value="textures/Buildings/TowerOfSauron.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>

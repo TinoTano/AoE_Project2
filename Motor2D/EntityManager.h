@@ -93,6 +93,7 @@ public:
 	float dt = 0;
 	buildingType creatingBuildingType = ORC_BARRACKS;
 	SDL_Rect NotHUD;
+	Building* buildingToCreate = nullptr;
 };
 
 #endif // !__ENTITY_MANAGER__

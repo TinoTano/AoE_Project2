@@ -90,13 +90,13 @@ bool Gui::Update(float dt)
 // Called after all Updates
 bool Gui::PostUpdate()
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
-		{
-			if (!it._Ptr->_Myval->debug) it._Ptr->_Myval->debug = true;
-			else it._Ptr->_Myval->debug = false;
-		}
-	}
+	//if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+	//	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+	//	{
+	//		if (!it._Ptr->_Myval->debug) it._Ptr->_Myval->debug = true;
+	//		else it._Ptr->_Myval->debug = false;
+	//	}
+	//}
 
 	if (Elements.empty() != true)
 	{

@@ -160,7 +160,7 @@ bool Scene::Start()
 
 	// MUSIC
 
-	App->audio->PlayMusic("audio/music/m_scene.ogg");
+	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
 	// ---------------------
 	// DONE!
 
@@ -170,9 +170,9 @@ bool Scene::Start()
 
 	App->fog->Start(); // Goes first!
 
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 180, GONDOR_HERO);
+	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
 	App->fog->AddEntity(hero);
-	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X - 100, TOWN_HALL_POS_Y + 150, ELF_VILLAGER));
+	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER));
 	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X + 220, TOWN_HALL_POS_Y + 150, GOBLIN_SOLDIER));
 	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER));
 
@@ -229,9 +229,18 @@ bool Scene::Update(float dt)
 		LoadScene();
 	}
 */
+
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
 		if (App->entityManager->selectedEntityList.size() > 0 && App->entityManager->selectedListType == COLLIDER_UNIT)
-			App->entityManager->placingBuilding = !App->entityManager->placingBuilding;
+			if (!App->entityManager->placingBuilding) {
+				int x, y;
+				App->input->GetMousePosition(x, y);
+				App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, ORC_BARRACKS);
+				App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+				App->entityManager->placingBuilding = true;
+				App->entityManager->buildingToCreate->waitingToPlace = true;
+				App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+			}
 	}
 
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
@@ -246,10 +255,10 @@ bool Scene::Update(float dt)
 		}
 	}
 
+	// --------------------------------------------
+	//						UI
+	//---------------------------------------------
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
-
-	if (buttons[MENU]->current == HOVER || buttons[0]->current == CLICKIN) App->gui->cursor->SetCursor(3);
-	else App->gui->cursor->SetCursor(0);
 
 	if (buttons[MENU]->current == CLICKUP) {
 		UpdateVillagers(5, 10);
@@ -261,10 +270,19 @@ bool Scene::Update(float dt)
 		ui_menu.WindowOff();
 		App->gui->Unfocus();
 	}
-	if (game_finished == false)
-	{
-		UpdateTime(timer.ReadSec());
+
+	bool cursoron = false;
+	for (uint i = 0; i < buttons.size(); ++i) {
+		if (buttons[i]->current == HOVER || buttons[i]->current == CLICKIN)
+			cursoron = true;
 	}
+
+	if (cursoron == true)
+		App->gui->cursor->SetCursor(3);
+	else App->gui->cursor->SetCursor(0);
+
+
+	// ---------------------------------------
 
 
 	if (timer.ReadSec() > (quadtree_flag + 20)) {

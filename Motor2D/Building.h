@@ -24,6 +24,7 @@ public:
 	bool Update(float dt);
 	bool Draw();
 	bool IsEnemy() const;
+	void GetBuildingBoundaries();
 	pugi::xml_node LoadBuildingInfo(buildingType type);
 
 	bool Load(pugi::xml_node&);
@@ -40,12 +41,17 @@ public:
 	int buildingStoneCost = 0;
 	int buildingBuildTime = 0;
 	bool canAttack = false;
+	bool waitingToPlace = false;
+	bool canBePlaced = false;
 
 	//Utilities
 	Timer attack_timer;
 	list<Unit*> availableUnitsToCreateList;
 	SDL_Texture* buildingIdleTexture = nullptr;
 	SDL_Texture* buildingDieTexture = nullptr;
+	SDL_Texture* constructingPhase1 = nullptr;
+	SDL_Texture* constructingPhase2 = nullptr;
+	SDL_Texture* constructingPhase3 = nullptr;
 	uint imageWidth = 0;
 	uint imageHeight = 0;
 	Collider* los = nullptr;

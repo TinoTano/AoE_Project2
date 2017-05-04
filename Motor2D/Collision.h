@@ -18,7 +18,7 @@ enum COLLIDER_TYPE
 	COLLIDER_RESOURCE,
 	COLLIDER_LOS,
 	COLLIDER_RANGE,
-
+	COLLIDER_CREATING_BUILDING,
 
 	COLLIDER_MAX
 };
@@ -35,13 +35,13 @@ enum Collision_state {
 
 struct Collider
 {
-	iPoint pos;
-	int r;
+	iPoint pos = { 0,0 };
+	int r = 0;
 	bool to_delete = false;
 	bool colliding = false;
-	COLLIDER_TYPE type;
-	Entity* entity;
-	Module* callback;
+	COLLIDER_TYPE type = COLLIDER_NONE;
+	Entity* entity = nullptr;
+	Module* callback = nullptr;
 
 	Collider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback, Entity* entity) :
 		pos(position),
@@ -65,8 +65,8 @@ struct Collider
 
 struct Collision_data {
 
-	Collider* c1;
-	Collider* c2;
+	Collider* c1 = nullptr;
+	Collider* c2 = nullptr;
 	Collision_state state = UNSOLVED;
 
 	Collision_data(Collider* c1, Collider* c2) : c1(c1), c2(c2)
@@ -114,7 +114,7 @@ private:
 public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
 	list<Collision_data*> collision_list;
-	QuadTree* quadTree;
+	QuadTree* quadTree = nullptr;
 };
 
 #endif // __ModuleCollision_H__
