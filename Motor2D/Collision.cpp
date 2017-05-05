@@ -88,8 +88,8 @@ bool Collision::PreUpdate()
 		}
 	}
 
-	Collider *c1;
-	Collider *c2;
+	Collider *c1 =	nullptr;
+	Collider *c2 =	nullptr;
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
 

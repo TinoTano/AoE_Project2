@@ -204,6 +204,7 @@
     <ClInclude Include="QuadTree.h">
       <Filter>Project 2\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="Orders.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">

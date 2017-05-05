@@ -152,6 +152,12 @@ bool EntityManager::Update(float arg_dt)
 				}
 			}
 		}
+
+		if (buildingToCreate != nullptr && buildingToCreate->waitingToPlace) {
+			placingBuilding = false;
+			buildingToCreate->Destroy();
+			buildingToCreate = nullptr;
+		}
 	}
 	
 	if (mouseY > NotHUD.y - CAMERA_OFFSET_Y && mouseY < NotHUD.h - CAMERA_OFFSET_Y) {

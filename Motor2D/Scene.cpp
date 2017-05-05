@@ -230,7 +230,7 @@ bool Scene::Update(float dt)
 	}
 */
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN && App->entityManager->buildingToCreate == nullptr) {
 		if (App->entityManager->selectedEntityList.size() > 0 && App->entityManager->selectedListType == COLLIDER_UNIT)
 			if (!App->entityManager->placingBuilding) {
 				int x, y;
