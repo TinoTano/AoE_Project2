@@ -1,4 +1,4 @@
-#ifndef _Oder_
+#ifndef _Order_
 #define _Order_
 
 #include "Unit.h"
@@ -23,7 +23,6 @@ enum Order_state {
 
 enum OrderType {
 	MOVETO, ATTACK, FOLLOWPATH, GATHER, BUILD, CREATE, REACH
-
 };
 
 class Order {

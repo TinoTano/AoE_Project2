@@ -15,10 +15,17 @@ enum Faction {
 };
 
 enum EntityState {
-	DESTROYED = 0, CONSTRUCTING, CREATING, MOVING, ATTACKING, PATROLLING, GATHERING, IDLE, BEING_BUILT
+	DESTROYED, CONSTRUCTING, CREATING, MOVING, ATTACKING, PATROLLING, GATHERING, IDLE, BEING_BUILT
 };
 
+struct Cost {
 
+	int woodCost = 0;
+	int stoneCost = 0;
+	int foodCost = 0;
+	int goldCost = 0;
+
+};
 
 class Entity
 {
