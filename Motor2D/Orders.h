@@ -82,7 +82,6 @@ public:
 			// ===============================================================
 			// Moving fog of war
 			App->fog->Update(unit->prev_pos, unit->next_pos, unit->entityID);			        // This updates the FOW
-			App->entityManager->ManageCharactersVisibility();		        // This updates the entities visibility
 			unit->prev_pos = unit->next_pos;
 			unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
 			// ===============================================================
@@ -209,7 +208,6 @@ public:
 			// ===============================================================
 			// Moving fog of war
 			App->fog->Update(unit->prev_pos, unit->next_pos, unit->entityID);			        // This updates the FOW
-			App->entityManager->ManageCharactersVisibility();		        // This updates the entities visibility
 			unit->prev_pos = unit->next_pos;
 			unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
 			// ===============================================================

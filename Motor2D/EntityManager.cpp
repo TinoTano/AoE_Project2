@@ -56,14 +56,13 @@ bool EntityManager::Update(float arg_dt)
 
 	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
 		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition))
+		if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
 			(*it)->Draw();
 	}
 	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
 			(*it)->Draw();
-		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
 		(*it)->Update(dt);
@@ -74,7 +73,6 @@ bool EntityManager::Update(float arg_dt)
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
 			(*it)->Draw();
-		//App->fog->removeFog((*it)->entityPosition.x, (*it)->entityPosition.y);
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
@@ -556,6 +554,7 @@ bool EntityManager::LoadGameData()
 Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 {
 	Unit* unit;
+
 	if (type == VILLAGER || type == ELF_VILLAGER)
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
 	else if (type == GONDOR_HERO)
@@ -570,8 +569,8 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 		friendlyUnitList.push_back(unit);
 	else 
 		enemyUnitList.push_back(unit);
-	
 
+	App->fog->AddEntity(unit);
 
 	return unit;
 }
@@ -951,22 +950,5 @@ void EntityManager::DrawSelectedList() {
 	}
 }
 
-// Fog of War ===============================================================================
 
-void EntityManager::ManageCharactersVisibility()
-{
-	for (list<enemy_unit>::iterator it = App->fog->simple_char_on_fog_pos.begin(); it != App->fog->simple_char_on_fog_pos.end(); it++)
-	{
-		for (list<Unit*>::iterator it2 = enemyUnitList.begin(); it2 != enemyUnitList.end(); it2++)
-		{
-			if (it->id == (*it2)->entityID)
-			{
-				if (it->visible == false) (*it2)->isActive = false;
-				else (*it2)->isActive = true;
-				break;
-			}
-
-		}
-	}
-}
 

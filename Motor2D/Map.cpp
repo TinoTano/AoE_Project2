@@ -61,24 +61,9 @@ void Map::Draw()
 						iPoint pos = MapToWorld(x, y);
 						App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
 
-						if (visibility != 40 /*&& visibility < dark_middle*/)
+						if (visibility == fow_grey)
 						{
-							r = App->fog->GetRect(visibility);
-							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
-						}
-
-						if (visibility >= darkd_middle && visibility <= darkd_inner_bottom_right)
-						{
-							r = App->fog->GetRect(1);
-							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
-
-							r = App->fog->GetRect(visibility);
-							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
-						}
-
-						if (visibility > darkd_inner_bottom_right && visibility <= darkc_inner_bottom_right)
-						{
-							r = App->fog->GetRect(visibility);
+							r = { 0, 0, 96, 51 };
 							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
 						}
 					}
@@ -509,6 +494,7 @@ bool Map::LoadResources(pugi::xml_node & node)
 				type = STONE_MINE;
 			}
 			Resource* resource = App->entityManager->CreateResource(prop.attribute("x").as_int(), prop.attribute("y").as_int(), (resourceItem)type);
+			App->fog->AddEntity(resource);
 		}
 	}
 

@@ -171,19 +171,14 @@ bool Scene::Start()
 	App->fog->Start(); // Goes first!
 
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
-	App->fog->AddEntity(hero);
-	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER));
-	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X + 220, TOWN_HALL_POS_Y + 150, GOBLIN_SOLDIER));
-	App->fog->AddEntity(App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER));
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 220, TOWN_HALL_POS_Y + 150, GOBLIN_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
 
 	UpdateVillagers(3, 3);
 
-	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y - 180, true, TROLL_MAULER);
-
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
-
-	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 
 	timer.Start();
 	troll_timer.Start();
@@ -329,6 +324,7 @@ bool Scene::CleanUp()
 
 	App->entityManager->selectedEntityList.clear();
 	App->entityManager->CleanUp();
+	App->fog->CleanUp();
 	return true;
 }
 
