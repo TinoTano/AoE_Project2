@@ -26,7 +26,7 @@
 	<map>
 		<folder>maps/</folder>
 	</map>
-	<console>
-		
-	</console>
+	<quest>
+ 		<data file = "quests/questData.xml"/>
+ 	</quest>
 </config>

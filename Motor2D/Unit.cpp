@@ -12,6 +12,7 @@
 #include "p2Defs.h"
 #include "Scene.h"
 #include "Gui.h"
+#include "QuestManager.h"
 
 Unit::Unit()
 {
@@ -374,6 +375,10 @@ void Unit::AttackEnemyBuilding(float dt)
 }
 
 void Unit::Dead() {
+
+	if (App->quest->TriggerKillCallback(this->type) == false)
+		App->quest->StepKillCallback(this->type);
+
 	SetState(UNIT_DEAD);
 	collider->rect = { 0, 0, 0, 0 };
 }

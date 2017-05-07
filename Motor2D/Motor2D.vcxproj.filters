@@ -85,6 +85,9 @@
     <ClCompile Include="SceneManager.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="QuestManager.cpp">
+      <Filter>Project 2\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -185,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="SceneManager.h">
       <Filter>Project 2\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestManager.h">
+      <Filter>Project 2\Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
