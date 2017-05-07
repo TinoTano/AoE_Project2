@@ -19,6 +19,7 @@ class SceneManager;
 class Map;
 class PathFinding;
 class Fonts;
+class ParticleManager;
 class EntityManager;
 class Collision;
 class Gui;
@@ -63,6 +64,7 @@ public:
 
 	pugi::xml_node LoadGameDataFile(pugi::xml_document&) const;
 	pugi::xml_node LoadHUDDataFile(pugi::xml_document&) const;
+	pugi::xml_node LoadParticleDataFile(pugi::xml_document &) const;
 
 private:
 
@@ -101,6 +103,7 @@ public:
 	Map*				map = NULL;
 	PathFinding*		pathfinding = NULL;
 	Fonts*				font = NULL;
+	ParticleManager*	particlemanager = NULL;
 	EntityManager*		entityManager = NULL;
 	Collision*			collision = NULL;
 	Gui*				gui = NULL;

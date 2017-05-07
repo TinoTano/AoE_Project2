@@ -95,6 +95,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MenuScene.cpp" />
     <ClCompile Include="p2Log.cpp" />
+    <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="QuadTree.cpp" />
@@ -128,6 +129,7 @@
     <ClInclude Include="p2Defs.h" />
     <ClInclude Include="p2Log.h" />
     <ClInclude Include="p2Point.h" />
+    <ClInclude Include="ParticleManager.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="QuadTree.h" />

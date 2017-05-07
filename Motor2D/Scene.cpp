@@ -18,6 +18,7 @@
 #include "QuadTree.h"
 #include "Building.h"
 #include "FogOfWar.h"
+#include "ParticleManager.h"
 
 Scene::Scene() : SceneElement("scene")
 {
@@ -213,6 +214,10 @@ bool Scene::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		//debug = !debug;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
+		App->particlemanager->CreateArrow(400, { hero->GetPosition().x, hero->GetPosition().y }, { my_townCenter->GetPosition().x,my_townCenter->GetPosition().y });
 	}
 
 	/*

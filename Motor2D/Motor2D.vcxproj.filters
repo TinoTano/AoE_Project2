@@ -94,6 +94,9 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>Project 2\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>Project 2\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -204,7 +207,12 @@
     <ClInclude Include="QuadTree.h">
       <Filter>Project 2\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Orders.h" />
+    <ClInclude Include="ParticleManager.h">
+      <Filter>Project 2\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Orders.h">
+      <Filter>Project 2\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">

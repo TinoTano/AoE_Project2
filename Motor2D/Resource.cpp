@@ -17,6 +17,7 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	entityPosition.y = posY;
 	type = resource->type;
 	visual = resource->visual;
+	MaxLife = resource->Life;
 	Life = resource->Life;
 	resourceIdleTexture = resource->resourceIdleTexture;
 	resourceGatheringTexture = resource->resourceGatheringTexture;

@@ -20,12 +20,24 @@ HUD::HUD()
 
 void HUD::Start() {
 	App->win->GetWindowSize(x, y);
-
-	buttons_positions.push_back({ (int)x / 35 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	// 0
+	buttons_positions.push_back({ (int)x / 30 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	// 1
 	buttons_positions.push_back({ (int)x / 15 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	// 2
 	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	// 12
 
-	buttons_positions.push_back({ (int)x / 7 - CAMERA_OFFSET_X, (int)y - (int)y / 9 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 5 - CAMERA_OFFSET_X, (int)y - (int)y / 9 - CAMERA_OFFSET_Y, 39,40 });
 
 	posx = x / 3 - x / 50;
 	posy = y - (y / 6);
@@ -62,115 +74,312 @@ void HUD::Update() {
 	string life_str;
 
 	if (App->entityManager->selectedEntityList.size() > 0) {
-		switch (App->entityManager->selectedListType) {
+		if (App->entityManager->selectedEntityList.front()->Life > 0) {
+			switch (App->entityManager->selectedListType) {
 
-		case COLLIDER_UNIT:
-			if (App->entityManager->selectedEntityList.size() > 1) {
+			case COLLIDER_UNIT:
+				if (App->entityManager->selectedEntityList.size() > 1) {
 
-
-				if (type != MULTIPLESELECTION)
-				{
-					if (type == SINGLEINFO)
-						ClearSingle();
-					else if (type == BUILDINGINFO)
-						ClearBuilding();
-					else if (type == RESOURCEINFO)
-						ClearResource();
-
-					type = MULTIPLESELECTION;
-					GetSelection();
-
-				}
-				else
-				{
-					int x = 0, y = 0;
-					for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteUnits.begin(); it_sprite != App->gui->SpriteUnits.end(); ++it_sprite)
+					if (type != MULTIPLESELECTION)
 					{
-						for (list<Entity*>::iterator it_unit = App->entityManager->selectedEntityList.begin(); it_unit != App->entityManager->selectedEntityList.end(); ++it_unit)
-						{
-							if (x >= max_width)
-							{
-								x = 0;
-								y += App->gui->SpriteUnits.front().GetRect().h + 5;
-							}
-							Unit* unit = (Unit*)(*it_unit);
-							if (it_sprite._Ptr->_Myval.GetID() == unit->GetType()) {
+						if (type == SINGLEINFO)
+							ClearSingle();
+						else if (type == BUILDINGINFO)
+							ClearBuilding();
+						else if (type == RESOURCEINFO)
+							ClearResource();
 
-								if (it_unit._Ptr->_Myval->MaxLife == 0) it_unit._Ptr->_Myval->MaxLife = it_unit._Ptr->_Myval->Life;
-								percent = ((it_unit._Ptr->_Myval->MaxLife - it_unit._Ptr->_Myval->Life) * 100) / it_unit._Ptr->_Myval->MaxLife;
-								barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
-								bar.rect.x = posx + x - App->render->camera.x;
-								bar.rect.y = posy + y - 30 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
-								bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
-								bar.rect.h = 5;
-								bar.r = 255;
-								bar.g = 0;
-								bar.b = 0;
-								App->render->ui_toDraw.push_back(bar);
-								bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
-								bar.r = 0;
-								bar.g = 255;
-								App->render->ui_toDraw.push_back(bar);
-								x += App->gui->SpriteUnits.front().GetRect().w;
+						type = MULTIPLESELECTION;
+						GetSelection();
+
+					}
+					else
+					{
+						int x = 0, y = 0;
+						for (list<UnitSprite>::iterator it_sprite = App->gui->SpriteUnits.begin(); it_sprite != App->gui->SpriteUnits.end(); ++it_sprite)
+						{
+							for (list<Entity*>::iterator it_unit = App->entityManager->selectedEntityList.begin(); it_unit != App->entityManager->selectedEntityList.end(); ++it_unit)
+							{
+								if (x >= max_width)
+								{
+									x = 0;
+									y += App->gui->SpriteUnits.front().GetRect().h + 5;
+								}
+								Unit* unit = (Unit*)(*it_unit);
+								if (it_sprite._Ptr->_Myval.GetID() == unit->GetType() && it_unit._Ptr->_Myval->Life > 0) {
+									if (it_unit._Ptr->_Myval->MaxLife == 0) it_unit._Ptr->_Myval->MaxLife = it_unit._Ptr->_Myval->Life;
+									percent = ((it_unit._Ptr->_Myval->MaxLife - it_unit._Ptr->_Myval->Life) * 100) / it_unit._Ptr->_Myval->MaxLife;
+									barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
+									bar.rect.x = posx + x - App->render->camera.x;
+									bar.rect.y = posy + y - 30 - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+									bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
+									bar.rect.h = 5;
+									bar.r = 255;
+									bar.g = 0;
+									bar.b = 0;
+									App->render->ui_toDraw.push_back(bar);
+									bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+									bar.r = 0;
+									bar.g = 255;
+									App->render->ui_toDraw.push_back(bar);
+									x += App->gui->SpriteUnits.front().GetRect().w;
+								}
+							}
+						}
+
+						// CODE TO SELECT ONE UNIT FROM THE PANEL NOT FUNCTIONAL FOR NOW
+						/*
+						list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin();
+						for (list<Image*>::iterator it = multiple.begin(); it != multiple.end(); ++it) {
+						if (it._Ptr->_Myval->current == CLICKIN){
+						App->entityManager->selectedUnitList.clear();
+						App->entityManager->selectedUnitList.push_back(it_unit._Ptr->_Myval);
+						type = SINGLEINFO;
+						GetSelection();
+						ClearMultiple();
+
+						int size = App->entityManager->selectedUnitList.size();
+						int a = 9381741;
+						}
+						if (it_unit != App->entityManager->selectedUnitList.end()) ++it_unit;
+						}*/
+					}
+				}
+				else {
+					if (type != SINGLEINFO)
+					{
+						if (type == MULTIPLESELECTION)
+							ClearMultiple();
+						else if (type == BUILDINGINFO)
+							ClearBuilding();
+						else if (type == RESOURCEINFO)
+							ClearResource();
+
+						type = SINGLEINFO;
+						GetSelection();
+					}
+					else {
+						if (App->entityManager->selectedEntityList.front()->Life > 0)
+						{
+							_itoa_s(App->entityManager->selectedEntityList.front()->Defense, armor, 65, 10);
+							_itoa_s(App->entityManager->selectedEntityList.front()->Attack, damage, 65, 10);
+
+							damage_val->SetString(damage);
+							armor_val->SetString(armor);
+
+
+							max_life = App->entityManager->selectedEntityList.front()->MaxLife;
+							curr_life = App->entityManager->selectedEntityList.front()->Life;
+
+							_itoa_s(curr_life, currlife, 65, 10);
+							life_str += currlife;
+							life_str += "/";
+							_itoa_s(max_life, maxlife, 65, 10);
+							life_str += maxlife;
+
+							life->SetString(life_str);
+
+							if (max_life <= 0) max_life = curr_life;
+							percent = ((max_life - curr_life) * 100) / max_life;
+							barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
+							bar.rect.x = posx - App->render->camera.x;
+							bar.rect.y = posy - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+							bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
+							bar.rect.h = 5;
+							bar.r = 255;
+							bar.g = 0;
+							bar.b = 0;
+							App->render->ui_toDraw.push_back(bar);
+							bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+							bar.r = 0;
+							bar.g = 255;
+							App->render->ui_toDraw.push_back(bar);
+							if (name->str == "ELF VILLAGER") {
+								switch (villager_state) {
+								case VILLAGERMENU:
+									if (villager_state != VILLAGERMENU)
+									{
+										HUDVillagerMenu();
+									}
+									else {
+										if (create_building_bt->current == CLICKUP)
+										{
+											HUDCreateBuildings();
+										}
+									}
+									break;
+								case VILLAGERCREATEBUILDINGS:
+									if (villager_state != VILLAGERCREATEBUILDINGS)
+									{
+										HUDCreateBuildings();
+									}
+									else {
+										if (cancel_bt->current == CLICKUP)
+											HUDVillagerMenu();
+										else if (create_town_center_bt->current == CLICKUP) {
+											// ORDER TO CREATE TOWN CENTER
+										}
+										else if (create_house_bt->current == CLICKUP) {
+											// ORDER TO CREATE HOUSE
+										}
+										// ... AND SO ON ...
+									}
+									break;
+								}
 							}
 						}
 					}
+					break;
+			case COLLIDER_BUILDING:
 
-					// CODE TO SELECT ONE UNIT FROM THE PANEL NOT FUNCTIONAL FOR NOW
-					/*
-					list<Unit*>::iterator it_unit = App->entityManager->selectedUnitList.begin();
-					for (list<Image*>::iterator it = multiple.begin(); it != multiple.end(); ++it) {
-					if (it._Ptr->_Myval->current == CLICKIN){
-					App->entityManager->selectedUnitList.clear();
-					App->entityManager->selectedUnitList.push_back(it_unit._Ptr->_Myval);
-					type = SINGLEINFO;
-					GetSelection();
-					ClearMultiple();
-
-					int size = App->entityManager->selectedUnitList.size();
-					int a = 9381741;
-					}
-					if (it_unit != App->entityManager->selectedUnitList.end()) ++it_unit;
-					}*/
-				}
-				break;
-			}
-			else {
-
-				if (type != SINGLEINFO)
+				if (type != BUILDINGINFO)
 				{
-					if (type == MULTIPLESELECTION)
-						ClearMultiple();
-					else if (type == BUILDINGINFO)
-						ClearBuilding();
-					else if (type == RESOURCEINFO)
-						ClearResource();
+					ClearSingle();
+					ClearMultiple();
+					ClearResource();
 
-					type = SINGLEINFO;
-					GetSelection();
+					type = BUILDINGINFO;
+					StartBuildingInfo();
 				}
 				else {
+					Building* building = (Building*)App->entityManager->selectedEntityList.front();
 
-					_itoa_s(App->entityManager->selectedEntityList.front()->Defense, armor, 65, 10);
-					_itoa_s(App->entityManager->selectedEntityList.front()->Attack, damage, 65, 10);
-
-					damage_val->SetString(damage);
-					armor_val->SetString(armor);
-
+					for (list<UnitSprite>::iterator it = App->gui->SpriteBuildings.begin(); it != App->gui->SpriteBuildings.end(); ++it)
+					{
+						if (it._Ptr->_Myval.GetID() == building->type)
+						{
+							name->SetString(it._Ptr->_Myval.GetName());
+						}
+					}
 					max_life = App->entityManager->selectedEntityList.front()->MaxLife;
 					curr_life = App->entityManager->selectedEntityList.front()->Life;
-
 					_itoa_s(curr_life, currlife, 65, 10);
 					life_str += currlife;
 					life_str += "/";
 					_itoa_s(max_life, maxlife, 65, 10);
 					life_str += maxlife;
-
 					life->SetString(life_str);
-
-					if (max_life <= 0) max_life = curr_life;
+					if (max_life == 0) max_life = curr_life;
 					percent = ((max_life - curr_life) * 100) / max_life;
-					barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
+					barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
+					bar.rect.x = posx - App->render->camera.x;
+					bar.rect.y = posy - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
+					bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
+					bar.rect.h = 5;
+					bar.r = 255;
+					bar.g = 0;
+					bar.b = 0;
+					App->render->ui_toDraw.push_back(bar);
+					bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+					bar.r = 0;
+					bar.g = 255;
+					App->render->ui_toDraw.push_back(bar);
+					if (name->str == "TOWN CENTER") {
+						switch (building_state) {
+						case BUILDINGMENU:
+							if (building_state != BUILDINGMENU)
+							{
+								HUDBuildingMenu();
+							}
+							else {
+								if (create_unit_bt->current == CLICKUP)
+								{
+									HUDCreateUnits();
+								}
+								else if (create_villager_bt->current == CLICKUP) {
+									if (App->sceneManager->level1_scene->woodCount > 50) {
+										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
+										create_villager_bt->current = FREE;
+										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 50);
+										Order* new_order = new CreateUnitOrder(ELF_VILLAGER);
+										building->order_list.push_back(new_order);
+									}
+								}
+								else if (create_hero_bt->current == CLICKUP) {
+									HUDCreateHero();
+								}
+							}
+							break;
+						case BUILDINGCREATEUNITS:
+							if (building_state != BUILDINGCREATEUNITS)
+							{
+								HUDCreateUnits();
+							}
+							else {
+								if (cancel_bt->current == CLICKUP)
+									HUDBuildingMenu();
+								else if (create_elven_archer_bt->current == CLICKUP)
+								{
+									if (App->sceneManager->level1_scene->woodCount > 70) {
+										Order* new_order = new CreateUnitOrder(ELVEN_ARCHER);
+										building->order_list.push_back(new_order);
+										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
+										create_elven_archer_bt->current = FREE;
+									}
+								}
+								else if (create_elven_longblade_bt->current == CLICKUP)
+								{
+									if (App->sceneManager->level1_scene->woodCount > 70) {
+										Order* new_order = new CreateUnitOrder(ELVEN_LONGBLADE);
+										building->order_list.push_back(new_order);
+										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
+										create_elven_longblade_bt->current = FREE;
+									}
+								}
+								else if (create_elven_cavalry_bt->current == CLICKUP)
+								{
+									if (App->sceneManager->level1_scene->woodCount > 350) {
+										Order* new_order = new CreateUnitOrder(GONDOR_HERO);
+										building->order_list.push_back(new_order);
+										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+										create_elven_cavalry_bt->current = FREE;
+									}
+								}
+							}
+							break;
+						case BUILDINGCREATEHERO:
+							if (building_state != BUILDINGCREATEHERO)
+							{
+								HUDCreateHero();
+							}
+							if (cancel_bt->current == CLICKUP)
+								HUDBuildingMenu();
+							break;
+						}
+					}
+				}
+				break;
+			case COLLIDER_RESOURCE:
+				if (type != RESOURCEINFO)
+				{
+					ClearSingle();
+					ClearMultiple();
+					ClearBuilding();
+					type = RESOURCEINFO;
+					StartResourceInfo();
+				}
+				else {
+					Resource* resource = (Resource*)App->entityManager->selectedEntityList.front();
+
+					for (list<UnitSprite>::iterator it = App->gui->SpriteResources.begin(); it != App->gui->SpriteResources.end(); ++it)
+					{
+						if (it._Ptr->_Myval.GetID() == resource->type)
+						{
+							name->SetString(it._Ptr->_Myval.GetName());
+						}
+					}
+
+					max_life = App->entityManager->selectedEntityList.front()->MaxLife;
+					curr_life = App->entityManager->selectedEntityList.front()->Life;
+					_itoa_s(curr_life, currlife, 65, 10);
+					life_str += currlife;
+					life_str += "/";
+					_itoa_s(max_life, maxlife, 65, 10);
+					life_str += maxlife;
+					life->SetString(life_str);
+					if (max_life == 0) max_life = curr_life;
+					percent = ((max_life - curr_life) * 100) / max_life;
+					barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
 					bar.rect.x = posx - App->render->camera.x;
 					bar.rect.y = posy - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
 					bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
@@ -184,141 +393,9 @@ void HUD::Update() {
 					bar.g = 255;
 					App->render->ui_toDraw.push_back(bar);
 				}
-			}
-			break;
-
-		case COLLIDER_BUILDING:
-
-			if (type != BUILDINGINFO)
-			{
-				ClearSingle();
-				ClearMultiple();
-				ClearResource();
-
-				type = BUILDINGINFO;
-				StartBuildingInfo();
-			}
-			else {
-				Building* building = (Building*)App->entityManager->selectedEntityList.front();
-
-				for (list<UnitSprite>::iterator it = App->gui->SpriteBuildings.begin(); it != App->gui->SpriteBuildings.end(); ++it)
-				{
-					if (it._Ptr->_Myval.GetID() == building->type)
-					{
-						name->SetString(it._Ptr->_Myval.GetName());
-					}
-				}
-				max_life = App->entityManager->selectedEntityList.front()->MaxLife;
-				curr_life = App->entityManager->selectedEntityList.front()->Life;
-				_itoa_s(curr_life, currlife, 65, 10);
-				life_str += currlife;
-				life_str += "/";
-				_itoa_s(max_life, maxlife, 65, 10);
-				life_str += maxlife;
-				life->SetString(life_str);
-				if (max_life == 0) max_life = curr_life;
-				percent = ((max_life - curr_life) * 100) / max_life;
-				barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
-				bar.rect.x = posx - App->render->camera.x;
-				bar.rect.y = posy - App->render->camera.y + App->gui->SpriteBuildings.front().GetRect().h;
-				bar.rect.w = App->gui->SpriteBuildings.front().GetRect().w;
-				bar.rect.h = 5;
-				bar.r = 255;
-				bar.g = 0;
-				bar.b = 0;
-				App->render->ui_toDraw.push_back(bar);
-				bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
-				bar.r = 0;
-				bar.g = 255;
-				App->render->ui_toDraw.push_back(bar);
-				if (name->str == "TOWN CENTER") {
-					switch (building_state) {
-					case BUILDINGMENU:
-						if (building_state != BUILDINGMENU)
-						{
-							HUDBuildingMenu();
-						}
-						else {
-							if (create_unit_bt->current == CLICKUP)
-							{
-								HUDCreateUnits();
-							}
-							else if (create_villager_bt->current == CLICKUP) {
-								if (App->sceneManager->level1_scene->woodCount > 50) {
-									App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
-									create_villager_bt->current = FREE;
-									App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 50);
-									Order* new_order = new CreateUnitOrder(ELF_VILLAGER);
-									building->order_list.push_back(new_order);
-								}
-							}
-						}
-
-						break;
-					case BUILDINGCREATEUNITS:
-						if (building_state != BUILDINGCREATEUNITS)
-						{
-							HUDCreateUnits();
-						}
-						else {
-							if (cancel_bt->current == CLICKUP)
-								HUDBuildingMenu();
-							else if (create_elven_archer_bt->current == CLICKUP)
-							{
-								if (App->sceneManager->level1_scene->woodCount > 70) {
-									Order* new_order = new CreateUnitOrder(ELVEN_ARCHER);
-									building->order_list.push_back(new_order);
-									App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
-									create_elven_archer_bt->current = FREE;
-								}
-							}
-							else if (create_elven_longblade_bt->current == CLICKUP)
-							{
-								if (App->sceneManager->level1_scene->woodCount > 70) {
-									Order* new_order = new CreateUnitOrder(ELVEN_LONGBLADE);
-									building->order_list.push_back(new_order);
-									App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
-									create_elven_longblade_bt->current = FREE;
-								}
-							}
-							else if (create_elven_cavalry_bt->current == CLICKUP)
-							{
-								if (App->sceneManager->level1_scene->woodCount > 350) {
-									Order* new_order = new CreateUnitOrder(GONDOR_HERO);
-									building->order_list.push_back(new_order);
-									App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
-									create_elven_cavalry_bt->current = FREE;
-								}
-							}
-						}
-						break;
-					}
+				break;
 				}
 			}
-			break;
-
-		case COLLIDER_RESOURCE:
-
-			if (type != RESOURCEINFO)
-			{
-				ClearSingle();
-				ClearMultiple();
-				ClearBuilding();
-				type = RESOURCEINFO;
-				StartResourceInfo();
-			}
-			else {
-				Resource* resource = (Resource*)App->entityManager->selectedEntityList.front();
-
-				for (list<UnitSprite>::iterator it = App->gui->SpriteResources.begin(); it != App->gui->SpriteResources.end(); ++it)
-				{
-					if (it._Ptr->_Myval.GetID() == resource->type)
-					{
-						name->SetString(it._Ptr->_Myval.GetName());
-					}
-				}
-			}
-			break;
 		}
 	}
 	else {
@@ -339,11 +416,88 @@ void HUD::Update() {
 }
 
 
+void HUD::HUDVillagerMenu()
+{
+	switch (villager_state) {
+	case VILLAGERCREATEBUILDINGS:
+		HUDClearCreateBuildings();
+		break;
+	}
+	// THIS MUST BE DONE HERE
+	villager_state = VILLAGERMENU;
+
+	vector<SDL_Rect> blit_sections;
+
+	blit_sections.push_back({ 130, 24, 39, 40 });
+	blit_sections.push_back({ 169, 24, 39, 40 });
+
+	create_building_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+}
+
+void HUD::HUDClearVillagerMenu()
+{
+	App->gui->DestroyUIElement(create_building_bt);
+}
+
+void HUD::HUDCreateBuildings()
+{
+	switch (villager_state) {
+	case VILLAGERMENU:
+		HUDClearVillagerMenu();
+		break;
+	}
+
+	villager_state = VILLAGERCREATEBUILDINGS;
+
+	vector<SDL_Rect> blit_sections;
+
+	blit_sections.push_back({ 0, 0, 33, 32 });
+	blit_sections.push_back({ 0, 0, 33, 32 });
+
+	create_town_center_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 33, 0, 33, 32 });
+	blit_sections.push_back({ 33, 0, 33, 32 });
+
+	create_house_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 52, 64, 39, 40 });
+	blit_sections.push_back({ 91, 64, 39, 40 });
+
+	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[NUM_UI_BUTTONS].x - CAMERA_OFFSET_X, buttons_positions[NUM_UI_BUTTONS].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+}
+
+void HUD::HUDClearCreateBuildings()
+{
+	App->gui->DestroyUIElement(create_town_center_bt);
+	App->gui->DestroyUIElement(create_house_bt);
+	App->gui->DestroyUIElement(create_barracks_bt);
+	App->gui->DestroyUIElement(create_archery_range_bt);
+	App->gui->DestroyUIElement(create_stables_bt);
+	App->gui->DestroyUIElement(create_siege_workshop_bt);
+	App->gui->DestroyUIElement(create_market_bt);
+	App->gui->DestroyUIElement(create_wall_bt);
+	App->gui->DestroyUIElement(create_mill_bt);
+	App->gui->DestroyUIElement(create_gate_bt);
+	App->gui->DestroyUIElement(create_outpost_bt);
+	App->gui->DestroyUIElement(create_monastery_bt);
+	App->gui->DestroyUIElement(create_castle_bt);
+
+	App->gui->DestroyUIElement(cancel_bt);
+
+}
+
 void HUD::HUDBuildingMenu()
 {
 	switch (building_state) {
 	case BUILDINGCREATEUNITS:
 		HUDClearCreateUnits();
+		break;
+	case BUILDINGCREATEHERO:
+		HUDClearCreateHero();
 		break;
 	}
 
@@ -357,19 +511,46 @@ void HUD::HUDBuildingMenu()
 	create_unit_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 	blit_sections.clear();
 
+	blit_sections.push_back({ 208, 24, 39, 40 });
+	blit_sections.push_back({ 247, 24, 39, 40 });
 
+	create_hero_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	blit_sections.clear();
 	blit_sections.push_back({ 52, 24, 39, 40 });
 	blit_sections.push_back({ 91, 24, 39, 40 });
 
-	create_villager_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-	// THIS MUST BE DONE HERE
-	building_state = BUILDINGMENU;
+	create_villager_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 }
 
 void HUD::HUDClearBuildingMenu()
 {
 	App->gui->DestroyUIElement(create_unit_bt);
+	App->gui->DestroyUIElement(create_hero_bt);
 	App->gui->DestroyUIElement(create_villager_bt);
+}
+
+void HUD::HUDCreateHero()
+{
+	switch (building_state) {
+	case BUILDINGMENU:
+		HUDClearBuildingMenu();
+		break;
+	case BUILDINGCREATEUNITS:
+		HUDClearCreateUnits();
+		break;
+	}
+	building_state = BUILDINGCREATEHERO;
+
+	vector<SDL_Rect> blit_sections;
+	blit_sections.push_back({ 52, 64, 39, 40 });
+	blit_sections.push_back({ 91, 64, 39, 40 });
+
+	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[NUM_UI_BUTTONS].x - CAMERA_OFFSET_X, buttons_positions[NUM_UI_BUTTONS].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+}
+
+void HUD::HUDClearCreateHero()
+{
+	App->gui->DestroyUIElement(cancel_bt);
 }
 
 
@@ -379,25 +560,28 @@ void HUD::HUDCreateUnits()
 	case BUILDINGMENU:
 		HUDClearBuildingMenu();
 		break;
+	case BUILDINGCREATEHERO:
+		HUDClearCreateHero();
+		break;
 	}
 	// THIS MUST BE DONE HERE
 	building_state = BUILDINGCREATEUNITS;
 
 	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 0, 0, 33, 32 });
-	blit_sections.push_back({ 0, 0, 33, 32 });
+	blit_sections.push_back({ 99, 0, 33, 32 });
+	blit_sections.push_back({ 99, 0, 33, 32 });
 
 	create_elven_archer_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 
 	blit_sections.clear();
-	blit_sections.push_back({ 33, 0, 33, 32 });
-	blit_sections.push_back({ 33, 0, 33, 32 });
+	blit_sections.push_back({ 0, 0, 33, 32 });
+	blit_sections.push_back({ 0, 0, 33, 32 });
 
 	create_elven_longblade_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 
 	blit_sections.clear();
-	blit_sections.push_back({ 66, 0, 33, 32 });
-	blit_sections.push_back({ 66, 0, 33, 32 });
+	blit_sections.push_back({ 165, 0, 33, 32 });
+	blit_sections.push_back({ 165, 0, 33, 32 });
 
 	create_elven_cavalry_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 
@@ -405,9 +589,7 @@ void HUD::HUDCreateUnits()
 	blit_sections.push_back({ 52, 64, 39, 40 });
 	blit_sections.push_back({ 91, 64, 39, 40 });
 
-	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[3].x - CAMERA_OFFSET_X, buttons_positions[3].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-
+	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[NUM_UI_BUTTONS].x - CAMERA_OFFSET_X, buttons_positions[NUM_UI_BUTTONS].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 
 }
 
@@ -516,7 +698,9 @@ void HUD::GetSelection() {
 		life_str += maxlife;
 
 		life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
-
+		if (name->str == "ELF VILLAGER") {
+			HUDVillagerMenu();
+		}
 		break;
 	case MULTIPLESELECTION:
 		int x = 0, y = 0;
@@ -581,6 +765,16 @@ void HUD::ClearSingle()
 	}
 	if (life != nullptr) {
 		App->gui->DestroyUIElement(life);
+	}
+
+	switch (villager_state)
+	{
+	case VILLAGERMENU:
+		HUDClearVillagerMenu();
+		break;
+	case VILLAGERCREATEBUILDINGS:
+		HUDClearCreateBuildings();
+		break;
 	}
 }
 

@@ -19,7 +19,7 @@ using namespace std;
 #define LABEL_COLOR {0,0,0 250}
 #define CAMERA_OFFSET_X App->render->camera.x
 #define CAMERA_OFFSET_Y App->render->camera.y
-
+#define NUM_UI_BUTTONS 12
 
 struct _TTF_Font;
 
@@ -306,25 +306,50 @@ private:
 	//-----------------------
 	void HUDResourceMenu();
 	// -----------------------
+	//		  VILLAGERS
+	// -----------------------
+	enum HUDVillagerState {
+		VILLAGERMENU,
+		VILLAGERCREATEBUILDINGS
+	};
+	HUDVillagerState villager_state;
+	// ------- MENU ----------
+	Button* create_building_bt;
+	void HUDVillagerMenu();
+	void HUDClearVillagerMenu();
+	// ------ CREATE BUILDINGS -------
+	Button* create_town_center_bt, *create_house_bt, *create_barracks_bt, *create_archery_range_bt,
+		*create_stables_bt, *create_siege_workshop_bt, *create_market_bt, *create_mill_bt, *create_wall_bt,
+		*create_gate_bt, *create_outpost_bt, *create_monastery_bt, *create_castle_bt;
+	void HUDCreateBuildings();
+	void HUDClearCreateBuildings();
+	// -----------------------
 	//        BUILDING
 	// -----------------------
 
 	enum HUDBuildingState {
 		BUILDINGMENU,
-		BUILDINGCREATEUNITS
+		BUILDINGCREATEUNITS,
+		BUILDINGCREATEHERO
 	};
 	HUDBuildingState building_state;
-
 	// ----- MENU -----
-	Button* create_unit_bt, *create_villager_bt;
+	Button* create_unit_bt, *create_hero_bt, *create_villager_bt;
 	void HUDBuildingMenu();
 	void HUDClearBuildingMenu();
 
+	// ----- CREATE HERO -------
+
+	void HUDCreateHero();
+	void HUDClearCreateHero();
+
 	// ----- CREATE UNITS ------
-	Button* create_elven_archer_bt, *create_elven_longblade_bt, *create_elven_cavalry_bt, *cancel_bt;
+	Button* create_elven_archer_bt, *create_elven_longblade_bt, *create_elven_cavalry_bt;
 	void HUDCreateUnits();
 	void HUDClearCreateUnits();
 
+
+	Button* cancel_bt;
 };
 
 

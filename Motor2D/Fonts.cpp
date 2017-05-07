@@ -105,3 +105,27 @@ bool Fonts::CalcSize(const char* text, int& width, int& height, _TTF_Font* font)
 
 	return ret;
 }
+
+bool Fonts::DeleteFont(_TTF_Font * font)
+{
+	bool ret = true;
+	if (font != nullptr) {
+		if (font != default) {
+			for (list<_TTF_Font*>::iterator it = fonts.begin(); it != fonts.end(); ++it)
+			{
+				if (*it == font) {
+					TTF_CloseFont(*it);
+				}
+			}
+		}
+		else {
+			LOG("Cannot delete default font :S");
+			ret = false;
+		}
+	}
+	else {
+		LOG("Cannot delete font.");
+		ret = false;
+	}
+	return ret;
+}

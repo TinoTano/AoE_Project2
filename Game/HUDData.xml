@@ -320,90 +320,112 @@
 		<Unit>
         <Name value = "ELVEN LONGBLADE"/>
         <ID value = "0"/>
-	<Position x="33" y ="0"/>
+	<Position x="0" y ="0"/>
 		</Unit>
 		<Unit>
         <Name value = "DWARVEN MAULER"/>
         <ID value = "1"/>
+		<Position x="33" y ="0"/>
 		</Unit>
 		<Unit>
         <Name value = "GONDOR SPEARMAN"/>
         <ID value = "2"/>
+		<Position x = "66" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "ELVEN ARCHER"/>
         <ID value = "3"/>
-	<Position x = "0" y = "0"/>
+		<Position x = "99" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "DUNEDAIN RANGE"/>
         <ID value = "4"/>
+		<Position x = "132" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "ELVEN CAVALRYE"/>
         <ID value = "5"/>
-	<Position x = "66" y = "0"/>
+		<Position x = "165" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "GONDOR KNIGHT"/>
         <ID value = "6"/>
-	<Position x = "99" y = "0"/>
+		<Position x = "198" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "ROHAN KNIGHT"/>
         <ID value = "7"/>
-	<Position x = "132" y = "0"/>
+		<Position x = "231" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "MOUNTED DUNEDAIN"/>
-        <ID value = "4"/>
-	<Position x = "165" y = "0"/>
+        <ID value = "8"/>
+		<Position x = "264" y = "0"/>
 		</Unit>
 		<Unit>
         <Name value = "SIEGE TOWER"/>
         <ID value = "9"/>
+		<Position x="0" y ="32"/>
 		</Unit>
 		<Unit>
         <Name value = "LIGHT_CATAPULT"/>
         <ID value = "10"/>
+		<Position x="33" y ="32"/>
+		</Unit>
+		<Unit>
+		 <Name value = "GOBLIN_SOLDIER"/>
+        <ID value = "11"/>
+		<Position x="66" y ="32"/>
 		</Unit>
 		<Unit>
         <Name value = "ORC SOLDIER"/>
         <ID value = "12"/>
+		<Position x="99" y ="32"/>
 		</Unit>
 		<Unit>
         <Name value = "URUK HAI SOLDIER"/>
         <ID value = "13"/>
+		<Position x="132" y ="32"/>
 		</Unit>
 		<Unit>
         <Name value = "ORC ARCHER"/>
         <ID value = "14"/>
+		<Position x = "165" y = "32"/>
 		</Unit>
 		<Unit>
         <Name value = "VENOMOUS SPIDER"/>
         <ID value = "15"/>
+		<Position x = "198" y = "32"/>
 		</Unit>
 		<Unit>
         <Name value = "HARADRIM OLIFANT"/>
         <ID value = "16"/>
+		<Position x = "231" y = "32"/>
 		</Unit>
 		<Unit>
         <Name value = "NAZGUL"/>
         <ID value = "17"/>
+		<Position x = "264" y = "32"/>
 		</Unit>
 		<Unit>
         <Name value = "TROLL MAULER"/>
         <ID value = "18"/>
+		<Position x = "0" y = "64"/>
 		</Unit>
 		<Unit>
-	<Name value = "VILLAGER"/>
+		<Name value = "VILLAGER"/>
         <ID value = "19"/>
-	<Position x="0" y = "0"/>
+		<Position x="33" y = "64"/>
 		</Unit>
 		<Unit>
-	<Name value = "ELF VILLAGER"/>
+		<Name value = "ELF VILLAGER"/>
         <ID value = "20"/>
-	<Position x="0" y = "0"/>
+		<Position x="66" y = "64"/>
+		</Unit>
+		<Unit>
+		<Name value = "GONDOR HERO"/>
+        <ID value = "21"/>
+		<Position x="99" y = "0"/>
 		</Unit>
 	</Units>
 

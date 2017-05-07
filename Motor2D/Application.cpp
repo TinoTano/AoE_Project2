@@ -11,6 +11,7 @@
 #include "Map.h"
 #include "Pathfinding.h"
 #include "Fonts.h"
+#include "ParticleManager.h"
 #include "Application.h"
 #include "p2Log.h"
 #include "EntityManager.h"
@@ -34,6 +35,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	map = new Map();
 	pathfinding = new PathFinding();
 	font = new Fonts();
+	particlemanager = new ParticleManager();
 	entityManager = new EntityManager();
 	collision = new Collision();
 	gui = new Gui();
@@ -50,6 +52,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(map);
 	AddModule(pathfinding);
 	AddModule(font);
+	AddModule(particlemanager);
 	AddModule(gui);
     //AddModule(console);
 
@@ -218,6 +221,24 @@ pugi::xml_node Application::LoadHUDDataFile(pugi::xml_document &HUDDatafile) con
 
 	return ret;
 }
+
+pugi::xml_node Application::LoadParticleDataFile(pugi::xml_document &ParticleDatafile) const
+{
+	pugi::xml_node ret;
+
+	char* buf = NULL;
+	int size = App->fs->Load("ParticleData.xml", &buf);
+	pugi::xml_parse_result result = ParticleDatafile.load_buffer(buf, size);
+	RELEASE(buf);
+
+	if (result == NULL)
+		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
+	else
+		ret = ParticleDatafile.child("ParticleData");
+
+	return ret;
+}
+
 
 // ---------------------------------------------
 void Application::PrepareUpdate()

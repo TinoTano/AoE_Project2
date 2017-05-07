@@ -516,6 +516,7 @@ void Label::CleanUp()
 	parent = nullptr;
 	font = nullptr;
 	App->tex->UnLoad(texture);
+	App->font->DeleteFont(font);
 	str.clear();
 }
 
