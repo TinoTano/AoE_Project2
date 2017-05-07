@@ -340,10 +340,10 @@ list<iPoint>* PathFinding::CreatePath(const iPoint& origin, const iPoint& destin
 	list<iPoint>* ret = new list<iPoint>;
 
 	if (!IsWalkable(origin) || App->collision->IsOccupied(adjusted_origWorld)) //this shouldn't happen, just as safety mesure
-		adjusted_orig = FindNearestAvailable(origin);    
+		adjusted_orig = FindNearestAvailable(origin, 5);    
 
 	if (!IsWalkable(destination) || App->collision->IsOccupied(adjusted_destWorld))
-		adjusted_dest = FindNearestAvailable(destination);
+		adjusted_dest = FindNearestAvailable(destination, 5);
 
 	if (adjusted_orig.x == -1 || adjusted_dest.x == -1 || adjusted_dest == adjusted_orig) {
 		ret->push_back(origin);
@@ -572,8 +572,7 @@ bool PathFinding::PushUnit(Unit* pushing_unit, Unit* pushed_unit) {
 		pushed_unit->path->push_front(App->map->WorldToMap(next_tile.x, next_tile.y));
 	}
 
-	Order* new_order = new FollowPathOrder();
-	pushed_unit->order_list.push_front(new_order);
+	pushed_unit->order_list.push_front(new FollowPathOrder());
 
 	return true;
 }

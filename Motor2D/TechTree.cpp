@@ -81,8 +81,8 @@ void TechTree::LoadTechTree(pugi::xml_node gameData) {
 			for (unlocked_unit = TechData.child("Unl_units").child("Unl_unit"); unlocked_unit; unlocked_unit = unlocked_unit.next_sibling("Unl_unit")) {
 
 				pair<unitType, buildingType> unl_unit_data;
-				unl_unit_data.first = (unitType)unlocked_tech.attribute("unit_type").as_int();
-				unl_unit_data.second = (buildingType)unlocked_tech.attribute("building").as_int();
+				unl_unit_data.first = (unitType)unlocked_unit.attribute("unit_type").as_int();
+				unl_unit_data.second = (buildingType)unlocked_unit.attribute("building").as_int();
 
 				new_Tech->unlocks_units.push_back(unl_unit_data);
 
@@ -92,8 +92,8 @@ void TechTree::LoadTechTree(pugi::xml_node gameData) {
 			for (mult_data = TechData.child("Multipliers").child("Multiplier"); mult_data; mult_data = mult_data.next_sibling("Multiplier")) {
 
 				pair<float, TechMultiplier> multiplier_data;
-				multiplier_data.first = (unitType)unlocked_tech.attribute("value").as_float();
-				multiplier_data.second = (TechMultiplier)unlocked_tech.attribute("multiplier").as_int();
+				multiplier_data.first = mult_data.attribute("value").as_float();
+				multiplier_data.second = (TechMultiplier)mult_data.attribute("multiplier").as_int();
 
 				new_Tech->multipliers.push_back(multiplier_data);
 

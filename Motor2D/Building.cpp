@@ -24,10 +24,9 @@ Building::Building(int posX, int posY, Building* building)
 	faction = building->faction;
 	buildingAttackSpeed = building->buildingAttackSpeed;
 	buildingPiercingDamage = building->buildingPiercingDamage;
-	buildingWoodCost = building->buildingWoodCost;
-	buildingStoneCost = building->buildingStoneCost;
+	cost = building->cost;
 	buildingBuildTime = building->buildingBuildTime;
-	buildingIdleTexture = building->buildingIdleTexture;
+	entityTexture = buildingIdleTexture = building->buildingIdleTexture;
 	buildingDieTexture = building->buildingDieTexture;
 	constructingPhase1 = building->constructingPhase1;
 	constructingPhase2 = building->constructingPhase2;
@@ -38,7 +37,6 @@ Building::Building(int posX, int posY, Building* building)
 	Defense = building->Defense;
 	canAttack = building->canAttack;
 
-	entityTexture = buildingIdleTexture;
 	GetBuildingBoundaries();
 
 	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);

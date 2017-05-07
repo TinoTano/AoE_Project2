@@ -38,8 +38,7 @@ public:
 	buildingType type = ORC_BARRACKS;
 	float buildingAttackSpeed = 0;
 	int buildingPiercingDamage = 0;
-	int buildingWoodCost = 0;
-	int buildingStoneCost = 0;
+	Cost cost;
 	int buildingBuildTime = 0;
 	bool canAttack = false;
 	bool waitingToPlace = false;
@@ -47,7 +46,6 @@ public:
 
 	//Utilities
 	Timer attack_timer;
-	list<Unit*> availableUnitsToCreateList;
 	SDL_Texture* buildingIdleTexture = nullptr;
 	SDL_Texture* buildingDieTexture = nullptr;
 	SDL_Texture* constructingPhase1 = nullptr;

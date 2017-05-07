@@ -18,7 +18,6 @@
 #include "QuadTree.h"
 #include "Building.h"
 #include "FogOfWar.h"
-#include "ParticleManager.h"
 
 Scene::Scene() : SceneElement("scene")
 {
@@ -216,10 +215,6 @@ bool Scene::Update(float dt)
 		//debug = !debug;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
-		App->particlemanager->CreateArrow(400, { hero->GetPosition().x, hero->GetPosition().y }, { my_townCenter->GetPosition().x,my_townCenter->GetPosition().y });
-	}
-
 	/*
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		SaveScene();
@@ -375,6 +370,23 @@ void Scene::UpdateResources(Label* resource, uint new_val)
 void Scene::UpdateVillagers(uint available_villagers, uint total_villagers)
 {
 	villagers->SetString(to_string(available_villagers) + '/' + to_string(total_villagers));
+}
+
+bool Scene::SpendResourcesIn(Cost& cost) {
+
+	if (woodCount - cost.woodCost < 0 || foodCount - cost.foodCost < 0 || goldCount - cost.goldCost < 0 || stoneCount - cost.stoneCost < 0)
+		return false;
+
+	if(cost.woodCost > 0)
+		UpdateResources(wood, woodCount -= cost.woodCost);
+	if (cost.foodCost > 0)
+		UpdateResources(food, foodCount -= cost.foodCost);
+	if (cost.goldCost > 0)
+		UpdateResources(gold, goldCount -= cost.goldCost);
+	if (cost.stoneCost > 0)
+		UpdateResources(stone, stoneCount -= cost.stoneCost);
+
+	return true;
 }
 
 void Scene::SaveScene()

@@ -61,6 +61,7 @@ public:
 	bool IsVillager = false;
 	bool IsHero = false;
 	bool isGuard = false;
+	Cost cost;
 	
 	// Utilities
 	EntityState state = IDLE;

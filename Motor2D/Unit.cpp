@@ -43,6 +43,7 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	MaxLife = unit->MaxLife;
 	Attack = unit->Attack;
 	Defense = unit->Defense;
+	cost = unit->cost;
 
 	//Animations
 	idleAnimations = unit->idleAnimations;

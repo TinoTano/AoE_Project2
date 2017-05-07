@@ -95,60 +95,73 @@ bool EntityManager::Update(float arg_dt)
 		}
 
 		iPoint mouse = { mouseX, mouseY };
-		Collider* nearest_col = App->collision->FindNearestCollider(mouse);
+		Collider* clicked_on = CheckCursorHover(mouse);
+		list<Entity*> aux_list;
 
-		if (mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
+		switch (cursor_hover) {
 
-			if (nearest_col->entity->faction != selectedEntityList.front()->faction) {
-				if (nearest_col->type == COLLIDER_RESOURCE) {
+		case HOVERING_ENEMY:
 
-					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-						unit = (Unit*)(*it);
-						if (unit->IsVillager) {
-							Order* new_order = (Order*)new GatherOrder((Resource*)nearest_col->entity);
-							unit->order_list.push_front(new_order);
-						}
-					}
-				}
-				else {
-					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-						unit = (Unit*)(*it);
-						Order* new_order = (Order*)new AttackOrder(nearest_col->entity);
-						unit->order_list.push_front(new_order);
-					}
-				}
+			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+				unit = (Unit*)(*it);
+				unit->order_list.push_front(new AttackOrder(clicked_on->entity));
 			}
+			break;
 
-			if (nearest_col->type == COLLIDER_BUILDING && nearest_col->entity->state == BEING_BUILT) {
-				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-					Unit* unit = (Unit*)(*it);
-					if (unit->IsVillager) {
-						Order* new_order = (Order*)new BuildOrder((Building*)nearest_col->entity);
-						unit->order_list.push_front(new_order);
-					}
-				}
+		case HOVERING_RESOURCE:
+
+			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+				unit = (Unit*)(*it);
+
+				if (unit->IsVillager)
+					unit->order_list.push_front(new GatherOrder((Resource*)clicked_on->entity));
+				else
+					aux_list.push_back((*it));
 			}
-		}
-		else {
-			iPoint destination = App->map->WorldToMap(mouseX, mouseY);
-			Unit* commander = (Unit*)selectedEntityList.front();
+			break;
 
-			if (commander->SetDestination(destination)) {
+		case HOVERING_ALLY_BUILDING:
 
-				if (selectedEntityList.size() > 1) {
-
-					selectedEntityList.pop_front();
-					App->pathfinding->SharePath(commander, selectedEntityList);
-					selectedEntityList.push_front(commander);
-
-				}
+			if (clicked_on->entity->state == BEING_BUILT) {
 
 				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 					unit = (Unit*)(*it);
-					Order* new_order = (Order*)new FollowPathOrder();
-					unit->order_list.push_front(new_order);
+
+					if (unit->IsVillager)
+						unit->order_list.push_front(new BuildOrder((Building*)clicked_on->entity));
 				}
 			}
+
+		default:
+
+			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++)
+				aux_list.push_back((*it));
+
+			break;
+		}
+
+		if (!aux_list.empty()) {
+
+			iPoint destination = App->map->WorldToMap(mouseX, mouseY);
+			Unit* commander = (Unit*)aux_list.front();
+
+			if (commander->SetDestination(destination)) {
+
+				if (aux_list.size() > 1) {
+
+					aux_list.pop_front();
+					App->pathfinding->SharePath(commander, aux_list);
+					aux_list.push_front(commander);
+
+				}
+
+				for (list<Entity*>::iterator it = aux_list.begin(); it != aux_list.end(); it++) {
+					unit = (Unit*)(*it);
+					unit->order_list.push_front(new FollowPathOrder());
+				}
+				
+			}
+
 		}
 
 		if (buildingToCreate != nullptr && buildingToCreate->waitingToPlace) {
@@ -175,8 +188,7 @@ bool EntityManager::Update(float arg_dt)
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
 						if (unit->IsVillager) {
-							Order* new_order = (Order*)new BuildOrder(buildingToCreate);
-							unit->order_list.push_front(new_order);
+							unit->order_list.push_front(new BuildOrder(buildingToCreate));
 							unit->buildingToCreate = buildingToCreate;
 						}
 					}
@@ -367,6 +379,11 @@ bool EntityManager::LoadGameData()
 			unitTemplate->unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
 			unitTemplate->unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
 
+			unitTemplate->cost.woodCost = unitNodeInfo.child("Stats").child("Cost").child("woodCost").attribute("value").as_int();
+			unitTemplate->cost.stoneCost = unitNodeInfo.child("Stats").child("Cost").child("stoneCost").attribute("value").as_int();
+			unitTemplate->cost.foodCost = unitNodeInfo.child("Stats").child("Cost").child("foodCost").attribute("value").as_int();
+			unitTemplate->cost.goldCost = unitNodeInfo.child("Stats").child("Cost").child("goldCost").attribute("value").as_int();
+
 			pugi::xml_node animationNode;
 			int width;
 			int height;
@@ -507,8 +524,6 @@ bool EntityManager::LoadGameData()
 
 			buildingTemplate->faction = (Faction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-			buildingTemplate->buildingWoodCost = buildingNodeInfo.child("Stats").child("WoodCost").attribute("value").as_int();
-			buildingTemplate->buildingStoneCost = buildingNodeInfo.child("Stats").child("StoneCost").attribute("value").as_int();
 			buildingTemplate->buildingBuildTime = buildingNodeInfo.child("Stats").child("BuildTime").attribute("value").as_int();
 			buildingTemplate->canAttack = buildingNodeInfo.child("Stats").child("CanAttack").attribute("value").as_bool();
 
@@ -517,6 +532,11 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->constructingPhase1 = App->tex->Load(constructingPhase1Path.c_str());
 			buildingTemplate->constructingPhase2 = App->tex->Load(constructingPhase2Path.c_str());
 			buildingTemplate->constructingPhase3 = App->tex->Load(constructingPhase3Path.c_str());
+
+			buildingTemplate->cost.woodCost = buildingNodeInfo.child("Stats").child("Cost").child("woodCost").attribute("value").as_int();
+			buildingTemplate->cost.stoneCost = buildingNodeInfo.child("Stats").child("Cost").child("stoneCost").attribute("value").as_int();
+			buildingTemplate->cost.foodCost = buildingNodeInfo.child("Stats").child("Cost").child("foodCost").attribute("value").as_int();
+			buildingTemplate->cost.goldCost = buildingNodeInfo.child("Stats").child("Cost").child("goldCost").attribute("value").as_int();
 
 			buildingTemplate->type = (buildingType)buildingNodeInfo.child("Info").child("ID").attribute("value").as_int();
 
@@ -681,10 +701,8 @@ void EntityManager::OnCollision(Collision_data& col_data)
 
 		if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
 
-			if (building = col_data.c1->entity->collider->GetBuilding()) {
-				Order* new_order = (Order*)new AttackOrder(col_data.c2->entity);
-				building->order_list.push_front(new_order);
-			}
+			if (building = col_data.c1->entity->collider->GetBuilding()) 
+				building->order_list.push_front(new AttackOrder(col_data.c2->entity));
 			else if (unit = col_data.c1->entity->collider->GetUnit()) {
 
 				if (unit->state == ATTACKING || unit->state == IDLE || unit->state == PATROLLING) {
@@ -701,8 +719,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 					}
 				}
 
-				Order* new_order = (Order*)new AttackOrder(col_data.c2->entity);
-				unit->order_list.push_front(new_order);
+				unit->order_list.push_front(new AttackOrder(col_data.c2->entity));
 			}
 		}
 	}
@@ -731,9 +748,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 
 					unit->order_list.pop_front();
 					unit->SetDestination(unit->destinationTileWorld);
-
-					Order* new_order = new FollowPathOrder();
-					unit->order_list.push_front(new_order);
+					unit->order_list.push_front(new FollowPathOrder());
 				}
 				else if (unit->order_list.front()->order_type == REACH) {
 
@@ -794,6 +809,29 @@ void EntityManager::DestroyEntity(Entity* entity)
 			++it;
 		}
 	}
+}
+
+Collider* EntityManager::CheckCursorHover(iPoint cursor_pos) {
+
+	Collider* nearest_col = App->collision->FindNearestCollider(cursor_pos);
+
+	if (cursor_pos.DistanceTo(nearest_col->pos) < nearest_col->r) {
+
+		if (nearest_col->type == COLLIDER_RESOURCE)
+			cursor_hover = HOVERING_RESOURCE;
+		else if (nearest_col->entity->faction == SAURON_ARMY)
+			cursor_hover = HOVERING_ENEMY;
+		else {
+			if (nearest_col->type == COLLIDER_UNIT)
+				cursor_hover = HOVERING_ALLY_UNIT;
+			else
+				cursor_hover = HOVERING_ALLY_BUILDING;
+		}
+	}
+	else
+		 cursor_hover = HOVERING_TERRAIN;
+
+	return nearest_col;
 }
 
 void EntityManager::FillSelectedList() {

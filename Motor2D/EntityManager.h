@@ -10,7 +10,9 @@
 #include "Villager.h"
 #include "Collision.h"
 
-
+enum CursorHovering {
+	HOVERING_TERRAIN, HOVERING_ALLY_UNIT, HOVERING_ENEMY, HOVERING_RESOURCE, HOVERING_ALLY_BUILDING 
+};
 
 #define CAMERA_OFFSET_X App->render->camera.x
 #define CAMERA_OFFSET_Y App->render->camera.y
@@ -55,6 +57,7 @@ public:
 
 	void FillSelectedList();
 	void DrawSelectedList();
+	Collider* CheckCursorHover(iPoint cursor_pos);
 
 	Resource* FindNearestResource(resourceType type, iPoint pos);
 
@@ -69,9 +72,6 @@ private:
 	SDL_Rect multiSelectionRect = { 0,0,0,0 };
 	Timer click_timer;
 
-	map<int, Unit*> unitsDB;
-	map<int, Building*> buildingsDB;
-	map<int, Resource*> resourcesDB;
 
 	Entity* clicked_entity = nullptr;
 
@@ -88,14 +88,19 @@ public:
 	list<Building*> enemyBuildingList;
 	list<Resource*> resourceList;
 
+	CursorHovering cursor_hover = HOVERING_TERRAIN;
 	bool placingBuilding = false;
 	float dt = 0;
 	buildingType creatingBuildingType = ORC_BARRACKS;
 	SDL_Rect NotHUD;
 	Building* buildingToCreate = nullptr;
+
+	map<int, Unit*> unitsDB;
+	map<int, Building*> buildingsDB;
+	map<int, Resource*> resourcesDB;
 };
 
-#endif // !__ENTITY_MANAGER__
+#endif // !_ENTITY_MANAGER_
 
 
 

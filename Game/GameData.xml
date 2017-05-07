@@ -643,7 +643,7 @@
 				<Die value="textures/Units/GoblinSoldier/GoblinSoldierDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
+				<Faction value="2"/>
 				<Life value="35"/>
 				<Attack value="3"/>
 				<AttackSpeed value="2.1"/>
