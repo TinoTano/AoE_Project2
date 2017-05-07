@@ -2,55 +2,29 @@
 #include "Application.h"
 #include "Input.h"
 #include "p2Log.h"
-#include "Entity.h"
 #include "Render.h"
-#include "Window.h"
-#include "QuadTree.h"
 
 Collision::Collision() : Module()
 {
 	name = "collision";
 
-	matrix[COLLIDER_UNIT][COLLIDER_UNIT] = true;
-	matrix[COLLIDER_UNIT][COLLIDER_BUILDING] = true;
-	matrix[COLLIDER_UNIT][COLLIDER_RESOURCE] = true;
-	matrix[COLLIDER_UNIT][COLLIDER_RANGE] = false;
-	matrix[COLLIDER_UNIT][COLLIDER_LOS] = false;
-	matrix[COLLIDER_UNIT][COLLIDER_CREATING_BUILDING] = true;
+	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_ENEMY_UNIT] = true;
+	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_FRIENDLY_BUILDING] = true;
+	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_ENEMY_BUILDING] = true;
+	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_RESOURCE] = true;
+	matrix[COLLIDER_FRIENDLY_UNIT][COLLIDER_FRIENDLY_UNIT] = true;
 
-	matrix[COLLIDER_BUILDING][COLLIDER_UNIT] = true;
-	matrix[COLLIDER_BUILDING][COLLIDER_BUILDING] = false;
-	matrix[COLLIDER_BUILDING][COLLIDER_RESOURCE] = false;
-	matrix[COLLIDER_BUILDING][COLLIDER_RANGE] = false;
-	matrix[COLLIDER_BUILDING][COLLIDER_LOS] = false;
-	matrix[COLLIDER_BUILDING][COLLIDER_CREATING_BUILDING] = true;
+	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_FRIENDLY_UNIT] = true;
+	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_ENEMY_BUILDING] = true;
+	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_FRIENDLY_BUILDING] = true;
+	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_RESOURCE] = true;
+	matrix[COLLIDER_ENEMY_UNIT][COLLIDER_ENEMY_UNIT] = false;
 
-	matrix[COLLIDER_RESOURCE][COLLIDER_UNIT] = true;
-	matrix[COLLIDER_RESOURCE][COLLIDER_BUILDING] = false;
-	matrix[COLLIDER_RESOURCE][COLLIDER_RESOURCE] = false;
-	matrix[COLLIDER_RESOURCE][COLLIDER_RANGE] = false;
-	matrix[COLLIDER_RESOURCE][COLLIDER_LOS] = false;
-	matrix[COLLIDER_RESOURCE][COLLIDER_CREATING_BUILDING] = true;
-
-	matrix[COLLIDER_RANGE][COLLIDER_UNIT] = true;
-	matrix[COLLIDER_RANGE][COLLIDER_BUILDING] = true;
-	matrix[COLLIDER_RANGE][COLLIDER_RESOURCE] = false;
-	matrix[COLLIDER_RANGE][COLLIDER_RANGE] = false;
-	matrix[COLLIDER_RANGE][COLLIDER_LOS] = false;
-	matrix[COLLIDER_RANGE][COLLIDER_CREATING_BUILDING] = false;
-
-	matrix[COLLIDER_LOS][COLLIDER_UNIT] = false;
-	matrix[COLLIDER_LOS][COLLIDER_BUILDING] = false;
-	matrix[COLLIDER_LOS][COLLIDER_RESOURCE] = false;
-	matrix[COLLIDER_LOS][COLLIDER_RANGE] = false;
-	matrix[COLLIDER_LOS][COLLIDER_LOS] = false;
-	matrix[COLLIDER_LOS][COLLIDER_CREATING_BUILDING] = false;
-
-	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_UNIT] = true;
-	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_BUILDING] = true;
-	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_RESOURCE] = true;
-	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_RANGE] = false;
-	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_LOS] = false;
+	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_FRIENDLY_UNIT] = true;
+	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_ENEMY_UNIT] = true;
+	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_ENEMY_BUILDING] = false;
+	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_RESOURCE] = false;
+	matrix[COLLIDER_FRIENDLY_BUILDING][COLLIDER_FRIENDLY_BUILDING] = false;
 
 }
 
@@ -66,70 +40,35 @@ bool Collision::Awake(pugi::xml_node &)
 
 bool Collision::Start()
 {
-	uint w, h;
-	App->win->GetWindowSize(w, h);
-	quadTree = new QuadTree({ -4800, 0, 9600, 4800 }, 0);
 	return true;
 }
 
 bool Collision::PreUpdate()
 {
-
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
 		if ((*it)->to_delete == true)
 		{
 			RELEASE(*it);
 			it = colliders.erase(it);
-
-			for (list<Collision_data*>::iterator it2 = collision_list.begin(); it2 != collision_list.end(); it2++) {
-				if ((*it) == (*it2)->c1 || (*it) == (*it2)->c2)
-					(*it2)->state = SOLVED;
-			}
 		}
 	}
 
-	Collider *c1 =	nullptr;
-	Collider *c2 =	nullptr;
-	
+	Collider *c1;
+	Collider *c2;
+
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
+		c1 = (*col1);
 
-		if ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING) {// || (*col1)->type == COLLIDER_RANGE) {
-			c1 = (*col1);
+		for (list<Collider*>::iterator col2 = next(col1); col2 != colliders.end(); col2++) {
+			c2 = (*col2);
 
-			potential_collisions.clear();
-			quadTree->Retrieve(potential_collisions, c1);
+			if (c1->CheckCollision(c2->rect) == true) {
+				if (matrix[c1->type][c2->type] && c1->callback)
+					c1->callback->OnCollision(c1, c2);
 
-			for (list<Collider*>::iterator col2 = potential_collisions.begin(); col2 != potential_collisions.end(); col2++) {
-				c2 = (*col2);
-
-				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback) {
-
-					if (!FindCollision(c1, c2)) {
-						Collision_data* collision = new Collision_data(c1, c2);   // c1 can only be unit or range
-						collision_list.push_back(collision);
-					}
-				}
+				if (matrix[c2->type][c1->type] && c2->callback)
+					c2->callback->OnCollision(c2, c1);
 			}
-		}
-	}
-
-	for (list<Collision_data*>::iterator collisions = collision_list.begin(); collisions != collision_list.end(); collisions++) {
-
-		if ((*collisions)->state == UNSOLVED) {
-			(*collisions)->c1->callback->OnCollision(*(*collisions));
-			continue;
-		}
-
-		if ((*collisions)->state == SOLVING) {
-			if ((*collisions)->c1->CheckCollision((*collisions)->c2) == false)
-				(*collisions)->state = SOLVED;
-		}
-
-		if ((*collisions)->state == SOLVED) {
-			(*collisions)->c1->colliding = false;
-			(*collisions)->c2->colliding = false;
-			RELEASE(*collisions);
-			collisions = collision_list.erase(collisions);
 		}
 	}
 
@@ -138,12 +77,14 @@ bool Collision::PreUpdate()
 
 bool Collision::Update(float dt)
 {
-	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) 
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		debug = !debug;
-	
-	if (debug) 
+	}
+
+	if (debug) {
 		DebugDraw();
-	
+	}
+
 	return true;
 }
 
@@ -163,11 +104,10 @@ bool Collision::CleanUp()
 	return true;
 }
 
-Collider * Collision::AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback, Entity* entity)
+Collider * Collision::AddCollider(SDL_Rect rect, COLLIDER_TYPE type, Module * callback)
 {
-	Collider* ret = new Collider(position, radius, type, callback, entity);
+	Collider* ret = new Collider(rect, type, callback);
 	colliders.push_back(ret);
-	quadTree->Insert(ret);
 
 	return ret;
 }
@@ -177,96 +117,20 @@ void Collision::DeleteCollider(Collider * collider)
 	collider->to_delete = true;
 }
 
-bool Collider::CheckCollision(Collider* c2) const
+bool Collider::CheckCollision(const SDL_Rect& r) const
 {
-	return (pos.DistanceTo(c2->pos) < (r + c2->r));
+	return (bool)SDL_HasIntersection(&rect, &r);
 }
-
-Unit* Collider::GetUnit() {
-
-	Unit* unit = nullptr;
-
-	if (type == COLLIDER_UNIT)
-		unit = (Unit*)entity;
-
-	return unit;
-}
-
-Building* Collider::GetBuilding() {
-
-	Building* building = nullptr;
-
-	if (type == COLLIDER_BUILDING || type == COLLIDER_CREATING_BUILDING)
-		building = (Building*)entity;
-
-	return building;
-}
-
-Resource* Collider::GetResource() {
-
-	Resource* resource = nullptr;
-
-	if (type == COLLIDER_RESOURCE)
-		resource = (Resource*)entity;
-
-	return resource;
-}
-
 
 void Collision::DebugDraw()
 {
 
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++)
 	{
-		if (App->render->CullingCam((*it)->pos)) {
-			if ((*it)->colliding)
-				App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255);
-			else
-				App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255);
-		}
-	}
-}
-
-bool Collision::FindCollision(Collider* col1, Collider* col2) {
-
-	for (list<Collision_data*>::iterator it = collision_list.begin(); it != collision_list.end(); it++) {
-
-		if (((*it)->c1 == col1 && (*it)->c2 == col2) || ((*it)->c2 == col1 && (*it)->c1 == col2))
-			return true;
-	}
-
-	return false;
-
-}
-
-Collider* Collision::FindNearestCollider(iPoint point) {
-
-	Collider* col = nullptr;
-	if (colliders.size() > 0) {
-		col = colliders.front();
-		for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
-
-			if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)
-				continue;
-
-			if ((*it)->pos.DistanceTo(point) < col->pos.DistanceTo(point))
-				col = (*it);
-		}
-	}
-	return col;
-
-}
-
-bool Collision::IsOccupied(iPoint worldPos) {
-
-	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
-
-		if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)
+		if ((*it) == nullptr) {
 			continue;
+		}
 
-		if ((*it)->pos.DistanceTo(worldPos) < (*it)->r)
-			return true;
+		App->render->DrawQuad((*it)->rect, 255, 255, 255, 255, false);
 	}
-
-	return false;
 }

@@ -21,9 +21,8 @@
 				<AttackSpeed value="2.2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="110.1"/>
+				<MovementSpeed value="1.1"/>
 				<LineOfSight value="3"/>
-        <Range value="20"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -78,9 +77,8 @@
 				<AttackSpeed value="1.9"/>
 				<Defense value="2"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="110.9"/>
+				<MovementSpeed value="0.9"/>
 				<LineOfSight value="3"/>
-        <Range value="30"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -135,9 +133,8 @@
 				<AttackSpeed value="2"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="110"/>
+				<MovementSpeed value="1"/>
 				<LineOfSight value="4"/>
-        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -192,9 +189,8 @@
 				<AttackSpeed value="2.2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="1"/>
-				<MovementSpeed value="110.1"/>
+				<MovementSpeed value="1.1"/>
 				<LineOfSight value="7"/>
-        <Range value="150"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -249,9 +245,8 @@
 				<AttackSpeed value="2"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="110"/>
+				<MovementSpeed value="1"/>
 				<LineOfSight value="6"/>
-        <Range value="30"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -301,14 +296,13 @@
 			</Textures>
 			<Stats>
 				<Faction value="0"/>
-				<Life value="90"/>
-				<Attack value="20"/>
+				<Life value="80"/>
+				<Attack value="4"/>
 				<AttackSpeed value="2.1"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="130.5"/>
+				<MovementSpeed value="1.5"/>
 				<LineOfSight value="6"/>
-        <Range value="165"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -319,7 +313,7 @@
 					<Columns value="10"/>
 					<Width value="98"/>
 					<Height value="94"/>
-					<Speed value="0.15f"/>
+					<Speed value="0.2f"/>
 				</Idle>
 				<Move>
 					<Rows value="5"/>
@@ -363,9 +357,8 @@
 				<AttackSpeed value="2"/>
 				<Defense value="1"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="110.5"/>
+				<MovementSpeed value="1.5"/>
 				<LineOfSight value="5"/>
-        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -420,9 +413,8 @@
 				<AttackSpeed value="1.9"/>
 				<Defense value="2"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="110.3"/>
+				<MovementSpeed value="1.3"/>
 				<LineOfSight value="3"/>
-        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -477,9 +469,8 @@
 				<AttackSpeed value="2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="3"/>
-				<MovementSpeed value="110.4"/>
+				<MovementSpeed value="1.4"/>
 				<LineOfSight value="4"/>
-        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -534,9 +525,8 @@
 				<AttackSpeed value="0"/>
 				<Defense value="3"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="100.7"/>
+				<MovementSpeed value="0.7"/>
 				<LineOfSight value="3"/>
-        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -591,9 +581,8 @@
 				<AttackSpeed value="1.8"/>
 				<Defense value="1"/>
 				<PiercingDamage value="3"/>
-				<MovementSpeed value="100.8"/>
+				<MovementSpeed value="0.8"/>
 				<LineOfSight value="6"/>
-        <Range value="35"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -649,10 +638,8 @@
 				<AttackSpeed value="2.1"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="85.1"/>
+				<MovementSpeed value="1.1"/>
 				<LineOfSight value="3"/>
-        <Range value="25"/>
-        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -707,10 +694,8 @@
 				<AttackSpeed value="2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="85"/>
+				<MovementSpeed value="1"/>
 				<LineOfSight value="3"/>
-        <Range value="25"/>
-        <RangeOffset value="70"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -735,7 +720,7 @@
 					<Columns value="15"/>
 					<Width value="75"/>
 					<Height value="79"/>
-					<Speed value="0.25f"/>
+					<Speed value="0.2f"/>
 				</Attack>
 				<Die>
 					<Rows value="5"/>
@@ -765,10 +750,8 @@
 				<AttackSpeed value="2"/>
 				<Defense value="1"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="85"/>
+				<MovementSpeed value="1"/>
 				<LineOfSight value="4"/>
-        <Range value="20"/>
-        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -823,10 +806,8 @@
 				<AttackSpeed value="2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="0"/>
-				<MovementSpeed value="85.1"/>
+				<MovementSpeed value="1.1"/>
 				<LineOfSight value="6"/>
-        <Range value="155"/>
-        <RangeOffset value="150"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -881,10 +862,8 @@
 				<AttackSpeed value="2.1"/>
 				<Defense value="0"/>
 				<PiercingDamage value="1"/>
-				<MovementSpeed value="85.3"/>
+				<MovementSpeed value="1.3"/>
 				<LineOfSight value="3"/>
-        <Range value="45"/>
-        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -939,10 +918,8 @@
 				<AttackSpeed value="1.9"/>
 				<Defense value="2"/>
 				<PiercingDamage value="3"/>
-				<MovementSpeed value="90.2"/>
+				<MovementSpeed value="1.2"/>
 				<LineOfSight value="3"/>
-        <Range value="160"/>
-        <RangeOffset value="150"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -997,10 +974,8 @@
 				<AttackSpeed value="2.1"/>
 				<Defense value="1"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="90.5"/>
+				<MovementSpeed value="1.5"/>
 				<LineOfSight value="4"/>
-        <Range value="40"/>
-        <RangeOffset value="50"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -1049,16 +1024,14 @@
 				<Die value="textures/Units/troll/trollDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="2"/>
+				<Faction value="1"/>
 				<Life value="250"/>
 				<Attack value="10"/>
 				<AttackSpeed value="1.5"/>
 				<Defense value="0"/>
 				<PiercingDamage value="2"/>
-				<MovementSpeed value="85.7"/>
+				<MovementSpeed value="0.7"/>
 				<LineOfSight value="3"/>
-        <Range value="70"/>
-        <RangeOffset value="100"/>
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
@@ -1094,197 +1067,6 @@
 				</Die>
 			</Animations>
 		</Unit>
-  
-    <Unit>
-      <Info>
-        <Name value = "VILLAGER"/>
-        <ID value = "19"/>
-      </Info>
-			<Textures>
-				<Idle value="textures/Units/Human/HumanWalkingWorker.png"/>
-				<Move value="textures/Units/Human/HumanWalkingWorker.png"/>
-				<Attack value="textures/Units/Human/HumanWalkingWorker.png"/>
-        <Cut value="textures/Units/Human"/>
-        <Minning value="textures/Units/Human"/>
-        <Collecting_animals value="textures/Units/Human"/>
-        <Collecting_plant value="textures/Units/Human"/>
-				<Die value="textures/Units/Human/HumanWalkingWorker.png"/>
-			</Textures>
-			<Stats>
-				<Faction value="0"/>
-				<Life value="25"/>
-				<Attack value="3"/>
-				<AttackSpeed value="1.5"/>
-				<Defense value="0"/>
-				<PiercingDamage value="0"/>
-				<MovementSpeed value="100.7"/>
-				<LineOfSight value="3"/>
-        <Range value="30"/>
-        <RangeOffset value="50"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
-				<BuildTime value=""/>
-			</Stats>
-			<Animations>
-				<Idle>
-					<Rows value="5"/>
-					<Columns value="15"/>
-					<Width value="42"/>
-					<Height value="51"/>
-					<Speed value="0.2f"/>
-				</Idle>
-				<Move>
-					<Rows value="5"/>
-					<Columns value="15"/>
-					<Width value="42"/>
-					<Height value="51"/> 
-					<Speed value="0.2f"/>
-				</Move>
-				<Attack>
-					<Rows value="5"/>
-					<Columns value="15"/>
-					<Width value="42"/>
-					<Height value="51"/>
-					<Speed value="0.2f"/>
-				</Attack>
-				<Die>
-					<Rows value="5"/>
-					<Columns value="15"/>
-					<Width value="42"/>
-					<Height value="51"/>
-					<Speed value="0.2f"/>
-				</Die>
-			</Animations>
-    </Unit>
-
-    <Unit>
-      <Info>
-        <Name value = "ELF_VILLAGER"/>
-        <ID value = "20"/>
-      </Info>
-      <Textures>
-        <Idle value="textures/Units/Elf villager/ElfVillagerIdle.png"/>
-        <Move value="textures/Units/Elf villager/ElfVillagerMove.png"/>
-        <Attack value="textures/Units/Elf villager/ElfVillagerAttack.png"/>
-        <Cut value="textures/Units/Elf villager/ElfVillagerChopping.png"/>
-        <Minning value="textures/Units/Human"/>
-        <Collecting_animals value="textures/Units/Human"/>
-        <Collecting_plant value="textures/Units/Human"/>
-        <Die value="textures/Units/Elf villager/ElfVillagerDie.png"/>
-      </Textures>
-      <Stats>
-        <Faction value="0"/>
-        <Life value="25"/>
-        <Attack value="3"/>
-        <AttackSpeed value="1.5"/>
-        <Defense value="0"/>
-        <PiercingDamage value="0"/>
-        <MovementSpeed value="100.7"/>
-        <LineOfSight value="3"/>
-        <Range value="30"/>
-        <RangeOffset value="50"/>
-        <FoodCost value=""/>
-        <GoldCost value=""/>
-        <BuildTime value=""/>
-	<GatheringSpeed value="30"/>
-	<MaxCapacity value="50"/>
-      </Stats>
-      <Animations>
-        <Idle>
-          <Rows value="5"/>
-          <Columns value="15"/>
-          <Width value="22"/>
-          <Height value="42"/>
-          <Speed value="0.2f"/>
-        </Idle>
-        <Move>
-          <Rows value="5"/>
-          <Columns value="15"/>
-          <Width value="28"/>
-          <Height value="45"/>
-          <Speed value="0.2f"/>
-        </Move>
-        <Attack>
-          <Rows value="5"/>
-          <Columns value="15"/>
-          <Width value="54"/>
-          <Height value="51"/>
-          <Speed value="0.2f"/>
-        </Attack>
-        <Chop>
-          <Rows value="5"/>
-          <Columns value="15"/>
-          <Width value="74"/>
-          <Height value="76"/>
-          <Speed value="0.2f"/>
-        </Chop>
-        <Die>
-          <Rows value="5"/>
-          <Columns value="15"/>
-          <Width value="77"/>
-          <Height value="68"/>
-          <Speed value="0.4f"/>
-        </Die>
-      </Animations>
-    </Unit>
-
-		<Unit>
-      <Info>
-        <Name value = "GONDOR_HERO"/>
-        <ID value = "21"/>
-      </Info>
-			<Textures>
-				<Idle value="textures/Units/GondorKnight/GondorKnightIdle.png"/>
-				<Move value="textures/Units/GondorKnight/GondorKnightMove.png"/>
-				<Attack value="textures/Units/GondorKnight/GondorKnightAttack.png"/>
-				<Die value="textures/Units/GondorKnight/GondorKnightDie.png"/>
-			</Textures>
-			<Stats>
-				<Faction value="0"/>
-				<Life value="100"/>
-				<Attack value="5"/>
-				<AttackSpeed value="2"/>
-				<Defense value="1"/>
-				<PiercingDamage value="0"/>
-				<MovementSpeed value="110.5"/>
-				<LineOfSight value="5"/>
-        <Range value="35"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
-				<BuildTime value=""/>
-				<SkillType value="1"/>
-			</Stats>
-			<Animations>
-				<Idle>
-					<Rows value="5"/>
-					<Columns value="10"/>
-					<Width value="77"/>
-					<Height value="90"/>
-					<Speed value="0.2f"/>
-				</Idle>
-				<Move>
-					<Rows value="5"/>
-					<Columns value="10"/>
-					<Width value="77"/>
-					<Height value="91"/>
-					<Speed value="0.2f"/>
-				</Move>
-				<Attack>
-					<Rows value="5"/>
-					<Columns value="10"/>
-					<Width value="91"/>
-					<Height value="98"/>
-					<Speed value="0.2f"/>
-				</Attack>
-				<Die>
-					<Rows value="10"/>
-					<Columns value="5"/>
-					<Width value="232"/>
-					<Height value="127"/>
-					<Speed value="0.2f"/>
-				</Die>
-			</Animations>
-		</Unit>
 	</Units>
 	
 <!-- BUILDINGS -->
@@ -1298,9 +1080,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/TownHall.png"/>
 				<Die value="textures/Buildings/TownHall.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="2400"/>
@@ -1319,9 +1098,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="550"/>
@@ -1332,7 +1108,7 @@
 			</Stats>
 		</Building>
 		
-		<Building>
+		<Building value="ORC_BARRACKS" BuildingID = "2">
       <Info>
         <Name value = "ORC_BARRACKS"/>
         <ID value = "2"/>
@@ -1340,9 +1116,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/barracksOrcs.png"/>
 				<Die value="textures/Buildings/barracksOrcs.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1200"/>
@@ -1361,9 +1134,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1500"/>
@@ -1382,9 +1152,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1500"/>
@@ -1403,9 +1170,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
@@ -1424,9 +1188,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
@@ -1445,9 +1206,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
@@ -1466,9 +1224,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="600"/>
@@ -1487,9 +1242,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value=""/>
@@ -1508,9 +1260,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value=""/>
@@ -1529,9 +1278,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1020"/>
@@ -1550,9 +1296,6 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="2100"/>
@@ -1571,32 +1314,8 @@
 			<Textures>
 				<Idle value="textures/Buildings/"/>
 				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
-				<Life value="4800"/>
-				<WoodCost value="0"/>
-				<StoneCost value="650"/>
-				<BuildTime value="200"/>
-				<CanAttack value="false"/>
-			</Stats>
-		</Building>
-    <Building>
-      <Info>
-        <Name value = "SAURON_TOWER"/>
-        <ID value = "14"/>
-      </Info>
-			<Textures>
-				<Idle value="textures/Buildings/TowerOfSauron.png"/>
-				<Die value="textures/Buildings/TowerOfSauron.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
-			</Textures>
-			<Stats>
-				<Faction value="2"/>
 				<Life value="4800"/>
 				<WoodCost value="0"/>
 				<StoneCost value="650"/>
@@ -1610,14 +1329,14 @@
     
   <Resources>
     
-    <Resource value="BlackTrees">
+    <Trees>
+      <TreeType value="BlackTrees">
         <Info>
           <ID value="0"/>
-	  <Type value="1"/>
         </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/BlackTrees.png"/>
-          <Gathering value="textures/Resources/Trees/BlackCutingTrees.png"/>
+          <Gathering value="textures/Resources/"/>
         </Textures>
         <Stats>
           <Life value ="100"/>
@@ -1638,19 +1357,15 @@
           <Rect x="2193" y="0" w="71" h="195"/>
           <Rect x="2384" y="0" w="76" h="195"/>
         </Rects>
-        <GatherRect>
-          <Rect x="0" y="0" w="100" h="40"/>
-        </GatherRect>
-	</Resource>
+      </TreeType>
       
-	<Resource value ="GreenTrees">
+      <TreeType value ="GreenTrees">
         <Info>
           <ID value="1"/>
-	  <Type value="1"/>
         </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/GreenTrees.png"/>
-          <Gathering value="textures/Resources/Trees/BrownCutingTrees.png"/>
+          <Gathering value="textures/Resources/"/>
         </Textures>
         <Stats>
           <Life value ="100"/>
@@ -1671,15 +1386,13 @@
           <Rect x="2310" y="0" w="93" h="192"/>
           <Rect x="2502" y="0" w="108" h="192"/>
         </Rects>
-        <GatherRect>
-          <Rect x="0" y="0" w="100" h="40"/>
-        </GatherRect>
-    </Resource>
+      </TreeType>
+    </Trees>
 
-    <Resource value ="GOLD_MINE">
+    <GoldMines>
       <Info>
+        <Name value ="GOLD_MINE"/>
         <ID value ="2"/>
-	<Type value="2"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/"/>
@@ -1688,12 +1401,12 @@
       <Stats>
         <Life value ="800"/>
       </Stats>
-    </Resource>
+    </GoldMines>
 
-    <Resource value ="BUSH">
+    <Animals>
       <Info>
+        <Name value ="FOOD"/>
         <ID value ="3"/>
-	<Type value="3"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/"/>
@@ -1702,29 +1415,21 @@
       <Stats>
         <Life value ="100"/>
       </Stats>
-    </Resource>
+    </Animals>
 
-    <Resource value ="STONE_MINE">
+    <StoneMines>
       <Info>
+        <Name value ="STONE"/>
         <ID value ="4"/>
-	<Type value="4"/>
       </Info>
       <Textures>
-        <Idle value="textures/Resources/Rocks/Rocks.png"/>
+        <Idle value="textures/Resources/"/>
         <Gathering value="textures/Resources/"/>
       </Textures>
       <Stats>
         <Life value ="350"/>
       </Stats>
-      <Rects>
-          <Rect x="22" y="0" w="166" h="128"/>
-          <Rect x="218" y="0" w="199" h="128"/>
-          <Rect x="439" y="0" w="172" h="128"/>
-          <Rect x="650" y="0" w="175" h="128"/>
-          <Rect x="902" y="0" w="123" h="128"/>
-          <Rect x="1082" y="0" w="165" h="128"/>
-      </Rects>
-    </Resource>
+    </StoneMines>
     
   </Resources>
 </GameData>

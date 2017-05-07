@@ -15,12 +15,15 @@
 #include <sstream>
 #include "FileSystem.h"
 #include "SceneManager.h"
-#include "QuadTree.h"
-#include "Building.h"
-#include "FogOfWar.h"
 
 Scene::Scene() : SceneElement("scene")
 {
+	blit_sections.push_back({ 0, 0, 220, 30 });
+	blit_sections.push_back({ 0, 30, 220, 30 });
+	detect_sections.push_back({ 0, 0, 220, 30 });
+	blit_sections_menu.push_back({ 0, 0, 50, 19 });
+	blit_sections_menu.push_back({ 50, 0, 50, 19 });
+	detect_sections_menu.push_back({ 1330 , 5, 50, 19 });
 }
 
 // Destructor
@@ -42,7 +45,7 @@ bool Scene::Start()
 	active = true;
 	if (start == false)
 	{
-		if (App->map->Load("map_1.tmx") == true)
+		if (App->map->Load("rivendell.tmx") == true)
 		{
 			int w, h;
 			uchar* data = NULL;
@@ -56,148 +59,100 @@ bool Scene::Start()
 		start = true;
 	}
 
-	// LOADING CAMERA POSITION
-
-	App->render->camera.x = STARTING_CAMERA_X;
-
-	App->render->camera.y = STARTING_CAMERA_Y;
-
-	uint x, y;
-	App->win->GetWindowSize(x, y);
-
+	//Test
 	// LOADING UI BB
-	// ---------------------------------------
+	// ----------------------------------------
+	// LOADING BUTTONS RECTS
+
+
 	// LOADING SCENE UI
 
-	elements = App->gui->GetElements("LEVEL");
+	top = (Image*)App->gui->CreateImage("gui/ingame_layer.png", 0, 0, { 0,0,1920, 30 });
+	bottom = (Image*)App->gui->CreateImage("gui/ingame_layer.png", 0, 622, { 0, 40, 1408, 172 });
 
-	elements[0].position.first = -STARTING_CAMERA_X + 0;
-	elements[0].position.second = -STARTING_CAMERA_Y + 0;
+	menu_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", 1330, 5, blit_sections_menu, detect_sections_menu, TIER2);
 
-	elements[1].position.first = -STARTING_CAMERA_X + 0;
-	elements[1].position.second = -STARTING_CAMERA_Y + y - elements[1].rect.h;
 
-	elements[2].position.first = -STARTING_CAMERA_X + x - elements[2].rect.w;
-	elements[2].position.second = -STARTING_CAMERA_Y + y - elements[2].rect.h;
 
-	SDL_Rect NotHUD{ 0,30, x, y - elements[2].rect.h };
+	// MENU WINDOW
 
-	App->entityManager->NotHUD = NotHUD;
-	elements[3].position.first = -STARTING_CAMERA_X + x / 3 + x / 50;
-	elements[3].position.second = -STARTING_CAMERA_Y + y / 8 + y / 16;
-
-	elements[4].position.first = -STARTING_CAMERA_X + x - (x / 4);
-	elements[4].position.second = -STARTING_CAMERA_Y + y / 100;
-
-	elements[5].position.first = elements[3].position.first + x / 50;
-	elements[5].position.second = elements[3].position.second + y / 50;
-
-	elements[6].position.first = elements[5].position.first;
-	elements[6].position.second = elements[5].position.second + elements[5].detect_sections.front().h + y / 100;
-
-	elements[7].position.first = elements[6].position.first;
-	elements[7].position.second = elements[6].position.second + elements[6].detect_sections.front().h + y / 100;
-
-	elements[8].position.first = elements[7].position.first;
-	elements[8].position.second = elements[7].position.second + elements[7].detect_sections.front().h + y / 100;
-
-	for (uint it = 0; it < elements.size(); ++it) {
-		switch (elements[it].type)
-		{
-		case IMAGE:
-			images.push_back((Image*)App->gui->CreateImage(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].rect));
-			images.back()->loaded_tex = true;
-			break;
-		case BUTTON:
-			buttons.push_back((Button*)App->gui->CreateButton(elements[it].texture, elements[it].position.first, elements[it].position.second, elements[it].blit_sections, elements[it].detect_sections, elements[it].tier));
-			buttons.back()->loaded_tex = true;
-			break;
-		}
-	}
-
-	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", buttons[BACKTOMENU]->pos.first + x / 30, buttons[BACKTOMENU]->pos.second, nullptr);
-	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", buttons[QUITGAME]->pos.first + x / 20, buttons[QUITGAME]->pos.second, nullptr);
-	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", buttons[SAVEGAME]->pos.first + x / 20, buttons[SAVEGAME]->pos.second, nullptr);
-	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", buttons[CANCEL]->pos.first + x / 15, buttons[CANCEL]->pos.second, nullptr);
+	menu_bg_img = (Image*)App->gui->CreateImage("gui/tech-tree-parchment-drop-down-background.png", 540, 200, { 0,0, 280, 280 });
+	back_to_menu_bt = (Button*)App->gui->CreateButton("gui/button.png", 570, 210, blit_sections, detect_sections, TIER2);
+	quit_game_bt = (Button*)App->gui->CreateButton("gui/button.png", 570, 250, blit_sections, detect_sections, TIER2);
+	save_game_bt = (Button*)App->gui->CreateButton("gui/button.png", 570, 290, blit_sections, detect_sections, TIER2);
+	cancel_bt = (Button*)App->gui->CreateButton("gui/button.png", 570, 330, blit_sections, detect_sections, TIER2);
+	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", 605, 213, nullptr);
+	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", 640, 253, nullptr);
+	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", 640, 293, nullptr);
+	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", 650, 333, nullptr);
 
 	back_to_menu_lbl->SetSize(16);
 	quit_game_lbl->SetSize(16);
 	save_game_lbl->SetSize(16);
 	cancel_lbl->SetSize(16);
 
-	ui_menu.in_window.push_back(images[WINDOW]);
-	ui_menu.in_window.push_back(buttons[BACKTOMENU]);
-	ui_menu.in_window.push_back(buttons[QUITGAME]);
-	ui_menu.in_window.push_back(buttons[SAVEGAME]);
-	ui_menu.in_window.push_back(buttons[CANCEL]);
+	ui_menu.in_window.push_back(menu_bg_img);
+	ui_menu.in_window.push_back(quit_game_bt);
+	ui_menu.in_window.push_back(back_to_menu_bt);
+	ui_menu.in_window.push_back(cancel_bt);
+	ui_menu.in_window.push_back(save_game_bt);
 	ui_menu.in_window.push_back(back_to_menu_lbl);
 	ui_menu.in_window.push_back(quit_game_lbl);
 	ui_menu.in_window.push_back(save_game_lbl);
 	ui_menu.in_window.push_back(cancel_lbl);
 
 	ui_menu.WindowOff();
-	ui_menu.SetFocus(images[3]->pos.first, images[3]->pos.second, 280, 280);
+	ui_menu.SetFocus(menu_bg_img->pos.first, menu_bg_img->pos.second, 280, 280);
 
 	// RESOURCE LABELS
-	wood = (Label*)App->gui->CreateLabel(to_string(woodCount), -STARTING_CAMERA_X + 50, -STARTING_CAMERA_Y + 5, nullptr);
+	wood = (Label*)App->gui->CreateLabel("0", 50, 5, nullptr);
 	wood->SetColor({ 255, 255, 255 ,255 });
 	//*food, *gold, *stone, *villagers
-	food = (Label*)App->gui->CreateLabel(to_string(foodCount), -STARTING_CAMERA_X + 150, -STARTING_CAMERA_Y + 5, nullptr);
+	food = (Label*)App->gui->CreateLabel("0", 150, 5, nullptr);
 	food->SetColor({ 255, 255, 255 ,255 });
 
-	gold = (Label*)App->gui->CreateLabel(to_string(goldCount), -STARTING_CAMERA_X + 280, -STARTING_CAMERA_Y + 5, nullptr);
+	gold = (Label*)App->gui->CreateLabel("0", 280, 5, nullptr);
 	gold->SetColor({ 255, 255, 255 ,255 });
 
-	stone = (Label*)App->gui->CreateLabel(to_string(stoneCount), -STARTING_CAMERA_X + 360, -STARTING_CAMERA_Y + 5, nullptr);
+	stone = (Label*)App->gui->CreateLabel("0", 360, 5, nullptr);
 	stone->SetColor({ 255, 255, 255 ,255 });
 
-	villagers = (Label*)App->gui->CreateLabel("0/0", -STARTING_CAMERA_X + 480, -STARTING_CAMERA_Y + 5, nullptr);
+	villagers = (Label*)App->gui->CreateLabel("0/0", 480, 5, nullptr);
 	villagers->SetColor({ 255, 255, 255 ,255 });
 
 	// SET UI PRIORITY
 
 	App->gui->SetPriority();
-
-	// MUSIC
-
-	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
 	// ---------------------
 	// DONE!
 
-	App->map->LoadResources(App->map->map_file.child("map"));
 
-	// Fog of war, entities & resources
+	//Test
+	/*App->entityManager->CreateUnit(400, 250, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(370, 300, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(350, 350, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(350, 400, false, ELVEN_ARCHER);
+	App->entityManager->CreateUnit(370, 500, false, ELVEN_ARCHER);*/
 
-	App->fog->Start(); // Goes first!
+	App->entityManager->CreateUnit(-350, 500, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(580, 700, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(680, 700, true, DWARVEN_MAULER);
+	App->entityManager->CreateUnit(400, 900, true, DWARVEN_MAULER);
 
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 220, TOWN_HALL_POS_Y + 150, GOBLIN_SOLDIER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
+	troll = App->entityManager->CreateUnit(50, 150, false, ELVEN_CAVALRY);
+	troll->isHero = true;
 
-	UpdateVillagers(3, 3);
+	my_townCenter = App->entityManager->CreateBuilding(580, 350, false, TOWN_CENTER);
+	enemy_townCenter = App->entityManager->CreateBuilding(-700, 500, true, ORC_BARRACKS);
 
-	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
-	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
+	//App->fog->CreateFog(App->map->data.mapWidth, App->map->data.mapHeight);
 
 	timer.Start();
-	troll_timer.Start();
 
-	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, nullptr);
+	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", 665, 40, nullptr);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
 	Timer_lbl->SetSize(26);
 
-	game_finished = false;
-
-	wave = 0;
-	orcs_to_spawn = 0;
-	trolls_to_spawn = 0;
-	woodCount = 100;
-	foodCount = 0;
-	goldCount = 0;
-	stoneCount = 0;
-	villagers_curr = 0;
-	villagers_total = 0;
 
 	return true;
 }
@@ -212,30 +167,15 @@ bool Scene::PreUpdate()
 bool Scene::Update(float dt)
 {
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-		//debug = !debug;
+		debug = !debug;
 	}
 
-	/*
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		SaveScene();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) {
 		LoadScene();
-	}
-*/
-
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN && App->entityManager->buildingToCreate == nullptr) {
-		if (App->entityManager->selectedEntityList.size() > 0 && App->entityManager->selectedListType == COLLIDER_UNIT)
-			if (!App->entityManager->placingBuilding) {
-				int x, y;
-				App->input->GetMousePosition(x, y);
-				App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, ORC_BARRACKS);
-				App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-				App->entityManager->placingBuilding = true;
-				App->entityManager->buildingToCreate->waitingToPlace = true;
-				App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
-			}
 	}
 
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
@@ -250,40 +190,22 @@ bool Scene::Update(float dt)
 		}
 	}
 
-	// --------------------------------------------
-	//						UI
-	//---------------------------------------------
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
 
-	if (buttons[MENU]->current == CLICKUP) {
+	if (menu_bt->current == HOVER || menu_bt->current == CLICKIN) App->gui->cursor->SetCursor(3);
+	else App->gui->cursor->SetCursor(0);
+
+	if (menu_bt->current == CLICKIN) {
 		UpdateVillagers(5, 10);
 		ui_menu.WindowOn();
 	}
-	if (buttons[QUITGAME]->current == CLICKUP) App->quit = true;
-
-	else if (buttons[CANCEL]->current == CLICKUP) {
+	if (quit_game_bt->current == CLICKIN) App->quit = true;
+	else if (cancel_bt->current == CLICKIN) {
 		ui_menu.WindowOff();
 		App->gui->Unfocus();
 	}
+	UpdateTime(timer.ReadSec());
 
-	bool cursoron = false;
-	for (uint i = 0; i < buttons.size(); ++i) {
-		if (buttons[i]->current == HOVER || buttons[i]->current == CLICKIN)
-			cursoron = true;
-	}
-
-	if (cursoron == true)
-		App->gui->cursor->SetCursor(3);
-	else App->gui->cursor->SetCursor(0);
-
-
-	// ---------------------------------------
-
-
-	if (timer.ReadSec() > (quadtree_flag + 20)) {
-		App->collision->quadTree->UpdateTree();
-		quadtree_flag = timer.ReadSec();
-	}
 	return true;
 }
 
@@ -292,20 +214,7 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if (my_townCenter->Life <= 0 && game_finished == false) {
-		Timer_lbl->SetString("DEFEAT");
-		Timer_lbl->SetColor({255, 0,0,255});
-		game_finished = true;
-	}
-	else if (enemy_townCenter->Life <= 0 && game_finished == false) {
-		Timer_lbl->SetString("VICTORY");
-		Timer_lbl->SetColor({ 0, 255 ,0 , 255 });
-		game_finished = true;
-	}
-	if (buttons[BACKTOMENU]->current == CLICKIN) {
-		App->audio->PlayFx(App->sceneManager->menu_scene->fx_button_click);
-	}
-	else if (buttons[BACKTOMENU]->current == CLICKUP) {
+	if (back_to_menu_bt->current == CLICKIN) {
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
 	}
 	return ret;
@@ -315,47 +224,10 @@ bool Scene::PostUpdate()
 bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
-
 	App->gui->DestroyALLUIElements();
-	elements.clear();
-	images.clear();
-	buttons.clear();
 	ui_menu.CleanUp();
-
-	App->entityManager->selectedEntityList.clear();
 	App->entityManager->CleanUp();
-	App->fog->CleanUp();
 	return true;
-}
-
-void Scene::TimeEvents() {
-
-	if ((int)timer.ReadSec() > 120) {
-		Timer_lbl->SetColor({ 255, 0,0,255 });
-	}
-
-	if ((int)timer.ReadSec() == 120) {
-		orc_timer.Start();
-		wave = 2;
-	}
-	else if ((int)timer.ReadSec() < 120) {
-		orc_timer.Start();
-	}
-	if ((int)troll_timer.ReadSec() == 300) {
-		App->entityManager->CreateUnit(2800, 2100, TROLL_MAULER);
-		troll_timer.Start();
-	}
-	if ((int)orc_timer.ReadSec() == 40)
-	{
-		orcs_to_spawn = wave;
-		wave++;
-		orc_timer.Start();
-	}
-		if ((int)orcs_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
-			App->entityManager->CreateUnit(2800, 2100, ORC_SOLDIER);
-			orcs_to_spawn--;
-			spawn_timer.Start();
-		}
 }
 void Scene::UpdateTime(float time)
 {
@@ -381,59 +253,67 @@ void Scene::SaveScene()
 
 	pugi::xml_node unitsNode = rootNode.append_child("Units");
 	for (list<Unit*>::iterator it = App->entityManager->friendlyUnitList.begin(); it != App->entityManager->friendlyUnitList.end(); it++) {
-		if ((*it)->state != DESTROYED) {
+		if ((*it)->state != UNIT_DEAD) {
 			pugi::xml_node unitNodeInfo = unitsNode.append_child("Unit");
 			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->unitLife;
+			unitNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			unitNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			destTileNode.append_attribute("x") = (*it)->path->back().x;
-			destTileNode.append_attribute("y") = (*it)->path->back().y;
+			destTileNode.append_attribute("x") = (*it)->path.back().x;
+			destTileNode.append_attribute("y") = (*it)->path.back().y;
 		}
 	}
 
 	for (list<Unit*>::iterator it = App->entityManager->enemyUnitList.begin(); it != App->entityManager->enemyUnitList.end(); it++) {
-		if ((*it)->state != DESTROYED) {
+		if ((*it)->state != UNIT_DEAD) {
 			pugi::xml_node unitNodeInfo = unitsNode.append_child("Unit");
 			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->unitLife;
+			unitNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			unitNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			destTileNode.append_attribute("x") = (*it)->path->back().x;
-			destTileNode.append_attribute("y") = (*it)->path->back().y;
+			destTileNode.append_attribute("x") = (*it)->path.back().x;
+			destTileNode.append_attribute("y") = (*it)->path.back().y;
 		}
 	}
 
 	pugi::xml_node buildingNode = rootNode.append_child("Buildings");
 	for (list<Building*>::iterator it = App->entityManager->friendlyBuildingList.begin(); it != App->entityManager->friendlyBuildingList.end(); it++) {
-		if ((*it)->state != DESTROYED) {
+		if ((*it)->state != BUILDING_DESTROYING) {
 			pugi::xml_node buildingNodeInfo = buildingNode.append_child("Building");
 			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->buildingLife;
+			buildingNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
 			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			buildingNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 		}
 	}
 
 	for (list<Building*>::iterator it = App->entityManager->enemyBuildingList.begin(); it != App->entityManager->enemyBuildingList.end(); it++) {
-		if ((*it)->state != DESTROYED) {
+		if ((*it)->state != BUILDING_DESTROYING) {
 			pugi::xml_node buildingNodeInfo = buildingNode.append_child("Building");
 			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->buildingLife;
+			buildingNodeInfo.append_child("IsEnemy").append_attribute("value") = (*it)->isEnemy;
 			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			buildingNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
 		}
 	}
 
@@ -444,7 +324,10 @@ void Scene::SaveScene()
 			pugi::xml_node positionNode = resourceNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
-			resourceNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			resourceNodeInfo.append_child("Life").append_attribute("value") = (*it)->resourceLife;
+			resourceNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			resourceNodeInfo.append_child("IsVisible").append_attribute("value") = (*it)->isVisible;
+			resourceNodeInfo.append_child("IndexRect").append_attribute("value") = (*it)->rectIndex;
 	}
 
 	stringstream stream;
@@ -477,11 +360,13 @@ void Scene::LoadScene() {
 
 			Unit* unitTemplate = App->entityManager->CreateUnit(unitNodeInfo.child("Position").attribute("x").as_int(),
 				unitNodeInfo.child("Position").attribute("y").as_int(),
+				unitNodeInfo.child("IsEnemy").attribute("value").as_bool(),
 				(unitType)unitNodeInfo.child("Type").attribute("value").as_int());
 
-			unitTemplate->currentDirection = (unitDirection)unitNodeInfo.child("Direction").attribute("value").as_int();
-			unitTemplate->Life = unitNodeInfo.child("Life").attribute("value").as_int();
-			if (unitNodeInfo.child("State").attribute("value").as_int() == MOVING) {
+			unitTemplate->direction = (unitDirection)unitNodeInfo.child("Direction").attribute("value").as_int();
+			unitTemplate->unitLife = unitNodeInfo.child("Life").attribute("value").as_int();
+			unitTemplate->isVisible = unitNodeInfo.child("IsVisible").attribute("value").as_bool();
+			if (unitNodeInfo.child("State").attribute("value").as_int() == UNIT_MOVING) {
 				unitTemplate->SetDestination({ unitNodeInfo.child("DestinationTile").attribute("x").as_int(), unitNodeInfo.child("DestinationTile").attribute("y").as_int() });
 			}
 		}
@@ -490,9 +375,11 @@ void Scene::LoadScene() {
 
 			Building* buildingTemplate = App->entityManager->CreateBuilding(buildingNodeInfo.child("Position").attribute("x").as_int(),
 				buildingNodeInfo.child("Position").attribute("y").as_int(),
+				buildingNodeInfo.child("IsEnemy").attribute("value").as_bool(),
 				(buildingType)buildingNodeInfo.child("Type").attribute("value").as_int());
 
-			buildingTemplate->Life = buildingNodeInfo.child("Life").attribute("value").as_int();
+			buildingTemplate->buildingLife = buildingNodeInfo.child("Life").attribute("value").as_int();
+			buildingTemplate->isVisible = buildingNodeInfo.child("IsVisible").attribute("value").as_bool();
 			//if (buildingNodeInfo.child("State").attribute("value").as_int() == BUILDING_DESTROYING) {
 			//	buildingTemplate->
 			//}
@@ -502,9 +389,11 @@ void Scene::LoadScene() {
 
 			Resource* resourceTemplate = App->entityManager->CreateResource(resourceNodeInfo.child("Position").attribute("x").as_int(),
 				resourceNodeInfo.child("Position").attribute("y").as_int(),
-				(resourceItem)resourceNodeInfo.child("Type").attribute("value").as_int());
+				(resourceType)resourceNodeInfo.child("Type").attribute("value").as_int(),
+				resourceNodeInfo.child("IndexRect").attribute("value").as_int());
 
-			resourceTemplate->Life = resourceNodeInfo.child("Life").attribute("value").as_int();
+			resourceTemplate->resourceLife = resourceNodeInfo.child("Life").attribute("value").as_int();
+			resourceTemplate->isVisible = resourceNodeInfo.child("IsVisible").attribute("value").as_bool();
 			//if (resourceNodeInfo.child("State").attribute("value").as_int() == RESOURCE_GATHERING) {
 			//	resourceTemplate->
 			//}

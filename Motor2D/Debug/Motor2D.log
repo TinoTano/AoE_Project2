@@ -1,0 +1,72 @@
+﻿  pugixml.cpp
+  Window.cpp
+  Unit.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(55): warning C4838: la conversión de 'float' en 'int' requiere una conversión de restricción
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(55): warning C4244: 'inicializando': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(233): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(295): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(296): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(309): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(310): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(313): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\unit.cpp(314): warning C4244: '=': conversión de 'int' a 'float'; posible pérdida de datos
+  Textures.cpp
+  Render.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\render.cpp(78): warning C4018: '<': no coinciden signed/unsigned
+  Timer.cpp
+  SceneManager.cpp
+  Scene.cpp
+  Resource.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\resource.cpp(20): warning C4018: '<': no coinciden signed/unsigned
+  PerfTimer.cpp
+  Pathfinding.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\p2point.h(124): warning C4244: 'argumento': conversión de 'int' a 'float'; posible pérdida de datos
+  c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\p2point.h(120): note: durante la compilación de la función miembro de plantilla de clase 'int p2Point<int>::DistanceTo(const p2Point<int> &) const'
+  c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\pathfinding.cpp(154): note: vea la referencia a la creación de instancias de plantilla de función 'int p2Point<int>::DistanceTo(const p2Point<int> &) const' que se está compilando
+  c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\entity.h(33): note: vea la referencia a la creación de instancias de plantilla de clase 'p2Point<int>' que se está compilando
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\p2point.h(124): warning C4244: 'return': conversión de 'float' a 'int'; posible pérdida de datos
+  p2Log.cpp
+  MenuScene.cpp
+  Map.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\map.cpp(105): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\map.cpp(106): warning C4244: '=': conversión de 'float' a 'int'; posible pérdida de datos
+  Input.cpp
+  Audio.cpp
+  Application.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\application.cpp(260): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\application.cpp(256): warning C4477: 'sprintf_s' : la cadena de formato '%lu' requiere un argumento de tipo 'unsigned long', pero el argumento variádico 6 tiene el tipo 'uint64'
+  c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\application.cpp(256): note: considere el uso de ' %llu' en la cadena de formato
+  c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\application.cpp(256): note: considere el uso de ' %I64u' en la cadena de formato
+  Main.cpp
+  HUD.cpp
+  Gui.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\gui.cpp(165): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\gui.cpp(520): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\gui.cpp(530): warning C4018: '<': no coinciden signed/unsigned
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\gui.cpp(551): warning C4018: '<': no coinciden signed/unsigned
+  Generando código...
+  Compilando...
+  Fonts.cpp
+  FogOfWar.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\fogofwar.cpp(119): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\fogofwar.cpp(120): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+  FileSystem.cpp
+  EntityManager.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\entitymanager.cpp(136): warning C4800: 'SDL_bool': forzando el valor a bool 'true' o 'false' (advertencia de rendimiento)
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\entitymanager.cpp(166): warning C4800: 'SDL_bool': forzando el valor a bool 'true' o 'false' (advertencia de rendimiento)
+  Entity.cpp
+  Console.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\console.cpp(31): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\console.cpp(37): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\console.cpp(49): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\console.cpp(50): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+  Collision.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\collision.cpp(122): warning C4800: 'SDL_bool': forzando el valor a bool 'true' o 'false' (advertencia de rendimiento)
+  Building.cpp
+c:\users\marc\downloads\aoe_project2-862a8f1501488b23556c5f93a856890ad09b3785\motor2d\building.cpp(42): warning C4838: la conversión de 'uint' en 'int' requiere una conversión de restricción
+  Generando código...
+  LINK : no se encontró C:\Users\Marc\Downloads\AoE_Project2-862a8f1501488b23556c5f93a856890ad09b3785\Debug\AgeOfTheRing.exe o no lo generó el último vínculo incremental; ejecutando vínculo completo
+     Creando biblioteca C:\Users\Marc\Downloads\AoE_Project2-862a8f1501488b23556c5f93a856890ad09b3785\Debug\AgeOfTheRing.lib y objeto C:\Users\Marc\Downloads\AoE_Project2-862a8f1501488b23556c5f93a856890ad09b3785\Debug\AgeOfTheRing.exp
+physfs.lib(physfs.obj) : warning LNK4217: se importó el símbolo _sprintf definido localmente en la función _PHYSFS_setSaneConfig
+  Motor2D.vcxproj -> C:\Users\Marc\Downloads\AoE_Project2-862a8f1501488b23556c5f93a856890ad09b3785\Debug\AgeOfTheRing.exe
+  Motor2D.vcxproj -> C:\Users\Marc\Downloads\AoE_Project2-862a8f1501488b23556c5f93a856890ad09b3785\Debug\AgeOfTheRing.pdb (Full PDB)

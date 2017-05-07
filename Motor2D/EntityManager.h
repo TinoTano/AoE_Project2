@@ -6,12 +6,8 @@
 #include "Unit.h"
 #include "Building.h"
 #include "Resource.h"
-#include "Render.h"
-#include "Villager.h"
-#include "Collision.h"
 
-
-
+#define NOTHUD SDL_Rect{0, 30, 1920 , 622}
 #define CAMERA_OFFSET_X App->render->camera.x
 #define CAMERA_OFFSET_Y App->render->camera.y
 
@@ -42,21 +38,18 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool IsOccupied(iPoint tile, Unit* ignore_unit = nullptr);
+
 	bool LoadGameData();
 
-	Unit* CreateUnit(int posX, int posY, unitType type);
-	Building* CreateBuilding(int posX, int posY, buildingType type);
-	Resource* CreateResource(int posX, int posY, resourceItem type);
+	Unit* CreateUnit(int posX, int posY, bool isEnemy, unitType type);
+	Building* CreateBuilding(int posX, int posY, bool isEnemy, buildingType type);
+	Resource* CreateResource(int posX, int posY, resourceType type, int resourceRectIndex);
 
-	void DeleteUnit(Unit* unit);
-	void DeleteBuilding(Building* building);
+	void DeleteUnit(Unit* unit, bool isEnemy);
+	void DeleteBuilding(Building* building, bool isEnemy);
 	void DeleteResource(Resource* resource);
-	void OnCollision(Collision_data& col_data);
-
-	void FillSelectedList();
-	void DrawSelectedList();
-
-	Resource* FindNearestResource(resourceType type, iPoint pos);
+	void OnCollision(Collider* c1, Collider* c2);
 
 private:
 	void DestroyEntity(Entity* entity);
@@ -67,32 +60,26 @@ private:
 	list<Resource*> removeResourceList;
 
 	SDL_Rect multiSelectionRect = { 0,0,0,0 };
-	Timer click_timer;
+	int timesClicked = 0;
+	float doubleClickTimer = 0;
 
 	map<int, Unit*> unitsDB;
 	map<int, Building*> buildingsDB;
 	map<int, Resource*> resourcesDB;
 
-	Entity* clicked_entity = nullptr;
-
 	int mouseX;
 	int mouseY;
-
+	
 public:
 	int nextID;
-	list<Entity*> selectedEntityList;
-	COLLIDER_TYPE selectedListType = COLLIDER_NONE;
+	list<Unit*> selectedUnitList;
+	list<Building*> selectedBuildingtList;
+	Resource* selectedResource = nullptr;
 	list<Unit*> friendlyUnitList;
 	list<Unit*> enemyUnitList;
 	list<Building*> friendlyBuildingList;
 	list<Building*> enemyBuildingList;
 	list<Resource*> resourceList;
-
-	bool placingBuilding = false;
-	float dt = 0;
-	buildingType creatingBuildingType = ORC_BARRACKS;
-	SDL_Rect NotHUD;
-	Building* buildingToCreate = nullptr;
 };
 
 #endif // !__ENTITY_MANAGER__

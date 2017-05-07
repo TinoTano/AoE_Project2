@@ -6,7 +6,6 @@
 #include "Timer.h"
 #include "PugiXml\src\pugixml.hpp"
 #include "p2Defs.h"
-#include "Brofiler\Brofiler.h"
 
 // Modules
 class Window;
@@ -22,7 +21,7 @@ class Fonts;
 class EntityManager;
 class Collision;
 class Gui;
-class FogOfWar;
+//class FogOfWar;
 //class Console;
 
 class Application
@@ -104,7 +103,7 @@ public:
 	EntityManager*		entityManager = NULL;
 	Collision*			collision = NULL;
 	Gui*				gui = NULL;
-	FogOfWar*			fog = NULL;
+	//FogOfWar*			fog = NULL;
 	//Console*			console = NULL;
 	bool				quit = false;
 

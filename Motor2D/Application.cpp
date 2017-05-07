@@ -16,7 +16,7 @@
 #include "EntityManager.h"
 #include "Collision.h"
 #include "Gui.h"
-#include "FogOfWar.h"
+//#include "FogOfWar.h"
 //#include "Console.h"
 
 // Constructor
@@ -37,7 +37,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	entityManager = new EntityManager();
 	collision = new Collision();
 	gui = new Gui();
-	fog = new FogOfWar();
+	//fog = new FogOfWar();
 	//console = new Console();
 
 	// Ordered for awake / Start / Update
@@ -51,7 +51,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(pathfinding);
 	AddModule(font);
 	AddModule(gui);
-    //AddModule(console);
+//	AddModule(console);
 
 	// scene last
 	AddModule(sceneManager);
@@ -59,7 +59,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 
 	AddModule(entityManager);
 	AddModule(collision);
-	AddModule(fog);
+	//AddModule(fog);
 	
 	// render last to swap buffer
 	AddModule(render);

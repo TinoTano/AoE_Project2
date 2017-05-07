@@ -10,7 +10,6 @@ class Unit;
 class Building;
 class Resource;
 
-
 class MenuScene : public SceneElement
 {
 public:
@@ -38,20 +37,10 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	vector<Info> elements;
-	vector<Image*> images;
-	vector<Button*> buttons;
-	uint fx_button_click;
 
-	// UI ELEMENTS
-	WindowUI ui_menu;
-	Label* settings_lbl, *mute_lbl, *window_lbl;
-
-	enum IMAGES { BACKGROUND, YELLOW, SETTINGS };
-
-	enum BUTTONS { SKIRMISH, OPTIONS, QUIT, MUTE, SCREEN };
-
+	Image* background;
+	Image* menu_bg_img;
+	Button*	campaign_bt, *skirmish_bt, *options_bt, *quit_bt;
 };
 
 #endif // __SCENE_H__#pragma once
-

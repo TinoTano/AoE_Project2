@@ -22,7 +22,7 @@ bool Window::Awake(pugi::xml_node& config)
 	LOG("Init SDL window & surface");
 	bool ret = true;
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if(SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		LOG("SDL_VIDEO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
@@ -31,7 +31,7 @@ bool Window::Awake(pugi::xml_node& config)
 	{
 		//Create window
 		Uint32 flags = SDL_WINDOW_SHOWN;
-		fullscreen = config.child("fullscreen").attribute("value").as_bool(false);
+		bool fullscreen = config.child("fullscreen").attribute("value").as_bool(false);
 		bool borderless = config.child("borderless").attribute("value").as_bool(false);
 		bool resizable = config.child("resizable").attribute("value").as_bool(false);
 		bool fullscreen_window = config.child("fullscreen_window").attribute("value").as_bool(false);
@@ -40,29 +40,29 @@ bool Window::Awake(pugi::xml_node& config)
 		height = config.child("resolution").attribute("height").as_int(480);
 		scale = config.child("resolution").attribute("scale").as_int(1);
 
-		if (fullscreen == true)
+		if(fullscreen == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if (borderless == true)
+		if(borderless == true)
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if (resizable == true)
+		if(resizable == true)
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if (fullscreen_window == true)
+		if(fullscreen_window == true)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
 		window = SDL_CreateWindow(App->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
-		if (window == NULL)
+		if(window == NULL)
 		{
 			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
 			ret = false;
@@ -83,7 +83,7 @@ bool Window::CleanUp()
 	LOG("Destroying SDL window and quitting all SDL systems");
 
 	//Destroy window
-	if (window != NULL)
+	if(window != NULL)
 	{
 		SDL_DestroyWindow(window);
 	}
@@ -109,62 +109,4 @@ void Window::GetWindowSize(uint& width, uint& height) const
 uint Window::GetScale() const
 {
 	return scale;
-}
-
-bool Window::IsFullScreen() const
-{
-	return fullscreen;
-}
-
-bool Window::ChangeToFullScreen()
-{
-	bool ret = true;
-
-	//Create window
-	Uint32 flags = SDL_WINDOW_SHOWN;
-
-	if (fullscreen == false)
-	{
-		flags |= SDL_WINDOW_FULLSCREEN;
-		fullscreen = true;
-		SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
-	}
-
-	if (window == NULL)
-	{
-		LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
-	}
-	else
-	{
-		//Get window surface
-		screen_surface = SDL_GetWindowSurface(window);
-	}
-	return ret;
-}
-
-bool Window::ChangeToWindow()
-{
-	bool ret = true;
-	//Create window
-
-	if (fullscreen == true)
-	{
-		fullscreen = false;
-		SDL_SetWindowFullscreen(window, SDL_FALSE);
-	}
-
-	if (window == NULL)
-	{
-		LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-		ret = false;
-	}
-	else
-	{
-		//Get window surface
-		screen_surface = SDL_GetWindowSurface(window);
-	}
-
-
-	return ret;
 }

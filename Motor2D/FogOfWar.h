@@ -1,79 +1,44 @@
-#ifndef _FOGOFWAR_H_
-#define	_FOGOFWAR_H_
+#ifndef __FOG_OF_WAR__
+#define __FOG_OF_WAR__
 
-#include "p2Defs.h"
-#include <list>
-#include <vector>
-#include <string>
-#include "Entity.h"
 #include "Module.h"
-#include "Unit.h"
-
-#define FOW_RADIUM 4
-
-enum fow_id
-{
-	fow_black,
-	fow_grey,
-	fow_clear,
-};
-
-struct in_fog_entity
-{
-	list<iPoint>	frontier;
-	list<iPoint>	current_points;
-	iPoint			pos = { 0,0 };
-	int				id = -1;
-};
 
 class FogOfWar : public Module
 {
 public:
-
 	FogOfWar();
-	~FogOfWar();
-	bool Awake(pugi::xml_node& conf);
+	virtual ~FogOfWar();
+
 	bool Start();
 
-	void Update(iPoint prev_pos, iPoint next_pos, uint id);
-	bool CleanUp();
+	bool Update(float dt);
 
-	bool AddEntity(Entity* new_entity);
+	void DrawFog();
 
-	// Update Methods
+	void CreateFog(int widht, int height);
 
-	void MoveFrontier(iPoint prev_pos, const char* direction, uint id);
-	void MoveArea(in_fog_entity& player, string direction, uint id);
-
-	// Create Areas
-
-	void FillFrontier();
-	void GetEntitiesCircleArea(in_fog_entity& new_player);
-	void DeletePicks(in_fog_entity& frontier);
-	void GetCurrentPointsFromFrontier(in_fog_entity& player);
-
-	// Characters
-
-	void ManageEntities();
-
-	// Utilility
-
-	bool IsVisible(iPoint char_pos);
-	bool IsFrontier(iPoint point, in_fog_entity& player);
-	uint Get(int x, int y);
-
-	// Atlas
-
-	vector<in_fog_entity>		entities_on_fog;
-	list<Entity*>	            entities_not_in_fog;
-
-	SDL_Texture*				texture = nullptr;
-	iPoint				        prev_pos = { 0,0 };
-	iPoint				        next_pos = { 0,0 };
-	uint*						data = nullptr;
+	void removeFog(int posX, int posY);
 
 private:
-	string                      path;
+	SDL_Surface* highFogSurface;
+	SDL_Surface* removerSurface;
+	SDL_Surface* lowFogSurface;
+	SDL_Texture* highFogTexture;
+	SDL_Texture* fogRemoverTexture;
+	SDL_Texture* lowFogTexture;
+	void* highFogPixels;
+	int highFogPitch;
+	void* removerPixels;
+	int removerPitch;
+	void* lowFogPixels;
+	int lowFogPitch;
+	uint fogTextWidth;
+	uint fogTextHeight;
+	uint removerTextWidth;
+	uint removerTextHeight;
+	
+	bool showHighFog;
+	bool showLowFog;
 };
 
-#endif
+#endif // !__FOG_OF_WAR__

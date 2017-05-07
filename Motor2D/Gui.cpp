@@ -31,6 +31,7 @@ bool Gui::Awake(pugi::xml_node& conf)
 {
 	LOG("Loading GUI atlas");
 	bool ret = true;
+	atlas_file_name = conf.child("atlas").attribute("file").as_string("");
 
 	return ret;
 }
@@ -38,6 +39,9 @@ bool Gui::Awake(pugi::xml_node& conf)
 // Called before the first frame
 bool Gui::Start()
 {
+
+	atlas = App->tex->Load(atlas_file_name.c_str());
+
 	vector<SDL_Rect> sprites_cursor;
 	sprites_cursor.push_back({ 0,   0, 70, 50 });
 	sprites_cursor.push_back({ 70,   0, 70, 50 });
@@ -57,21 +61,10 @@ bool Gui::Start()
 	sprites_cursor.push_back({ 420, 50, 70, 50 });
 	sprites_cursor.push_back({ 490, 50, 70, 50 });
 	sprites_cursor.push_back({ 560, 50, 70, 50 });
-
-
-
-
 	hud = new HUD();
-	hud->Start();
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
 
-
 	LoadHUDData();
-
-	for (uint i = 0; i < info.size(); ++i)
-	{
-		info[i].texture = App->tex->Load(info[i].path.c_str());
-	}
 
 	return true;
 }
@@ -90,13 +83,13 @@ bool Gui::Update(float dt)
 // Called after all Updates
 bool Gui::PostUpdate()
 {
-	//if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-	//	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
-	//	{
-	//		if (!it._Ptr->_Myval->debug) it._Ptr->_Myval->debug = true;
-	//		else it._Ptr->_Myval->debug = false;
-	//	}
-	//}
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+		{
+			if (!it._Ptr->_Myval->debug) it._Ptr->_Myval->debug = true;
+			else it._Ptr->_Myval->debug = false;
+		}
+	}
 
 	if (Elements.empty() != true)
 	{
@@ -124,16 +117,10 @@ bool Gui::CleanUp()
 
 	cursor->CleanUp();
 
-	for (uint i = 0; i < info.size(); ++i)
-	{
-		App->tex->UnLoad(info[i].texture);
-	}
-
 	if (Elements.empty() != true)
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 		{
-			App->tex->UnLoad(it._Ptr->_Myval->texture);
 			App->gui->DestroyUIElement(it._Ptr->_Myval);
 		}
 	}
@@ -144,6 +131,11 @@ bool Gui::CleanUp()
 	return true;
 }
 
+// const getter for atlas
+SDL_Texture* Gui::GetAtlas() const
+{
+	return atlas;
+}
 
 bool Gui::Save(pugi::xml_node &) const
 {
@@ -165,7 +157,6 @@ void Gui::ScreenMoves(pair<int, int> movement) {
 		}
 	}
 }
-
 void Gui::SetPriority()
 {
 	list<UIElement*> Priority1;
@@ -206,18 +197,6 @@ void Gui::Unfocus()
 		it._Ptr->_Myval->focused = true;
 	}
 }
-vector<Info> Gui::GetElements(string scene)
-{
-	vector<Info> ret;
-
-	for (uint i = 0; i < info.size(); ++i)
-	{
-		if (info[i].scene == scene) {
-			ret.push_back(info[i]);
-		}
-	}
-	return ret;
-}
 // UI ELEMENT
 // methods:
 
@@ -245,7 +224,9 @@ UIElement * Gui::CreateImage(char* path, int x, int y, SDL_Rect section)
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	tex = App->tex->Load(path);
+	if (path != nullptr)
+		tex = App->tex->Load(path);
+	else tex = GetAtlas();
 
 	ret = new Image(section, x, y, tex);
 	Elements.push_back(ret);
@@ -257,19 +238,13 @@ UIElement * Gui::CreateImage(char* path, int x, int y)
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	tex = App->tex->Load(path);
+	if (path != nullptr)
+		tex = App->tex->Load(path);
+	else tex = GetAtlas();
 
 	ret = new Image(x, y, tex);
 	Elements.push_back(ret);
 
-	return ret;
-}
-
-UIElement * Gui::CreateImage(SDL_Texture * argtexture, int x, int y, SDL_Rect section)
-{
-	UIElement* ret = nullptr;
-	ret = new Image(section, x, y, argtexture);
-	Elements.push_back(ret);
 	return ret;
 }
 
@@ -304,17 +279,11 @@ UIElement * Gui::CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sec
 {
 	UIElement* ret = nullptr;
 	SDL_Texture* tex;
-	tex = App->tex->Load(path);
+	if (path != nullptr)
+		tex = App->tex->Load(path);
+	else tex = GetAtlas();
 
 	ret = new Button(x, y, blit_sections, detect_sections, Tier, tex);
-	Elements.push_back(ret);
-
-	return ret;
-}
-
-UIElement * Gui::CreateButton(SDL_Texture * texture, int x, int y, vector<SDL_Rect> blit_sections, vector<SDL_Rect> detect_sections, ButtonTier Tier)
-{
-	UIElement* ret = new Button(x, y, blit_sections, detect_sections, Tier, texture);
 	Elements.push_back(ret);
 
 	return ret;
@@ -388,12 +357,9 @@ void Image::Update()
 
 void Image::Draw()
 {
-	Sprite img;
-	img.pos.x = pos.first;
-	img.pos.y = pos.second;
-	img.rect = section;
-	img.texture = texture;
-	App->render->ui_toDraw.push_back(img);
+	if (section.w>0 && section.h>0)
+		App->render->Blit(texture, pos.first, pos.second, &section);
+	else App->render->Blit(texture, pos.first, pos.second);
 }
 
 MouseState Image::MouseDetect()
@@ -412,9 +378,7 @@ MouseState Image::MouseDetect()
 		else {
 			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 				ret = CLICKIN;
-			}
-			else if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
-				ret = CLICKUP;
+
 			}
 		}
 	}
@@ -432,8 +396,7 @@ void Image::DebugMode() {
 void Image::CleanUp()
 {
 	parent = nullptr;
-	if (!loaded_tex)
-		App->tex->UnLoad(texture);
+	App->tex->UnLoad(texture);
 }
 // LABEL 
 
@@ -464,48 +427,29 @@ void Label::Update()
 void Label::Draw()
 {
 	SDL_Rect text_size{ 0, 0, width, height };
-	Sprite lbl;
-
-	lbl.pos.x = pos.first;
-	lbl.pos.y = pos.second;
-	lbl.rect = text_size;
-	lbl.texture = texture;
-	App->render->ui_toDraw.push_back(lbl);
+	App->render->Blit(texture, pos.first, pos.second, &text_size);
 }
 
 void Label::SetText(char* text) {
 	str = text;
-	if (texture != nullptr) {
-		App->tex->UnLoad(texture);
-	}
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height);
 }
 void Label::SetString(string text) {
-	if (str != text)
-	{
-		str = text.c_str();
-		if (texture != nullptr) {
-			App->tex->UnLoad(texture);
-		}
-		texture = App->font->Print(str.c_str(), color, font);
-		App->font->CalcSize(str.c_str(), width, height, font);
-	}
+	str = text.c_str();
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 void Label::SetSize(int size) {
 	font = App->font->Load(nullptr, size);
 	this->size = size;
-	if (texture != nullptr) {
-		App->tex->UnLoad(texture);
-	}
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 void Label::SetColor(SDL_Color color)
 {
-	if (texture != nullptr) App->tex->UnLoad(texture);
 	this->color = color;
 	texture = App->font->Print(str.c_str(), color, font);
 	App->font->CalcSize(str.c_str(), width, height, font);
@@ -559,20 +503,14 @@ void Button::Update()
 void Button::CleanUp()
 {
 	parent = nullptr;
-	if (!loaded_tex)
-		App->tex->UnLoad(texture);
+	App->tex->UnLoad(texture);
 	blit_sections.clear();
 	detect_sections.clear();
 }
 
 void Button::Draw(SDL_Rect section)
 {
-	Sprite bt;
-	bt.pos.x = pos.first;
-	bt.pos.y = pos.second;
-	bt.rect = section;
-	bt.texture = texture;
-	App->render->ui_toDraw.push_back(bt);
+	App->render->Blit(texture, pos.first, pos.second, &section);
 }
 
 void Button::Movement(pair<int, int> movement) {
@@ -589,34 +527,26 @@ MouseState Button::MouseDetect()
 {
 	MouseState ret = FREE;
 	if (focused) {
-		if (current == CLICKIN && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_IDLE) {
-			ret = CLICKUP;
+		for (int it = 0; it < detect_sections.size(); ++it) {
+			pair<int, int> mouse_pos;
+			App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
+			if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + detect_sections[it].w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + detect_sections[it].h)) {
+				ret = HOVER;
+				break;
+			}
+		}
+		if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
+			ret = CLICKOUT;
 		}
 		else {
-			for (int it = 0; it < detect_sections.size(); ++it) {
-				pair<int, int> mouse_pos;
-				App->input->GetMousePosition(mouse_pos.first, mouse_pos.second);
-				if (mouse_pos.first - App->render->camera.x >= pos.first && mouse_pos.first - App->render->camera.x <= (pos.first + detect_sections[it].w) && mouse_pos.second - App->render->camera.y >= pos.second && mouse_pos.second - App->render->camera.y <= (pos.second + detect_sections[it].h)) {
-					ret = HOVER;
-					break;
-				}
-			}
-			if (ret == FREE && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
-				ret = CLICKOUT;
-			}
-			else {
-				if (ret == HOVER)
-				{
-					if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
-						ret = CLICKIN;
-					}
-				}
+			if (ret == HOVER && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+				ret = CLICKIN;
+
 			}
 		}
 	}
 	return ret;
 }
-
 void Button::DebugMode() {
 	for (int it = 0; it < detect_sections.size(); ++it) {
 		SDL_Rect debug_rect{ pos.first, pos.second, detect_sections[it].w, detect_sections[it].h };
@@ -675,13 +605,7 @@ void InputText::Draw() {
 	texture = App->font->Print(str.c_str());
 	App->font->CalcSize(str.c_str(), width, height);
 	SDL_Rect text_size{ 0, 0, width, height };
-
-	Sprite inpt;
-	inpt.pos.x = pos.first;
-	inpt.pos.y = pos.second;
-	inpt.rect = text_size;
-	inpt.texture = texture;
-	App->render->ui_toDraw.push_back(inpt);
+	App->render->Blit(texture, pos.first, pos.second, &text_size);
 }
 
 void InputText::CleanUp()
@@ -968,12 +892,6 @@ void Cursor::Update() {
 	}
 }
 void Cursor::Draw() {
-	Sprite crsr;
-	crsr.pos.x = pos.first - blitoffset.first;
-	crsr.pos.y = pos.second - blitoffset.second;
-	crsr.rect = sprite_list[id];
-	crsr.texture = texture;
-	App->render->ui_toDraw.push_back(crsr);
 
 	App->render->Blit(texture, pos.first - blitoffset.first, pos.second - blitoffset.second, &sprite_list[id]);
 }
@@ -1000,8 +918,7 @@ void WindowUI::WindowOff()
 {
 	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
 	{
-		if (it._Ptr->_Myval != nullptr)
-			it._Ptr->_Myval->enabled = false;
+		it._Ptr->_Myval->enabled = false;
 	}
 	enabled = false;
 }
@@ -1019,6 +936,7 @@ void WindowUI::CleanUp()
 {
 	for (list<UIElement*>::iterator it = in_window.begin(); it != in_window.end(); ++it)
 	{
+		//RELEASE((*it));
 		App->gui->DestroyUIElement(it._Ptr->_Myval);
 		in_window.remove(it._Ptr->_Myval);
 	}
@@ -1035,4 +953,51 @@ void WindowUI::SetFocus(int& x, int& y, int width, int height)
 }
 bool WindowUI::IsEnabled() {
 	return enabled;
+}
+
+
+
+bool Gui::LoadHUDData()
+{
+	bool ret = false;
+	pugi::xml_document HUDDataFile;
+	pugi::xml_node HUDData;
+	pugi::xml_node unitNodeInfo;
+	pugi::xml_node buildingNodeInfo;
+	pugi::xml_node resourceNodeInfo;
+
+	HUDData = App->LoadHUDDataFile(HUDDataFile);
+
+	if (HUDData.empty() == false)
+	{
+		SDL_Rect proportions;
+		proportions.w = HUDData.child("Sprites").child("Proportions").attribute("width").as_uint();
+		proportions.h = HUDData.child("Sprites").child("Proportions").attribute("height").as_uint();
+
+		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit"))
+		{
+			EntityType type = UNIT;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id, name);
+			SpriteUnits.push_back(unit);
+		}
+		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building"))
+		{
+			EntityType type = BUILDING;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
+
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+
+			UnitSprite unit(type, proportions, id, name);
+			SpriteBuildings.push_back(unit);
+		}
+	}
+	return ret;
 }

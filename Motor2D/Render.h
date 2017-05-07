@@ -19,7 +19,6 @@ struct Sprite
 	int g = 0;
 	int b = 0;
 	int radius = 0;
-	bool filled = true;
 };
 
 class Render : public Module
@@ -52,10 +51,10 @@ public:
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
 	iPoint ScreenToWorld(int x, int y) const;
-	
+
 	// Draw & Blit
 	bool Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE, bool use_camera = true, float speed = 1.0f, double angle = 0, int pivot_x = INT_MAX, int pivot_y = INT_MAX) const;
-	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, bool filled = true,  Uint8 a = 255, bool use_camera = true) const;
+	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool filled = true, bool use_camera = true) const;
 	bool DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool use_camera = true) const;
 	bool DrawCircle(int x1, int y1, int redius, Uint8 r, Uint8 g, Uint8 b, Uint8 a = 255, bool use_camera = true) const;
 	
@@ -64,7 +63,6 @@ public:
 
 	//Move camera with cursor
 	pair<int,int> MoveCameraWithCursor(float dt);
-	bool CullingCam(iPoint point);
 
 public:
 
@@ -74,7 +72,6 @@ public:
 	SDL_Color		background;
 	SDL_Rect		culling_cam;
 	std::deque<Sprite> sprites_toDraw;
-	std::deque<Sprite> ui_toDraw;
 
 private:
 

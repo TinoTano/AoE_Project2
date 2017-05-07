@@ -121,7 +121,7 @@ public:
 		TYPE fx = x - v.x;
 		TYPE fy = y - v.y;
 
-		return (TYPE)sqrtf((fx*fx) + (fy*fy));
+		return sqrtf((fx*fx) + (fy*fy));
 	}
 
 	TYPE DistanceNoSqrt(const p2Point& v) const

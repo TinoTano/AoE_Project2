@@ -77,10 +77,10 @@ private:
 	bool		windowEvents[WE_COUNT];
 	KeyState*	keyboard;
 	KeyState	mouse_buttons[NUM_MOUSE_BUTTONS];
-	int			mouse_motion_x = 0;
-	int			mouse_motion_y = 0;
-	int			mouse_x = 0;
-	int			mouse_y = 0;
+	int			mouse_motion_x;
+	int			mouse_motion_y;
+	int			mouse_x;
+	int			mouse_y;
 
 public:
 	//text input management

@@ -35,14 +35,14 @@ public:
 
 public:
 	bool				show = false;
-	uint				window_w = 0, window_h = 0;
+	uint				window_w, window_h;
 	list<string>		ctext;
 	list<UIElement*>	console_elements;
-	Quad*				cbackground = nullptr;
-	Quad*				cinput = nullptr;
-	ScrollBar*			cscroll = nullptr;
-	InputText*			ctextinput = nullptr;
-	int					h = 0;
+	Quad*				cbackground;
+	Quad*				cinput;
+	ScrollBar*			cscroll;
+	InputText*			ctextinput;
+	int h = 0;
 
 private:
 	void				SetConsoleText();

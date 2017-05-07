@@ -5,9 +5,6 @@
 #include "Map.h"
 #include "p2Log.h"
 #include <math.h>
-#include "EntityManager.h"
-#include "Resource.h"
-#include "FogOfWar.h"
 
 Map::Map() : Module(), map_loaded(false)
 {
@@ -31,42 +28,33 @@ bool Map::Awake(pugi::xml_node& config)
 
 void Map::Draw()
 {
-	if (map_loaded == false)
+	if(map_loaded == false)
 		return;
 
-	SDL_Rect cam = App->render->culling_cam;
-
-	for (list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); it++)
+	for(list<MapLayer*>::iterator it = data.layers.begin(); it != data.layers.end(); it++)
 	{
 		MapLayer* layer = *it;
 
-		if (layer->properties.Get("Nodraw") != 0)
+		if(layer->properties.Get("Nodraw") != 0)
 			continue;
 
-		for (int y = 0; y < data.height; ++y)
+		for(int y = 0; y < data.height; ++y)
 		{
-			for (int x = 0; x < data.width; ++x)
+			for(int x = 0; x < data.width; ++x)
 			{
+				int tile_id = layer->Get(x, y);
+				if(tile_id > 0)
+				{
+					TileSet* tileset = GetTilesetFromTileId(tile_id);
 
-				iPoint tileWorld = MapToWorld(x, y);
-				if (App->render->CullingCam(tileWorld)) {
+					SDL_Rect r = tileset->GetTileRect(tile_id);
+					iPoint pos = MapToWorld(x, y);
 
-					int tile_id = layer->Get(x, y);
-					int visibility = App->fog->Get(x, y);
+					SDL_Rect cam = App->render->culling_cam;
 
-					if (tile_id > 0 && visibility != 0)
-					{
-						TileSet* tileset = GetTilesetFromTileId(tile_id);
-						SDL_Rect r = tileset->GetTileRect(tile_id);
-						iPoint pos = MapToWorld(x, y);
-						App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
-
-						if (visibility == fow_grey)
-						{
-							r = { 0, 0, 96, 51 };
-							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
-						}
-					}
+					if (pos.x + data.tile_width >= cam.x && pos.x <= cam.x + cam.w)
+						if (pos.y + data.tile_height * 2 > cam.y && pos.y < cam.y + cam.h)		
+							App->render->Blit(tileset->texture, pos.x, pos.y, &r);					
 				}
 			}
 		}
@@ -140,7 +128,7 @@ iPoint Map::WorldToMap(int x, int y) const
 		
 		float half_width = data.tile_width * 0.5f;
 		float half_height = data.tile_height * 0.5f;
-		ret.x = int( (x / half_width + y / half_height) / 2);
+		ret.x = int( (x / half_width + y / half_height) / 2) - 1;
 		ret.y = int( (y / half_height - (x / half_width)) / 2);
 	}
 	else
@@ -251,7 +239,6 @@ bool Map::Load(const char* file_name)
 		if(ret == true)
 			data.layers.push_back(lay);
 	}
-
 
 	if(ret == true)
 	{
@@ -471,36 +458,6 @@ bool Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 	return ret;
 }
 
-bool Map::LoadResources(pugi::xml_node & node)
-{
-	bool ret = true;
-	data.mapWidth = data.width * data.tile_width;
-	data.mapHeight = data.height * data.tile_height;
-
-	pugi::xml_node resourceNode;
-
-	for (resourceNode = node.child("objectgroup"); resourceNode; resourceNode = resourceNode.next_sibling("objectgroup"))
-	{
-		pugi::xml_node prop;
-
-		for (prop = resourceNode.child("object"); prop; prop = prop.next_sibling("object"))
-		{
-			uint type = 0;
-			string name = prop.attribute("name").as_string();
-			if (name == "Green Tree") {
-				type = GREEN_TREE;
-			}
-			else if (name == "Rock") {
-				type = STONE_MINE;
-			}
-			Resource* resource = App->entityManager->CreateResource(prop.attribute("x").as_int(), prop.attribute("y").as_int(), (resourceItem)type);
-			App->fog->AddEntity(resource);
-		}
-	}
-
-	return ret;
-}
-
 bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 {
 	bool ret = false;
@@ -546,67 +503,5 @@ bool Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 	}
 
 	return ret;
-}
-
-list<iPoint> Map::PropagateBFS(iPoint origin, int field_of_view)
-{
-	list<iPoint>		frontier;
-	vector<iPoint>		visited;
-
-	frontier.push_back(origin);
-	visited.push_back(origin);
-
-	int count = 0;
-
-	int current_layer = 0;
-	int layer_done = 4;
-
-	while (current_layer < field_of_view)
-	{
-		iPoint curr = frontier.front();
-		bool is_on_list = false;
-
-		if (curr != iPoint(0, 0))
-		{
-			iPoint neighbors[4];
-			neighbors[0].create(curr.x + 1, curr.y);
-			neighbors[1].create(curr.x, curr.y + 1);
-			neighbors[2].create(curr.x - 1, curr.y);
-			neighbors[3].create(curr.x, curr.y - 1);
-
-			frontier.pop_front();
-
-			for (uint i = 0; i < 4; i++)
-			{
-				for (vector<iPoint>::const_iterator it = visited.cbegin(); it != visited.cend(); it++)
-				{
-					is_on_list = false;
-
-					if (neighbors[i] == *it)
-					{
-						is_on_list = true;
-						break;
-					}
-				}
-
-				if (!is_on_list)
-				{
-					frontier.push_back(neighbors[i]);
-					visited.push_back(neighbors[i]);
-					count++;
-				}
-			}
-		}
-
-		if (count == layer_done)
-		{
-			layer_done = layer_done + 4;
-			count = 0;
-			current_layer++;
-		}
-	}
-
-	return frontier;
-
 }
 

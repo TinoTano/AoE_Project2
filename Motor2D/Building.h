@@ -3,29 +3,34 @@
 
 #include "Entity.h"
 #include "Animation.h"
-#include "Timer.h"
 #include <list>
 
+class Unit;
 
 enum buildingType {
-	TOWN_CENTER, HOUSE, ORC_BARRACKS, ARCHERY_RANGE, STABLES, SIEGE_WORKSHOP, MARKET, BLACKSMITH, MILL, WALL, GATE, OUTPOST, MONASTERY, CASTLE, SAURON_TOWER
+	TOWN_CENTER, HOUSE, ORC_BARRACKS, ARCHERY_RANGE, STABLES, SIEGE_WORKSHOP, MARKET, BLACKSMITH, MILL, WALL, GATE, OUTPOST, MONASTERY, CASTLE
 };
 
-class Unit;
-class Order;
+enum buildingState
+{
+	BUILDING_IDLE, BUILDING_ATTACKING, BUILDING_DESTROYING
+};
+
+enum buildingFaction {
+	FREE_MEN_BUILDING, SAURON_ARMY_BUILDING
+};
 
 class Building : public Entity
 {
 public:
 	Building();
-	Building(int posX, int posY, Building* building);
+	Building(int posX, int posY, bool isEnemy, Building* building);
 	~Building();
 
 	bool Update(float dt);
 	bool Draw();
-	bool IsEnemy() const;
-	void Destroy();
-	void GetBuildingBoundaries();
+	void Attack(float dt);
+	void Dead();
 	pugi::xml_node LoadBuildingInfo(buildingType type);
 
 	bool Load(pugi::xml_node&);
@@ -34,32 +39,38 @@ public:
 private:
 
 public:
-	//STATS:
 	buildingType type = ORC_BARRACKS;
+	buildingFaction faction;
 	float buildingAttackSpeed = 0;
 	int buildingPiercingDamage = 0;
+	bool isEnemy = false;
+	float timer = 0;
+	list<Unit*> availableUnitsToCreateList;
+	bool isDamaged = false;
+	int hpBarWidth = 0;
 	int buildingWoodCost = 0;
 	int buildingStoneCost = 0;
 	int buildingBuildTime = 0;
-	bool canAttack = false;
-	bool waitingToPlace = false;
-	bool canBePlaced = false;
-
-	//Utilities
-	Timer attack_timer;
-	list<Unit*> availableUnitsToCreateList;
 	SDL_Texture* buildingIdleTexture = nullptr;
 	SDL_Texture* buildingDieTexture = nullptr;
-	SDL_Texture* constructingPhase1 = nullptr;
-	SDL_Texture* constructingPhase2 = nullptr;
-	SDL_Texture* constructingPhase3 = nullptr;
 	uint imageWidth = 0;
 	uint imageHeight = 0;
-	Collider* los = nullptr;
-	Collider* range = nullptr;
-	list<Order*> order_list;
-
+	Unit* attackUnitTarget = nullptr;
+	int buildingLife = 0;
+	int buildingMaxLife = 0;
+	int buildingAttack = 0;
+	int buildingDefense = 0;
+	bool isVisible = true;
+	bool isSelected = false;
+	bool canAttack = false;
+	buildingState state = BUILDING_IDLE;
 };
 
 #endif // !__BUILDING_H__
+
+
+
+
+
+
 

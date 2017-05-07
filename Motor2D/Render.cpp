@@ -52,9 +52,6 @@ bool Render::Awake(pugi::xml_node& config)
 		camera.y = 0;
 	}
 	culling_cam = camera;
-
-	culling_cam.w += (300 * 2);
-	culling_cam.h += (300 * 2);
 	return ret;
 }
 
@@ -84,27 +81,13 @@ bool Render::PostUpdate()
 			Blit(sprites_toDraw[it].texture, sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, &sprites_toDraw[it].rect, sprites_toDraw[it].flip);
 		else
 		{
-			if (sprites_toDraw[it].radius == 0) DrawQuad(sprites_toDraw[it].rect, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b, sprites_toDraw[it].filled);
+			if (sprites_toDraw[it].radius == 0) DrawQuad(sprites_toDraw[it].rect, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
 			else DrawCircle(sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, sprites_toDraw[it].radius, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
 		}
 	}
 
 	sprites_toDraw.clear();
 
-	std::sort(ui_toDraw.begin(), ui_toDraw.end(), [](const Sprite& lhs, const Sprite& rhs) { return lhs.priority < rhs.priority; });
-
-	for (int it = 0; it < ui_toDraw.size(); it++)
-	{
-		if (ui_toDraw[it].texture != nullptr)
-			Blit(ui_toDraw[it].texture, ui_toDraw[it].pos.x, ui_toDraw[it].pos.y, &ui_toDraw[it].rect, ui_toDraw[it].flip);
-		else
-		{
-			if (ui_toDraw[it].radius == 0) DrawQuad(ui_toDraw[it].rect, ui_toDraw[it].r, ui_toDraw[it].g, ui_toDraw[it].b);
-			else DrawCircle(ui_toDraw[it].pos.x, ui_toDraw[it].pos.y, ui_toDraw[it].radius, ui_toDraw[it].r,ui_toDraw[it].g, ui_toDraw[it].b);
-		}
-	}
-
-	ui_toDraw.clear();
 
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);
@@ -151,63 +134,46 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	pair<int, int> movement;
 	App->input->GetMousePosition(mousePosX, mousePosY);
 
-
-	if (mousePosX < 10)	//Move left
-		movement.first = 10;
-	else if (mousePosX > camera.w - 10)  //Move right
-		movement.first = -10;
-
-	if (mousePosY < 10)	//Move up
-		movement.second = 10;
-	else if (mousePosY > camera.h - 10)  //Move down
-		movement.second = -10;
-
-	iPoint cam_pos_iso;
-	cam_pos_iso.x = (-camera.x) - (camera.y * 2);
-	cam_pos_iso.y = -camera.y + (camera.x / 2);
-
-	if ((cam_pos_iso.x - 15) < 0) {
-		if (movement.first == 10)
-			movement.first = 0;
-		if (movement.second == 10)
-			movement.second = 0;
+	//Move left
+	if (mousePosX < 10)
+	{
+		if (camera.x + (camera.w / 2) < App->map->data.mapWidth) {
+			camera.x += 5;
+			movement.first = 5;
+		}
 	}
-	else if (cam_pos_iso.x + (camera.w * 2) > 9600) {
-		if (movement.first == -10)
-			movement.first = 0;
-		if (movement.second == -10)
-			movement.second = 0;
+	
+	//Move right
+	if (mousePosX > camera.w - 10)
+	{
+		if (-camera.x - (-camera.w / 2) < App->map->data.mapWidth / 2) {
+			camera.x -= 5;
+			movement.first = -5;
+		}
 	}
 
-	if ((cam_pos_iso.y - 15) < 0) {
-		if (movement.first == -10)
-			movement.first = 0;
-		if (movement.second == 10)
-			movement.second = 0;
-	}
-	else if (cam_pos_iso.y + (camera.h) > 4800) {
-		if (movement.first == 10)
-			movement.first = 0;
-		if (movement.second == -10)
-			movement.second = 0;
+	//Move up
+	if (mousePosY < 10)
+	{
+		if (camera.y + (camera.h / 2) < App->map->data.mapHeight / 1.5f) {
+			camera.y += 5;
+			movement.second = 5;
+		}
 	}
 
-	//LOG("cam: %d, %d", camera.x, camera.y);
-	//LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
-	camera.x += movement.first;
-	camera.y += movement.second;
+	//Move down
+	if (mousePosY > camera.h - 10)
+	{
+		if (-camera.y - (-camera.h / 2) < App->map->data.mapHeight) {
+			camera.y -= 5;
+			movement.second = -5;
+		}
+	}
 
-	culling_cam.x = -camera.x - 300;
-	culling_cam.y = -camera.y - 300;
+	culling_cam.x = -camera.x;
+	culling_cam.y = -camera.y;
 
 	return movement;
-}
-
-bool Render::CullingCam(iPoint point) {
-
-	SDL_Point p = { point.x, point.y };
-	return SDL_PointInRect(&p, &culling_cam);
-
 }
 
 void Render::SetViewPort(const SDL_Rect& rect)
@@ -277,7 +243,7 @@ bool Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, S
 	return ret;
 }
 
-bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, bool filled, Uint8 a , bool use_camera) const
+bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled, bool use_camera) const
 {
 	bool ret = true;
 	uint scale = App->win->GetScale();

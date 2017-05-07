@@ -7,20 +7,21 @@
 #include "EntityManager.h"
 #include "Collision.h"
 #include "p2Log.h"
-#include "Orders.h"
 #include "math.h"
+
 
 
 Building::Building()
 {
 }
 
-Building::Building(int posX, int posY, Building* building)
+Building::Building(int posX, int posY, bool isEnemy, Building* building)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
+	this->isEnemy = isEnemy;
+	this->type = type;
 
-	type = building->type;
 	faction = building->faction;
 	buildingAttackSpeed = building->buildingAttackSpeed;
 	buildingPiercingDamage = building->buildingPiercingDamage;
@@ -29,89 +30,64 @@ Building::Building(int posX, int posY, Building* building)
 	buildingBuildTime = building->buildingBuildTime;
 	buildingIdleTexture = building->buildingIdleTexture;
 	buildingDieTexture = building->buildingDieTexture;
-	constructingPhase1 = building->constructingPhase1;
-	constructingPhase2 = building->constructingPhase2;
-	constructingPhase3 = building->constructingPhase3;
-	Life = building->Life;
-	MaxLife = building->MaxLife;
-	Attack = building->Attack;
-	Defense = building->Defense;
+	buildingLife = building->buildingLife;
+	buildingMaxLife = building->buildingMaxLife;
+	buildingAttack = building->buildingAttack;
+	buildingDefense = building->buildingDefense;
 	canAttack = building->canAttack;
 
 	entityTexture = buildingIdleTexture;
-	GetBuildingBoundaries();
 
-	collider = App->collision->AddCollider(entityPosition, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
-	range = App->collision->AddCollider(entityPosition, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
-	los = App->collision->AddCollider(entityPosition, imageWidth * 1.5, COLLIDER_LOS, App->entityManager, (Entity*)this);
+	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
+	SDL_Rect colliderRect = { entityPosition.x - (imageWidth / 2), entityPosition.y - (imageHeight / 2), imageWidth, imageHeight};
+	COLLIDER_TYPE colliderType;
+	if (isEnemy) {
+		colliderType = COLLIDER_ENEMY_BUILDING;
+	}
+	else {
+		colliderType = COLLIDER_FRIENDLY_BUILDING;
+	}
+	collider = App->collision->AddCollider(colliderRect, colliderType, App->entityManager);
 
-	attack_timer.Start();
+	isSelected = false;
+	hpBarWidth = 50;
 }
 
 Building::~Building()
-{}
-
-bool Building::IsEnemy() const
 {
-	return (bool)faction;
-}
-
-void Building::GetBuildingBoundaries()
-{
-	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
 }
 
 bool Building::Update(float dt)
 {
-
-	if (Life == -1) {
-		Destroy();
-		return false;
+	switch (state) {
+	case BUILDING_ATTACKING:
+		Attack(dt);
+		break;
+	case BUILDING_DESTROYING:
+		//if (currentAnim->Finished()) {
+		App->entityManager->DeleteBuilding(this, isEnemy);
+		//}
+		break;
 	}
 
-	if (state != BEING_BUILT && state != DESTROYED) {
-
-		if (!order_list.empty()) {
-			Order* current_order = order_list.front();
-
-			if (current_order->state == NEEDS_START)
-				current_order->Start((Entity*)this);
-
-			if (current_order->state == EXECUTING)
-				current_order->Execute();
-
-			if (current_order->state == COMPLETED)
-				order_list.pop_front();
-		}
-		else {
-			if (state != IDLE)
-				state = IDLE;
-		}
-	}
-
-	if (Life < MaxLife / 2) {
+	if (isDamaged) {
 		//blit fire animation
 	}
 
-	if (state == BEING_BUILT) {
-		if (Life > MaxLife / 1.5f) {
-			entityTexture = constructingPhase3;
-			GetBuildingBoundaries();
-		}
-		else if (Life > MaxLife / 3) {
-			entityTexture = constructingPhase2;
-			GetBuildingBoundaries();
-		}
-	}
-
-	if (waitingToPlace) {
-		if (collider->colliding) {
-			SDL_SetTextureColorMod(entityTexture, 255, 0, 0);
-			canBePlaced = false;
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+		int x;
+		int y;
+		App->input->GetMousePosition(x, y);
+		if (x < entityPosition.x + (collider->rect.w / 2) && x > entityPosition.x - (collider->rect.w / 2) &&
+			y < entityPosition.y + (collider->rect.h / 2) && y > entityPosition.y - (collider->rect.h / 2)) {
+			if (isVisible) {
+				isSelected = true;
+			}
 		}
 		else {
-			SDL_SetTextureColorMod(entityTexture, 255, 255, 255);
-			canBePlaced = true;
+			if (isSelected) {
+				isSelected = false;
+			}
 		}
 	}
 
@@ -120,42 +96,78 @@ bool Building::Update(float dt)
 
 bool Building::Draw()
 {
-	Sprite aux;
+	if (isVisible)
+	{
+		Sprite aux;
 
-	aux.texture = entityTexture;
-	aux.pos.x = entityPosition.x - (imageWidth / 2);
-	aux.pos.y = entityPosition.y - (imageHeight / 2);
-	aux.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
-	aux.rect.w = imageWidth;
-	aux.rect.h = imageHeight;
+		aux.texture = entityTexture;
+		aux.pos.x = entityPosition.x - (imageWidth / 2);
+		aux.pos.y = entityPosition.y - (imageHeight / 2);
+		aux.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
+		aux.rect.w = imageWidth;
+		aux.rect.h = imageHeight;
+		aux.flip = SDL_FLIP_HORIZONTAL;
 
-	App->render->sprites_toDraw.push_back(aux);
+		if (isSelected)
+		{
+			Sprite bar;
 
-	if (last_life != Life) {
-		lifebar_timer.Start();
-		last_life = Life;
+			int percent = ((buildingMaxLife - buildingLife) * 100) / buildingMaxLife;
+			int barPercent = (percent * hpBarWidth) / 100;
+
+			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar.rect.w = hpBarWidth;
+			bar.rect.h = 5;
+			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
+			bar.r = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+
+			bar.rect.x = entityPosition.x - (hpBarWidth / 2);
+			bar.rect.y = entityPosition.y - ((int)(collider->rect.h / 1.5f));
+			bar.rect.w = min(hpBarWidth, max(hpBarWidth - barPercent, 0));
+			bar.rect.h = 5;
+			bar.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
+			bar.r = 0;
+			bar.g = 255;
+
+			App->render->sprites_toDraw.push_back(bar);
+		}
+
+		App->render->sprites_toDraw.push_back(aux);
 	}
 
-	if (lifebar_timer.ReadSec() < 5) {
-		iPoint p(entityPosition.x - 25, entityPosition.y - (imageHeight / 2));
-		drawLife(p);
-	}
-
+	
 	return true;
 }
 
-void Building::Destroy() {
+void Building::Attack(float dt)
+{
+	if (timer >= buildingAttackSpeed) {
+		attackUnitTarget->unitLife -= buildingAttack - attackUnitTarget->unitDefense;
+		if (attackUnitTarget->unitLife <= 0) {
+			attackUnitTarget->Dead();
+			if (buildingLife > 0) {
+				state = BUILDING_IDLE;
+			}
+		}
+		timer = 0;
+	}
+	else {
+		timer += dt;
+	}
+}
 
+void Building::Dead()
+{
+	state = BUILDING_DESTROYING;
 	App->collision->DeleteCollider(collider);
-	App->collision->DeleteCollider(range);
-	App->collision->DeleteCollider(los);
-	state = DESTROYED;
-	App->entityManager->DeleteBuilding(this);
-
 }
 
 pugi::xml_node Building::LoadBuildingInfo(buildingType type)
 {
+	
 	return pugi::xml_node();
 }
 
@@ -168,3 +180,4 @@ bool Building::Save(pugi::xml_node &) const
 {
 	return true;
 }
+

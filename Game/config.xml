@@ -14,7 +14,7 @@
 		<atlas file="gui/atlas.png" />
 	</gui>
 	<window>
-		<resolution width="1280" height="720" scale="1" />
+		<resolution width="1408" height="792" scale="1" />
 		<fullscreen value="false" />
 		<borderless value="false" />
 		<resizable value="false" />
@@ -26,7 +26,7 @@
 	<map>
 		<folder>maps/</folder>
 	</map>
-  <fog>
-    <texture file="maps/FOW.png" />
-  </fog>
+	<console>
+		
+	</console>
 </config>
