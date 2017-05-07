@@ -49,7 +49,6 @@ public:
 };
 
 
-
 class FollowPathOrder : public Order {
 
 public:
@@ -100,6 +99,7 @@ public:
 	void Execute();
 	bool CheckCompletion();
 };
+
 
 class GatherOrder : public Order {
 

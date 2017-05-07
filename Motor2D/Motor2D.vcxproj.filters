@@ -94,12 +94,11 @@
     <ClCompile Include="QuadTree.cpp">
       <Filter>Project 2\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="TechTree.cpp">
-      <Filter>Project 2\Entities</Filter>
+    <ClCompile Include="ParticleManager.cpp">
+      <Filter>Project 2\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Orders.cpp">
-      <Filter>Project 2\Entities</Filter>
-    </ClCompile>
+    <ClCompile Include="Orders.cpp" />
+    <ClCompile Include="TechTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -210,12 +209,13 @@
     <ClInclude Include="QuadTree.h">
       <Filter>Project 2\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleManager.h">
+      <Filter>Project 2\Modules</Filter>
+    </ClInclude>
     <ClInclude Include="Orders.h">
       <Filter>Project 2\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="TechTree.h">
-      <Filter>Project 2\Entities</Filter>
-    </ClInclude>
+    <ClInclude Include="TechTree.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">
