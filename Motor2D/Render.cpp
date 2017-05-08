@@ -5,6 +5,8 @@
 #include "Input.h"
 #include "Textures.h"
 #include "Map.h"
+#include "FogOfWar.h"
+#include "Minimap.h"
 #include <algorithm>
 
 #define VSYNC true
@@ -105,6 +107,36 @@ bool Render::PostUpdate()
 	}
 
 	ui_toDraw.clear();
+
+	// Minimap ===================================================================
+
+	for (list<MapLayer*>::iterator it = App->map->data.layers.begin(); it != App->map->data.layers.end(); it++)
+	{
+		MapLayer* layer = *it;
+
+		if (layer->properties.Get("Nodraw") != 0)
+			continue;
+
+		for (int y = 0; y < App->map->data.height; ++y)
+		{
+			for (int x = 0; x < App->map->data.width; ++x)
+			{
+				int tile_id = layer->Get(x, y);
+				int visibility = App->fog->Get(x, y);
+
+				iPoint tileWorld = App->map->MapToWorld(x, y);
+
+				if (tile_id > 0 && visibility != 0)
+					App->minimap->DrawTerrain(tileWorld.x, tileWorld.y, 0, 153, 51);
+
+			}
+		}
+	}
+
+	App->minimap->DrawUnits();
+
+	// ==============================================================================
+
 
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);

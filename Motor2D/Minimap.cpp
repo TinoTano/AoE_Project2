@@ -31,50 +31,37 @@ bool Minimap::CleanUp()
 	return true;
 }
 
-void Minimap::DrawTerrain(int x, int y)
+void Minimap::DrawTerrain(int x, int y, int r, int g, int b)
 {
-	Sprite minimapTile;
-
-	minimapTile.rect.x = 1105 - App->render->camera.x + (x * 0.035);
-	minimapTile.rect.y = 549 - App->render->camera.y + (y * 0.035);
-	minimapTile.rect.w = 2;
-	minimapTile.rect.h = 2;
-
-	minimapTile.priority = 20;
-	minimapTile.g = 153;
-	minimapTile.b = 51;
-
-	App->render->ui_toDraw.push_back(minimapTile);
+	SDL_Rect rect;
+	rect.x = 1105 - App->render->camera.x + (x * 0.035);
+	rect.y = 549 - App->render->camera.y + (y * 0.035);
+	rect.w = 2;
+	rect.h = 2;
+	App->render->DrawQuad(rect, r, g, b, true);
 }
 
 void Minimap::DrawUnits()
 {
-
-	Sprite minimapTile;
-
-	minimapTile.rect.w = 4;
-	minimapTile.rect.h = 4;
-	minimapTile.priority = 21;
-
 	for (list<Unit*>::iterator it = App->entityManager->friendlyUnitList.begin(); it != App->entityManager->friendlyUnitList.end(); it++) {
 
-		minimapTile.rect.x = 1105 - App->render->camera.x + ((*it)->entityPosition.x * 0.035);
-		minimapTile.rect.y = 549 - App->render->camera.y + ((*it)->entityPosition.y * 0.035);
-
-		minimapTile.b = 255;
-
-		App->render->ui_toDraw.push_back(minimapTile);
+		SDL_Rect rect;
+		rect.x = 1105 - App->render->camera.x + ((*it)->entityPosition.x * 0.035);
+		rect.y = 549 - App->render->camera.y + ((*it)->entityPosition.y * 0.035);
+		rect.w = 4;
+		rect.h = 4;
+		App->render->DrawQuad(rect, 0, 0, 255, true);
 	}
 
 	for (list<Unit*>::iterator it = App->entityManager->enemyUnitList.begin(); it != App->entityManager->enemyUnitList.end(); it++) {
 
 		if ((*it)->isActive) {
-			minimapTile.rect.x = 1105 - App->render->camera.x + ((*it)->entityPosition.x * 0.035);
-			minimapTile.rect.y = 549 - App->render->camera.y + ((*it)->entityPosition.y * 0.035);
-
-			minimapTile.r = 255;
-
-			App->render->ui_toDraw.push_back(minimapTile);
+			SDL_Rect rect;
+			rect.x = 1105 - App->render->camera.x + ((*it)->entityPosition.x * 0.035);
+			rect.y = 549 - App->render->camera.y + ((*it)->entityPosition.y * 0.035);
+			rect.w = 4;
+			rect.h = 4;
+			App->render->DrawQuad(rect, 255, 0, 0, true);
 		}
 	}
 }

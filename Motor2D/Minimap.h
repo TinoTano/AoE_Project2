@@ -20,10 +20,11 @@ public:
 	bool CleanUp();
 
 	//Draw terrain
-	void DrawTerrain(int x, int y);
+	void DrawTerrain(int x, int y, int r, int g, int b);
 
 	//Draw units
 	void DrawUnits();
+
 
 };
 

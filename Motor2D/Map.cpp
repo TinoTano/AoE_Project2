@@ -55,9 +55,6 @@ void Map::Draw()
 
 				if (tile_id > 0 && visibility != 0) {
 
-					//DRAWING MINIMAP
-					App->minimap->DrawTerrain(tileWorld.x, tileWorld.y);
-
 					if (App->render->CullingCam(tileWorld))
 					{
 						TileSet* tileset = GetTilesetFromTileId(tile_id);
@@ -74,11 +71,8 @@ void Map::Draw()
 			}
 		}
 	}
-
-	//DRAWING MINIMAP UNITS
-	App->minimap->DrawUnits();
-
 }
+
 
 int Properties::Get(const char* value, int default_value) const
 {
