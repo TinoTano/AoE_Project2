@@ -974,9 +974,8 @@ void Cursor::Draw() {
 	crsr.pos.y = pos.second - blitoffset.second;
 	crsr.rect = sprite_list[id];
 	crsr.texture = texture;
+	crsr.priority = 40;
 	App->render->ui_toDraw.push_back(crsr);
-
-	App->render->Blit(texture, pos.first - blitoffset.first, pos.second - blitoffset.second, &sprite_list[id]);
 }
 void Cursor::SetCursor(int id) {
 	this->id = id;
