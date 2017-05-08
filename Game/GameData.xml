@@ -701,7 +701,7 @@
 				<Die value="textures/Units/OrcSoldier/OrcSoldierDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
+				<Faction value="2"/>
 				<Life value="50"/>
 				<Attack value="6"/>
 				<AttackSpeed value="2"/>

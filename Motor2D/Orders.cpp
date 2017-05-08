@@ -172,9 +172,10 @@ bool ReachOrder::CheckCompletion()
 
 void UnitAttackOrder::Start(Entity* entity)
 {
-
+	
 	if (unit = entity->collider->GetUnit()) {
 		unit->state = ATTACKING;
+		App->entityManager->RallyCall(unit);
 
 		if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->range->r)
 			unit->order_list.push_front(new ReachOrder(target));
@@ -233,6 +234,7 @@ void BuildingAttackOrder::Start(Entity* entity)
 {
 
 	if (building = entity->collider->GetBuilding()) {
+		App->entityManager->RallyCall(building);
 		building->attack_timer.Start();
 		building->state = ATTACKING;
 	}

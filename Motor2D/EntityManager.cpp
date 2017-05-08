@@ -779,6 +779,25 @@ Resource* EntityManager::FindNearestResource(resourceType type, iPoint pos) {
 	return ret;
 }
 
+void EntityManager::RallyCall(Entity* entity) {
+
+	list<Unit*>* allied_units = nullptr;
+
+	if (entity->faction == FREE_MEN)
+		allied_units = &friendlyUnitList;
+	else
+		allied_units = &enemyUnitList;
+	
+	for (list<Unit*>::iterator it = allied_units->begin(); it != allied_units->end(); it++) {
+		if (entity->entityPosition.DistanceTo((*it)->entityPosition) < (*it)->los->r && (*it)->state == IDLE) {
+			Entity* target = nullptr;
+			if (target = App->entityManager->FindTarget((*it)))
+				(*it)->order_list.push_back(new UnitAttackOrder(target));
+		}
+	}
+	
+}
+
 Entity* EntityManager::FindTarget(Unit* unit) {
 
 	list<Unit*>* enemy_units = nullptr;
@@ -823,11 +842,16 @@ Entity* EntityManager::FindTarget(Unit* unit) {
 void EntityManager::Untarget(Entity* destroyed_entity) {
 
 	list<Unit*>* enemy_units = nullptr;
+	list<Building*>* enemy_buildings = nullptr;
 
-	if (destroyed_entity->faction == FREE_MEN)
+	if (destroyed_entity->faction == FREE_MEN) {
 		enemy_units = &enemyUnitList;
-	else
+		enemy_buildings = &enemyBuildingList;
+	}
+	else {
 		enemy_units = &friendlyUnitList;
+		enemy_buildings = &friendlyBuildingList;
+	}
 
 
 	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
@@ -845,14 +869,6 @@ void EntityManager::Untarget(Entity* destroyed_entity) {
 			}
 		}
 	}
-
-
-	list<Building*>* enemy_buildings = nullptr;
-
-	if (destroyed_entity->faction == FREE_MEN)
-		enemy_buildings = &enemyBuildingList;
-	else
-		enemy_buildings = &friendlyBuildingList;
 
 
 	for (list<Building*>::iterator it3 = enemy_buildings->begin(); it3 != enemy_buildings->end(); it3++) {

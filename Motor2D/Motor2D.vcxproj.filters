@@ -97,10 +97,18 @@
     <ClCompile Include="ParticleManager.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Orders.cpp" />
-    <ClCompile Include="TechTree.cpp" />
-    <ClCompile Include="Minimap.cpp" />
-    <ClCompile Include="QuestManager.cpp" />
+    <ClCompile Include="Orders.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Minimap.cpp">
+      <Filter>Project 2\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="QuestManager.cpp">
+      <Filter>Project 2\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="TechTree.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -217,9 +225,15 @@
     <ClInclude Include="Orders.h">
       <Filter>Project 2\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="TechTree.h" />
-    <ClInclude Include="Minimap.h" />
-    <ClInclude Include="QuestManager.h" />
+    <ClInclude Include="Minimap.h">
+      <Filter>Project 2\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="QuestManager.h">
+      <Filter>Project 2\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="TechTree.h">
+      <Filter>Project 2\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">
