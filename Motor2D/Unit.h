@@ -75,7 +75,7 @@ public:
 	Collider* range = nullptr;
 	list<Order*> order_list;
 	Building* buildingToCreate = nullptr;
-
+	Building* resourcesWareHouse = nullptr;
 
 	//Animations
 	vector<Animation> idleAnimations;

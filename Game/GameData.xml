@@ -1604,6 +1604,27 @@
 				<CanAttack value="false"/>
 			</Stats>
 		</Building>
+    <Building>
+      <Info>
+        <Name value = "FARM"/>
+        <ID value = "15"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Buildings/BuildingsFP/MillFP1.png"/>
+        <Die value="textures/Buildings/BuildingsFP/MillFP1.png"/>
+        <ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+        <ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+        <ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
+      </Textures>
+      <Stats>
+        <Faction value="0"/>
+        <Life value="1200"/>
+        <WoodCost value="0"/>
+        <StoneCost value="650"/>
+        <BuildTime value="200"/>
+        <CanAttack value="false"/>
+      </Stats>
+    </Building>
 	</Buildings>
 
 <!-- Resources -->

@@ -292,7 +292,7 @@ void GatherOrder::Start(Entity* entity) {
 
 	villager->resource_carried = resource->type;
 
-	if (!villager->collider->CheckCollision(App->sceneManager->level1_scene->my_townCenter->collider) && villager->curr_capacity > 0) {
+	if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
 
 		switch (villager->resource_carried) {
 		case WOOD:
@@ -336,7 +336,7 @@ void GatherOrder::Execute() {
 	}
 	else {
 		state = NEEDS_START;
-		villager->order_list.push_front(new ReachOrder(App->sceneManager->level1_scene->my_townCenter));
+		villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
 	}
 }
 
@@ -389,6 +389,9 @@ bool BuildOrder::CheckCompletion() {
 			building->GetBuildingBoundaries();
 			building->collider->type = COLLIDER_BUILDING;
 			building->state = IDLE;
+			if (building->type == FARM) {
+				villager->resourcesWareHouse = building;
+			}
 			return true;
 		}
 	}

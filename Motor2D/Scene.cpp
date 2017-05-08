@@ -171,7 +171,6 @@ bool Scene::Start()
 	App->fog->Start(); // Goes first!
 
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
 
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y - 150, GOBLIN_SOLDIER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
@@ -183,6 +182,9 @@ bool Scene::Start()
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
+
+	//IMPORTANT! CREATE VILLAGER AFTER CREATING TOWN CENTER TO ASSIGN IT AS RESOURCE WAREHOUSE
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
 
 	// =================================================================================================================
 
@@ -238,7 +240,7 @@ bool Scene::Update(float dt)
 			if (!App->entityManager->placingBuilding) {
 				int x, y;
 				App->input->GetMousePosition(x, y);
-				App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, ORC_BARRACKS);
+				App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, FARM);
 				App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
 				App->entityManager->placingBuilding = true;
 				App->entityManager->buildingToCreate->waitingToPlace = true;

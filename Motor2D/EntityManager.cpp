@@ -583,12 +583,16 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 {
 	Unit* unit;
 
-	if (type == VILLAGER || type == ELF_VILLAGER)
+	if (type == VILLAGER || type == ELF_VILLAGER) {
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
-	else if (type == GONDOR_HERO)
+		unit->resourcesWareHouse = App->sceneManager->level1_scene->my_townCenter;
+	}
+	else if (type == GONDOR_HERO) {
 		unit = (Unit*) new Hero(posX, posY, (Hero*)unitsDB[type]);
-	else
+	}
+	else {
 		unit = new Unit(posX, posY, unitsDB[type]);
+	}
 
 	unit->entityID = nextID;
 	nextID++;
