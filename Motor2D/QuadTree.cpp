@@ -131,6 +131,17 @@ void QuadTree::Insert(Collider* col)
 	
 }
 
+void QuadTree::Remove(Collider* col) {
+
+	int index = GetNodeIndex(col);
+	if (index != -1 && node[0] != nullptr) {
+		node[index]->Remove(col);
+	}
+	else 
+		collidersList.remove(col);
+
+}
+
 void QuadTree::Retrieve(list<Collider*> &possibleColliders, Collider* col)
 {
 

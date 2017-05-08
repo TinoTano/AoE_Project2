@@ -83,19 +83,34 @@ public:
 
 };
 
-class AttackOrder : public Order {
+class UnitAttackOrder : public Order {
 
 public:
 
 	Entity* target = nullptr;
 	Unit* unit = nullptr;
+
+public:
+
+	UnitAttackOrder(Entity* argtarget) : target(argtarget) { order_type = ATTACK; }
+
+	void Start(Entity* unit);
+	void Execute();
+	bool CheckCompletion();
+};
+
+class BuildingAttackOrder : public Order {
+
+public:
+
+	Entity* target = nullptr;
 	Building* building = nullptr;
 
 public:
 
-	AttackOrder(Entity* argtarget) : target(argtarget) { order_type = ATTACK; }
+	BuildingAttackOrder(Entity* argtarget) : target(argtarget) { order_type = ATTACK; }
 
-	void Start(Entity* entity);
+	void Start(Entity* unit);
 	void Execute();
 	bool CheckCompletion();
 };

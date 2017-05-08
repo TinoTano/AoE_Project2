@@ -78,8 +78,9 @@ bool Collision::PreUpdate()
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
 		if ((*it)->to_delete == true)
 		{
+			quadTree->Remove(*it);
+			colliders.erase(it);
 			RELEASE(*it);
-			it = colliders.erase(it);
 
 			for (list<Collision_data*>::iterator it2 = collision_list.begin(); it2 != collision_list.end(); it2++) {
 				if ((*it) == (*it2)->c1 || (*it) == (*it2)->c2)

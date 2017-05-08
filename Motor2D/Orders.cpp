@@ -135,6 +135,7 @@ void ReachOrder::Execute() {
 		unit->entityPosition = unit->next_step;
 		unit->collider->pos = unit->next_step;
 		unit->range->pos = unit->entityPosition;
+		unit->los->pos = unit->entityPosition;
 
 		unit->CalculateVelocity();
 
@@ -169,7 +170,7 @@ bool ReachOrder::CheckCompletion()
 }
 
 
-void AttackOrder::Start(Entity* entity)
+void UnitAttackOrder::Start(Entity* entity)
 {
 
 	if (unit = entity->collider->GetUnit()) {
@@ -182,71 +183,90 @@ void AttackOrder::Start(Entity* entity)
 			state = EXECUTING;
 		}
 	}
-	else if (building = entity->collider->GetBuilding()) {
-		building->attack_timer.Start();
-		building->state = ATTACKING;
-	}
 
 	Unit* enemy_unit = nullptr;
 	if (enemy_unit = target->collider->GetUnit()) {
-		if (enemy_unit->entityPosition.DistanceTo(unit->entityPosition) < enemy_unit->los->r) {
-
-			for (list<Order*>::iterator it = enemy_unit->order_list.begin(); it != enemy_unit->order_list.end(); it++) {
-				if ((*it)->order_type == ATTACK) {
-					AttackOrder* atk_order = (AttackOrder*)(*it);
-					if (atk_order->target == entity)
-						return;
-				}
-			}
-
-			enemy_unit->order_list.push_back(new AttackOrder(entity));
+		if (enemy_unit->state != ATTACKING) {
+			enemy_unit->order_list.push_front(new UnitAttackOrder(entity));
+			enemy_unit->state = ATTACKING;
 		}
 	}
 }
 
 //Attack order:
 
-void AttackOrder::Execute() {
+void UnitAttackOrder::Execute() {
 
 	if (!CheckCompletion()) {
 
-		if (unit) {
-			if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->los->r) {
-				unit->order_list.push_front(new ReachOrder(target));
-				state = NEEDS_START;
-			}
-			else if (unit->currentAnim->Finished())
-				target->Life -= unit->Attack - target->Defense;
+		if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->range->r) {
+			unit->order_list.push_front(new ReachOrder(target));
+			state = NEEDS_START;
 		}
-		else if (building) {
-
-			if (building->attack_timer.ReadSec() > 0.5) {
-				target->Life -= building->Attack - target->Defense;
-				building->attack_timer.Start();
-			}
-		}
+		else if (unit->currentAnim->Finished())
+			target->Life -= unit->Attack - target->Defense;
 
 		if (target->Life <= 0)
-			target->Life = -1;
+			target->Destroy();
+	}
+	else {
+		state = COMPLETED;
+		if (target = App->entityManager->FindTarget(unit))
+			unit->order_list.push_back(new UnitAttackOrder(target));
+	}
+
+}
+
+bool UnitAttackOrder::CheckCompletion() {
+
+	if (target != nullptr) {
+		if (target->Life > 0) {
+			if (unit->entityPosition.DistanceTo(target->entityPosition) < unit->los->r)
+				return false;
+		}
+	}
+	return true;
+}
+
+
+void BuildingAttackOrder::Start(Entity* entity)
+{
+
+	if (building = entity->collider->GetBuilding()) {
+		building->attack_timer.Start();
+		building->state = ATTACKING;
 	}
 	else
 		state = COMPLETED;
 
 }
 
-bool AttackOrder::CheckCompletion() {
+//Attack order:
+
+void BuildingAttackOrder::Execute() {
+
+	if (!CheckCompletion()) {
+
+		if (building->attack_timer.ReadSec() > 0.5) {
+			target->Life -= building->Attack - target->Defense;
+			building->attack_timer.Start();
+		}
+		
+
+		if (target->Life <= 0)
+			target->Destroy();
+	}
+	else
+		state = COMPLETED;
+
+}
+
+bool BuildingAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-
-			if (unit) {
-				if (unit->entityPosition.DistanceTo(target->entityPosition) < unit->los->r)
-					return false;
-			}
-			else if (building) {
-				if (building->entityPosition.DistanceTo(target->entityPosition) < building->range->r)
-					return false;
-			}
+			if (building->entityPosition.DistanceTo(target->entityPosition) < building->range->r)
+				return false;
 		}
 	}
 	return true;

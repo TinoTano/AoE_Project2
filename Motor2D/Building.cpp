@@ -62,11 +62,6 @@ void Building::GetBuildingBoundaries()
 bool Building::Update(float dt)
 {
 
-	if (Life == -1) {
-		Destroy();
-		return false;
-	}
-
 	if (state != BEING_BUILT && state != DESTROYED) {
 
 		if (!order_list.empty()) {
@@ -85,11 +80,12 @@ bool Building::Update(float dt)
 			if (state != IDLE)
 				state = IDLE;
 		}
+
+		if (Life < MaxLife / 2) {
+			//blit fire animation
+		}
 	}
 
-	if (Life < MaxLife / 2) {
-		//blit fire animation
-	}
 
 	if (state == BEING_BUILT) {
 		if (Life > MaxLife / 1.5f) {
@@ -144,6 +140,10 @@ bool Building::Draw()
 
 void Building::Destroy() {
 
+	if (Life <= 0)
+		Life = -1;
+
+	App->entityManager->Untarget(this);
 	App->collision->DeleteCollider(collider);
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);

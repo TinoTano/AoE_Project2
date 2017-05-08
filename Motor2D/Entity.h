@@ -62,6 +62,7 @@ public:
 
 	int last_life = 0;
 	Timer lifebar_timer;
+
 };
 
 #endif // !__ENTITY_H__

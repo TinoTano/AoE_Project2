@@ -90,8 +90,8 @@ public:
 
 	Animation* currentAnim = nullptr;
 
-	iPoint				prev_pos = { 0,0 };
-	iPoint				next_pos = { 0,0 };
+	iPoint prev_pos = { 0,0 };
+	iPoint next_pos = { 0,0 };
 
 };
 

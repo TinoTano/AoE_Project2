@@ -23,6 +23,7 @@ public:
 	void UpdateTree();
 	int GetNodeIndex(Collider* col, int start_from = 0);
 	void Insert(Collider* col);
+	void Remove(Collider* col);
 	void Retrieve(list<Collider*> &potentialColliders, Collider* col);
 	bool Contains(Collider* col);
 	bool IsInList(Collider* col);

@@ -56,6 +56,7 @@ public:
 	Collider* los = nullptr;
 	Collider* range = nullptr;
 	list<Order*> order_list;
+	list<Order*> target_of;
 
 };
 

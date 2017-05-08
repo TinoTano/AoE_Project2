@@ -58,8 +58,10 @@ public:
 	void FillSelectedList();
 	void DrawSelectedList();
 	Collider* CheckCursorHover(iPoint cursor_pos);
+	void Untarget(Entity* destroyed_entity);
 
 	Resource* FindNearestResource(resourceType type, iPoint pos);
+	Entity* FindTarget(Unit* unit);
 
 private:
 	void DestroyEntity(Entity* entity);

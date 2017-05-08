@@ -80,6 +80,11 @@ bool EntityManager::Update(float arg_dt)
 			(*it)->Draw();
 	}
 
+	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+		if ((*it)->state == DESTROYED)
+			selectedEntityList.erase(it);
+	}
+
 	// AI for enemies
 	Unit* unit = nullptr;
 
@@ -102,9 +107,12 @@ bool EntityManager::Update(float arg_dt)
 
 		case HOVERING_ENEMY:
 
-			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-				unit = (Unit*)(*it);
-				unit->order_list.push_front(new AttackOrder(clicked_on->entity));
+			if (clicked_on->entity->state != DESTROYED) {
+				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+					unit = (Unit*)(*it);
+					unit->order_list.push_front(new UnitAttackOrder(clicked_on->entity));
+					unit->state = ATTACKING;
+				}
 			}
 			break;
 
@@ -702,25 +710,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 		if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
 
 			if (building = col_data.c1->entity->collider->GetBuilding()) 
-				building->order_list.push_front(new AttackOrder(col_data.c2->entity));
-			else if (unit = col_data.c1->entity->collider->GetUnit()) {
-
-				if (unit->state == ATTACKING || unit->state == IDLE || unit->state == PATROLLING) {
-
-					if (unit->state == ATTACKING) {
-
-						for (list<Order*>::iterator it = unit->order_list.begin(); it != unit->order_list.end(); it++) {
-							if ((*it)->order_type == ATTACK) {
-								AttackOrder* atk_order = (AttackOrder*)(*it);
-								if (atk_order->target == col_data.c2->entity)
-									unit->order_list.erase(it);
-							}
-						}
-					}
-				}
-
-				unit->order_list.push_front(new AttackOrder(col_data.c2->entity));
-			}
+				building->order_list.push_front(new BuildingAttackOrder(col_data.c2->entity));
 		}
 	}
 	else if (col_data.c1->type == COLLIDER_UNIT) {    // c1->type == COLLIDER_UNIT
@@ -762,9 +752,6 @@ void EntityManager::OnCollision(Collision_data& col_data)
 		
 			break;
 
-		case COLLIDER_RESOURCE:
-
-			break;
 		default:
 			break;
 		}
@@ -792,6 +779,98 @@ Resource* EntityManager::FindNearestResource(resourceType type, iPoint pos) {
 	return ret;
 }
 
+Entity* EntityManager::FindTarget(Unit* unit) {
+
+	list<Unit*>* enemy_units = nullptr;
+
+	if (unit->faction == FREE_MEN)
+		enemy_units = &enemyUnitList;
+	else
+		enemy_units = &friendlyUnitList;
+
+	Entity* ret = nullptr;
+	iPoint aux{ -1,-1 };
+	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
+		if(unit->entityPosition.DistanceTo((*it)->entityPosition) < unit->los->r && (*it)->state != DESTROYED &&
+			unit->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
+			ret = (*it);
+			aux = (*it)->entityPosition;
+		}
+	}
+
+	if (ret == nullptr) {
+
+		list<Building*>* enemy_buildings = nullptr;
+
+		if (unit->faction == FREE_MEN)
+			enemy_buildings = &enemyBuildingList;
+		else
+			enemy_buildings = &friendlyBuildingList;
+
+		aux.create(-1, -1);
+		for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
+			if (unit->entityPosition.DistanceTo((*it)->entityPosition) < unit->range->r && (*it)->state != DESTROYED &&
+				unit->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
+				ret = (*it);
+				aux = (*it)->entityPosition;
+			}
+		}
+	}
+
+	return ret;
+}
+
+void EntityManager::Untarget(Entity* destroyed_entity) {
+
+	list<Unit*>* enemy_units = nullptr;
+
+	if (destroyed_entity->faction == FREE_MEN)
+		enemy_units = &enemyUnitList;
+	else
+		enemy_units = &friendlyUnitList;
+
+
+	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
+
+		if ((*it)->state == ATTACKING) {
+
+			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+
+				if ((*it2)->order_type == ATTACK) {
+					UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it);
+
+					if (atk_order->target == destroyed_entity)
+						atk_order->state = COMPLETED;
+				}
+			}
+		}
+	}
+
+
+	list<Building*>* enemy_buildings = nullptr;
+
+	if (destroyed_entity->faction == FREE_MEN)
+		enemy_buildings = &enemyBuildingList;
+	else
+		enemy_buildings = &friendlyBuildingList;
+
+
+	for (list<Building*>::iterator it3 = enemy_buildings->begin(); it3 != enemy_buildings->end(); it3++) {
+
+		if ((*it3)->state == ATTACKING) {
+
+			for (list<Order*>::iterator it4 = (*it3)->order_list.begin(); it4 != (*it3)->order_list.end(); it4++) {
+
+				if ((*it4)->order_type == ATTACK) {
+					UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it3);
+
+					if (atk_order->target == destroyed_entity)
+						atk_order->state = COMPLETED;
+				}
+			}
+		}
+	}
+}
 
 void EntityManager::DestroyEntity(Entity* entity)
 {
@@ -953,12 +1032,6 @@ void EntityManager::FillSelectedList() {
 
 	if (!selectedEntityList.empty())
 		selectedListType = selectedEntityList.front()->collider->type;
-
-	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-		if ((*it)->state == DESTROYED)
-			selectedEntityList.erase(it);
-	}
-
 
 	multiSelectionRect = { 0,0,0,0 };
 }
