@@ -166,19 +166,27 @@ bool Scene::Start()
 
 	App->map->LoadResources(App->map->map_file.child("map"));
 
-	// Fog of war, entities & resources
+	// Fog of war, entities & resources ================================================================================
 
 	App->fog->Start(); // Goes first!
 
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 220, TOWN_HALL_POS_Y + 150, GOBLIN_SOLDIER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
 
-	UpdateVillagers(3, 3);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y - 150, GOBLIN_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 120, GOBLIN_SOLDIER);
+
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y + 150, ORC_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 180, ORC_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 120, ORC_SOLDIER);
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
+
+	// =================================================================================================================
+
+	UpdateVillagers(3, 3);
 
 	timer.Start();
 	troll_timer.Start();

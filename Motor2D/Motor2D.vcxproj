@@ -101,6 +101,7 @@
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="QuestManager.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="QuestManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneElement.h" />

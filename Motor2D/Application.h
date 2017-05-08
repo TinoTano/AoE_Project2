@@ -25,7 +25,7 @@ class Collision;
 class Gui;
 class FogOfWar;
 class Minimap;
-//class Console;
+class QuestManager;
 
 class Application
 {
@@ -110,7 +110,7 @@ public:
 	Gui*				gui = NULL;
 	FogOfWar*			fog = NULL;
 	Minimap*			minimap = NULL;
-	//Console*			console = NULL;
+	QuestManager*		quest = NULL;
 	bool				quit = false;
 
 private:

@@ -272,7 +272,7 @@ void FogOfWar::ManageEntities()
 {
 	for (list<Entity*>::iterator it = entities_not_in_fog.begin(); it != entities_not_in_fog.end(); it++)
 	{
-		if (IsVisible(App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y)))
+		if (IsVisible(App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y), (*it)->faction))
 			(*it)->isActive = true;
 		else
 			(*it)->isActive = false;
@@ -280,11 +280,12 @@ void FogOfWar::ManageEntities()
 }
 
 
-bool FogOfWar::IsVisible(iPoint char_pos)
+bool FogOfWar::IsVisible(iPoint char_pos, Faction faction)
 {
 	bool ret = false;
 
-	if (Get(char_pos.x, char_pos.y) == fow_clear) ret = true;
+	if (faction == NATURE && Get(char_pos.x, char_pos.y) != fow_black) ret = true;
+	if (faction == SAURON_ARMY && Get(char_pos.x, char_pos.y) == fow_clear) ret = true;
 
 	return ret;
 }

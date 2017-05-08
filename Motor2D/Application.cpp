@@ -19,7 +19,7 @@
 #include "Gui.h"
 #include "FogOfWar.h"
 #include "Minimap.h"
-//#include "Console.h"
+#include "QuestManager.h"
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -42,7 +42,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	gui = new Gui();
 	fog = new FogOfWar();
 	minimap = new Minimap();
-	//console = new Console();
+	quest = new QuestManager();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -56,7 +56,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(particlemanager);
 	AddModule(gui);
-    //AddModule(console);
+    AddModule(quest);
 
 	// scene last
 	AddModule(sceneManager);

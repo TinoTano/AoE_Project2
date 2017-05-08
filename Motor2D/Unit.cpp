@@ -17,6 +17,7 @@
 #include "QuadTree.h"
 #include "Orders.h"
 #include "Villager.h"
+#include "QuestManager.h"
 
 Unit::Unit()
 {
@@ -114,13 +115,15 @@ bool Unit::Update(float dt)
 
 void Unit::Destroy() {
 
+	if (App->quest->TriggerKillCallback(this->type) == false)
+		App->quest->StepKillCallback(this->type);
+
 	SetTexture(DESTROYED);
 	App->collision->DeleteCollider(collider);
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);
 	state = DESTROYED;
 	App->entityManager->DeleteUnit(this);
-
 }
 
 bool Unit::Draw()

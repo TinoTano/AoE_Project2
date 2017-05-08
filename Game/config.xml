@@ -26,7 +26,10 @@
 	<map>
 		<folder>maps/</folder>
 	</map>
-  <fog>
-    <texture file="maps/FOW.png" />
-  </fog>
+        <fog>
+               <texture file="maps/FOW.png" />
+        </fog>
+        <quest>
+               <data file="quests/questData.xml"/>
+        </quest>
 </config>
