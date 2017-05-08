@@ -24,6 +24,7 @@ class EntityManager;
 class Collision;
 class Gui;
 class FogOfWar;
+class Minimap;
 //class Console;
 
 class Application
@@ -108,6 +109,7 @@ public:
 	Collision*			collision = NULL;
 	Gui*				gui = NULL;
 	FogOfWar*			fog = NULL;
+	Minimap*			minimap = NULL;
 	//Console*			console = NULL;
 	bool				quit = false;
 

@@ -99,6 +99,7 @@
     </ClCompile>
     <ClCompile Include="Orders.cpp" />
     <ClCompile Include="TechTree.cpp" />
+    <ClCompile Include="Minimap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -216,6 +217,7 @@
       <Filter>Project 2\Entities</Filter>
     </ClInclude>
     <ClInclude Include="TechTree.h" />
+    <ClInclude Include="Minimap.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">
