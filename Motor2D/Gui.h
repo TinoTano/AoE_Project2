@@ -272,7 +272,7 @@ private:
 	Label* life;
 
 	Image* sword_img;		Image* armor_img;
-
+	uint id;
 	char armor[65], damage[65], currlife[65], maxlife[65];
 	uint posx, posy;
 	//BUILDINGINFO

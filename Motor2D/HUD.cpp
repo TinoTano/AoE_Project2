@@ -169,17 +169,22 @@ void HUD::Update() {
 						GetSelection();
 					}
 					else {
-						if (App->entityManager->selectedEntityList.front()->Life > 0)
+						Unit* unit = (Unit*)App->entityManager->selectedEntityList.front();
+						if (unit->GetType() != id) {
+							ClearSingle();
+							GetSelection();
+						}
+						else if (unit->Life > 0)
 						{
-							_itoa_s(App->entityManager->selectedEntityList.front()->Defense, armor, 65, 10);
-							_itoa_s(App->entityManager->selectedEntityList.front()->Attack, damage, 65, 10);
+							_itoa_s(unit->Defense, armor, 65, 10);
+							_itoa_s(unit->Attack, damage, 65, 10);
 
 							damage_val->SetString(damage);
 							armor_val->SetString(armor);
 
 
-							max_life = App->entityManager->selectedEntityList.front()->MaxLife;
-							curr_life = App->entityManager->selectedEntityList.front()->Life;
+							max_life = unit->MaxLife;
+							curr_life = unit->Life;
 
 							_itoa_s(curr_life, currlife, 65, 10);
 							life_str += currlife;
@@ -362,13 +367,15 @@ void HUD::Update() {
 					ClearSingle();
 					ClearMultiple();
 					ClearResource();
-
 					type = BUILDINGINFO;
 					StartBuildingInfo();
 				}
 				else {
 					Building* building = (Building*)App->entityManager->selectedEntityList.front();
-
+					if (building->type != id) {
+						ClearBuilding();
+						StartBuildingInfo();
+					}
 					for (list<UnitSprite>::iterator it = App->gui->SpriteBuildings.begin(); it != App->gui->SpriteBuildings.end(); ++it)
 					{
 						if (it._Ptr->_Myval.GetID() == building->type)
@@ -485,7 +492,10 @@ void HUD::Update() {
 				}
 				else {
 					Resource* resource = (Resource*)App->entityManager->selectedEntityList.front();
-
+					if (resource->type != id) {
+						ClearResource();
+						StartResourceInfo();
+					}
 					for (list<UnitSprite>::iterator it = App->gui->SpriteResources.begin(); it != App->gui->SpriteResources.end(); ++it)
 					{
 						if (it._Ptr->_Myval.GetID() == resource->type)
@@ -663,9 +673,7 @@ void HUD::HUDClearCreateBuildings()
 	App->gui->DestroyUIElement(create_outpost_bt);
 	App->gui->DestroyUIElement(create_monastery_bt);
 	App->gui->DestroyUIElement(create_castle_bt);
-
 	App->gui->DestroyUIElement(cancel_bt);
-
 }
 
 void HUD::HUDBuildingMenu()
@@ -790,6 +798,7 @@ void HUD::StartResourceInfo()
 	{
 		if (it._Ptr->_Myval.GetID() == resource->type)
 		{
+			id = resource->type;
 			single = (Image*)App->gui->CreateImage("gui/ResourcesMiniatures.png", posx - App->render->camera.x, posy - App->render->camera.y, it._Ptr->_Myval.GetRect());
 			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), posx - App->render->camera.x, posy - 20 - App->render->camera.y, nullptr);
 		}
@@ -814,6 +823,7 @@ void HUD::StartBuildingInfo()
 	{
 		if (it._Ptr->_Myval.GetID() == building->type)
 		{
+			id = building->type;
 			single = (Image*)App->gui->CreateImage("gui/BuildingMiniatures.png", posx - App->render->camera.x, posy - App->render->camera.y, it._Ptr->_Myval.GetRect());
 			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), posx - App->render->camera.x, posy - 20 - App->render->camera.y, nullptr);
 		}
@@ -851,6 +861,7 @@ void HUD::GetSelection() {
 		{
 			if (it._Ptr->_Myval.GetID() == unit->GetType())
 			{
+				id = unit->GetType();
 				single = (Image*)App->gui->CreateImage("gui/UnitMiniatures.png", posx - App->render->camera.x, posy - App->render->camera.y, it._Ptr->_Myval.GetRect());
 				name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), posx - App->render->camera.x, posy - 25 - App->render->camera.y, nullptr);
 			}
