@@ -942,7 +942,7 @@ void EntityManager::FillSelectedList() {
 		iPoint mouse = { mouseX, mouseY };
 		Collider* nearest_col = App->collision->FindNearestCollider(mouse);
 
-		if (mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
+		if (nearest_col != nullptr && mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
 			Unit* unit = nullptr;
 			switch (nearest_col->type) {
 

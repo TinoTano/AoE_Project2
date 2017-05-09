@@ -68,7 +68,7 @@ public:
 	SDL_Rect r = { 0,0,0,0 };
 	iPoint next_step = { 0,0 };
 	unitDirection currentDirection = RIGHT;
-	list<iPoint>* path;
+	list<iPoint>* path = nullptr;
 	fPoint velocity = { 0,0 };
 	iPoint destinationTileWorld = { 0,0 };
 	Collider* los = nullptr;

@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "QuestManager.h"
 #include "FileSystem.h"
+#include "SceneManager.h"
 
 
 QuestManager::QuestManager() : Module()
@@ -136,6 +137,8 @@ bool QuestManager::StepKillCallback(unitType t)
 					activeQuests.erase(it);
 
 					// Reward
+					App->sceneManager->level1_scene->goldCount += (*it)->reward;
+					App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->gold, App->sceneManager->level1_scene->goldCount);
 				}
 				return true;
 			}

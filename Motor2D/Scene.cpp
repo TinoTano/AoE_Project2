@@ -176,9 +176,9 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 120, GOBLIN_SOLDIER);
 
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y + 150, ORC_SOLDIER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 180, ORC_SOLDIER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 120, ORC_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y + 250, ORC_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 280, ORC_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 220, ORC_SOLDIER);
 
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
