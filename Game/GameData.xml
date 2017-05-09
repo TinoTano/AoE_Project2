@@ -1317,8 +1317,8 @@
         <ID value = "1"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/HouseFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/HouseFP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1359,8 +1359,8 @@
         <ID value = "3"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/ArcheryRangeFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/ArcheryRangeFP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1380,8 +1380,8 @@
         <ID value = "4"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/StablesFP.png"/>
+				<Idle value="textures/Buildings/BuildingsFP/StablesFP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1401,8 +1401,8 @@
         <ID value = "5"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/SiegeWorkshopFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/SiegeWorkshopFP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1422,8 +1422,8 @@
         <ID value = "6"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/MarketFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/MarketFP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1443,8 +1443,8 @@
         <ID value = "7"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/BlacksmithFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/BlacksmithFP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1464,8 +1464,8 @@
         <ID value = "8"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/MillFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/MillFPP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1527,8 +1527,8 @@
         <ID value = "11"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/OutpostFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/OutpostFP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1548,8 +1548,8 @@
         <ID value = "12"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/MonasteryFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/MonasteryFP.png"/>"
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
@@ -1569,8 +1569,8 @@
         <ID value = "13"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
+				<Idle value="textures/Buildings/BuildingsFP/HouseFP2.png"/>
+				<Die value="textures/Buildings/BuildingsFP/HouseFP2.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>

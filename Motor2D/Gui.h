@@ -318,9 +318,9 @@ private:
 	void HUDVillagerMenu();
 	void HUDClearVillagerMenu();
 	// ------ CREATE BUILDINGS -------
-	Button* create_town_center_bt, *create_house_bt, *create_barracks_bt, *create_archery_range_bt,
-		*create_stables_bt, *create_siege_workshop_bt, *create_market_bt, *create_mill_bt, *create_wall_bt,
-		*create_gate_bt, *create_outpost_bt, *create_monastery_bt, *create_castle_bt;
+	Button* create_town_center_bt, *create_house_bt,*create_archery_range_bt,
+		*create_stables_bt, *create_siege_workshop_bt, *create_market_bt, *create_blacksmith_bt, *create_mill_bt, 
+		*create_outpost_bt, *create_monastery_bt, *create_castle_bt;
 	void HUDCreateBuildings();
 	void HUDClearCreateBuildings();
 	// -----------------------

@@ -94,6 +94,7 @@ bool MenuScene::Start()
 
 	App->gui->SetPriority();
 
+	App->audio->active = false;
 	//LOAD FX
 	fx_button_click = App->audio->LoadFx("audio/fx/fx_button_click.wav");
 	App->audio->PlayMusic("audio/music/m_menu.ogg", 0.0f);

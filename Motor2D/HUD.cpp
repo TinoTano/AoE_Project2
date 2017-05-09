@@ -26,18 +26,28 @@ void HUD::Start() {
 	buttons_positions.push_back({ (int)x / 15 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
 	// 2
 	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
-	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	// 3
+	buttons_positions.push_back({ (int)x / 7 - (int)(x/100) - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	// 4
+	buttons_positions.push_back({ (int)x / 6 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	// 5
+	buttons_positions.push_back({ (int)x / 5 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	// 6
+	buttons_positions.push_back({ (int)x / 30 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y/100) - CAMERA_OFFSET_Y, 39,40 });
+	//7
+	buttons_positions.push_back({ (int)x / 15 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
+	// 8
+	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
+	// 9
+	buttons_positions.push_back({ (int)x / 7 - (int)(x/100) - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
+	// 10
+	buttons_positions.push_back({ (int)x / 6 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
+	
+	
+	buttons_positions.push_back({ (int)x / 30 - CAMERA_OFFSET_X, (int)y - (int)y / 8 - CAMERA_OFFSET_Y, 39,40 });
 	// 12
 
-	buttons_positions.push_back({ (int)x / 5 - CAMERA_OFFSET_X, (int)y - (int)y / 9 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 4 - (int)x / 40 - CAMERA_OFFSET_X, (int)y - (int)y / 10 - CAMERA_OFFSET_Y, 39,40 });
 
 	posx = x / 3 - x / 50;
 	posy = y - (y / 6);
@@ -220,7 +230,7 @@ void HUD::Update() {
 											if (!App->entityManager->placingBuilding) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, FARM);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, TOWN_CENTER);
 												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
 												App->entityManager->placingBuilding = true;
 												App->entityManager->buildingToCreate->waitingToPlace = true;
@@ -228,9 +238,116 @@ void HUD::Update() {
 											}
 										}
 										else if (create_house_bt->current == CLICKUP) {
-											// ORDER TO CREATE HOUSE
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, HOUSE);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
 										}
-										// ... AND SO ON ...
+										else if (create_stables_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, STABLES);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+										else if (create_archery_range_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, ARCHERY_RANGE);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+										else if (create_siege_workshop_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, SIEGE_WORKSHOP);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+										else if (create_market_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MARKET);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+										else if (create_blacksmith_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, BLACKSMITH);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+										else if (create_mill_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, FARM);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+										else if (create_outpost_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, OUTPOST);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+										else if (create_monastery_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MONASTERY);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+										else if (create_castle_bt->current == CLICKUP) {
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, CASTLE);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
+										}
+									// AND SO ON
 									}
 									break;
 								}
@@ -472,6 +589,61 @@ void HUD::HUDCreateBuildings()
 	create_house_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 
 	blit_sections.clear();
+	blit_sections.push_back({ 99, 0, 33, 32 });
+	blit_sections.push_back({ 99, 0, 33, 32 });
+
+	create_archery_range_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	
+	blit_sections.clear();
+	blit_sections.push_back({ 132, 0, 33, 32 });
+	blit_sections.push_back({ 132, 0, 33, 32 });
+
+	create_stables_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[3].x - CAMERA_OFFSET_X, buttons_positions[3].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 165, 0, 33, 32 });
+	blit_sections.push_back({ 165, 0, 33, 32 });
+
+	create_siege_workshop_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[4].x - CAMERA_OFFSET_X, buttons_positions[4].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 198, 0, 33, 32 });
+	blit_sections.push_back({ 198, 0, 33, 32 });
+
+	create_market_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[5].x - CAMERA_OFFSET_X, buttons_positions[5].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 231, 0, 33, 32 });
+	blit_sections.push_back({ 231, 0, 33, 32 });
+
+	create_blacksmith_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[6].x - CAMERA_OFFSET_X, buttons_positions[6].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 264, 0, 33, 32 });
+	blit_sections.push_back({ 264, 0, 33, 32 });
+
+	create_mill_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[7].x - CAMERA_OFFSET_X, buttons_positions[7].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 66, 32, 33, 32 });
+	blit_sections.push_back({ 66, 32, 33, 32 });
+
+	create_outpost_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[8].x - CAMERA_OFFSET_X, buttons_positions[8].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 99, 32, 33, 32 });
+	blit_sections.push_back({ 99, 32, 33, 32 });
+
+	create_monastery_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[9].x - CAMERA_OFFSET_X, buttons_positions[9].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 132, 32, 33, 32 });
+	blit_sections.push_back({ 132, 32, 33, 32 });
+
+	create_castle_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[10].x - CAMERA_OFFSET_X, buttons_positions[10].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+
+	blit_sections.clear();
 	blit_sections.push_back({ 52, 64, 39, 40 });
 	blit_sections.push_back({ 91, 64, 39, 40 });
 
@@ -482,14 +654,12 @@ void HUD::HUDClearCreateBuildings()
 {
 	App->gui->DestroyUIElement(create_town_center_bt);
 	App->gui->DestroyUIElement(create_house_bt);
-	App->gui->DestroyUIElement(create_barracks_bt);
 	App->gui->DestroyUIElement(create_archery_range_bt);
 	App->gui->DestroyUIElement(create_stables_bt);
 	App->gui->DestroyUIElement(create_siege_workshop_bt);
 	App->gui->DestroyUIElement(create_market_bt);
-	App->gui->DestroyUIElement(create_wall_bt);
+	App->gui->DestroyUIElement(create_blacksmith_bt);
 	App->gui->DestroyUIElement(create_mill_bt);
-	App->gui->DestroyUIElement(create_gate_bt);
 	App->gui->DestroyUIElement(create_outpost_bt);
 	App->gui->DestroyUIElement(create_monastery_bt);
 	App->gui->DestroyUIElement(create_castle_bt);

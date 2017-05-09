@@ -438,61 +438,78 @@
 		<Building>
         <Name value = "HOUSE"/>
         <ID value = "1"/>
-		<Position x = "33" y = "0"/>
+		<Position x="33" y ="0"/>
 		</Building>
 		<Building>
         <Name value = "ORC BARRACKS"/>
         <ID value = "2"/>
-		<Position x="99" y="0"/>
+		<Position x = "66" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "ARCHERY RANGE"/>
-        <ID value = "3"/>
+         <ID value = "3"/>
+		<Position x = "99" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "STABLES"/>
-        <ID value = "4"/>
+       <ID value = "4"/>
+		<Position x = "132" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "SIEGE WORKSHOP"/>
         <ID value = "5"/>
+		<Position x = "165" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "MARKET"/>
-        <ID value = "6"/>
+         <ID value = "6"/>
+		<Position x = "198" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "BLACKSMITH"/>
         <ID value = "7"/>
+		<Position x = "231" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "MILL"/>
         <ID value = "8"/>
+		<Position x = "264" y = "0"/>
 		</Building>
 		<Building>
         <Name value = "WALL"/>
-        <ID value = "9"/>
+         <ID value = "9"/>
+		<Position x="0" y ="32"/>
 		</Building>
 		<Building>
         <Name value = "GATE"/>
-        <ID value = "10"/>
+       <ID value = "10"/>
+		<Position x="33" y ="32"/>
 		</Building>
 		<Building>
         <Name value = "OUTPOST"/>
-        <ID value = "11"/>
+       <ID value = "11"/>
+		<Position x="66" y ="32"/>
 		</Building>
 		<Building>
         <Name value = "MONASTERY"/>
         <ID value = "12"/>
+		<Position x="99" y ="32"/>
 		</Building>
 		<Building>
         <Name value = "CASTLE"/>
         <ID value = "13"/>
+		<Position x="132" y ="32"/>
 		</Building>
 		<Building>
         <Name value = "SAURON TOWER"/>
         <ID value = "14"/>
+		<Position x = "165" y = "32"/>
 		</Building>
+		<Building>
+        <Name value = "FARM"/>
+        <ID value = "15"/>
+		<Position x = "198" y = "32"/>
+    </Building>
 	</Buildings>
 	<Resources>
 		<Resource>
