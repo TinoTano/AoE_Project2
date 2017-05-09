@@ -109,6 +109,9 @@
     <ClCompile Include="TechTree.cpp">
       <Filter>Project 2\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>Project 2\Entities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -232,6 +235,9 @@
       <Filter>Project 2\Modules</Filter>
     </ClInclude>
     <ClInclude Include="TechTree.h">
+      <Filter>Project 2\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
       <Filter>Project 2\Entities</Filter>
     </ClInclude>
   </ItemGroup>

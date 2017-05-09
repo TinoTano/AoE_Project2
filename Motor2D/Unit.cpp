@@ -74,6 +74,11 @@ bool Unit::Update(float dt)
 {
 	r = currentAnim->GetCurrentFrame();
 
+	if (Life == -1) {
+		Destroy();
+		return false;
+	}
+
 	if (state != DESTROYED) {
 
 		if (!order_list.empty()) {
@@ -85,7 +90,7 @@ bool Unit::Update(float dt)
 			if (current_order->state == EXECUTING)
 				current_order->Execute();
 
-			if (current_order->state == COMPLETED)
+			if (current_order->state == COMPLETED) 
 				order_list.pop_front();
 		}
 		else {
@@ -94,37 +99,31 @@ bool Unit::Update(float dt)
 				state = IDLE;
 			}
 		}
-
-		if (IsHero) {
-			Hero* hero = (Hero*)this;
-			hero->HeroUpdate();
-		}
 	}
 	else {
 		if (currentAnim->Finished()) 
 			App->entityManager->DeleteUnit(this);
 	}
 
+	if (IsHero) {
+		Hero* hero = (Hero*)this;
+		hero->HeroUpdate();
+	}
 
 	return true;
 }
 
 void Unit::Destroy() {
 
-	if (Life <= 0)
-		Life = -1;
-
 	if (App->quest->TriggerKillCallback(this->type) == false)
 		App->quest->StepKillCallback(this->type);
 
 	SetTexture(DESTROYED);
-	App->entityManager->Untarget(this);
 	App->collision->DeleteCollider(collider);
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);
 	state = DESTROYED;
 	App->entityManager->DeleteUnit(this);
-
 }
 
 bool Unit::Draw()

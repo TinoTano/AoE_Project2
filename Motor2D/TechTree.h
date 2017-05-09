@@ -16,14 +16,29 @@ enum TechMultiplier {
 	MAX_MULTIPLIERS
 };
 
-enum TechList {
+enum TechType {
 
 	BASIC_TECH,
 
-	ENHANCED_BLACKSMITHING,
-	MOUNTAIN_FORGE,
-	DWARVEN_STEEL,
-	DWARVEN_TACTICS
+	RANGED_WEAPONS,  
+	HORSE_TRAINING,  
+	TOWN_MILITIA,    
+
+	ENHANCED_BLACKSMITHING,   
+	MOUNTAIN_FORGE,           
+	DWARVEN_STEEL,            
+	DWARVEN_TACTICS,          
+
+	ENHANCED_TRAINING,        
+	ELVEN_TACTICS,            
+	ELVEN_STEEL,              
+	LIBRARY,                  
+
+	ENHANCED_VILLAGERS,       
+	HUMAN_WARFARE,            
+	ROHAN_HORSES,             
+	DUNEDAIN_OUTPOST          
+
 
 };
 
