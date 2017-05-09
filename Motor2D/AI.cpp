@@ -8,12 +8,12 @@
 bool AI::Start() {
 
 	enemy_techtree = new TechTree();
-	enemy_techtree->Start();
-
+	//enemy_techtree->Start();
+	return true;
 }
 bool AI::Update(float dt) {
 
-
+	return true;
 
 }
 
