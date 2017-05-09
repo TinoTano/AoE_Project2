@@ -217,7 +217,15 @@ void HUD::Update() {
 										if (cancel_bt->current == CLICKUP)
 											HUDVillagerMenu();
 										else if (create_town_center_bt->current == CLICKUP) {
-											// ORDER TO CREATE TOWN CENTER
+											if (!App->entityManager->placingBuilding) {
+												int x, y;
+												App->input->GetMousePosition(x, y);
+												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, FARM);
+												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+												App->entityManager->placingBuilding = true;
+												App->entityManager->buildingToCreate->waitingToPlace = true;
+												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+											}
 										}
 										else if (create_house_bt->current == CLICKUP) {
 											// ORDER TO CREATE HOUSE

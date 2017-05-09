@@ -235,19 +235,6 @@ bool Scene::Update(float dt)
 	}
 */
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN && App->entityManager->buildingToCreate == nullptr) {
-		if (App->entityManager->selectedEntityList.size() > 0 && App->entityManager->selectedListType == COLLIDER_UNIT)
-			if (!App->entityManager->placingBuilding) {
-				int x, y;
-				App->input->GetMousePosition(x, y);
-				App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, FARM);
-				App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-				App->entityManager->placingBuilding = true;
-				App->entityManager->buildingToCreate->waitingToPlace = true;
-				App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
-			}
-	}
-
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
 
