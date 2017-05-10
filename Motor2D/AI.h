@@ -1,22 +1,48 @@
+#pragma once
 
-#ifndef _AI_
-#define _AI_
 
 #include "Module.h"
-#include "Timer.h"
+#include "Timer.h" 
 #include "Unit.h"
 #include "Villager.h"
 #include "TechTree.h"
 #include "Building.h"
+#include "Pathfinding.h"
+#include "Squad.h"
 #include "Resource.h"
+#include "Application.h"
+#include "Orders.h"
+
+#include <cstdlib>
+#include <deque>
+
+#define EXPANSION_VAR_VAL (250 * expansion_level)
+#define EXPANSION_FIX_VAL 1000
+
+#define FOOD_PROPORTION 0.35
+#define WOOD_PROPORTION 0.35
+#define STONE_PROPORTION 0.15
+#define GOLD_PROPORTION 0.15
+
+enum AI_state {
+	EXPANDING, DEFENSIVE, OFFENSIVE
+};
+
+struct TargetPriority
+{
+	bool operator()(const Entity& lhs, const Entity& rhs) const
+	{
+		return lhs.MaxLife > rhs.MaxLife;
+	}
+};
 
 class AI : public Module {
 public:
 
-	AI();
+	AI(){};
 
 	// Destructor
-	virtual ~AI();
+	virtual ~AI() {};
 
 	// Called when before render is available
 	bool Awake(pugi::xml_node&);
@@ -25,54 +51,65 @@ public:
 	bool Start();
 
 	// Called before all Updates
-	bool PreUpdate();
+	bool PreUpdate() { return true; };
 
 	// Update Elements
 	bool Update(float dt);
 
 	// Called after all Updates
-	bool PostUpdate();
+	bool PostUpdate() { return true; };
 
 	// Called before quitting
-	bool CleanUp();
+	bool CleanUp() { return true; };
 
-	void ManageExpenses();
-	void ManageDefense();
+	void ManageAttack();
+	void StartAttack();
 
-	void ManageVillagers();
+	void ManageUnitRequests();
+	void ManageBuildRequests();
+	void ManageVillagerRequests();
+	void ManageTechRequests();
+
 	void FillResourceRequests();
+
+	void IncreaseExpansionLevel();
+
 	iPoint PlaceBuilding(buildingType type);
-
-	void ManageBuildings();
-
-private:
+	void LoadExplorationMap();
+	void LoadAI_Data(pugi::xml_node& gameData);
 
 public:
 
+	// general utilities
 	Timer AI_timer;
 	TechTree* enemy_techtree = nullptr;
+	int expansion_level = 0;
+	AI_state state = EXPANDING;
+	StoredResources enemy_resources;
 
-	//unit management
-	int army_size = 0;
-	list<Unit*> units_defending;
-	list<Unit*> units_exploring;
-	list<Unit*> units_attacking;
+	//expansion management
+	list<buildingType> buildings_to_build;
+	vector<list<buildingType>> expansion_build_table;
+	list<TechType> techs_to_research;
+	vector<list<TechType>> expansion_tech_table;
+	vector<int> villager_expansion_table;
 
-	//Building management
-	list<unitType> unit_requests;
-	list<int> tech_requests;
+	//army management
+	int squad_size = 10;
+	list<Squad*> defensive_squads;
+	list<Squad*> offensive_squads;
+	deque<Entity*> targets;
+	deque<Entity*> threats;
+	list<iPoint> exploration_points;
+
+	//requests management
+	void Fetch_AICommand(Villager* villager);
+	list<Order*> villager_requests;
+	list<pair<unitType, Squad*>> unit_requests;
+	list<pair<int, buildingType>> tech_requests;
 
 	//villager management
-	list<Unit*> idle_villagers;
-	int gatherers = 0;
-	list<resourceType> resource_requests;
-	list<Building*> build_requests;
-
-	int food_requests = 0;
-	int wood_requests = 0;
-	int stone_requests = 0;
-	int gold_requests = 0;
+	list<Unit*> villagers;
 
 };
 
-#endif // !AI_

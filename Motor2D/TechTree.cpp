@@ -3,7 +3,7 @@
 void TechTree::Start(pugi::xml_node gameData){
 
 	for (int i = 0; i < MAX_MULTIPLIERS; i++)
-		multiplier_list.at(i) = 1;
+		multiplier_list.push_back(1);
 
 	LoadTechTree(gameData);
 	Researched(BASIC_TECH);
@@ -36,8 +36,11 @@ void TechTree::Researched(int tech_id) {
 	}
 
 	if (!tech->unlocks_units.empty()) {
-		for (list<pair<unitType, buildingType>>::iterator it2 = tech->unlocks_units.begin(); it2 != tech->unlocks_units.end(); it2++)
+		for (list<pair<unitType, buildingType>>::iterator it2 = tech->unlocks_units.begin(); it2 != tech->unlocks_units.end(); it2++) {
 			available_units[(*it2).second].push_back((*it2).first);
+			pair<buildingType, unitType> unit_data = { (*it2).second,(*it2).first };
+			all_available_units.push_back(unit_data);
+		}
 	}
 
 	if (!tech->unlocks_buildings.empty()) {
@@ -109,10 +112,10 @@ void TechTree::LoadTechTree(pugi::xml_node gameData) {
 			new_Tech->desc = TechData.child("Vesc").attribute("value").as_string();
 			new_Tech->id = id_count;
 
-			new_Tech->cost.foodCost = TechData.child("Cost").child("foodCost").attribute("value").as_int();
-			new_Tech->cost.stoneCost = TechData.child("Cost").child("stoneCost").attribute("value").as_int();
-			new_Tech->cost.woodCost = TechData.child("Cost").child("woodCost").attribute("value").as_int();
-			new_Tech->cost.goldCost = TechData.child("Cost").child("goldCost").attribute("value").as_int();
+			new_Tech->cost.food = TechData.child("Cost").child("foodCost").attribute("value").as_int();
+			new_Tech->cost.stone = TechData.child("Cost").child("stoneCost").attribute("value").as_int();
+			new_Tech->cost.wood = TechData.child("Cost").child("woodCost").attribute("value").as_int();
+			new_Tech->cost.gold = TechData.child("Cost").child("goldCost").attribute("value").as_int();
 			
 			new_Tech->research_time = TechData.child("Reseach_time").attribute("value").as_int();
 

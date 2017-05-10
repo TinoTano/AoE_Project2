@@ -20,10 +20,23 @@ enum EntityState {
 
 struct Cost {
 
-	int woodCost = 0;
-	int stoneCost = 0;
-	int foodCost = 0;
-	int goldCost = 0;
+	int wood = 0;
+	int stone = 0;
+	int food = 0;
+	int gold = 0;
+
+	int Total() {
+		return wood + stone + food + gold;
+	}
+
+	bool Spend(Cost cost) {
+
+		if (wood - cost.wood < 0 || food - cost.food < 0 || gold - cost.gold < 0 || stone - cost.stone < 0)
+			return false;
+
+		wood -= cost.wood; food -= cost.food; gold -= cost.gold; stone -= cost.stone;
+		return true;
+	}
 
 };
 
@@ -64,5 +77,7 @@ public:
 	Timer lifebar_timer;
 
 };
+
+typedef Cost StoredResources;
 
 #endif // !__ENTITY_H__

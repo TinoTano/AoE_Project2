@@ -69,6 +69,7 @@ public:
 	vector<float> multiplier_list;
 
 	vector<Tech*> all_techs;
+	list<pair<buildingType, unitType>> all_available_units;
 
 public:
 

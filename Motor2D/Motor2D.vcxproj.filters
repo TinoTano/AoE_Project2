@@ -112,11 +112,8 @@
     <ClCompile Include="AI.cpp">
       <Filter>Project 2\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="PlayScene.cpp">
-      <Filter>Project 2\Scenes</Filter>
-    </ClCompile>
-    <ClCompile Include="CutSceneManager.cpp">
-      <Filter>Project 2\Modules</Filter>
+    <ClCompile Include="Squad.cpp">
+      <Filter>Project 2\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -246,11 +243,8 @@
     <ClInclude Include="AI.h">
       <Filter>Project 2\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="PlayScene.h">
-      <Filter>Project 2\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="CutSceneManager.h">
-      <Filter>Project 2\Modules</Filter>
+    <ClInclude Include="Squad.h">
+      <Filter>Project 2\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

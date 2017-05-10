@@ -25,6 +25,7 @@ class Collision;
 class Gui;
 class FogOfWar;
 class Minimap;
+class AI;
 class QuestManager;
 class CutSceneManager;
 
@@ -110,10 +111,10 @@ public:
 	Collision*			collision = NULL;
 	Gui*				gui = NULL;
 	FogOfWar*			fog = NULL;
+	AI*					ai = NULL;
 	Minimap*			minimap = NULL;
 	QuestManager*		quest = NULL;
 	CutSceneManager*	cutscene = NULL;
-
 	bool				quit = false;
 
 private:

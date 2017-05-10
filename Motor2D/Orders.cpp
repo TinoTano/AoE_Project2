@@ -14,6 +14,8 @@
 #include "Animation.h"
 #include "SceneManager.h"
 #include "Orders.h"
+#include "AI.h"
+#include "Squad.h"
 
 
 //Move to Order:
@@ -413,7 +415,11 @@ void CreateUnitOrder::Execute()
 		iPoint creation_place = App->map->WorldToMap(building->entityPosition.x, building->entityPosition.y + 150);
 		creation_place = App->pathfinding->FindNearestAvailable(creation_place, 10);
 		creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
-		App->entityManager->CreateUnit(creation_place.x, creation_place.y, type);
+		Unit* unit = App->entityManager->CreateUnit(creation_place.x, creation_place.y, type);
+
+		if (belongs_to) 
+			belongs_to->units.push_back(unit);
+
 		state = COMPLETED;
 	}
 }

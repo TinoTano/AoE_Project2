@@ -6,6 +6,7 @@
 #include "Resource.h"
 #include "p2Point.h"
 #include "Collision.h"
+#include "AI.h"
 #include "Timer.h"
 
 enum Order_state {
@@ -150,7 +151,7 @@ public:
 
 };
 
-
+class Squad;
 
 class CreateUnitOrder : public Order {
 
@@ -158,11 +159,12 @@ public:
 
 	Building* building = nullptr;
 	unitType type = VILLAGER;
+	Squad* belongs_to;
 	Timer timer;
 
 public:
 
-	CreateUnitOrder(unitType argtype) : type(argtype) { order_type = CREATE; }
+	CreateUnitOrder(unitType argtype, Squad* argsquad = nullptr) : type(argtype), belongs_to(argsquad) { order_type = CREATE; }
 
 	void Start(Entity* entity);
 	void Execute();

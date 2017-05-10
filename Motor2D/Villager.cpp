@@ -1,6 +1,4 @@
 #include "Villager.h"
-#include "Application.h"
-#include "SceneManager.h"
 
 Villager::Villager() {}
 
@@ -15,7 +13,3 @@ Villager::Villager(int posx, int posy, Villager* unit) : Unit(posx, posy, (Unit*
 
 	IsVillager = true;
 }
-
-
-
-

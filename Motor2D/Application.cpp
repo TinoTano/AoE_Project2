@@ -18,9 +18,11 @@
 #include "Collision.h"
 #include "Gui.h"
 #include "FogOfWar.h"
+#include "AI.h"
 #include "Minimap.h"
 #include "QuestManager.h"
 #include "CutSceneManager.h"
+
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -42,6 +44,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	collision = new Collision();
 	gui = new Gui();
 	fog = new FogOfWar();
+	ai = new AI();
 	minimap = new Minimap();
 	quest = new QuestManager();
 	cutscene = new CutSceneManager();
@@ -58,10 +61,14 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(particlemanager);
 	AddModule(gui);
-    AddModule(quest);
+	//AddModule(ai);
 	AddModule(cutscene);
+ 	AddModule(quest);
+
 	// scene last
 	AddModule(sceneManager);
+
+
 	AddModule(entityManager);
 	AddModule(collision);
 	AddModule(fog);

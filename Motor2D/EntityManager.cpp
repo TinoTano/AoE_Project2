@@ -75,13 +75,13 @@ bool EntityManager::Update(float arg_dt)
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
 			(*it)->Draw();
+		/*if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
+			(*it)->Draw();*/
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition))
+		if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
 			(*it)->Draw();
-		/*if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
-			(*it)->Draw();*/
 	}
 
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
@@ -391,10 +391,10 @@ bool EntityManager::LoadGameData()
 			unitTemplate->unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
 			unitTemplate->unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
 
-			unitTemplate->cost.woodCost = unitNodeInfo.child("Stats").child("Cost").child("woodCost").attribute("value").as_int();
-			unitTemplate->cost.stoneCost = unitNodeInfo.child("Stats").child("Cost").child("stoneCost").attribute("value").as_int();
-			unitTemplate->cost.foodCost = unitNodeInfo.child("Stats").child("Cost").child("foodCost").attribute("value").as_int();
-			unitTemplate->cost.goldCost = unitNodeInfo.child("Stats").child("Cost").child("goldCost").attribute("value").as_int();
+			unitTemplate->cost.wood = unitNodeInfo.child("Stats").child("Cost").child("woodCost").attribute("value").as_int();
+			unitTemplate->cost.stone = unitNodeInfo.child("Stats").child("Cost").child("stoneCost").attribute("value").as_int();
+			unitTemplate->cost.food = unitNodeInfo.child("Stats").child("Cost").child("foodCost").attribute("value").as_int();
+			unitTemplate->cost.gold = unitNodeInfo.child("Stats").child("Cost").child("goldCost").attribute("value").as_int();
 
 			pugi::xml_node animationNode;
 			int width;
@@ -545,10 +545,10 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->constructingPhase2 = App->tex->Load(constructingPhase2Path.c_str());
 			buildingTemplate->constructingPhase3 = App->tex->Load(constructingPhase3Path.c_str());
 
-			buildingTemplate->cost.woodCost = buildingNodeInfo.child("Stats").child("Cost").child("woodCost").attribute("value").as_int();
-			buildingTemplate->cost.stoneCost = buildingNodeInfo.child("Stats").child("Cost").child("stoneCost").attribute("value").as_int();
-			buildingTemplate->cost.foodCost = buildingNodeInfo.child("Stats").child("Cost").child("foodCost").attribute("value").as_int();
-			buildingTemplate->cost.goldCost = buildingNodeInfo.child("Stats").child("Cost").child("goldCost").attribute("value").as_int();
+			buildingTemplate->cost.wood = buildingNodeInfo.child("Stats").child("Cost").child("woodCost").attribute("value").as_int();
+			buildingTemplate->cost.stone = buildingNodeInfo.child("Stats").child("Cost").child("stoneCost").attribute("value").as_int();
+			buildingTemplate->cost.food = buildingNodeInfo.child("Stats").child("Cost").child("foodCost").attribute("value").as_int();
+			buildingTemplate->cost.gold = buildingNodeInfo.child("Stats").child("Cost").child("goldCost").attribute("value").as_int();
 
 			buildingTemplate->type = (buildingType)buildingNodeInfo.child("Info").child("ID").attribute("value").as_int();
 

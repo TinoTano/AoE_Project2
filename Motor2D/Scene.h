@@ -47,7 +47,6 @@ public:
 
 	void LoadScene();
 	void SaveScene();
-	bool SpendResourcesIn(Cost& cost);
 
 	uint villagers_curr = 0, villagers_total = 0;
 	bool game_finished;
