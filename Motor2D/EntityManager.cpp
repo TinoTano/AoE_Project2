@@ -370,7 +370,7 @@ bool EntityManager::LoadGameData()
 
 			if (type == VILLAGER || type == ELF_VILLAGER)
 				unitTemplate = (Unit*) new Villager();
-			else if (type == GONDOR_HERO)
+			else if (type == GONDOR_HERO || type == LEGOLAS)
 				unitTemplate = (Unit*) new Hero();
 			else
 				unitTemplate = new Unit();
@@ -516,7 +516,7 @@ bool EntityManager::LoadGameData()
 
 			}
 
-			if (unitTemplate->type == GONDOR_HERO) {
+			if (unitTemplate->type == GONDOR_HERO || unitTemplate->type == LEGOLAS) {
 
 				Hero* heroTemplate = (Hero*)unitTemplate;
 				heroTemplate->skill->type = (Skill_type)unitNodeInfo.child("Stats").child("SkillType").attribute("value").as_int();;
@@ -594,7 +594,7 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
 		unit->resourcesWareHouse = App->sceneManager->level1_scene->my_townCenter;
 	}
-	else if (type == GONDOR_HERO) {
+	else if (type == GONDOR_HERO || type == LEGOLAS) {
 		unit = (Unit*) new Hero(posX, posY, (Hero*)unitsDB[type]);
 	}
 	else {

@@ -790,17 +790,17 @@ void HUD::HUDBuildingMenu()
 		create_villager_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 		blit_sections.clear();
 	}
-	/*if (tech) {
-	uint tech_place = TECH_UI_BUTTON;
-	uint x = 0;
-	for (list<Button*>::iterator it = tech_bt.begin(); it != tech_bt.end(); ++it) {
-	blit_sections.push_back(tech_rects[x]);
-	tech_rects[x].x += tech_rects[x].w;
-	it._Ptr->_Myval = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-	tech_place++;
-	x++;
+	if (tech) {
+		uint tech_place = TECH_UI_BUTTON;
+		uint x = 0;
+		for (uint i = 0; i < tech_rects.size(); ++i) {
+			blit_sections.push_back(tech_rects[x]);
+			tech_rects[x].x += tech_rects[x].w;
+			tech_bt.push_back((Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2));
+			tech_place++;
+			x++;
+		}
 	}
-	}*/
 }
 
 void HUD::HUDClearBuildingMenu()
@@ -808,11 +808,11 @@ void HUD::HUDClearBuildingMenu()
 	App->gui->DestroyUIElement(create_unit_bt);
 	App->gui->DestroyUIElement(create_hero_bt);
 	App->gui->DestroyUIElement(create_villager_bt);
-	/*tech = false;
+	tech = false;
 	tech_rects.clear();
 	for (list<Button*>::iterator it = tech_bt.begin(); it != tech_bt.end(); ++it) {
 	App->gui->DestroyUIElement(it._Ptr->_Myval);
-	}*/
+	}
 }
 
 void HUD::HUDCreateHero()
@@ -976,19 +976,15 @@ void HUD::StartBuildingInfo()
 	life_str += maxlife;
 
 	life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
-
-	/*TechTree * tree;
-	SDL_Rect button;
-	for (uint i = 0; i < tree->all_techs.size(); ++i) {
-	if (tree->all_techs[i]->researched_in == id) {
-	for (list<pair<int, buildingType>>::iterator it = tree->all_techs[i]->unlocks_techs.begin(); it != tree->all_techs[i]->unlocks_techs.end(); ++it)
-	{
-	tech_rects.push_back(GetTechRect(it._Ptr->_Myval.first));
-	tech = true;
+	
+	for (uint i = 0; i < App->entityManager->ally_techtree->all_techs.size(); ++i) {
+		for (list<TechType>::iterator it = App->entityManager->ally_techtree->available_techs.begin(); it != App->entityManager->ally_techtree->available_techs.end(); ++it) {
+			if (it._Ptr->_Myval == App->entityManager->ally_techtree->all_techs[i]->id && App->entityManager->ally_techtree->all_techs[i]->researched_in && id) {
+				tech_rects.push_back(GetTechRect(i));
+				tech = true;
+			}
+		}
 	}
-	}
-	}*/
-	if (name->str == "TOWN CENTER")
 		HUDBuildingMenu();
 }
 
