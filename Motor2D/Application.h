@@ -26,6 +26,7 @@ class Gui;
 class FogOfWar;
 class Minimap;
 class QuestManager;
+class CutSceneManager;
 
 class Application
 {
@@ -111,6 +112,8 @@ public:
 	FogOfWar*			fog = NULL;
 	Minimap*			minimap = NULL;
 	QuestManager*		quest = NULL;
+	CutSceneManager*	cutscene = NULL;
+
 	bool				quit = false;
 
 private:

@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Scene.h"
 #include "MenuScene.h"
+#include "PlayScene.h"
 
 class SceneManager;
 
@@ -36,6 +37,7 @@ public:
 
 	Scene*		level1_scene = nullptr;
 	MenuScene*		menu_scene = nullptr;
+	PlayScene*		play_scene = nullptr;
 
 	list<SceneElement*>	scenes;
 	SceneElement*	current_scene = nullptr;

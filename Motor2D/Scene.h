@@ -8,10 +8,10 @@
 #include <string>
 
 
-#define TOWN_HALL_POS_X -2600
+#define TOWN_HALL_POS_X -1000
 #define TOWN_HALL_POS_Y 2250
 
-#define STARTING_CAMERA_X 3250
+#define STARTING_CAMERA_X 1650
 #define STARTING_CAMERA_Y -1900
 
 struct SDL_Texture;

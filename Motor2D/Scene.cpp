@@ -40,6 +40,8 @@ bool Scene::Awake(pugi::xml_node & config)
 bool Scene::Start()
 {
 	active = true;
+	// Creating map ==================================================
+
 	if (start == false)
 	{
 		if (App->map->Load("map_1.tmx") == true)
@@ -56,23 +58,15 @@ bool Scene::Start()
 		start = true;
 	}
 
-	// LOADING CAMERA POSITION
-
-	App->render->cameraScene.down = -3090;
-	App->render->cameraScene.up = -1180;
-	App->render->cameraScene.left = 1680;
-	App->render->cameraScene.right = -1410;
+	// Loading camera position =======================================
 
 	App->render->camera.x = STARTING_CAMERA_X;
-
 	App->render->camera.y = STARTING_CAMERA_Y;
+
+	// Loading UI ====================================================
 
 	uint x, y;
 	App->win->GetWindowSize(x, y);
-
-	// LOADING UI BB
-	// ---------------------------------------
-	// LOADING SCENE UI
 
 	elements = App->gui->GetElements("LEVEL");
 
@@ -143,55 +137,51 @@ bool Scene::Start()
 	ui_menu.WindowOff();
 	ui_menu.SetFocus(images[3]->pos.first, images[3]->pos.second, 280, 280);
 
-	// RESOURCE LABELS
+	// Labels
 	wood = (Label*)App->gui->CreateLabel(to_string(woodCount), -STARTING_CAMERA_X + 50, -STARTING_CAMERA_Y + 5, nullptr);
 	wood->SetColor({ 255, 255, 255 ,255 });
-	//*food, *gold, *stone, *villagers
 	food = (Label*)App->gui->CreateLabel(to_string(foodCount), -STARTING_CAMERA_X + 150, -STARTING_CAMERA_Y + 5, nullptr);
 	food->SetColor({ 255, 255, 255 ,255 });
-
 	gold = (Label*)App->gui->CreateLabel(to_string(goldCount), -STARTING_CAMERA_X + 280, -STARTING_CAMERA_Y + 5, nullptr);
 	gold->SetColor({ 255, 255, 255 ,255 });
-
 	stone = (Label*)App->gui->CreateLabel(to_string(stoneCount), -STARTING_CAMERA_X + 360, -STARTING_CAMERA_Y + 5, nullptr);
 	stone->SetColor({ 255, 255, 255 ,255 });
-
 	villagers = (Label*)App->gui->CreateLabel("0/0", -STARTING_CAMERA_X + 480, -STARTING_CAMERA_Y + 5, nullptr);
 	villagers->SetColor({ 255, 255, 255 ,255 });
 
-	// SET UI PRIORITY
-
+	// Priority
 	App->gui->SetPriority();
 
-	// MUSIC
+	// Music ==========================================================================================================
 
 	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
-	// ---------------------
-	// DONE!
 
+	// Fog of war, entities & resources ===============================================================================
+
+	App->fog->Start();
+
+	//Resources
 	App->map->LoadResources(App->map->map_file.child("map"));
 
-	// Fog of war, entities & resources ================================================================================
-
-	App->fog->Start(); // Goes first!
-
+	// Units
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
-
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y - 150, GOBLIN_SOLDIER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 120, GOBLIN_SOLDIER);
-
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y + 250, ORC_SOLDIER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 280, ORC_SOLDIER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 220, ORC_SOLDIER);
 
+	// Buildings
 	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
+	App->fog->AddEntity(my_townCenter);
 	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
+	App->fog->AddEntity(enemy_townCenter);
 
-	//IMPORTANT! CREATE VILLAGER AFTER CREATING TOWN CENTER TO ASSIGN IT AS RESOURCE WAREHOUSE
+	// Villager last!
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
 
-	// =================================================================================================================
+	// ================================================================================================================
 
 	UpdateVillagers(3, 3);
 

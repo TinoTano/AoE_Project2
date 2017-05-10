@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "FogOfWar.h"
 #include "Minimap.h"
+#include "SceneManager.h"
 #include <algorithm>
 
 #define VSYNC true
@@ -110,30 +111,42 @@ bool Render::PostUpdate()
 
 	// Minimap ===================================================================
 
-	for (list<MapLayer*>::iterator it = App->map->data.layers.begin(); it != App->map->data.layers.end(); it++)
+	if (App->sceneManager->current_scene == App->sceneManager->level1_scene || App->sceneManager->current_scene == App->sceneManager->play_scene)
 	{
-		MapLayer* layer = *it;
-
-		if (layer->properties.Get("Nodraw") != 0)
-			continue;
-
-		for (int y = 0; y < App->map->data.height; ++y)
+		for (list<MapLayer*>::iterator it = App->map->data.layers.begin(); it != App->map->data.layers.end(); it++)
 		{
-			for (int x = 0; x < App->map->data.width; ++x)
+			MapLayer* layer = *it;
+
+			if (layer->properties.Get("Nodraw") != 0)
+				continue;
+
+			for (int y = 0; y < App->map->data.height; ++y)
 			{
-				int tile_id = layer->Get(x, y);
-				int visibility = App->fog->Get(x, y);
+				for (int x = 0; x < App->map->data.width; ++x)
+				{
+					int tile_id = layer->Get(x, y);
+					int visibility = App->fog->Get(x, y);
 
-				iPoint tileWorld = App->map->MapToWorld(x, y);
+					iPoint tileWorld = App->map->MapToWorld(x, y);
 
-				if (tile_id > 0 && visibility != 0)
-					App->minimap->DrawTerrain(tileWorld.x, tileWorld.y, 0, 153, 51);
+					if (tile_id > 0 && visibility != 0)
+						App->minimap->DrawTerrain(tileWorld.x, tileWorld.y, 0, 153, 51);
 
+				}
 			}
 		}
-	}
 
-	App->minimap->DrawUnits();
+		App->minimap->DrawUnits();
+
+		uint x, y;
+		App->win->GetWindowSize(x, y);
+		SDL_Rect rect;
+		rect.x = 1105 - App->render->camera.x - (App->render->camera.x * 0.035);
+		rect.y = 549 - App->render->camera.y - (App->render->camera.y * 0.035);
+		rect.w = x* 0.035;
+		rect.h = y* 0.035;
+		DrawQuad(rect, 255, 255, 255, false);
+	}
 
 	// ==============================================================================
 

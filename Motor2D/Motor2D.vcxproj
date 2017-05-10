@@ -81,6 +81,7 @@
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="CutSceneManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FileSystem.cpp" />
@@ -101,6 +102,7 @@
     <ClCompile Include="ParticleManager.cpp" />
     <ClCompile Include="Pathfinding.cpp" />
     <ClCompile Include="PerfTimer.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="QuadTree.cpp" />
     <ClCompile Include="QuestManager.cpp" />
     <ClCompile Include="Resource.cpp" />
@@ -121,6 +123,7 @@
     <ClInclude Include="Building.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="CutSceneManager.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="FileSystem.h" />
@@ -139,6 +142,7 @@
     <ClInclude Include="ParticleManager.h" />
     <ClInclude Include="Pathfinding.h" />
     <ClInclude Include="PerfTimer.h" />
+    <ClInclude Include="PlayScene.h" />
     <ClInclude Include="QuadTree.h" />
     <ClInclude Include="QuestManager.h" />
     <ClInclude Include="Resource.h" />

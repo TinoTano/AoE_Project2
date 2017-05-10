@@ -20,6 +20,7 @@
 #include "FogOfWar.h"
 #include "Minimap.h"
 #include "QuestManager.h"
+#include "CutSceneManager.h"
 
 // Constructor
 Application::Application(int argc, char* args[]) : argc(argc), args(args)
@@ -43,6 +44,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	fog = new FogOfWar();
 	minimap = new Minimap();
 	quest = new QuestManager();
+	cutscene = new CutSceneManager();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -57,11 +59,9 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(particlemanager);
 	AddModule(gui);
     AddModule(quest);
-
+	AddModule(cutscene);
 	// scene last
 	AddModule(sceneManager);
-
-
 	AddModule(entityManager);
 	AddModule(collision);
 	AddModule(fog);

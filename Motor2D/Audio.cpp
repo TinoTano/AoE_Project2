@@ -172,3 +172,8 @@ bool Audio::PlayFx(unsigned int id, int repeat)
 
 	return ret;
 }
+
+void Audio::StopMusic()
+{
+	Mix_HaltMusic();
+}

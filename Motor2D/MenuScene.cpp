@@ -5,6 +5,7 @@
 #include "SceneManager.h"
 #include "Window.h"
 #include "Audio.h"
+#include "CutSceneManager.h"
 
 MenuScene::MenuScene() : SceneElement("menu")
 {
@@ -167,7 +168,8 @@ bool MenuScene::PostUpdate()
 	}
 	else if (buttons[0]->current == CLICKUP)
 	{
-		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
+		App->cutscene->Start();
+		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
 	}
 	else if (buttons[2]->current == CLICKUP)
 	{
