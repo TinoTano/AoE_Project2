@@ -112,6 +112,8 @@
     <ClCompile Include="AI.cpp">
       <Filter>Project 2\Entities</Filter>
     </ClCompile>
+    <ClCompile Include="CutSceneManager.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Squad.cpp">
       <Filter>Project 2\Entities</Filter>
     </ClCompile>
@@ -243,6 +245,8 @@
     <ClInclude Include="AI.h">
       <Filter>Project 2\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="CutSceneManager.h" />
+    <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Squad.h">
       <Filter>Project 2\Entities</Filter>
     </ClInclude>
