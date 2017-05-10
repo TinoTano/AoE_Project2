@@ -531,6 +531,12 @@ void HUD::Update() {
 							}
 							if (cancel_bt->current == CLICKUP)
 								HUDBuildingMenu();
+							else if (create_Legolas_bt->current == CLICKUP)
+							{
+								Order* new_order = new CreateUnitOrder(LEGOLAS);
+								building->order_list.push_back(new_order);
+							//	App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+							}
 							break;
 						}
 					}
@@ -822,6 +828,12 @@ void HUD::HUDCreateHero()
 	building_state = BUILDINGCREATEHERO;
 
 	vector<SDL_Rect> blit_sections;
+	blit_sections.push_back({ 0, 0, 33, 32 });
+	blit_sections.push_back({ 0, 0, 33, 32 });
+
+	create_Legolas_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
 	blit_sections.push_back({ 53, 64, 39, 40 });
 	blit_sections.push_back({ 92, 64, 39, 40 });
 
@@ -831,6 +843,7 @@ void HUD::HUDCreateHero()
 void HUD::HUDClearCreateHero()
 {
 	App->gui->DestroyUIElement(cancel_bt);
+	App->gui->DestroyUIElement(create_Legolas_bt);
 }
 
 

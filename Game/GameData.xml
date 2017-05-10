@@ -1285,7 +1285,69 @@
 				</Die>
 			</Animations>
 		</Unit>
+		
+		<!-- HEROES -->
+		
+		<Unit>
+      <Info>
+        <Name value = "LEGOLAS"/>
+        <ID value = "22"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Heroes/Legolas/LegolasIdle.png"/>
+				<Move value="textures/Heroes/Legolas/LegolasMove.png"/>
+				<Attack value="textures/Heroes/Legolas/LegolasAttack.png"/>
+				<Die value="textures/Heroes/Legolas/LegolasDie.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="0"/>
+				<Life value="200"/>
+				<Attack value="5"/>
+				<AttackSpeed value="4"/>
+				<Defense value="2"/>
+				<PiercingDamage value="0"/>
+				<MovementSpeed value="130.5"/>
+				<LineOfSight value="5"/>
+        <Range value="35"/>
+				<FoodCost value=""/>
+				<GoldCost value=""/>
+				<BuildTime value=""/>
+				<SkillType value="1"/>
+			</Stats>
+			<Animations>
+				<Idle>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="42"/>
+					<Height value="55"/>
+					<Speed value="0.2f"/>
+				</Idle>
+				<Move>
+					<Rows value="5"/>
+					<Columns value="15"/>
+					<Width value="43"/>
+					<Height value="56"/>
+					<Speed value="0.2f"/>
+				</Move>
+				<Attack>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="45"/>
+					<Height value="65"/>
+					<Speed value="0.2f"/>
+				</Attack>
+				<Die>
+					<Rows value="10"/>
+					<Columns value="5"/>
+					<Width value="57"/>
+					<Height value="59"/>
+					<Speed value="0.2f"/>
+				</Die>
+			</Animations>
+		</Unit>
 	</Units>
+	
+	
 	
 <!-- BUILDINGS -->
 	<Buildings>
