@@ -2119,4 +2119,17 @@
 	<Cost foodCost="300" woodCost="0" stoneCost="100" goldCost="0"/>
   </Tech>
 </Techs>
+
+<!--- AI data --->
+
+<AI>
+	<Expansion>
+		<Villager_num value=""/>
+		<Tech value=""/>
+		<Tech value=""/>
+		<Building value=""/>
+		<Building value=""/>
+	</Expansion>
+
+</AI>
 </GameData>

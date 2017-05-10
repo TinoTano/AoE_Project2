@@ -75,12 +75,10 @@ bool EntityManager::Update(float arg_dt)
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
 			(*it)->Draw();
-		/*if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
-			(*it)->Draw();*/
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
+		if (App->render->CullingCam((*it)->entityPosition))
 			(*it)->Draw();
 	}
 
@@ -88,6 +86,8 @@ bool EntityManager::Update(float arg_dt)
 		if ((*it)->state == DESTROYED)
 			selectedEntityList.erase(it);
 	}
+
+	ally_techtree->Update();
 
 	// AI for enemies
 	Unit* unit = nullptr;

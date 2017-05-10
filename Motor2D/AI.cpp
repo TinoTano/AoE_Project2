@@ -70,11 +70,11 @@ void AI::LoadAI_Data(pugi::xml_node& gameData) {
 		for (ExpansionData = gameData.child("AI").child("Expansion"); ExpansionData; ExpansionData = ExpansionData.next_sibling("Expansion")) {
 
 			pugi::xml_node techs;
-			for (techs = ExpansionData.child("Techs"); techs; techs = techs.next_sibling("Techs"))
+			for (techs = ExpansionData.child("Tech"); techs; techs = techs.next_sibling("Tech"))
 				expansion_tech_table.at(expansion_count).push_back((TechType)techs.attribute("value").as_int());
 
 			pugi::xml_node buildings;
-			for (buildings = ExpansionData.child("Buildings"); buildings; buildings = buildings.next_sibling("Buildings"))
+			for (buildings = ExpansionData.child("Building"); buildings; buildings = buildings.next_sibling("Building"))
 				expansion_build_table.at(expansion_count).push_back((buildingType)techs.attribute("value").as_int());
 
 			villager_expansion_table.at(expansion_level) = ExpansionData.child("Villager_num").attribute("value").as_int();
@@ -89,6 +89,17 @@ bool AI::Update(float dt) {
 
 	switch (state) {
 
+	case DEFENSIVE:
+
+		ManageUnitRequests();
+		ManageVillagerRequests();
+		break;
+
+		if (threats.empty())
+			state = EXPANDING;
+
+		break;
+
 	case EXPANDING:
 
 		ManageVillagerRequests();
@@ -98,17 +109,6 @@ bool AI::Update(float dt) {
 
 		if (buildings_to_build.empty() && techs_to_research.empty() && unit_requests.empty() && villagers.size() >= villager_expansion_table.at(expansion_level))
 			state = OFFENSIVE;
-
-		break;
-
-	case DEFENSIVE:
-
-		ManageUnitRequests();
-		ManageVillagerRequests();
-		break;
-
-		if (threats.empty())
-			state = EXPANDING;
 
 		break;
 
