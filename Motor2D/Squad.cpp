@@ -6,15 +6,15 @@
 
 void Squad::Start() {
 
-	list<pair< buildingType, unitType>>* available_types = &App->ai->enemy_techtree->all_available_units;
-	int random = rand() / available_types->size();
+	list<pair<unitType, buildingType>>* available_types = &App->ai->enemy_techtree->available_units;
+	int random = rand() % available_types->size();
 
-	list<pair< buildingType, unitType>>::iterator it = available_types->begin();
+	list<pair<unitType, buildingType>>::iterator it = available_types->begin();
 
 	for (int i = 0; i < random; i++)
 		it++;
 
-	type = (*it).second;
+	type = (*it).first;
 	state = IDLE;
 	commander = nullptr;
 }

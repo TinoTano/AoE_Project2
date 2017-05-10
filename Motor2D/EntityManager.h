@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Entity.h"
 #include "Unit.h"
+#include "TechTree.h"
 #include "Building.h"
 #include "Resource.h"
 #include "Render.h"
@@ -76,7 +77,6 @@ private:
 	SDL_Rect multiSelectionRect = { 0,0,0,0 };
 	Timer click_timer;
 
-
 	Entity* clicked_entity = nullptr;
 
 	int mouseX;
@@ -98,6 +98,8 @@ public:
 	buildingType creatingBuildingType = ORC_BARRACKS;
 	SDL_Rect NotHUD;
 	Building* buildingToCreate = nullptr;
+
+	TechTree* ally_techtree = nullptr;
 
 	map<int, Unit*> unitsDB;
 	map<int, Building*> buildingsDB;

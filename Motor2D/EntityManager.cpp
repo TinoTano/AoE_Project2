@@ -355,10 +355,11 @@ bool EntityManager::LoadGameData()
 	pugi::xml_node buildingNodeInfo;
 	pugi::xml_node resourceNodeInfo;
 
+	ally_techtree = new TechTree();
 
 	gameData = App->LoadGameDataFile(gameDataFile);
 
-	if (gameData.empty() == false)
+	if (!gameData.empty())
 	{
 		ret = true;
 
@@ -578,6 +579,8 @@ bool EntityManager::LoadGameData()
 
 			resourcesDB.insert(pair<int, Resource*>(resourceTemplate->visual, resourceTemplate));
 		}
+
+		ally_techtree->Start(gameData.child("Techs"));
 	}
 
 	return ret;

@@ -6,7 +6,32 @@ void TechTree::Start(pugi::xml_node gameData){
 		multiplier_list.push_back(1);
 
 	LoadTechTree(gameData);
-	Researched(BASIC_TECH);
+
+	available_buildings.push_back(HOUSE);
+	available_buildings.push_back(ORC_BARRACKS);
+	available_buildings.push_back(ARCHERY_RANGE);
+	available_buildings.push_back(STABLES);
+	available_buildings.push_back(MILL);
+
+	available_techs.push_back(RANGED_WEAPONS);
+	available_techs.push_back(HORSE_TRAINING);
+	available_techs.push_back(TOWN_MILITIA);
+
+	pair<unitType, buildingType> p;
+
+	p = { GONDOR_SPEARMAN, ORC_BARRACKS };
+	available_units.push_back(p);
+
+	p = { DUNEDAIN_RANGE, ARCHERY_RANGE };
+	available_units.push_back(p);
+
+	p = { GONDOR_KNIGHT, STABLES };
+	available_units.push_back(p);
+
+	p = { LIGHT_CATAPULT, SIEGE_WORKSHOP };
+	available_units.push_back(p);
+
+
 }
 
 
@@ -20,104 +45,68 @@ void TechTree::Update(){
 }
 
 
-void TechTree::StartResearch(int tech_id) 
+void TechTree::StartResearch(TechType tech_id)
 {
 	all_techs.at(tech_id)->research_timer.Start();
 }
 
 
-void TechTree::Researched(int tech_id) {
+void TechTree::Researched(TechType tech_id) {
 
 	Tech* tech = all_techs.at(tech_id);
 
-	if (!tech->unlocks_techs.empty()) {
-		for (list<pair<int, buildingType>>::iterator it = tech->unlocks_techs.begin(); it != tech->unlocks_techs.end(); it++)
-			available_techs[(*it).second].push_back((*it).first);
+	if (tech->unlocks_tech.empty()) {
+		for(list<TechType>::iterator it = tech->unlocks_tech.begin(); it != tech->unlocks_tech.end(); it++)
+			available_techs.push_back(*it);
 	}
+	
+	if (tech->unlocks_unit.first != -1)
+		available_units.push_back(tech->unlocks_unit);
 
-	if (!tech->unlocks_units.empty()) {
-		for (list<pair<unitType, buildingType>>::iterator it2 = tech->unlocks_units.begin(); it2 != tech->unlocks_units.end(); it2++) {
-			available_units[(*it2).second].push_back((*it2).first);
-			pair<buildingType, unitType> unit_data = { (*it2).second,(*it2).first };
-			all_available_units.push_back(unit_data);
-		}
-	}
+	if (tech->unlocks_building != -1)
+		available_buildings.push_back(tech->unlocks_building);
 
-	if (!tech->unlocks_buildings.empty()) {
-		for (list<buildingType>::iterator it3 = tech->unlocks_buildings.begin(); it3 != tech->unlocks_buildings.end(); it3++)
-			available_buildings.push_back((*it3));
-	}
-
-	if (!tech->multipliers.empty()) {
-		for (list<pair<float, TechMultiplier>>::iterator it4 = tech->multipliers.begin(); it4 != tech->multipliers.end(); it4++)
-			multiplier_list[(*it4).second] += (*it4).first;
-	}
-
-	available_techs.at(tech->researched_in).remove(tech->id);
+	if (tech->multipliers.first != -1)
+		multiplier_list[tech->unlocks_unit.second] += tech->multipliers.first;
+	
+	available_techs.remove(tech_id);
 }
 
 
-void TechTree::LoadTechTree(pugi::xml_node gameData) {
+void TechTree::LoadTechTree(pugi::xml_node Techs) {
 
 	pugi::xml_node TechData;
 	int id_count = 0;
 
-	if (gameData.empty() == false)
+	if (Techs.empty() == false)
 	{
 
-		for (TechData = gameData.child("Techs").child("Tech"); TechData; TechData = TechData.next_sibling("Tech")) {
+		for (TechData = Techs.child("Tech"); TechData; TechData = TechData.next_sibling("Tech")) {
 
 			Tech* new_Tech = new Tech();
 
-			pugi::xml_node unlocked_tech;
-			for (unlocked_tech = TechData.child("Unl_techs").child("Unl_tech"); unlocked_tech; unlocked_tech = unlocked_tech.next_sibling("Unl_tech")) {
+			for (pugi::xml_node unlocked_techs = TechData.child("Unlockedtech"); unlocked_techs; unlocked_techs = TechData.next_sibling("Unlockedtech"))
+				new_Tech->unlocks_tech.push_back((TechType)unlocked_techs.attribute("value").as_int());
 
-				pair<int, buildingType> unl_tech_data;
-				unl_tech_data.first = unlocked_tech.attribute("tech_id").as_int();
-				unl_tech_data.second = (buildingType)unlocked_tech.attribute("building").as_int();
+			new_Tech->unlocks_building = (buildingType)TechData.child("Unlockedbuilding").attribute("value").as_int();
 
-				new_Tech->unlocks_techs.push_back(unl_tech_data);
+			new_Tech->unlocks_unit.first = (unitType)TechData.child("Unlockedunit").attribute("unit_type").as_int();
+			new_Tech->unlocks_unit.second = (buildingType)TechData.child("Unlockedunit").attribute("building").as_int();
 
-			}
-
-			pugi::xml_node unlocked_unit;
-			for (unlocked_unit = TechData.child("Unl_units").child("Unl_unit"); unlocked_unit; unlocked_unit = unlocked_unit.next_sibling("Unl_unit")) {
-
-				pair<unitType, buildingType> unl_unit_data;
-				unl_unit_data.first = (unitType)unlocked_unit.attribute("unit_type").as_int();
-				unl_unit_data.second = (buildingType)unlocked_unit.attribute("building").as_int();
-
-				new_Tech->unlocks_units.push_back(unl_unit_data);
-
-			}
-
-			pugi::xml_node mult_data;
-			for (mult_data = TechData.child("Multipliers").child("Multiplier"); mult_data; mult_data = mult_data.next_sibling("Multiplier")) {
-
-				pair<float, TechMultiplier> multiplier_data;
-				multiplier_data.first = mult_data.attribute("value").as_float();
-				multiplier_data.second = (TechMultiplier)mult_data.attribute("multiplier").as_int();
-
-				new_Tech->multipliers.push_back(multiplier_data);
-
-			}
-
-			pugi::xml_node unlocked_buidling;
-			for (unlocked_buidling = TechData.child("Unl_buildings").child("Unl_building"); unlocked_buidling; unlocked_buidling = unlocked_buidling.next_sibling("Unl_building"))
-				new_Tech->unlocks_buildings.push_back((buildingType)unlocked_buidling.attribute("value").as_int());
-
+			new_Tech->multipliers.first = TechData.child("Multiplier").attribute("value").as_float();
+			new_Tech->multipliers.second = (TechMultiplier)TechData.child("Multiplier").attribute("multiplier").as_int();
 
 			new_Tech->researched_in = (buildingType)TechData.child("Researched_in").attribute("value").as_int();
 			new_Tech->name = TechData.child("Name").attribute("value").as_string();
-			new_Tech->desc = TechData.child("Vesc").attribute("value").as_string();
-			new_Tech->id = id_count;
+			new_Tech->desc = TechData.child("Desc").attribute("value").as_string();
+			new_Tech->id = (TechType)id_count;
 
-			new_Tech->cost.food = TechData.child("Cost").child("foodCost").attribute("value").as_int();
-			new_Tech->cost.stone = TechData.child("Cost").child("stoneCost").attribute("value").as_int();
-			new_Tech->cost.wood = TechData.child("Cost").child("woodCost").attribute("value").as_int();
-			new_Tech->cost.gold = TechData.child("Cost").child("goldCost").attribute("value").as_int();
+			new_Tech->cost.food = TechData.child("Cost").attribute("foodCost").as_int();
+			new_Tech->cost.stone = TechData.child("Cost").attribute("stoneCost").as_int();
+			new_Tech->cost.wood = TechData.child("Cost").attribute("woodCost").as_int();
+			new_Tech->cost.gold = TechData.child("Cost").attribute("goldCost").as_int();
 			
-			new_Tech->research_time = TechData.child("Reseach_time").attribute("value").as_int();
+			new_Tech->research_time = TechData.child("Research_time").attribute("value").as_int();
 
 			all_techs.push_back(new_Tech);
 			id_count++;

@@ -225,8 +225,8 @@ void AI::ManageUnitRequests() {
 	if (!unit_requests.empty()) {
 		for (list<pair<unitType, Squad*>>::iterator requested_type = unit_requests.begin(); requested_type != unit_requests.end(); requested_type++) {
 
-			for (list<pair<buildingType, unitType>>::iterator units = enemy_techtree->all_available_units.begin(); units != enemy_techtree->all_available_units.end(); requested_type++) {
-				if ((*units).second == (*requested_type).first) {
+			for (list<pair<unitType, buildingType>>::iterator units = enemy_techtree->available_units.begin(); units != enemy_techtree->available_units.end(); requested_type++) {
+				if ((*units).first == (*requested_type).first) {
 
 					list<Building*>* enemy_buildings = &App->entityManager->enemyBuildingList;
 					for (list<Building*>::iterator building = enemy_buildings->begin(); building != enemy_buildings->end(); building++) {
@@ -258,7 +258,7 @@ void AI::ManageTechRequests() {
 				if ((*requested_type).second == (*building)->type) {
 
 					if (enemy_resources.Spend(App->ai->enemy_techtree->all_techs.at((*requested_type).first)->cost)) {
-						enemy_techtree->StartResearch((*requested_type).first);
+						enemy_techtree->StartResearch((TechType)(*requested_type).first);
 						tech_requests.erase(requested_type);
 					}
 					break;
