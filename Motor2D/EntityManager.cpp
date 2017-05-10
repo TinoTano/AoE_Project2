@@ -56,7 +56,9 @@ bool EntityManager::Update(float arg_dt)
 
 	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
 		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
+		/*if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
+			(*it)->Draw();*/
+		if (App->render->CullingCam((*it)->entityPosition))
 			(*it)->Draw();
 	}
 	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
@@ -76,8 +78,10 @@ bool EntityManager::Update(float arg_dt)
 	}
 	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
 		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
+		if (App->render->CullingCam((*it)->entityPosition))
 			(*it)->Draw();
+		/*if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
+			(*it)->Draw();*/
 	}
 
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
@@ -602,7 +606,7 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	else 
 		enemyUnitList.push_back(unit);
 
-	App->fog->AddEntity(unit);
+	//App->fog->AddEntity(unit);
 
 	return unit;
 }

@@ -53,19 +53,19 @@ void Map::Draw()
 
 				iPoint tileWorld = MapToWorld(x, y);
 
-				if (tile_id > 0 && visibility != 0) {
-
+				/*if (tile_id > 0 && visibility != 0) {*/
+					if (tile_id > 0) {
 					if (App->render->CullingCam(tileWorld))
 					{
 						TileSet* tileset = GetTilesetFromTileId(tile_id);
 						SDL_Rect r = tileset->GetTileRect(tile_id);
 						App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
 
-						if (visibility == fow_grey)
+					/*	if (visibility == fow_grey)
 						{
 							r = { 0, 0, 96, 51 };
 							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
-						}
+						}*/
 					}
 				}
 			}
@@ -482,23 +482,52 @@ bool Map::LoadResources(pugi::xml_node & node)
 
 	for (resourceNode = node.child("objectgroup"); resourceNode; resourceNode = resourceNode.next_sibling("objectgroup"))
 	{
-		pugi::xml_node prop;
+		uint type = 0;
+		string name = resourceNode.attribute("name").as_string();
+		if (name == "gold") {
+			type = GOLD_MINE;
+		}
+		else if (name == "stone") {
+			type = STONE_MINE;
+		}
+		else if (name == "forest_rocks") {
+			type = FOREST_ROCK;
+		}
+		else if (name == "rocks") {
+			type = ROCK_MINE;
+		}
+		else if (name == "greentrees") {
+			type = GREEN_TREE;
+		}
+		else if (name == "blacktrees") {
+			type = BLACK_TREE;
+		}
+		else if (name == "mount1") {
+			type = MOUNT_1;
+		}
+		else if (name == "mount2") {
+			type = MOUNT_2;
+		}
+		else if (name == "mount3") {
+			type = MOUNT_3;
+		}
+		else if (name == "mount4") {
+			type = MOUNT_4;
+		}
+		else if (name == "mount5") {
+			type = MOUNT_5;
+		}
+		else if (name == "mount6") {
+			type = MOUNT_6;
+		}
 
+		pugi::xml_node prop;
 		for (prop = resourceNode.child("object"); prop; prop = prop.next_sibling("object"))
 		{
-			uint type = 0;
-			string name = prop.attribute("name").as_string();
-			if (name == "Green Tree") {
-				type = GREEN_TREE;
-			}
-			else if (name == "Rock") {
-				type = STONE_MINE;
-			}
 			Resource* resource = App->entityManager->CreateResource(prop.attribute("x").as_int(), prop.attribute("y").as_int(), (resourceItem)type);
-			App->fog->AddEntity(resource);
+			//	App->fog->AddEntity(resource);
 		}
 	}
-
 	return ret;
 }
 

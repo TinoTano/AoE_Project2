@@ -1703,14 +1703,21 @@
 	<Type value="2"/>
       </Info>
       <Textures>
-        <Idle value="textures/Resources/"/>
-        <Gathering value="textures/Resources/"/>
+        <Idle value="textures/Resources/Gold/Gold.png"/>
+        <Gathering value="textures/Resources/Gold/Gold.png"/>
       </Textures>
       <Stats>
         <Life value ="800"/>
       </Stats>
+	  <Rects>
+          <Rect x="12" y="1" w="74" h="43"/>
+          <Rect x="100" y="1" w="77" h="44"/>
+          <Rect x="191" y="1" w="65" h="51"/>
+          <Rect x="285" y="1" w="80" h="46"/>
+          <Rect x="379" y="1" w="87" h="47"/>
+          <Rect x="566" y="9" w="80" h="38"/>
+      </Rects>
     </Resource>
-
     <Resource value ="BUSH">
       <Info>
         <ID value ="3"/>
@@ -1724,28 +1731,164 @@
         <Life value ="100"/>
       </Stats>
     </Resource>
-
     <Resource value ="STONE_MINE">
       <Info>
         <ID value ="4"/>
 	<Type value="4"/>
       </Info>
       <Textures>
-        <Idle value="textures/Resources/Rocks/Rocks.png"/>
+        <Idle value="textures/Resources/Stone/stone.png"/>
         <Gathering value="textures/Resources/"/>
       </Textures>
       <Stats>
         <Life value ="350"/>
       </Stats>
       <Rects>
-          <Rect x="22" y="0" w="166" h="128"/>
-          <Rect x="218" y="0" w="199" h="128"/>
-          <Rect x="439" y="0" w="172" h="128"/>
-          <Rect x="650" y="0" w="175" h="128"/>
-          <Rect x="902" y="0" w="123" h="128"/>
-          <Rect x="1082" y="0" w="165" h="128"/>
+          <Rect x="4" y="2" w="78" h="44"/>
+          <Rect x="95" y="1" w="74" h="46"/>
+          <Rect x="179" y="0" w="85" h="48"/>
+          <Rect x="278" y="0" w="80" h="46"/>
+          <Rect x="458" y="5" w="75" h="41"/>
+          <Rect x="549" y="5" w="68" h="44"/>
       </Rects>
     </Resource>
-    
+     <Resource value ="FOREST_ROCK">
+      <Info>
+        <ID value ="5"/>
+	<Type value="4"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/Rocks/ForestRocks.png"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="420"/>
+      </Stats>
+      <Rects>
+          <Rect x="10" y="58" w="225" h="250"/>
+          <Rect x="270" y="89" w="199" h="227"/>
+          <Rect x="509" y="15" w="208" h="293"/>
+          <Rect x="752" y="48" w="214" h="257"/>
+          <Rect x="1006" y="1" w="202" h="300"/>
+          <Rect x="1268" y="116" w="182" h="172"/>
+      </Rects>
+    </Resource>
+	 <Resource value ="MOUNT_1">
+      <Info>
+        <ID value ="6"/>
+	<Type value="5"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/Mountains/mount1.png"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="1000"/>
+      </Stats>
+      <Rects>
+          <Rect x="0" y="0" w="586" h="472"/>
+      </Rects>
+    </Resource>
+	 <Resource value ="MOUNT_2">
+      <Info>
+        <ID value ="7"/>
+	<Type value="6"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/Mountains/mount2.png"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="1000"/>
+      </Stats>
+      <Rects>
+         <Rect x="0" y="0" w="642" h="471"/>
+      </Rects>
+    </Resource>
+	<Resource value ="MOUNT_3">
+      <Info>
+        <ID value ="8"/>
+	<Type value="7"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/Mountains/mount3.png"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="1000"/>
+      </Stats>
+      <Rects>
+         <Rect x="0" y="0" w="574" h="465"/>
+      </Rects>
+    </Resource>
+	<Resource value ="MOUNT_4">
+      <Info>
+        <ID value ="9"/>
+	<Type value="8"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/Mountains/mount4.png"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="1000"/>
+      </Stats>
+      <Rects>
+         <Rect x="0" y="0" w="512" h="399"/>
+      </Rects>
+    </Resource>
+	<Resource value ="MOUNT_5">
+      <Info>
+        <ID value ="10"/>
+	<Type value="9"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/Mountains/mount5.png"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="1000"/>
+      </Stats>
+      <Rects>
+         <Rect x="0" y="0" w="512" h="360"/>
+      </Rects>
+    </Resource>
+	<Resource value ="MOUNT_6">
+      <Info>
+        <ID value ="11"/>
+	<Type value="10"/>
+      </Info>
+      <Textures>
+        <Idle value="textures/Resources/Mountains/mount6.png"/>
+        <Gathering value="textures/Resources/"/>
+      </Textures>
+      <Stats>
+        <Life value ="1000"/>
+      </Stats>
+      <Rects>
+         <Rect x="0" y="0" w="1297" h="1081"/>
+      </Rects>
+    </Resource>
+	<Resource value="ROCK_MINE">
+		<Info>
+			<ID value="12"/>
+			<Type value="4"/>
+		</Info>
+		<Textures>
+			<Idle value="textures/Resources/Rocks/Rocks.png"/>
+			<Gathering value="textures/Resources/"/>
+		</Textures>
+		<Stats>
+			<Life value="350"/>
+		</Stats>
+		<Rects>
+			<Rect h="128" w="166" y="0" x="22"/>
+			<Rect h="128" w="199" y="0" x="218"/>
+			<Rect h="128" w="172" y="0" x="439"/>
+			<Rect h="128" w="175" y="0" x="650"/>
+			<Rect h="128" w="123" y="0" x="902"/>
+			<Rect h="128" w="165" y="0" x="1082"/>
+		</Rects>
+	</Resource>
   </Resources>
 </GameData>
