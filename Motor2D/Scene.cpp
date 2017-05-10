@@ -58,6 +58,11 @@ bool Scene::Start()
 
 	// LOADING CAMERA POSITION
 
+	App->render->cameraScene.down = -3090;
+	App->render->cameraScene.up = -1180;
+	App->render->cameraScene.left = 1680;
+	App->render->cameraScene.right = -1410;
+
 	App->render->camera.x = STARTING_CAMERA_X;
 
 	App->render->camera.y = STARTING_CAMERA_Y;

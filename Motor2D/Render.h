@@ -22,6 +22,11 @@ struct Sprite
 	bool filled = true;
 };
 
+struct CameraLimit
+{
+	int up, down, left, right;
+};
+
 class Render : public Module
 {
 public:
@@ -75,6 +80,8 @@ public:
 	SDL_Rect		culling_cam;
 	std::deque<Sprite> sprites_toDraw;
 	std::deque<Sprite> ui_toDraw;
+
+	CameraLimit cameraScene;
 
 private:
 

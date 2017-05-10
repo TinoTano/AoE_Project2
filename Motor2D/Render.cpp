@@ -184,45 +184,17 @@ pair <int,int> Render::MoveCameraWithCursor(float dt)
 	App->input->GetMousePosition(mousePosX, mousePosY);
 
 
-	if (mousePosX < 10)	//Move left
+	if (mousePosX < 10 && camera.x < cameraScene.left)	//Move left
 		movement.first = 10;
-	else if (mousePosX > camera.w - 10)  //Move right
+
+	else if (mousePosX > camera.w - 10 && camera.x > cameraScene.right)  //Move right
 		movement.first = -10;
 
-	if (mousePosY < 10)	//Move up
+	if (mousePosY < 10 && camera.y < cameraScene.up)	//Move up
 		movement.second = 10;
-	else if (mousePosY > camera.h - 10)  //Move down
+
+	else if (mousePosY > camera.h - 10 && camera.y > cameraScene.down)  //Move down
 		movement.second = -10;
-
-	iPoint cam_pos_iso;
-	cam_pos_iso.x = (-camera.x) - (camera.y * 2);
-	cam_pos_iso.y = -camera.y + (camera.x / 2);
-
-	if ((cam_pos_iso.x - 15) < 0) {
-		if (movement.first == 10)
-			movement.first = 0;
-		if (movement.second == 10)
-			movement.second = 0;
-	}
-	else if (cam_pos_iso.x + (camera.w * 2) > 9600) {
-		if (movement.first == -10)
-			movement.first = 0;
-		if (movement.second == -10)
-			movement.second = 0;
-	}
-
-	if ((cam_pos_iso.y - 15) < 0) {
-		if (movement.first == -10)
-			movement.first = 0;
-		if (movement.second == 10)
-			movement.second = 0;
-	}
-	else if (cam_pos_iso.y + (camera.h) > 4800) {
-		if (movement.first == 10)
-			movement.first = 0;
-		if (movement.second == -10)
-			movement.second = 0;
-	}
 
 	//LOG("cam: %d, %d", camera.x, camera.y);
 	//LOG("iso_cam: %d, %d", cam_pos_iso.x, cam_pos_iso.y);
