@@ -20,6 +20,7 @@ using namespace std;
 #define CAMERA_OFFSET_X App->render->camera.x
 #define CAMERA_OFFSET_Y App->render->camera.y
 #define NUM_UI_BUTTONS 12
+#define TECH_UI_BUTTON 6
 
 struct _TTF_Font;
 
@@ -286,18 +287,19 @@ private:
 	// BUTTONS POSITIONS
 	vector<SDL_Rect> buttons_positions;
 public:
-
+	void Start();
+	void Update();
+	void CleanUp();
+private:
 	void GetSelection();
 	void StartBuildingInfo();
 	void StartResourceInfo();
-	void Start();
-	void Update();
-
+	SDL_Rect GetTechRect(uint id);
 	void ClearMultiple();
 	void ClearSingle();
 	void ClearBuilding();
 	void ClearResource();
-	void CleanUp();
+
 private:
 	//
 	// HUD MANAGING FUNCTIONS
@@ -317,10 +319,24 @@ private:
 	Button* create_building_bt;
 	void HUDVillagerMenu();
 	void HUDClearVillagerMenu();
+	// -----------------------
+	//		  HEROES
+	// -----------------------
+	enum HUDHeroState {
+		HEROMENU
+	};
+	HUDHeroState hero_state;
+	// ------- MENU ----------
+	Button* skill_bt;
+	void HUDHeroMenu();
+	void HUDClearHeroMenu();
 	// ------ CREATE BUILDINGS -------
-	Button* create_town_center_bt, *create_house_bt,*create_archery_range_bt,
-		*create_stables_bt, *create_siege_workshop_bt, *create_market_bt, *create_blacksmith_bt, *create_mill_bt, 
+	Button* create_town_center_bt, *create_house_bt, *create_archery_range_bt,
+		*create_stables_bt, *create_siege_workshop_bt, *create_market_bt, *create_blacksmith_bt, *create_mill_bt,
 		*create_outpost_bt, *create_monastery_bt, *create_castle_bt;
+	list<Button*> tech_bt;
+	vector<SDL_Rect> tech_rects;
+	bool tech = false;
 	void HUDCreateBuildings();
 	void HUDClearCreateBuildings();
 	// -----------------------

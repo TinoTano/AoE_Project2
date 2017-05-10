@@ -11,6 +11,8 @@
 #include "Window.h"
 #include "Orders.h"
 #include <stdlib.h>  
+#include "TechTree.h"
+#include "Hero.h"
 
 
 //HUD
@@ -27,23 +29,23 @@ void HUD::Start() {
 	// 2
 	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
 	// 3
-	buttons_positions.push_back({ (int)x / 7 - (int)(x/100) - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 7 - (int)(x / 100) - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
 	// 4
 	buttons_positions.push_back({ (int)x / 6 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
 	// 5
 	buttons_positions.push_back({ (int)x / 5 - CAMERA_OFFSET_X, (int)y - (int)y / 5 - CAMERA_OFFSET_Y, 39,40 });
 	// 6
-	buttons_positions.push_back({ (int)x / 30 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y/100) - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 30 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
 	//7
 	buttons_positions.push_back({ (int)x / 15 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
 	// 8
 	buttons_positions.push_back({ (int)x / 10 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
 	// 9
-	buttons_positions.push_back({ (int)x / 7 - (int)(x/100) - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
+	buttons_positions.push_back({ (int)x / 7 - (int)(x / 100) - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
 	// 10
 	buttons_positions.push_back({ (int)x / 6 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
-	
-	
+
+
 	buttons_positions.push_back({ (int)x / 30 - CAMERA_OFFSET_X, (int)y - (int)y / 8 - CAMERA_OFFSET_Y, 39,40 });
 	// 12
 
@@ -352,9 +354,33 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-									// AND SO ON
+										// AND SO ON
 									}
 									break;
+								}
+							}
+							else {
+								Unit* unit = (Unit*)App->entityManager->selectedEntityList.front();
+								if (unit->IsHero) {
+									Hero* hero = (Hero*)unit;
+									switch (hero_state) {
+									case VILLAGERMENU:
+										if (hero_state != HEROMENU)
+										{
+											HUDHeroMenu();
+										}
+										else {
+											if (hero->skill->active == true) {
+												skill_bt->enabled = true;
+											}
+											else skill_bt->enabled = false;
+											if (skill_bt->current == CLICKUP)
+											{
+												hero->skill->Activate();
+											}
+										}
+										break;
+									}
 								}
 							}
 						}
@@ -575,6 +601,26 @@ void HUD::HUDClearVillagerMenu()
 	App->gui->DestroyUIElement(create_building_bt);
 }
 
+void HUD::HUDHeroMenu()
+{
+	switch (hero_state) {
+	}
+	hero_state = HEROMENU;
+
+	vector<SDL_Rect> blit_sections;
+
+	blit_sections.push_back({ 208, 64, 39, 40 });
+	blit_sections.push_back({ 247, 64, 39, 40 });
+
+	skill_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+}
+
+void HUD::HUDClearHeroMenu()
+{
+	skill_bt->enabled = true;
+	App->gui->DestroyUIElement(skill_bt);
+}
+
 void HUD::HUDCreateBuildings()
 {
 	switch (villager_state) {
@@ -603,7 +649,7 @@ void HUD::HUDCreateBuildings()
 	blit_sections.push_back({ 99, 0, 33, 32 });
 
 	create_archery_range_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-	
+
 	blit_sections.clear();
 	blit_sections.push_back({ 132, 0, 33, 32 });
 	blit_sections.push_back({ 132, 0, 33, 32 });
@@ -689,23 +735,38 @@ void HUD::HUDBuildingMenu()
 
 	// THIS MUST BE DONE HERE
 	building_state = BUILDINGMENU;
-
 	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 130, 64, 39, 40 });
-	blit_sections.push_back({ 169, 64, 39, 40 });
 
-	create_unit_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-	blit_sections.clear();
+	if (name->str == "TOWN CENTER") {
 
-	blit_sections.push_back({ 208, 24, 39, 40 });
-	blit_sections.push_back({ 247, 24, 39, 40 });
+		blit_sections.push_back({ 130, 64, 39, 40 });
+		blit_sections.push_back({ 169, 64, 39, 40 });
 
-	create_hero_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-	blit_sections.clear();
-	blit_sections.push_back({ 52, 24, 39, 40 });
-	blit_sections.push_back({ 91, 24, 39, 40 });
+		create_unit_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+		blit_sections.clear();
 
-	create_villager_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+		blit_sections.push_back({ 208, 24, 39, 40 });
+		blit_sections.push_back({ 247, 24, 39, 40 });
+
+		create_hero_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+		blit_sections.clear();
+		blit_sections.push_back({ 52, 24, 39, 40 });
+		blit_sections.push_back({ 91, 24, 39, 40 });
+
+		create_villager_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+		blit_sections.clear();
+	}
+	/*if (tech) {
+	uint tech_place = TECH_UI_BUTTON;
+	uint x = 0;
+	for (list<Button*>::iterator it = tech_bt.begin(); it != tech_bt.end(); ++it) {
+	blit_sections.push_back(tech_rects[x]);
+	tech_rects[x].x += tech_rects[x].w;
+	it._Ptr->_Myval = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	tech_place++;
+	x++;
+	}
+	}*/
 }
 
 void HUD::HUDClearBuildingMenu()
@@ -713,6 +774,11 @@ void HUD::HUDClearBuildingMenu()
 	App->gui->DestroyUIElement(create_unit_bt);
 	App->gui->DestroyUIElement(create_hero_bt);
 	App->gui->DestroyUIElement(create_villager_bt);
+	/*tech = false;
+	tech_rects.clear();
+	for (list<Button*>::iterator it = tech_bt.begin(); it != tech_bt.end(); ++it) {
+	App->gui->DestroyUIElement(it._Ptr->_Myval);
+	}*/
 }
 
 void HUD::HUDCreateHero()
@@ -811,6 +877,35 @@ void HUD::StartResourceInfo()
 	life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
 }
 
+SDL_Rect HUD::GetTechRect(uint id)
+{
+
+	SDL_Rect ret = { 130,144,39,40 };
+
+	switch (id) {
+	case 0:
+		break;
+	case 1:
+		ret.x = 208;
+		break;
+	case 2:
+		ret.x = 286;
+		break;
+	default:
+		ret.y = 184;
+		for (uint it = 0, c = 1; it < id; it++) {
+			ret.x += 39 * 2;
+			if (c == 4) {
+				ret.x = 130;
+				ret.y += 40;
+				c = 0;
+			}
+			c++;
+		}
+	}
+	return ret;
+}
+
 
 void HUD::StartBuildingInfo()
 {
@@ -841,6 +936,17 @@ void HUD::StartBuildingInfo()
 
 	life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
 
+	/*TechTree * tree;
+	SDL_Rect button;
+	for (uint i = 0; i < tree->all_techs.size(); ++i) {
+	if (tree->all_techs[i]->researched_in == id) {
+	for (list<pair<int, buildingType>>::iterator it = tree->all_techs[i]->unlocks_techs.begin(); it != tree->all_techs[i]->unlocks_techs.end(); ++it)
+	{
+	tech_rects.push_back(GetTechRect(it._Ptr->_Myval.first));
+	tech = true;
+	}
+	}
+	}*/
 	if (name->str == "TOWN CENTER")
 		HUDBuildingMenu();
 }
