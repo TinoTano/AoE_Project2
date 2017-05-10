@@ -84,6 +84,7 @@ void HUD::Update() {
 	int percent;
 	int barPercent;
 	string life_str;
+	string cd_str;
 
 	if (App->entityManager->selectedEntityList.size() > 0) {
 		if (App->entityManager->selectedEntityList.front()->Life > 0) {
@@ -363,6 +364,34 @@ void HUD::Update() {
 								Unit* unit = (Unit*)App->entityManager->selectedEntityList.front();
 								if (unit->IsHero) {
 									Hero* hero = (Hero*)unit;
+
+									max_life = hero->skill->cooldown;
+									curr_life = (int)hero->skill_timer.ReadSec();
+									if (curr_life >= max_life) curr_life = max_life;
+									_itoa_s(curr_life, currlife, 65, 10);
+									life_str += "     ";
+									life_str += currlife;
+									life_str += "/";
+									_itoa_s(max_life, maxlife, 65, 10);
+									life_str += maxlife;
+									life_str += "(sec)";
+									life->SetString(life_str);
+									if (max_life == 0) max_life = curr_life;
+									percent = ((max_life - curr_life) * 100) / max_life;
+									barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
+									bar.rect.y = bar.rect.y + bar.rect.h;
+									bar.rect.h = 5;
+									bar.r = 200;
+									bar.g = 200;
+									bar.b = 200;
+									App->render->ui_toDraw.push_back(bar);
+									bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+									bar.r = 0;
+									bar.b = 255;
+									bar.g = 100;
+									App->render->ui_toDraw.push_back(bar);
+
+
 									switch (hero_state) {
 									case VILLAGERMENU:
 										if (hero_state != HEROMENU)
@@ -370,13 +399,13 @@ void HUD::Update() {
 											HUDHeroMenu();
 										}
 										else {
-											if (hero->skill->active == true) {
+											if (hero->skill->ready) {
 												skill_bt->enabled = true;
 											}
 											else skill_bt->enabled = false;
 											if (skill_bt->current == CLICKUP)
 											{
-												hero->skill->Activate();
+												hero->skill->Activate(hero);
 											}
 										}
 										break;
@@ -609,15 +638,14 @@ void HUD::HUDHeroMenu()
 
 	vector<SDL_Rect> blit_sections;
 
-	blit_sections.push_back({ 208, 64, 39, 40 });
-	blit_sections.push_back({ 247, 64, 39, 40 });
+	blit_sections.push_back({ 210, 64, 39, 40 });
+	blit_sections.push_back({ 249, 64, 39, 40 });
 
 	skill_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 }
 
 void HUD::HUDClearHeroMenu()
 {
-	skill_bt->enabled = true;
 	App->gui->DestroyUIElement(skill_bt);
 }
 
@@ -794,8 +822,8 @@ void HUD::HUDCreateHero()
 	building_state = BUILDINGCREATEHERO;
 
 	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 52, 64, 39, 40 });
-	blit_sections.push_back({ 91, 64, 39, 40 });
+	blit_sections.push_back({ 53, 64, 39, 40 });
+	blit_sections.push_back({ 92, 64, 39, 40 });
 
 	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[NUM_UI_BUTTONS].x - CAMERA_OFFSET_X, buttons_positions[NUM_UI_BUTTONS].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 }
@@ -996,6 +1024,9 @@ void HUD::GetSelection() {
 		if (name->str == "ELF VILLAGER") {
 			HUDVillagerMenu();
 		}
+		else if (unit->IsHero) {
+			HUDHeroMenu();
+		}
 		break;
 	case MULTIPLESELECTION:
 		int x = 0, y = 0;
@@ -1070,6 +1101,11 @@ void HUD::ClearSingle()
 	case VILLAGERCREATEBUILDINGS:
 		HUDClearCreateBuildings();
 		break;
+	}
+	switch (hero_state)
+	{
+	case HEROMENU:
+		HUDClearHeroMenu();
 	}
 }
 

@@ -33,6 +33,7 @@ Hero::~Hero()
 
 bool Hero::HeroUpdate() {
 
+
 	if (skill->active) {
 		if (skill_timer.ReadSec() > skill->duration)
 			skill->Deactivate(this);
@@ -48,12 +49,9 @@ bool Hero::HeroUpdate() {
 
 		App->render->sprites_toDraw.push_back(aux);
 	}
-
-	if (App->input->GetKey(SDL_SCANCODE_SPACE)) {
-		//if(App->entityManager->FindUnit(this))
-		if (skill_timer.ReadSec() > skill->cooldown)
-			skill->Activate(this);
-	}
+	if (skill_timer.ReadSec() > skill->cooldown)
+		skill->ready = true;
+	else skill->ready = false;
 
 	return true;
 }
