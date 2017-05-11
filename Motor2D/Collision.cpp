@@ -17,6 +17,7 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_UNIT][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_UNIT][COLLIDER_LOS] = false;
 	matrix[COLLIDER_UNIT][COLLIDER_CREATING_BUILDING] = true;
+	matrix[COLLIDER_UNIT][COLLIDER_AOE_SKILL] = true;
 
 	matrix[COLLIDER_BUILDING][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_BUILDING][COLLIDER_BUILDING] = false;
@@ -24,6 +25,7 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_BUILDING][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_BUILDING][COLLIDER_LOS] = false;
 	matrix[COLLIDER_BUILDING][COLLIDER_CREATING_BUILDING] = true;
+	matrix[COLLIDER_BUILDING][COLLIDER_AOE_SKILL] = false;
 
 	matrix[COLLIDER_RESOURCE][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_RESOURCE][COLLIDER_BUILDING] = false;
@@ -31,6 +33,7 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_RESOURCE][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_RESOURCE][COLLIDER_LOS] = false;
 	matrix[COLLIDER_RESOURCE][COLLIDER_CREATING_BUILDING] = true;
+	matrix[COLLIDER_RESOURCE][COLLIDER_AOE_SKILL] = false;
 
 	matrix[COLLIDER_RANGE][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_RANGE][COLLIDER_BUILDING] = true;
@@ -38,6 +41,7 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_RANGE][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_LOS] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_CREATING_BUILDING] = false;
+	matrix[COLLIDER_RANGE][COLLIDER_AOE_SKILL] = false;
 
 	matrix[COLLIDER_LOS][COLLIDER_UNIT] = false;
 	matrix[COLLIDER_LOS][COLLIDER_BUILDING] = false;
@@ -45,12 +49,21 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_LOS][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_LOS][COLLIDER_LOS] = false;
 	matrix[COLLIDER_LOS][COLLIDER_CREATING_BUILDING] = false;
+	matrix[COLLIDER_LOS][COLLIDER_AOE_SKILL] = false;
 
 	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_BUILDING] = true;
 	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_RESOURCE] = true;
 	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_LOS] = false;
+	matrix[COLLIDER_CREATING_BUILDING][COLLIDER_AOE_SKILL] = false;
+
+	matrix[COLLIDER_AOE_SKILL][COLLIDER_UNIT] = true;
+	matrix[COLLIDER_AOE_SKILL][COLLIDER_BUILDING] = false;
+	matrix[COLLIDER_AOE_SKILL][COLLIDER_RESOURCE] = false;
+	matrix[COLLIDER_AOE_SKILL][COLLIDER_RANGE] = false;
+	matrix[COLLIDER_AOE_SKILL][COLLIDER_LOS] = false;
+	matrix[COLLIDER_AOE_SKILL][COLLIDER_AOE_SKILL] = false;
 
 }
 
@@ -103,7 +116,7 @@ bool Collision::PreUpdate()
 			for (list<Collider*>::iterator col2 = potential_collisions.begin(); col2 != potential_collisions.end(); col2++) {
 				c2 = (*col2);
 
-				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback) {
+				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c2->enabled) {
 
 					if (!FindCollision(c1, c2)) {
 						Collision_data* collision = new Collision_data(c1, c2);   // c1 can only be unit or range
@@ -187,7 +200,7 @@ Unit* Collider::GetUnit() {
 
 	Unit* unit = nullptr;
 
-	if (type == COLLIDER_UNIT)
+	if (type == COLLIDER_UNIT || type == COLLIDER_AOE_SKILL)
 		unit = (Unit*)entity;
 
 	return unit;
