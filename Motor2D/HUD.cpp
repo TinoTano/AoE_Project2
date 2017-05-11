@@ -1392,8 +1392,6 @@ bool Gui::LoadHUDData()
 			UnitSprite unit(type, proportions, id, name);
 			SpriteResources.push_back(unit);
 		}
-
-
 	}
 	return ret;
 }

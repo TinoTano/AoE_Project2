@@ -65,6 +65,7 @@ bool MenuScene::Start()
 	elements[11].position.second = elements[10].position.second + (y / 15);
 
 
+
 	for (uint it = 0; it < elements.size(); ++it) {
 		switch (elements[it].type)
 		{

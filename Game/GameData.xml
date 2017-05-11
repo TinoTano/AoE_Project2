@@ -1358,8 +1358,8 @@
         <ID value = "0"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/TownHall.png"/>
-				<Die value="textures/Buildings/TownHall.png"/>
+				<Idle value="textures/Buildings/BuildingsFP/TownHall.png"/>
+				<Die value="textures/Buildings/BuildingsFP/TownHall.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
