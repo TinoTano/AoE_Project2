@@ -474,12 +474,11 @@ void HUD::Update() {
 									HUDCreateUnits();
 								}
 								else if (create_villager_bt->current == CLICKUP) {
-									if (App->sceneManager->level1_scene->woodCount > 50) {
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)){
 										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
 										create_villager_bt->current = FREE;
-										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 50);
-										Order* new_order = new CreateUnitOrder(ELF_VILLAGER);
-										building->order_list.push_back(new_order);
+										App->sceneManager->level1_scene->UpdateResources();
+										building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
 									}
 								}
 								else if (create_hero_bt->current == CLICKUP) {
@@ -497,28 +496,25 @@ void HUD::Update() {
 									HUDBuildingMenu();
 								else if (create_elven_archer_bt->current == CLICKUP)
 								{
-									if (App->sceneManager->level1_scene->woodCount > 70) {
-										Order* new_order = new CreateUnitOrder(ELVEN_ARCHER);
-										building->order_list.push_back(new_order);
-										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_ARCHER]->cost)) {
+										building->order_list.push_back(new CreateUnitOrder(ELVEN_ARCHER));
+										App->sceneManager->level1_scene->UpdateResources();
 										create_elven_archer_bt->current = FREE;
 									}
 								}
 								else if (create_elven_longblade_bt->current == CLICKUP)
 								{
-									if (App->sceneManager->level1_scene->woodCount > 70) {
-										Order* new_order = new CreateUnitOrder(ELVEN_LONGBLADE);
-										building->order_list.push_back(new_order);
-										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_LONGBLADE]->cost)){
+										building->order_list.push_back(new CreateUnitOrder(ELVEN_LONGBLADE));
+										App->sceneManager->level1_scene->UpdateResources();
 										create_elven_longblade_bt->current = FREE;
 									}
 								}
 								else if (create_elven_cavalry_bt->current == CLICKUP)
 								{
-									if (App->sceneManager->level1_scene->woodCount > 350) {
-										Order* new_order = new CreateUnitOrder(GONDOR_HERO);
-										building->order_list.push_back(new_order);
-										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[GONDOR_HERO]->cost)){
+										building->order_list.push_back(new CreateUnitOrder(GONDOR_HERO));
+										App->sceneManager->level1_scene->UpdateResources();
 										create_elven_cavalry_bt->current = FREE;
 									}
 								}

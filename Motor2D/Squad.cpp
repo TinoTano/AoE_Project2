@@ -1,12 +1,13 @@
 #include "Squad.h"
 #include "Building.h"
+#include "GameFaction.h"
 #include "Unit.h"
 #include "AI.h"
 
 
 void Squad::Start() {
 
-	list<pair<unitType, buildingType>>* available_types = &App->ai->enemy_techtree->available_units;
+	list<pair<unitType, buildingType>>* available_types = &App->ai->Enemies->tech_tree->available_units;
 	int random = rand() % available_types->size();
 
 	list<pair<unitType, buildingType>>::iterator it = available_types->begin();

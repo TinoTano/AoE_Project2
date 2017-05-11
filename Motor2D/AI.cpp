@@ -10,8 +10,10 @@
 
 bool AI::Awake(pugi::xml_node& gameData) {
 
-	enemy_techtree = new TechTree();
-	enemy_techtree->Start(gameData);
+	Enemies = App->entityManager->AI_faction;
+
+	Enemies->tech_tree = new TechTree();
+	Enemies->tech_tree->Start(gameData);
 	srand(time(NULL));
 
 	LoadAI_Data(gameData);
@@ -51,7 +53,6 @@ void AI::LoadExplorationMap() {
 		}
 	}
 
-	iPoint enemy_town_hall = App->sceneManager->level1_scene->enemy_townCenter->entityPosition;
 	//sort(exploration_points.begin(), exploration_points.end(), [](const iPoint& lhs, const iPoint& rhs, iPoint enemy_town_hall) { return lhs.DistanceTo(enemy_town_hall) < rhs.DistanceTo(enemy_town_hall); });
 
 }
@@ -199,7 +200,7 @@ void AI::IncreaseExpansionLevel() {
 void AI::ManageBuildRequests() {
 
 	for (list<buildingType>::iterator it = buildings_to_build.begin(); it != buildings_to_build.end(); it++) {
-		if (enemy_resources.Spend(App->entityManager->unitsDB[(*it)]->cost)) {
+		if (Enemies->resources.Spend(App->entityManager->unitsDB[(*it)]->cost)) {
 			iPoint placing_point = PlaceBuilding(buildings_to_build.front());
 			Building* building = App->entityManager->CreateBuilding(placing_point.x, placing_point.y, buildings_to_build.front());
 
@@ -214,8 +215,8 @@ void AI::ManageBuildRequests() {
 void AI::ManageVillagerRequests() {
 
 	for (int i = villagers.size(); i < villager_expansion_table.at(expansion_level); i++) {
-		if (enemy_resources.Spend(App->entityManager->unitsDB[VILLAGER]->cost)) 
-			App->sceneManager->level1_scene->enemy_townCenter->order_list.push_front(new CreateUnitOrder(VILLAGER));
+		if (Enemies->resources.Spend(App->entityManager->unitsDB[VILLAGER]->cost)) 
+			Enemies->Town_center->order_list.push_front(new CreateUnitOrder(VILLAGER));
 	}
 }
 
@@ -225,15 +226,15 @@ void AI::ManageUnitRequests() {
 	if (!unit_requests.empty()) {
 		for (list<pair<unitType, Squad*>>::iterator requested_type = unit_requests.begin(); requested_type != unit_requests.end(); requested_type++) {
 
-			for (list<pair<unitType, buildingType>>::iterator units = enemy_techtree->available_units.begin(); units != enemy_techtree->available_units.end(); requested_type++) {
+			for (list<pair<unitType, buildingType>>::iterator units = Enemies->tech_tree->available_units.begin(); units != Enemies->tech_tree->available_units.end(); requested_type++) {
 				if ((*units).first == (*requested_type).first) {
 
-					list<Building*>* enemy_buildings = &App->entityManager->enemyBuildingList;
+					list<Building*>* enemy_buildings = &Enemies->buildings;
 					for (list<Building*>::iterator building = enemy_buildings->begin(); building != enemy_buildings->end(); building++) {
 
 						if ((*units).first == (*building)->type) {
 
-							if (enemy_resources.Spend(App->entityManager->unitsDB[(*requested_type).first]->cost)) {
+							if (Enemies->resources.Spend(App->entityManager->unitsDB[(*requested_type).first]->cost)) {
 								(*building)->order_list.push_front(new CreateUnitOrder((*requested_type).first, (*requested_type).second));
 								unit_requests.erase(requested_type);
 							}
@@ -252,13 +253,13 @@ void AI::ManageTechRequests() {
 	if (!tech_requests.empty()) {
 		for (list<pair<int, buildingType>>::iterator requested_type = tech_requests.begin(); requested_type != tech_requests.end(); requested_type++) {
 
-			list<Building*>* enemy_buildings = &App->entityManager->enemyBuildingList;
+			list<Building*>* enemy_buildings = &Enemies->buildings;
 			for (list<Building*>::iterator building = enemy_buildings->begin(); building != enemy_buildings->end(); building++) {
 
 				if ((*requested_type).second == (*building)->type) {
 
-					if (enemy_resources.Spend(App->ai->enemy_techtree->all_techs.at((*requested_type).first)->cost)) {
-						enemy_techtree->StartResearch((TechType)(*requested_type).first);
+					if (Enemies->resources.Spend(Enemies->tech_tree->all_techs.at((*requested_type).first)->cost)) {
+						Enemies->tech_tree->StartResearch((TechType)(*requested_type).first);
 						tech_requests.erase(requested_type);
 					}
 					break;
@@ -283,13 +284,13 @@ void AI::Fetch_AICommand(Villager* villager) {
 void AI::FillResourceRequests() {
 
 	for (int i = 0; i < MAX(1, (FOOD_PROPORTION * villagers.size())); i++)
-		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(FOOD, App->sceneManager->level1_scene->enemy_townCenter->entityPosition)));
+		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(FOOD, Enemies->Town_center->entityPosition)));
 	for (int i = 0; i < MAX(1, (WOOD_PROPORTION * villagers.size())); i++)
-		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(WOOD, App->sceneManager->level1_scene->enemy_townCenter->entityPosition)));
+		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(WOOD, Enemies->Town_center->entityPosition)));
 	for (int i = 0; i < STONE_PROPORTION * villagers.size(); i++)
-		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(STONE, App->sceneManager->level1_scene->enemy_townCenter->entityPosition)));
+		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(STONE, Enemies->Town_center->entityPosition)));
 	for (int i = 0; i < GOLD_PROPORTION * villagers.size(); i++)
-		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(GOLD, App->sceneManager->level1_scene->enemy_townCenter->entityPosition)));
+		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(GOLD, Enemies->Town_center->entityPosition)));
 
 }
 
@@ -298,7 +299,7 @@ iPoint AI::PlaceBuilding(buildingType type) {
 
 	int height = App->entityManager->buildingsDB[type]->imageHeight;
 	int width = App->entityManager->buildingsDB[type]->imageWidth;
-	iPoint start_position = App->sceneManager->level1_scene->enemy_townCenter->entityPosition;
+	iPoint start_position = Enemies->Town_center->entityPosition;
 
 	int r = MAX(height, width);
 

@@ -78,6 +78,6 @@ void Resource::Damaged() {
 void Resource::Destroy() {
 
 	App->collision->DeleteCollider(collider);
-	App->entityManager->DeleteResource(this);
+	App->entityManager->DeleteEntity(this);
 
 }

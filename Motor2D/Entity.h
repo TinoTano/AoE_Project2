@@ -35,6 +35,7 @@ struct Cost {
 			return false;
 
 		wood -= cost.wood; food -= cost.food; gold -= cost.gold; stone -= cost.stone;
+
 		return true;
 	}
 

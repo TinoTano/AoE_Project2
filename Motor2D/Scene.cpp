@@ -8,9 +8,11 @@
 #include "PathFinding.h"
 #include "Scene.h"
 #include "p2Log.h"
+#include "Orders.h"
 #include "EntityManager.h"
 #include "Unit.h"
 #include "FogOfWar.h"
+#include "GameFaction.h"
 #include "Gui.h"
 #include <sstream>
 #include "FileSystem.h"
@@ -143,13 +145,13 @@ bool Scene::Start()
 	ui_menu.SetFocus(images[3]->pos.first, images[3]->pos.second, 280, 280);
 
 	// Labels
-	wood = (Label*)App->gui->CreateLabel(to_string(woodCount), -STARTING_CAMERA_X + 50, -STARTING_CAMERA_Y + 5, nullptr);
+	wood = (Label*)App->gui->CreateLabel(to_string(App->entityManager->player->resources.wood), -STARTING_CAMERA_X + 50, -STARTING_CAMERA_Y + 5, nullptr);
 	wood->SetColor({ 255, 255, 255 ,255 });
-	food = (Label*)App->gui->CreateLabel(to_string(foodCount), -STARTING_CAMERA_X + 150, -STARTING_CAMERA_Y + 5, nullptr);
+	food = (Label*)App->gui->CreateLabel(to_string(App->entityManager->player->resources.food), -STARTING_CAMERA_X + 150, -STARTING_CAMERA_Y + 5, nullptr);
 	food->SetColor({ 255, 255, 255 ,255 });
-	gold = (Label*)App->gui->CreateLabel(to_string(goldCount), -STARTING_CAMERA_X + 280, -STARTING_CAMERA_Y + 5, nullptr);
+	gold = (Label*)App->gui->CreateLabel(to_string(App->entityManager->player->resources.gold), -STARTING_CAMERA_X + 280, -STARTING_CAMERA_Y + 5, nullptr);
 	gold->SetColor({ 255, 255, 255 ,255 });
-	stone = (Label*)App->gui->CreateLabel(to_string(stoneCount), -STARTING_CAMERA_X + 360, -STARTING_CAMERA_Y + 5, nullptr);
+	stone = (Label*)App->gui->CreateLabel(to_string(App->entityManager->player->resources.stone), -STARTING_CAMERA_X + 360, -STARTING_CAMERA_Y + 5, nullptr);
 	stone->SetColor({ 255, 255, 255 ,255 });
 	villagers = (Label*)App->gui->CreateLabel("0/0", -STARTING_CAMERA_X + 480, -STARTING_CAMERA_Y + 5, nullptr);
 	villagers->SetColor({ 255, 255, 255 ,255 });
@@ -178,10 +180,10 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 220, ORC_SOLDIER);
 
 	// Buildings
-	my_townCenter = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
-	App->fog->AddEntity(my_townCenter);
-	enemy_townCenter = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
-	App->fog->AddEntity(enemy_townCenter);
+	App->entityManager->player->Town_center = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
+	App->fog->AddEntity(App->entityManager->player->Town_center);
+	App->entityManager->AI_faction->Town_center = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
+	App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
 
 	// Villager last!
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
@@ -202,10 +204,8 @@ bool Scene::Start()
 	wave = 0;
 	orcs_to_spawn = 0;
 	trolls_to_spawn = 0;
-	woodCount = 100;
-	foodCount = 0;
-	goldCount = 0;
-	stoneCount = 0;
+	App->entityManager->player->resources.wood = 100;
+	UpdateResources();
 	villagers_curr = 0;
 	villagers_total = 0;
 
@@ -289,12 +289,12 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if (my_townCenter->Life <= 0 && game_finished == false) {
+	if (App->entityManager->player->Town_center->Life <= 0 && game_finished == false) {
 		Timer_lbl->SetString("DEFEAT");
 		Timer_lbl->SetColor({255, 0,0,255});
 		game_finished = true;
 	}
-	else if (enemy_townCenter->Life <= 0 && game_finished == false) {
+	else if (App->entityManager->AI_faction->Town_center->Life <= 0 && game_finished == false) {
 		Timer_lbl->SetString("VICTORY");
 		Timer_lbl->SetColor({ 0, 255 ,0 , 255 });
 		game_finished = true;
@@ -359,9 +359,12 @@ void Scene::UpdateTime(float time)
 	Timer_lbl->SetString(to_string((int)time / 60 / 10) + to_string((int)time / 60 % 10) + ':' + to_string((int)time % 60 / 10) + to_string((int)time % 60 % 10));
 }
 
-void Scene::UpdateResources(Label* resource, uint new_val)
+void Scene::UpdateResources()
 {
-	resource->SetString(to_string(new_val));
+	wood->SetString(to_string(App->entityManager->player->resources.wood));
+	food->SetString(to_string(App->entityManager->player->resources.food));
+	stone->SetString(to_string(App->entityManager->player->resources.stone));
+	gold->SetString(to_string(App->entityManager->player->resources.gold));
 }
 
 void Scene::UpdateVillagers(uint available_villagers, uint total_villagers)
@@ -377,7 +380,7 @@ void Scene::SaveScene()
 	rootNode = saveFile.append_child("Scene");
 
 	pugi::xml_node unitsNode = rootNode.append_child("Units");
-	for (list<Unit*>::iterator it = App->entityManager->friendlyUnitList.begin(); it != App->entityManager->friendlyUnitList.end(); it++) {
+	for (list<Unit*>::iterator it = App->entityManager->player->units.begin(); it != App->entityManager->player->units.end(); it++) {
 		if ((*it)->state != DESTROYED) {
 			pugi::xml_node unitNodeInfo = unitsNode.append_child("Unit");
 			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
@@ -393,7 +396,7 @@ void Scene::SaveScene()
 		}
 	}
 
-	for (list<Unit*>::iterator it = App->entityManager->enemyUnitList.begin(); it != App->entityManager->enemyUnitList.end(); it++) {
+	for (list<Unit*>::iterator it = App->entityManager->AI_faction->units.begin(); it != App->entityManager->AI_faction->units.end(); it++) {
 		if ((*it)->state != DESTROYED) {
 			pugi::xml_node unitNodeInfo = unitsNode.append_child("Unit");
 			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
@@ -410,7 +413,7 @@ void Scene::SaveScene()
 	}
 
 	pugi::xml_node buildingNode = rootNode.append_child("Buildings");
-	for (list<Building*>::iterator it = App->entityManager->friendlyBuildingList.begin(); it != App->entityManager->friendlyBuildingList.end(); it++) {
+	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); it++) {
 		if ((*it)->state != DESTROYED) {
 			pugi::xml_node buildingNodeInfo = buildingNode.append_child("Building");
 			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
@@ -422,7 +425,7 @@ void Scene::SaveScene()
 		}
 	}
 
-	for (list<Building*>::iterator it = App->entityManager->enemyBuildingList.begin(); it != App->entityManager->enemyBuildingList.end(); it++) {
+	for (list<Building*>::iterator it = App->entityManager->AI_faction->buildings.begin(); it != App->entityManager->AI_faction->buildings.end(); it++) {
 		if ((*it)->state != DESTROYED) {
 			pugi::xml_node buildingNodeInfo = buildingNode.append_child("Building");
 			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
@@ -435,7 +438,7 @@ void Scene::SaveScene()
 	}
 
 	pugi::xml_node resourcesNode = rootNode.append_child("Resources");
-	for (list<Resource*>::iterator it = App->entityManager->resourceList.begin(); it != App->entityManager->resourceList.end(); it++) {
+	for (list<Resource*>::iterator it = App->entityManager->aux_resource_list.begin(); it != App->entityManager->aux_resource_list.end(); it++) {
 			pugi::xml_node resourceNodeInfo = resourcesNode.append_child("Resource");
 			resourceNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
 			pugi::xml_node positionNode = resourceNodeInfo.append_child("Position");

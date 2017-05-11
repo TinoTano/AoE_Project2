@@ -301,7 +301,7 @@ void CutSceneManager::ClearScene()
 
 			CutsceneUnit* unit = static_cast<CutsceneUnit*>(*it);
 			if (unit->GetUnit() != nullptr)
-				App->entityManager->DeleteUnit(unit->GetUnit());
+				App->entityManager->DeleteEntity(unit->GetUnit());
 		}
 		RELEASE(*it);
 		it = elements.erase(it);
@@ -625,7 +625,7 @@ void CutSceneManager::PerformModify(CutsceneElement * ele, CutsceneAction * act)
 			case e_a_kill:
 				if (e->GetUnit() != nullptr)
 				{
-					App->entityManager->DeleteUnit((Unit*)e->GetUnit());
+					App->entityManager->DeleteEntity((Unit*)e->GetUnit());
 					e->SetNull();
 				}
 				break;

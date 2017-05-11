@@ -38,6 +38,10 @@ bool EntityManager::Start()
 
 	bool ret = LoadGameData();
 	click_timer.Start();
+
+	player = new GameFaction(FREE_MEN);
+	AI_faction = new GameFaction(SAURON_ARMY);
+
 	return ret;
 }
 
@@ -54,29 +58,7 @@ bool EntityManager::Update(float arg_dt)
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;
 
-	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-		(*it)->Update(dt);
-		/*if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive)
-			(*it)->Draw();*/
-		if (App->render->CullingCam((*it)->entityPosition))
-			(*it)->Draw();
-	}
-	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
-		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition))
-			(*it)->Draw();
-	}
-	for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
-		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition))
-			(*it)->Draw();
-	}
-	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
-		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition))
-			(*it)->Draw();
-	}
-	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
 			(*it)->Draw();
@@ -256,43 +238,17 @@ bool EntityManager::Update(float arg_dt)
 
 bool EntityManager::PostUpdate()
 {
-	if (removeUnitList.size() > 0) {
-		list<Unit*>::iterator i = removeUnitList.begin();
+	if (removeEntityList.size() > 0) {
+		list<Entity*>::iterator i = removeEntityList.begin();
 
-		while (i != removeUnitList.end())
+		while (i != removeEntityList.end())
 		{
-			list<Unit*>::iterator unitToDestroy = i;
+			list<Entity*>::iterator unitToDestroy = i;
 			++i;
 			DestroyEntity((*unitToDestroy));
 		}
 
-		removeUnitList.clear();
-	}
-
-	if (removeBuildingList.size() > 0) {
-		list<Building*>::iterator i = removeBuildingList.begin();
-
-		while (i != removeBuildingList.end())
-		{
-			list<Building*>::iterator buildingToDestroy = i;
-			++i;
-			DestroyEntity((*buildingToDestroy));
-		}
-
-		removeBuildingList.clear();
-	}
-
-	if (removeResourceList.size() > 0) {
-		list<Resource*>::iterator i = removeResourceList.begin();
-
-		while (i != removeResourceList.end())
-		{
-			list<Resource*>::iterator resourceToDestroy = i;
-			++i;
-			DestroyEntity((*resourceToDestroy));
-		}
-
-		removeResourceList.clear();
+		removeEntityList.clear();
 	}
 
 	return true;
@@ -302,45 +258,10 @@ bool EntityManager::CleanUp()
 {
 	LOG("Freeing EntityManager");
 
-	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
 		RELEASE((*it));
 	}
-	friendlyUnitList.clear();
-
-	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
-		RELEASE((*it));
-	}
-	enemyUnitList.clear();
-
-	for (list<Unit*>::iterator it = removeUnitList.begin(); it != removeUnitList.end(); it++) {
-		RELEASE((*it));
-	}
-	removeUnitList.clear();
-
-	for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
-		RELEASE((*it));
-	}
-	friendlyBuildingList.clear();
-
-	for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
-		RELEASE((*it));
-	}
-	enemyBuildingList.clear();
-
-	for (list<Building*>::iterator it = removeBuildingList.begin(); it != removeBuildingList.end(); it++) {
-		RELEASE((*it));
-	}
-	removeBuildingList.clear();
-
-	for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
-		RELEASE((*it));
-	}
-	resourceList.clear();
-
-	for (list<Resource*>::iterator it = removeResourceList.begin(); it != removeResourceList.end(); it++) {
-		RELEASE((*it));
-	}
-	removeResourceList.clear();
+	WorldEntityList.clear();
 
 	return true;
 }
@@ -592,7 +513,11 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 
 	if (type == VILLAGER || type == ELF_VILLAGER) {
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
-		unit->resourcesWareHouse = App->sceneManager->level1_scene->my_townCenter;
+		unit->resourcesWareHouse = player->Town_center;
+		if (unit->faction == player->faction)
+			player->villagers.push_back((Villager*)unit);
+		else
+			AI_faction->villagers.push_back((Villager*)unit);
 	}
 	else if (type == GONDOR_HERO || type == LEGOLAS) {
 		unit = (Unit*) new Hero(posX, posY, (Hero*)unitsDB[type]);
@@ -604,11 +529,13 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	unit->entityID = nextID;
 	nextID++;
 
-	if (unit->faction == FREE_MEN) 
-		friendlyUnitList.push_back(unit);
-	else 
-		enemyUnitList.push_back(unit);
+	if (unit->faction == player->faction)
+		player->units.push_back(unit);
+	else
+		AI_faction->units.push_back(unit);
 
+
+	WorldEntityList.push_back((Entity*)unit);
 	//App->fog->AddEntity(unit);
 
 	return unit;
@@ -620,11 +547,12 @@ Building* EntityManager::CreateBuilding(int posX, int posY,  buildingType type)
 	Building* building = new Building(posX, posY, buildingsDB[type]);
 	building->entityID = nextID;
 	nextID++;
-	if (building->faction == FREE_MEN)
-		friendlyBuildingList.push_back(building);
-	else 
-		enemyBuildingList.push_back(building);
+	if (building->faction == player->faction)
+		player->buildings.push_back(building);
+	else
+		AI_faction->buildings.push_back(building);
 
+	WorldEntityList.push_back((Entity*)building);
 	return building;
 }
 
@@ -636,73 +564,82 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceItem item)
 	Resource* resource = new Resource(ret.x, ret.y, resourcesDB[item]);
 	resource->entityID = nextID;
 	nextID++;
-	resourceList.push_back(resource);
+	WorldEntityList.push_back((Entity*)resource);
 
 	return resource;
 }
 
-void EntityManager::DeleteUnit(Unit* unit)
+
+void EntityManager::DeleteEntity(Entity* entity)
 {
-	if (unit != nullptr) {
-		removeUnitList.push_back(unit);
-		if (unit->faction == FREE_MEN) 
-			friendlyUnitList.remove(unit);
-		else 
-			enemyUnitList.remove(unit);
-		
-	}
-}
+	if (entity != nullptr) {
 
-void EntityManager::DeleteBuilding(Building* building)
-{
-	if (building != nullptr) {
-		removeBuildingList.push_back(building);
-		if (building->faction == FREE_MEN)
-			friendlyBuildingList.remove(building);
-		else 
-			enemyBuildingList.remove(building);
-		
-	}
-}
+		removeEntityList.push_back(entity);
+		Unit* unit = nullptr; 
 
-void EntityManager::DeleteResource(Resource* resource)
-{
-	if (resource != nullptr) {
-		removeResourceList.push_back(resource);
-		resourceList.remove(resource);
-	}
+		switch (entity->collider->type) {
+		case COLLIDER_UNIT:
 
-	for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+			unit = (Unit*)entity;
 
-		if ((*it)->IsVillager && (*it)->state == GATHERING) {
-			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+			if (entity->faction == player->faction) {
+				player->units.remove(unit);
+				if (unit->IsVillager)
+					player->villagers.remove((Villager*)unit);
+			}
+			else {
+				AI_faction->units.remove(unit);
+				if (unit->IsVillager)
+					AI_faction->villagers.remove((Villager*)unit);
+			}
 
-				if ((*it2)->order_type == GATHER) {
+			break;
+		case COLLIDER_BUILDING:
+			if (entity->faction == player->faction)
+				player->buildings.remove((Building*)entity);
+			else
+				AI_faction->buildings.remove((Building*)entity);
+			break;
 
-					GatherOrder* gth_order = (GatherOrder*)(*it2);
-					if (gth_order->resource = resource)
-						gth_order->resource = nullptr;
+		case COLLIDER_RESOURCE:
+			aux_resource_list.remove((Resource*)entity);
+
+			for (list<Villager*>::iterator it = player->villagers.begin(); it != player->villagers.end(); it++) {
+
+				if ((*it)->state == GATHERING) {
+					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+
+						if ((*it2)->order_type == GATHER) {
+
+							GatherOrder* gth_order = (GatherOrder*)(*it2);
+							if (gth_order->resource = (Resource*)entity) 
+								gth_order->resource = nullptr;
+						}
+					}
 				}
 			}
-		}
-	}
 
+			for (list<Villager*>::iterator it = AI_faction->villagers.begin(); it != AI_faction->villagers.end(); it++) {
 
-	for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+				if ((*it)->state == GATHERING) {
+					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
 
-		if ((*it)->IsVillager && (*it)->state == GATHERING) {
-			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+						if ((*it2)->order_type == GATHER) {
 
-				if ((*it2)->order_type == GATHER) {
-
-					GatherOrder* gth_order = (GatherOrder*)(*it2);
-					if (gth_order->resource = resource)
-						gth_order->resource = nullptr;
+							GatherOrder* gth_order = (GatherOrder*)(*it2);
+							if (gth_order->resource = (Resource*)entity)
+								gth_order->resource = nullptr;
+						}
+					}
 				}
 			}
+			break;
 		}
+
+		WorldEntityList.remove(entity);
 	}
 }
+
 
 void EntityManager::OnCollision(Collision_data& col_data)
 {
@@ -774,10 +711,10 @@ void EntityManager::OnCollision(Collision_data& col_data)
 
 Resource* EntityManager::FindNearestResource(resourceType type, iPoint pos) {
 
-	Resource* ret = resourceList.front();
+	Resource* ret = aux_resource_list.front();
 
 	if (type != NONE) {
-		for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
+		for (list<Resource*>::iterator it = aux_resource_list.begin(); it != aux_resource_list.end(); it++) {
 			if ((*it)->type == type) {
 				if (pos.DistanceTo((*it)->entityPosition) < pos.DistanceTo(ret->entityPosition))
 					ret = (*it);
@@ -794,11 +731,11 @@ void EntityManager::RallyCall(Entity* entity) {
 
 	list<Unit*>* allied_units = nullptr;
 
-	if (entity->faction == FREE_MEN)
-		allied_units = &friendlyUnitList;
+	if (entity->faction == player->faction)
+		allied_units = &player->units;
 	else
-		allied_units = &enemyUnitList;
-	
+		allied_units = &AI_faction->units;
+
 	for (list<Unit*>::iterator it = allied_units->begin(); it != allied_units->end(); it++) {
 		if (entity->entityPosition.DistanceTo((*it)->entityPosition) < (*it)->los->r && (*it)->state == IDLE) {
 			Entity* target = nullptr;
@@ -813,10 +750,11 @@ Entity* EntityManager::FindTarget(Unit* unit) {
 
 	list<Unit*>* enemy_units = nullptr;
 
-	if (unit->faction == FREE_MEN)
-		enemy_units = &enemyUnitList;
+	if (unit->faction == player->faction)
+		enemy_units = &AI_faction->units;
 	else
-		enemy_units = &friendlyUnitList;
+		enemy_units = &player->units;
+
 
 	Entity* ret = nullptr;
 	iPoint aux{ -1,-1 };
@@ -832,10 +770,10 @@ Entity* EntityManager::FindTarget(Unit* unit) {
 
 		list<Building*>* enemy_buildings = nullptr;
 
-		if (unit->faction == FREE_MEN)
-			enemy_buildings = &enemyBuildingList;
+		if (unit->faction == player->faction)
+			enemy_buildings = &AI_faction->buildings;
 		else
-			enemy_buildings = &friendlyBuildingList;
+			enemy_buildings = &player->buildings;
 
 		aux.create(-1, -1);
 		for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
@@ -855,13 +793,14 @@ void EntityManager::Untarget(Entity* destroyed_entity) {
 	list<Unit*>* enemy_units = nullptr;
 	list<Building*>* enemy_buildings = nullptr;
 
-	if (destroyed_entity->faction == FREE_MEN) {
-		enemy_units = &enemyUnitList;
-		enemy_buildings = &enemyBuildingList;
+
+	if (destroyed_entity->faction == player->faction){
+		enemy_units = &AI_faction->units;
+		enemy_buildings = &AI_faction->buildings;
 	}
 	else {
-		enemy_units = &friendlyUnitList;
-		enemy_buildings = &friendlyBuildingList;
+		enemy_units = &player->units;
+		enemy_buildings = &player->buildings;
 	}
 
 
@@ -902,13 +841,13 @@ void EntityManager::Untarget(Entity* destroyed_entity) {
 void EntityManager::DestroyEntity(Entity* entity)
 {
 	if (entity != nullptr) {
-		list<Unit*>::iterator it = removeUnitList.begin();
+		list<Entity*>::iterator it = removeEntityList.begin();
 
-		while (it != removeUnitList.end())
+		while (it != removeEntityList.end())
 		{
 			if (*it == entity)
 			{
-				removeUnitList.remove(*it);
+				removeEntityList.remove(*it);
 				delete entity;
 				return;
 			}
@@ -958,7 +897,7 @@ void EntityManager::FillSelectedList() {
 				unit = (Unit*)nearest_col->entity;
 				if (click_timer.ReadSec() < 0.5 && nearest_col->entity == clicked_entity) { // double click
 
-					for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+					for (list<Unit*>::iterator it = player->units.begin(); it != player->units.end(); it++) {
 
 						if (unit->type == (*it)->type)
 							selectedEntityList.push_back((Entity*)(*it));
@@ -1001,7 +940,7 @@ void EntityManager::FillSelectedList() {
 		}
 
 
-		for (list<Unit*>::iterator it = friendlyUnitList.begin(); it != friendlyUnitList.end(); it++) {
+		for (list<Unit*>::iterator it = player->units.begin(); it != player->units.end(); it++) {
 			SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
 
 			if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
@@ -1012,7 +951,7 @@ void EntityManager::FillSelectedList() {
 
 		if (selectedCount == 0) {
 
-			for (list<Building*>::iterator it = friendlyBuildingList.begin(); it != friendlyBuildingList.end(); it++) {
+			for (list<Building*>::iterator it = player->buildings.begin(); it != player->buildings.end(); it++) {
 				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
 
 				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
@@ -1024,7 +963,7 @@ void EntityManager::FillSelectedList() {
 
 		if (selectedCount == 0) {
 
-			for (list<Unit*>::iterator it = enemyUnitList.begin(); it != enemyUnitList.end(); it++) {
+			for (list<Unit*>::iterator it = AI_faction->units.begin(); it != AI_faction->units.end(); it++) {
 				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
 
 				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
@@ -1036,7 +975,7 @@ void EntityManager::FillSelectedList() {
 
 		if (selectedCount == 0) {
 
-			for (list<Building*>::iterator it = enemyBuildingList.begin(); it != enemyBuildingList.end(); it++) {
+			for (list<Building*>::iterator it = AI_faction->buildings.begin(); it != AI_faction->buildings.end(); it++) {
 				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
 
 				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
@@ -1048,7 +987,7 @@ void EntityManager::FillSelectedList() {
 
 		if (selectedCount == 0) {
 
-			for (list<Resource*>::iterator it = resourceList.begin(); it != resourceList.end(); it++) {
+			for (list<Resource*>::iterator it = aux_resource_list.begin(); it != aux_resource_list.end(); it++) {
 				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
 
 				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))

@@ -43,7 +43,7 @@ void Minimap::DrawTerrain(int x, int y, int r, int g, int b)
 
 void Minimap::DrawUnits()
 {
-	for (list<Unit*>::iterator it = App->entityManager->friendlyUnitList.begin(); it != App->entityManager->friendlyUnitList.end(); it++) {
+	for (list<Unit*>::iterator it = App->entityManager->player->units.begin(); it != App->entityManager->player->units.end(); it++) {
 
 		SDL_Rect rect;
 		rect.x = 1105 - App->render->camera.x + ((*it)->entityPosition.x * 0.035);
@@ -53,7 +53,7 @@ void Minimap::DrawUnits()
 		App->render->DrawQuad(rect, 0, 0, 255, true);
 	}
 
-	for (list<Unit*>::iterator it = App->entityManager->enemyUnitList.begin(); it != App->entityManager->enemyUnitList.end(); it++) {
+	for (list<Unit*>::iterator it = App->entityManager->AI_faction->units.begin(); it != App->entityManager->AI_faction->units.end(); it++) {
 
 		if ((*it)->isActive) {
 			SDL_Rect rect;

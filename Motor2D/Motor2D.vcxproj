@@ -130,6 +130,7 @@
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="FogOfWar.h" />
     <ClInclude Include="Fonts.h" />
+    <ClInclude Include="GameFaction.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="Map.h" />

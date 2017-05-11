@@ -11,6 +11,7 @@
 #include "Squad.h"
 #include "Resource.h"
 #include "Application.h"
+#include "GameFaction.h"
 #include "Orders.h"
 
 #include <cstdlib>
@@ -82,10 +83,10 @@ public:
 
 	// general utilities
 	Timer AI_timer;
-	TechTree* enemy_techtree = nullptr;
+	GameFaction* Enemies;
 	int expansion_level = 0;
 	AI_state state = EXPANDING;
-	StoredResources enemy_resources;
+
 
 	//expansion management
 	list<buildingType> buildings_to_build;
@@ -104,7 +105,7 @@ public:
 
 	//requests management
 	void Fetch_AICommand(Villager* villager);
-	list<Order*> villager_requests;
+	list<Order*> villager_requests;  // resource + build requests
 	list<pair<unitType, Squad*>> unit_requests;
 	list<pair<int, buildingType>> tech_requests;
 
