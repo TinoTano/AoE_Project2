@@ -52,7 +52,8 @@ bool QuestManager::Start()
 	{
 		//Load quest data from XML
 		Quest* new_quest = new Quest();
-		new_quest->id = quest.attribute("id").as_int();
+		new_quest->name = quest.attribute("name").as_string();
+		new_quest->description = quest.attribute("description").as_string();
 		new_quest->reward = quest.attribute("reward").as_int();
 
 		new_quest->trigger = createEvent(quest.child("trigger"));
@@ -63,7 +64,11 @@ bool QuestManager::Start()
 			new_quest->steps.push_back(createEvent(step));
 		}
 
-		sleepQuests.push_back(new_quest);
+		uint state = quest.attribute("state").as_uint();
+
+		if (state == 0) sleepQuests.push_back(new_quest);
+		else if (state == 1) activeQuests.push_back(new_quest);
+		else closedQuests.push_back(new_quest);
 	}
 
 	return ret;
