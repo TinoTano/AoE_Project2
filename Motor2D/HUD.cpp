@@ -791,7 +791,7 @@ void HUD::HUDCreateBuildings()
 	villager_state = VILLAGERCREATEBUILDINGS;
 
 	vector<buildingType> available_buildings;
-	for (list<buildingType>::iterator it = App->entityManager->ally_techtree->available_buildings.begin(); it != App->entityManager->ally_techtree->available_buildings.end(); ++it) {
+	for (list<buildingType>::iterator it = App->entityManager->player->tech_tree->available_buildings.begin(); it != App->entityManager->player->tech_tree->available_buildings.end(); ++it) {
 		available_buildings.push_back(*it);
 	}
 	//TOWN_CENTER, HOUSE, ORC_BARRACKS, ARCHERY_RANGE, STABLES, SIEGE_WORKSHOP, MARKET, BLACKSMITH, MILL, OUTPOST, MONASTERY, CASTLE, SAURON_TOWER, FARM
@@ -875,7 +875,7 @@ void HUD::HUDBuildingMenu()
 	vector<SDL_Rect> blit_sections;
 
 	bool create_units = false;
-	for (list<pair<unitType, buildingType>>::iterator it = App->entityManager->ally_techtree->available_units.begin(); it != App->entityManager->ally_techtree->available_units.end(); ++it) {
+	for (list<pair<unitType, buildingType>>::iterator it = App->entityManager->player->tech_tree->available_units.begin(); it != App->entityManager->player->tech_tree->available_units.end(); ++it) {
 		if (id == it._Ptr->_Myval.second) {
 			create_units = true;
 			break;
@@ -984,7 +984,7 @@ void HUD::HUDCreateUnits()
 	building_state = BUILDINGCREATEUNITS;
 
 	vector<unitType> available_units;
-	for (list<pair<unitType, buildingType>>::iterator it = App->entityManager->ally_techtree->available_units.begin(); it != App->entityManager->ally_techtree->available_units.end(); ++it) {
+	for (list<pair<unitType, buildingType>>::iterator it = App->entityManager->player->tech_tree->available_units.begin(); it != App->entityManager->player->tech_tree->available_units.end(); ++it) {
 		if (id == it._Ptr->_Myval.second)
 			available_units.push_back(it._Ptr->_Myval.first);
 	}
@@ -1130,19 +1130,12 @@ void HUD::StartBuildingInfo()
 	life_str += maxlife;
 
 	life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
-<<<<<<< HEAD
-	
+
 	for (uint i = 0; i < App->entityManager->player->tech_tree->all_techs.size(); ++i) {
 		for (list<TechType>::iterator it = App->entityManager->player->tech_tree->available_techs.begin(); it != App->entityManager->player->tech_tree->available_techs.end(); ++it) {
 			if (it._Ptr->_Myval == App->entityManager->player->tech_tree->all_techs[i]->id && App->entityManager->player->tech_tree->all_techs[i]->researched_in && id) {
 				tech_rects.push_back(GetTechRect(i));
-=======
 
-	for (list<TechType>::iterator it = App->entityManager->ally_techtree->available_techs.begin(); it != App->entityManager->ally_techtree->available_techs.end(); ++it) {
-		for (uint i = 0; i < App->entityManager->ally_techtree->all_techs.size(); ++i) {
-			if (it._Ptr->_Myval == App->entityManager->ally_techtree->all_techs[i]->id && App->entityManager->ally_techtree->all_techs[i]->researched_in == id) {
-				tech_rects.push_back(GetTechRect(it._Ptr->_Myval));
->>>>>>> origin/master
 				tech = true;
 			}
 		}

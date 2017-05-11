@@ -7,15 +7,21 @@
 
 void Squad::Start() {
 
-	list<pair<unitType, buildingType>>* available_types = &App->ai->Enemies->tech_tree->available_units;
-	int random = rand() % available_types->size();
+	vector<unitType> available_types;
+	list<pair<unitType, buildingType>>* researched_units = &App->ai->Enemies->tech_tree->available_units;
 
-	list<pair<unitType, buildingType>>::iterator it = available_types->begin();
+	for (list<pair<unitType, buildingType>>::iterator it2 = researched_units->begin(); it2 != researched_units->end(); it2++) {
+		for (list<Building*>::iterator it = App->ai->Enemies->buildings.begin(); it != App->ai->Enemies->buildings.end(); it++) {
+			if ((*it2).second == (*it)->type) {
+				available_types.push_back((*it2).first);
+				break;
+			}
+		}
+	}
 
-	for (int i = 0; i < random; i++)
-		it++;
+	int random = rand() % available_types.size();
 
-	type = (*it).first;
+	type = available_types.at(random);
 	state = IDLE;
 	commander = nullptr;
 }

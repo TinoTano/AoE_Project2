@@ -11,9 +11,6 @@
 bool AI::Awake(pugi::xml_node& gameData) {
 
 	Enemies = App->entityManager->AI_faction;
-
-	Enemies->tech_tree = new TechTree();
-	Enemies->tech_tree->Start(gameData);
 	srand(time(NULL));
 
 	LoadAI_Data(gameData);
