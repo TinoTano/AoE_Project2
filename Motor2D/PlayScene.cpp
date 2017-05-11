@@ -58,9 +58,6 @@ bool PlayScene::Start()
 	// Priority
 	App->gui->SetPriority();
 
-	// Resources
-	App->map->LoadResources(App->map->map_file.child("map"));
-
 	return true;
 }
 

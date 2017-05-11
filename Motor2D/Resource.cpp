@@ -5,6 +5,7 @@
 #include "Scene.h"
 #include "EntityManager.h"
 #include "Collision.h"
+#include "FogOfWar.h"
 #include "Textures.h"
 
 Resource::Resource()
@@ -41,6 +42,7 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - (resourceRect.w / 2)}, resourceRect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
 	entityTexture = resourceIdleTexture;
 	faction = NATURE;
+	App->fog->AddEntity(this);
 }
 
 
