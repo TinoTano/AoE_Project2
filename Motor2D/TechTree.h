@@ -18,7 +18,7 @@ enum TechMultiplier {
 
 enum TechType {
 
-	BASIC_TECH,
+	NO_TECH,
 
 	RANGED_WEAPONS,  
 	HORSE_TRAINING,  
@@ -37,23 +37,30 @@ enum TechType {
 	ENHANCED_VILLAGERS,       
 	HUMAN_WARFARE,            
 	ROHAN_HORSES,             
-	DUNEDAIN_OUTPOST          
-
+	DUNEDAIN_OUTPOST,
 
 };
 
 struct Tech {
 	
+	Tech() {
+		unlocks_building = (buildingType)-1;
+		unlocks_unit.first = (unitType)-1;
+		multipliers.first = -1;
+
+	}
+
 	string name;
 	string desc;
-	int id;
+	TechType id;
 
-	list<pair<int, buildingType>> unlocks_techs;
-	list<pair<unitType, buildingType>> unlocks_units;
-	list<pair<float, TechMultiplier>> multipliers;
-	list<buildingType> unlocks_buildings;
+	list<TechType> unlocks_tech;
+	pair<unitType, buildingType> unlocks_unit;
+	pair<float, TechMultiplier> multipliers;
+	buildingType unlocks_building;
 
 	buildingType researched_in;
+	bool researched = false;
 	Cost cost;
 	int research_time;
 	Timer research_timer;
@@ -63,13 +70,12 @@ struct Tech {
 
 class TechTree {
 public:
-	vector<list<unitType>> available_units;
-	vector<list<int>> available_techs;
+	list<pair<unitType, buildingType>> available_units;
+	list<TechType> available_techs;
 	list<buildingType> available_buildings;
 	vector<float> multiplier_list;
 
 	vector<Tech*> all_techs;
-	list<pair<buildingType, unitType>> all_available_units;
 
 public:
 
@@ -78,8 +84,8 @@ public:
 
 	void LoadTechTree(pugi::xml_node gameData);
 
-	void StartResearch(int tech_id);
-	void Researched(int tech_id);
+	void StartResearch(TechType tech_id);
+	void Researched(TechType tech_id);
 
 };
 

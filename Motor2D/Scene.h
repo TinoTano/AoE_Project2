@@ -66,7 +66,7 @@ private:
 	vector<Button*> buttons;
 
 public:
-	void UpdateResources(Label* resource, uint new_val);
+	void UpdateResources();
 	void UpdateVillagers(uint available_villagers, uint total_villagers);
 private:
 	// TIMER
@@ -81,13 +81,7 @@ private:
 	uint wave = 0, orcs_to_spawn = 0, trolls_to_spawn = 0;
 public:
 	///////
-	Building* my_townCenter = nullptr;
-	Building* enemy_townCenter = nullptr;
 	Unit* hero = nullptr;
-	int woodCount = 0;
-	int foodCount = 0;
-	int goldCount = 0;
-	int stoneCount = 0;
 	// RESOURCES 
 	Label* wood = nullptr, *food = nullptr, *gold = nullptr, *stone = nullptr, *villagers = nullptr;
 	Unit* guard1= nullptr;

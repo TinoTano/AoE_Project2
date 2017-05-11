@@ -21,7 +21,9 @@ enum unitType {
 
 	VILLAGER, ELF_VILLAGER,
 
-	GONDOR_HERO
+	GONDOR_HERO,
+
+	LEGOLAS
 };
 
 enum unitDirection {

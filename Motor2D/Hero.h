@@ -34,7 +34,7 @@ public:
 	int cooldown = 0;
 	int duration = 0;
 	bool active = false;
-
+	bool ready = false;
 	SDL_Texture* effect = nullptr;
 	Skill_type type = NO_SKILL;
 
@@ -60,7 +60,6 @@ public:
 		cooldown = 20;
 		duration = 5;
 		type = DAMAGE_SKILL;
-		
 		multiplier = 2.5;
 	}
 

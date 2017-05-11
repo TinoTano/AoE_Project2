@@ -4,9 +4,11 @@
 #include "Module.h"
 #include "Entity.h"
 #include "Unit.h"
+#include "TechTree.h"
 #include "Building.h"
 #include "Resource.h"
 #include "Render.h"
+#include "GameFaction.h"
 #include "Villager.h"
 #include "Collision.h"
 
@@ -50,9 +52,7 @@ public:
 	Building* CreateBuilding(int posX, int posY, buildingType type);
 	Resource* CreateResource(int posX, int posY, resourceItem type);
 
-	void DeleteUnit(Unit* unit);
-	void DeleteBuilding(Building* building);
-	void DeleteResource(Resource* resource);
+	void DeleteEntity(Entity* entity);
 	void OnCollision(Collision_data& col_data);
 
 	void FillSelectedList();
@@ -69,13 +69,10 @@ private:
 	void DestroyEntity(Entity* entity);
 
 private:
-	list<Unit*> removeUnitList;
-	list<Building*> removeBuildingList;
-	list<Resource*> removeResourceList;
+	list<Entity*> removeEntityList;
 
 	SDL_Rect multiSelectionRect = { 0,0,0,0 };
 	Timer click_timer;
-
 
 	Entity* clicked_entity = nullptr;
 
@@ -86,11 +83,12 @@ public:
 	int nextID;
 	list<Entity*> selectedEntityList;
 	COLLIDER_TYPE selectedListType = COLLIDER_NONE;
-	list<Unit*> friendlyUnitList;
-	list<Unit*> enemyUnitList;
-	list<Building*> friendlyBuildingList;
-	list<Building*> enemyBuildingList;
-	list<Resource*> resourceList;
+
+	list<Entity*> WorldEntityList;
+	list<Resource*> aux_resource_list;
+
+	GameFaction* player;
+	GameFaction* AI_faction;
 
 	CursorHovering cursor_hover = HOVERING_TERRAIN;
 	bool placingBuilding = false;
@@ -98,6 +96,8 @@ public:
 	buildingType creatingBuildingType = ORC_BARRACKS;
 	SDL_Rect NotHUD;
 	Building* buildingToCreate = nullptr;
+
+	TechTree* ally_techtree = nullptr;
 
 	map<int, Unit*> unitsDB;
 	map<int, Building*> buildingsDB;

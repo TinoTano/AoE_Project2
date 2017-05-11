@@ -1285,7 +1285,69 @@
 				</Die>
 			</Animations>
 		</Unit>
+		
+		<!-- HEROES -->
+		
+		<Unit>
+      <Info>
+        <Name value = "LEGOLAS"/>
+        <ID value = "22"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Heroes/Legolas/LegolasIdle.png"/>
+				<Move value="textures/Heroes/Legolas/LegolasMove.png"/>
+				<Attack value="textures/Heroes/Legolas/LegolasAttack.png"/>
+				<Die value="textures/Heroes/Legolas/LegolasDie.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="0"/>
+				<Life value="200"/>
+				<Attack value="5"/>
+				<AttackSpeed value="4"/>
+				<Defense value="2"/>
+				<PiercingDamage value="0"/>
+				<MovementSpeed value="130.5"/>
+				<LineOfSight value="5"/>
+        <Range value="35"/>
+				<FoodCost value=""/>
+				<GoldCost value=""/>
+				<BuildTime value=""/>
+				<SkillType value="1"/>
+			</Stats>
+			<Animations>
+				<Idle>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="42"/>
+					<Height value="55"/>
+					<Speed value="0.2f"/>
+				</Idle>
+				<Move>
+					<Rows value="5"/>
+					<Columns value="15"/>
+					<Width value="43"/>
+					<Height value="56"/>
+					<Speed value="0.2f"/>
+				</Move>
+				<Attack>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="45"/>
+					<Height value="65"/>
+					<Speed value="0.2f"/>
+				</Attack>
+				<Die>
+					<Rows value="10"/>
+					<Columns value="5"/>
+					<Width value="57"/>
+					<Height value="59"/>
+					<Speed value="0.2f"/>
+				</Die>
+			</Animations>
+		</Unit>
 	</Units>
+	
+	
 	
 <!-- BUILDINGS -->
 	<Buildings>
@@ -1891,4 +1953,183 @@
 		</Rects>
 	</Resource>
   </Resources>
+
+  <!---Techs ---->
+<Techs>
+  <Tech>
+	<Name value="Ranged Weapons"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="7"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="3" building="3"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="3"/>
+	<Research_time value="30"/>
+	<Cost foodCost="100" woodCost="200" stoneCost="0" goldCost="0"/>
+  </Tech>
+<Tech>
+	<Name value="Horse Training"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="11"/>
+	<Unlockedbuilding value="4"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="4"/>
+	<Research_time value="40"/>
+	<Cost foodCost="175" woodCost="200" stoneCost="0" goldCost="0"/>
+  </Tech>
+<Tech>
+	<Name value="Town Militia"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="4"/>
+	<Unlockedbuilding value="10"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="2"/>
+	<Research_time value="40"/>
+	<Cost foodCost="100" woodCost="100" stoneCost="0" goldCost="50"/>
+  </Tech>
+<Tech>
+	<Name value="Enhanced Training"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="8"/>
+	<Unlockedtech value="9"/>
+	<Unlockedtech value="10"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="0" building="2"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="3"/>
+	<Research_time value="60"/>
+	<Cost foodCost="200" woodCost="0" stoneCost="0" goldCost="150"/>
+  </Tech>
+<Tech>
+	<Name value="Elven Tactics"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="11"/>
+	<Research_time value="90"/>
+	<Cost foodCost="0" woodCost="0" stoneCost="0" goldCost="350"/>
+  </Tech>
+<Tech>
+	<Name value="Elven Steel"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="5" building="4"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="7"/>
+	<Research_time value="120"/>
+	<Cost foodCost="0" woodCost="100" stoneCost="200" goldCost="150"/>
+  </Tech>
+<Tech>
+	<Name value="Library"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="11"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="0"/>
+	<Research_time value="110"/>
+	<Cost foodCost="0" woodCost="100" stoneCost="100" goldCost="250"/>
+  </Tech>
+<Tech>
+	<Name value="Enhanced Villagers"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="12"/>
+	<Unlockedtech value="13"/>
+	<Unlockedtech value="14"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="0"/>
+	<Research_time value="70"/>
+	<Cost foodCost="150" woodCost="0" stoneCost="0" goldCost="150"/>
+  </Tech>
+<Tech>
+	<Name value="Human Warfare"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="8" building="3"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="2"/>
+	<Research_time value="100"/>
+	<Cost foodCost="200" woodCost="200" stoneCost="0" goldCost="0"/>
+  </Tech>
+<Tech>
+	<Name value="Rohan Knights"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="7" building="4"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="4"/>
+	<Research_time value="140"/>
+	<Cost foodCost="300" woodCost="0" stoneCost="0" goldCost="200"/>
+  </Tech>
+<Tech>
+	<Name value="Dunedain Outpost"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="12"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="10"/>
+	<Research_time value="150"/>
+	<Cost foodCost="0" woodCost="0" stoneCost="300" goldCost="200"/>
+  </Tech>
+<Tech>
+	<Name value="Enhanced Blacksmithing"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="5"/>
+	<Unlockedbuilding value="7"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="2"/>
+	<Research_time value="70"/>
+	<Cost foodCost="0" woodCost="0" stoneCost="150" goldCost="150"/>
+  </Tech>
+<Tech>
+	<Name value="Mountain Forge"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="6"/>
+	<Unlockedtech value="7"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="10" building="5"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="7"/>
+	<Research_time value="100"/>
+	<Cost foodCost="0" woodCost="150" stoneCost="200" goldCost="50"/>
+  </Tech>
+<Tech>
+	<Name value="Dwarven Steel"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="7"/>
+	<Research_time value="120"/>
+	<Cost foodCost="100" woodCost="0" stoneCost="200" goldCost="100"/>
+  </Tech>
+<Tech>
+	<Name value="Dwarven Tactics"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="1" building="2"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="11"/>
+	<Research_time value="120"/>
+	<Cost foodCost="300" woodCost="0" stoneCost="100" goldCost="0"/>
+  </Tech>
+</Techs>
+
+<!--- AI data --->
+
+<AI>
+	<Expansion>
+		<Villager_num value=""/>
+		<Tech value=""/>
+		<Tech value=""/>
+		<Building value=""/>
+		<Building value=""/>
+	</Expansion>
+
+</AI>
 </GameData>

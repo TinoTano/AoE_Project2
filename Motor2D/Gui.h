@@ -355,7 +355,7 @@ private:
 	void HUDClearBuildingMenu();
 
 	// ----- CREATE HERO -------
-
+	Button* create_Legolas_bt;
 	void HUDCreateHero();
 	void HUDClearCreateHero();
 

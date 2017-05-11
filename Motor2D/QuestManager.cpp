@@ -137,8 +137,8 @@ bool QuestManager::StepKillCallback(unitType t)
 					activeQuests.erase(it);
 
 					// Reward
-					App->sceneManager->level1_scene->goldCount += (*it)->reward;
-					App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->gold, App->sceneManager->level1_scene->goldCount);
+					App->entityManager->player->resources.gold += (*it)->reward;
+					App->sceneManager->level1_scene->UpdateResources();
 				}
 				return true;
 			}

@@ -140,15 +140,13 @@ bool Building::Draw()
 
 void Building::Destroy() {
 
-	if (Life <= 0)
-		Life = -1;
 
 	App->entityManager->Untarget(this);
 	App->collision->DeleteCollider(collider);
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);
 	state = DESTROYED;
-	App->entityManager->DeleteBuilding(this);
+	App->entityManager->DeleteEntity(this);
 
 }
 

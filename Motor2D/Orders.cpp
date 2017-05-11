@@ -298,23 +298,20 @@ void GatherOrder::Start(Entity* entity) {
 
 		switch (villager->resource_carried) {
 		case WOOD:
-			App->sceneManager->level1_scene->woodCount += villager->curr_capacity;
-			App->sceneManager->level1_scene->wood->SetString(to_string(App->sceneManager->level1_scene->woodCount));
+			App->entityManager->player->resources.wood += villager->curr_capacity;
 			break;
 		case GOLD:
-			App->sceneManager->level1_scene->goldCount += villager->curr_capacity;
-			App->sceneManager->level1_scene->gold->SetString(to_string(App->sceneManager->level1_scene->goldCount));
+			App->entityManager->player->resources.gold += villager->curr_capacity;
 			break;
 		case FOOD:
-			App->sceneManager->level1_scene->foodCount += villager->curr_capacity;
-			App->sceneManager->level1_scene->food->SetString(to_string(App->sceneManager->level1_scene->foodCount));
+			App->entityManager->player->resources.food += villager->curr_capacity;
 			break;
 		case STONE:
-			App->sceneManager->level1_scene->stoneCount += villager->curr_capacity;
-			App->sceneManager->level1_scene->stone->SetString(to_string(App->sceneManager->level1_scene->stoneCount));
+			App->entityManager->player->resources.stone += villager->curr_capacity;
 			break;
 		}
 
+		App->sceneManager->level1_scene->UpdateResources();
 		villager->curr_capacity = 0;
 	}
 

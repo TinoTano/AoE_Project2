@@ -84,6 +84,7 @@ void HUD::Update() {
 	int percent;
 	int barPercent;
 	string life_str;
+	string cd_str;
 
 	if (App->entityManager->selectedEntityList.size() > 0) {
 		if (App->entityManager->selectedEntityList.front()->Life > 0) {
@@ -363,6 +364,34 @@ void HUD::Update() {
 								Unit* unit = (Unit*)App->entityManager->selectedEntityList.front();
 								if (unit->IsHero) {
 									Hero* hero = (Hero*)unit;
+
+									max_life = hero->skill->cooldown;
+									curr_life = (int)hero->skill_timer.ReadSec();
+									if (curr_life >= max_life) curr_life = max_life;
+									_itoa_s(curr_life, currlife, 65, 10);
+									life_str += "     ";
+									life_str += currlife;
+									life_str += "/";
+									_itoa_s(max_life, maxlife, 65, 10);
+									life_str += maxlife;
+									life_str += "(sec)";
+									life->SetString(life_str);
+									if (max_life == 0) max_life = curr_life;
+									percent = ((max_life - curr_life) * 100) / max_life;
+									barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
+									bar.rect.y = bar.rect.y + bar.rect.h;
+									bar.rect.h = 5;
+									bar.r = 200;
+									bar.g = 200;
+									bar.b = 200;
+									App->render->ui_toDraw.push_back(bar);
+									bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+									bar.r = 0;
+									bar.b = 255;
+									bar.g = 100;
+									App->render->ui_toDraw.push_back(bar);
+
+
 									switch (hero_state) {
 									case VILLAGERMENU:
 										if (hero_state != HEROMENU)
@@ -370,13 +399,13 @@ void HUD::Update() {
 											HUDHeroMenu();
 										}
 										else {
-											if (hero->skill->active == true) {
+											if (hero->skill->ready) {
 												skill_bt->enabled = true;
 											}
 											else skill_bt->enabled = false;
 											if (skill_bt->current == CLICKUP)
 											{
-												hero->skill->Activate();
+												hero->skill->Activate(hero);
 											}
 										}
 										break;
@@ -445,12 +474,11 @@ void HUD::Update() {
 									HUDCreateUnits();
 								}
 								else if (create_villager_bt->current == CLICKUP) {
-									if (App->sceneManager->level1_scene->woodCount > 50) {
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)){
 										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
 										create_villager_bt->current = FREE;
-										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 50);
-										Order* new_order = new CreateUnitOrder(ELF_VILLAGER);
-										building->order_list.push_back(new_order);
+										App->sceneManager->level1_scene->UpdateResources();
+										building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
 									}
 								}
 								else if (create_hero_bt->current == CLICKUP) {
@@ -468,28 +496,25 @@ void HUD::Update() {
 									HUDBuildingMenu();
 								else if (create_elven_archer_bt->current == CLICKUP)
 								{
-									if (App->sceneManager->level1_scene->woodCount > 70) {
-										Order* new_order = new CreateUnitOrder(ELVEN_ARCHER);
-										building->order_list.push_back(new_order);
-										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_ARCHER]->cost)) {
+										building->order_list.push_back(new CreateUnitOrder(ELVEN_ARCHER));
+										App->sceneManager->level1_scene->UpdateResources();
 										create_elven_archer_bt->current = FREE;
 									}
 								}
 								else if (create_elven_longblade_bt->current == CLICKUP)
 								{
-									if (App->sceneManager->level1_scene->woodCount > 70) {
-										Order* new_order = new CreateUnitOrder(ELVEN_LONGBLADE);
-										building->order_list.push_back(new_order);
-										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 70);
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_LONGBLADE]->cost)){
+										building->order_list.push_back(new CreateUnitOrder(ELVEN_LONGBLADE));
+										App->sceneManager->level1_scene->UpdateResources();
 										create_elven_longblade_bt->current = FREE;
 									}
 								}
 								else if (create_elven_cavalry_bt->current == CLICKUP)
 								{
-									if (App->sceneManager->level1_scene->woodCount > 350) {
-										Order* new_order = new CreateUnitOrder(GONDOR_HERO);
-										building->order_list.push_back(new_order);
-										App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[GONDOR_HERO]->cost)){
+										building->order_list.push_back(new CreateUnitOrder(GONDOR_HERO));
+										App->sceneManager->level1_scene->UpdateResources();
 										create_elven_cavalry_bt->current = FREE;
 									}
 								}
@@ -502,6 +527,12 @@ void HUD::Update() {
 							}
 							if (cancel_bt->current == CLICKUP)
 								HUDBuildingMenu();
+							else if (create_Legolas_bt->current == CLICKUP)
+							{
+								Order* new_order = new CreateUnitOrder(LEGOLAS);
+								building->order_list.push_back(new_order);
+							//	App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+							}
 							break;
 						}
 					}
@@ -609,15 +640,14 @@ void HUD::HUDHeroMenu()
 
 	vector<SDL_Rect> blit_sections;
 
-	blit_sections.push_back({ 208, 64, 39, 40 });
-	blit_sections.push_back({ 247, 64, 39, 40 });
+	blit_sections.push_back({ 210, 64, 39, 40 });
+	blit_sections.push_back({ 249, 64, 39, 40 });
 
 	skill_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 }
 
 void HUD::HUDClearHeroMenu()
 {
-	skill_bt->enabled = true;
 	App->gui->DestroyUIElement(skill_bt);
 }
 
@@ -756,17 +786,17 @@ void HUD::HUDBuildingMenu()
 		create_villager_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 		blit_sections.clear();
 	}
-	/*if (tech) {
-	uint tech_place = TECH_UI_BUTTON;
-	uint x = 0;
-	for (list<Button*>::iterator it = tech_bt.begin(); it != tech_bt.end(); ++it) {
-	blit_sections.push_back(tech_rects[x]);
-	tech_rects[x].x += tech_rects[x].w;
-	it._Ptr->_Myval = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-	tech_place++;
-	x++;
+	if (tech) {
+		uint tech_place = TECH_UI_BUTTON;
+		uint x = 0;
+		for (uint i = 0; i < tech_rects.size(); ++i) {
+			blit_sections.push_back(tech_rects[x]);
+			tech_rects[x].x += tech_rects[x].w;
+			tech_bt.push_back((Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2));
+			tech_place++;
+			x++;
+		}
 	}
-	}*/
 }
 
 void HUD::HUDClearBuildingMenu()
@@ -774,11 +804,11 @@ void HUD::HUDClearBuildingMenu()
 	App->gui->DestroyUIElement(create_unit_bt);
 	App->gui->DestroyUIElement(create_hero_bt);
 	App->gui->DestroyUIElement(create_villager_bt);
-	/*tech = false;
+	tech = false;
 	tech_rects.clear();
 	for (list<Button*>::iterator it = tech_bt.begin(); it != tech_bt.end(); ++it) {
 	App->gui->DestroyUIElement(it._Ptr->_Myval);
-	}*/
+	}
 }
 
 void HUD::HUDCreateHero()
@@ -794,8 +824,14 @@ void HUD::HUDCreateHero()
 	building_state = BUILDINGCREATEHERO;
 
 	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 52, 64, 39, 40 });
-	blit_sections.push_back({ 91, 64, 39, 40 });
+	blit_sections.push_back({ 0, 0, 33, 32 });
+	blit_sections.push_back({ 0, 0, 33, 32 });
+
+	create_Legolas_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+
+	blit_sections.clear();
+	blit_sections.push_back({ 53, 64, 39, 40 });
+	blit_sections.push_back({ 92, 64, 39, 40 });
 
 	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[NUM_UI_BUTTONS].x - CAMERA_OFFSET_X, buttons_positions[NUM_UI_BUTTONS].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 }
@@ -803,6 +839,7 @@ void HUD::HUDCreateHero()
 void HUD::HUDClearCreateHero()
 {
 	App->gui->DestroyUIElement(cancel_bt);
+	App->gui->DestroyUIElement(create_Legolas_bt);
 }
 
 
@@ -935,19 +972,15 @@ void HUD::StartBuildingInfo()
 	life_str += maxlife;
 
 	life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
-
-	/*TechTree * tree;
-	SDL_Rect button;
-	for (uint i = 0; i < tree->all_techs.size(); ++i) {
-	if (tree->all_techs[i]->researched_in == id) {
-	for (list<pair<int, buildingType>>::iterator it = tree->all_techs[i]->unlocks_techs.begin(); it != tree->all_techs[i]->unlocks_techs.end(); ++it)
-	{
-	tech_rects.push_back(GetTechRect(it._Ptr->_Myval.first));
-	tech = true;
+	
+	for (uint i = 0; i < App->entityManager->ally_techtree->all_techs.size(); ++i) {
+		for (list<TechType>::iterator it = App->entityManager->ally_techtree->available_techs.begin(); it != App->entityManager->ally_techtree->available_techs.end(); ++it) {
+			if (it._Ptr->_Myval == App->entityManager->ally_techtree->all_techs[i]->id && App->entityManager->ally_techtree->all_techs[i]->researched_in && id) {
+				tech_rects.push_back(GetTechRect(i));
+				tech = true;
+			}
+		}
 	}
-	}
-	}*/
-	if (name->str == "TOWN CENTER")
 		HUDBuildingMenu();
 }
 
@@ -995,6 +1028,9 @@ void HUD::GetSelection() {
 		life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
 		if (name->str == "ELF VILLAGER") {
 			HUDVillagerMenu();
+		}
+		else if (unit->IsHero) {
+			HUDHeroMenu();
 		}
 		break;
 	case MULTIPLESELECTION:
@@ -1070,6 +1106,11 @@ void HUD::ClearSingle()
 	case VILLAGERCREATEBUILDINGS:
 		HUDClearCreateBuildings();
 		break;
+	}
+	switch (hero_state)
+	{
+	case HEROMENU:
+		HUDClearHeroMenu();
 	}
 }
 

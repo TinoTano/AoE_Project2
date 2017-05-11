@@ -74,12 +74,12 @@ bool Unit::Update(float dt)
 {
 	r = currentAnim->GetCurrentFrame();
 
-	if (Life == -1) {
-		Destroy();
-		return false;
-	}
-
 	if (state != DESTROYED) {
+
+		if (IsHero) {
+			Hero* hero = (Hero*)this;
+			hero->HeroUpdate();
+		}
 
 		if (!order_list.empty()) {
 			Order* current_order = order_list.front();
@@ -90,7 +90,7 @@ bool Unit::Update(float dt)
 			if (current_order->state == EXECUTING)
 				current_order->Execute();
 
-			if (current_order->state == COMPLETED) 
+			if (current_order->state == COMPLETED)
 				order_list.pop_front();
 		}
 		else {
@@ -102,13 +102,9 @@ bool Unit::Update(float dt)
 	}
 	else {
 		if (currentAnim->Finished()) 
-			App->entityManager->DeleteUnit(this);
+			App->entityManager->DeleteEntity(this);
 	}
 
-	if (IsHero) {
-		Hero* hero = (Hero*)this;
-		hero->HeroUpdate();
-	}
 
 	return true;
 }
@@ -123,7 +119,6 @@ void Unit::Destroy() {
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);
 	state = DESTROYED;
-	App->entityManager->DeleteUnit(this);
 }
 
 bool Unit::Draw()
@@ -137,31 +132,7 @@ bool Unit::Draw()
 	aux.priority = entityPosition.y - (r.h / 2) + r.h;
 	aux.flip = currentAnim->flip;
 
-	Sprite bar;
-	Sprite bar2;
-
-	bar.rect.x = destinationTileWorld.x;
-	bar.rect.y = destinationTileWorld.y;
-
-	iPoint p_map = App->map->WorldToMap(entityPosition.x, entityPosition.y);
-	iPoint p_world = App->map->MapToWorld(p_map.x, p_map.y);
-	bar2.rect.x = p_world.x;
-	bar2.rect.y = p_world.y;
-	bar.rect.w = bar2.rect.w = 5; 
-	bar.rect.h = bar2.rect.h = 5;
-	bar.priority = entityPosition.y + 10;
-	bar.r = 255;
-	bar.g = 0;
-	bar.b = 0;
-
-	bar2.priority = entityPosition.y + 11;
-	bar2.r = 0;
-	bar2.g = 255;
-	bar2.b = 0;
-
 	App->render->sprites_toDraw.push_back(aux);
-	App->render->sprites_toDraw.push_back(bar);
-	App->render->sprites_toDraw.push_back(bar2);
 
 	if (last_life != Life) {
 		lifebar_timer.Start();
