@@ -20,17 +20,17 @@ enum TechType {
 
 	NO_TECH,
 
-	RANGED_WEAPONS,  
-	HORSE_TRAINING,  
-	TOWN_MILITIA,    
+	RANGED_WEAPONS,					ORC_MINES = 1,
+	HORSE_TRAINING,					GUTS_COMMERCE = 2,
+	TOWN_MILITIA,					STEEL_MINES = 3,
 
-	ENHANCED_BLACKSMITHING,   
-	MOUNTAIN_FORGE,           
-	DWARVEN_STEEL,            
-	DWARVEN_TACTICS,          
+	ENHANCED_BLACKSMITHING,			SKIRMISH_TACTICS = 4,
+	MOUNTAIN_FORGE,					BEASTS_TAMING = 5,
+	DWARVEN_STEEL,					SARUMAN_SUPPORT = 6,
+	DWARVEN_TACTICS,				HARADRIM_REINFORCEMENTS = 7,
 
-	ENHANCED_TRAINING,        
-	ELVEN_TACTICS,            
+	ENHANCED_TRAINING,				GIANT_BREEDING = 8,
+	ELVEN_TACTICS,					CALL_TO_THE_NINE = 9,
 	ELVEN_STEEL,              
 	LIBRARY,                  
 
@@ -52,7 +52,7 @@ struct Tech {
 
 	string name;
 	string desc;
-	TechType id;
+	int id;
 
 	list<TechType> unlocks_tech;
 	pair<unitType, buildingType> unlocks_unit;
@@ -79,7 +79,7 @@ public:
 
 public:
 
-	void Start(pugi::xml_node gameData);
+	void Start(pugi::xml_node gameData, Faction faction);
 	void Update();
 
 	void LoadTechTree(pugi::xml_node gameData);

@@ -1,35 +1,51 @@
 #include "TechTree.h"
 
-void TechTree::Start(pugi::xml_node gameData){
+void TechTree::Start(pugi::xml_node gameData, Faction faction){
 
 	for (int i = 0; i < MAX_MULTIPLIERS; i++)
 		multiplier_list.push_back(1);
 
 	LoadTechTree(gameData);
 
-	available_buildings.push_back(HOUSE);
-	available_buildings.push_back(ORC_BARRACKS);
-	available_buildings.push_back(ARCHERY_RANGE);
-	available_buildings.push_back(STABLES);
-	available_buildings.push_back(MILL);
+	if (faction == FREE_MEN) {
+		available_buildings.push_back(HOUSE);
+		available_buildings.push_back(BARRACKS);
+		available_buildings.push_back(ARCHERY_RANGE);
+		available_buildings.push_back(STABLES);
+		available_buildings.push_back(MILL);
 
-	available_techs.push_back(RANGED_WEAPONS);
-	available_techs.push_back(HORSE_TRAINING);
-	available_techs.push_back(TOWN_MILITIA);
+		available_techs.push_back(RANGED_WEAPONS);
+		available_techs.push_back(HORSE_TRAINING);
+		available_techs.push_back(TOWN_MILITIA);
 
-	pair<unitType, buildingType> p;
+		pair<unitType, buildingType> p;
 
-	p = { GONDOR_SPEARMAN, ORC_BARRACKS };
-	available_units.push_back(p);
+		p = { GONDOR_SPEARMAN, BARRACKS };
+		available_units.push_back(p);
 
-	p = { DUNEDAIN_RANGE, ARCHERY_RANGE };
-	available_units.push_back(p);
+		p = { DUNEDAIN_RANGE, ARCHERY_RANGE };
+		available_units.push_back(p);
 
-	p = { GONDOR_KNIGHT, STABLES };
-	available_units.push_back(p);
+		p = { GONDOR_KNIGHT, STABLES };
+		available_units.push_back(p);
 
-	p = { LIGHT_CATAPULT, SIEGE_WORKSHOP };
-	available_units.push_back(p);
+		p = { LIGHT_CATAPULT, SIEGE_WORKSHOP };
+		available_units.push_back(p);
+	}
+	else if (faction == SAURON_ARMY) {
+
+		available_buildings.push_back(SAURON_TOWER);
+		available_buildings.push_back(ORC_BARRACKS);
+		available_buildings.push_back(ORC_HOUSE);
+
+		available_techs.push_back(ORC_MINES);
+
+		pair<unitType, buildingType> p;
+
+		p = { GOBLIN_SOLDIER, ORC_BARRACKS };
+		available_units.push_back(p);
+
+	}
 
 
 }
@@ -39,7 +55,7 @@ void TechTree::Update(){
 
 	for (vector<Tech*>::iterator it = all_techs.begin(); it != all_techs.end(); it++) {
 		if ((*it)->research_timer.ReadSec() > (*it)->research_time)
-			Researched((*it)->id);
+			Researched((TechType)(*it)->id);
 	}
 
 }

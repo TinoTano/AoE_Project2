@@ -388,7 +388,7 @@ bool BuildOrder::CheckCompletion() {
 			building->GetBuildingBoundaries();
 			building->collider->type = COLLIDER_BUILDING;
 			building->state = IDLE;
-			if (building->type == FARM) {
+			if (building->type == MILL) {
 				villager->resourcesWareHouse = building;
 			}
 			return true;

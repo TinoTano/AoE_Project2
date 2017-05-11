@@ -36,11 +36,14 @@ bool EntityManager::Start()
 {
 	LOG("Starting EntityManager");
 
-	bool ret = LoadGameData();
-	click_timer.Start();
-
 	player = new GameFaction(FREE_MEN);
 	AI_faction = new GameFaction(SAURON_ARMY);
+
+	player->tech_tree = new TechTree();
+	AI_faction->tech_tree = new TechTree();
+
+	bool ret = LoadGameData();
+	click_timer.Start();
 
 	return ret;
 }
@@ -69,7 +72,8 @@ bool EntityManager::Update(float arg_dt)
 			selectedEntityList.erase(it);
 	}
 
-	ally_techtree->Update();
+	player->tech_tree->Update();
+	AI_faction->tech_tree->Update();
 
 	// AI for enemies
 	Unit* unit = nullptr;
@@ -275,8 +279,6 @@ bool EntityManager::LoadGameData()
 	pugi::xml_node unitNodeInfo;
 	pugi::xml_node buildingNodeInfo;
 	pugi::xml_node resourceNodeInfo;
-
-	ally_techtree = new TechTree();
 
 	gameData = App->LoadGameDataFile(gameDataFile);
 
@@ -501,7 +503,8 @@ bool EntityManager::LoadGameData()
 			resourcesDB.insert(pair<int, Resource*>(resourceTemplate->visual, resourceTemplate));
 		}
 
-		ally_techtree->Start(gameData.child("Techs"));
+		player->tech_tree->Start(gameData.child("FPTechs"), player->faction);
+		AI_faction->tech_tree->Start(gameData.child("SATechs"), AI_faction->faction);
 	}
 
 	return ret;
@@ -512,12 +515,18 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	Unit* unit;
 
 	if (type == VILLAGER || type == ELF_VILLAGER) {
+
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
 		unit->resourcesWareHouse = player->Town_center;
-		if (unit->faction == player->faction)
+
+		if (unit->faction == player->faction) {
 			player->villagers.push_back((Villager*)unit);
-		else
+			unit->resourcesWareHouse = player->Town_center;
+		}
+		else {
 			AI_faction->villagers.push_back((Villager*)unit);
+			unit->resourcesWareHouse = AI_faction->Town_center;
+		}
 	}
 	else if (type == GONDOR_HERO || type == LEGOLAS) {
 		unit = (Unit*) new Hero(posX, posY, (Hero*)unitsDB[type]);

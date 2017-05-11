@@ -1366,10 +1366,12 @@
 			</Textures>
 			<Stats>
 				<Life value="2400"/>
-				<WoodCost value="275"/>
-				<StoneCost value="100"/>
 				<BuildTime value="150"/>
-				<CanAttack value="false"/>
+				<CanAttack value="true"/>
+				<Cost>
+					<woodCost value="275"/>
+					<stoneCost value="100"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
@@ -1387,30 +1389,33 @@
 			</Textures>
 			<Stats>
 				<Life value="550"/>
-				<WoodCost value="25"/>
-				<StoneCost value="0"/>
 				<BuildTime value="25"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<foodCost value="25"/>
+					<woodCost value="50"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
 		<Building>
       <Info>
-        <Name value = "ORC_BARRACKS"/>
+        <Name value = "BARRACKS"/>
         <ID value = "2"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/barracksOrcs.png"/>
-				<Die value="textures/Buildings/barracksOrcs.png"/>
+				<Idle value="textures/Buildings/BuildingsFP/BarracksFP.png"/>
+				<Die value="textures/Buildings/BuildingsFP/BarracksFP.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Life value="1200"/>
-				<WoodCost value="155"/>
-				<StoneCost value="0"/>
 				<BuildTime value="50"/>
+				<Cost>
+					<woodCost value="150"/>
+				</Cost>
 				<CanAttack value="false"/>
 			</Stats>
 		</Building>
@@ -1429,10 +1434,11 @@
 			</Textures>
 			<Stats>
 				<Life value="1500"/>
-				<WoodCost value="175"/>
-				<StoneCost value="0"/>
 				<BuildTime value="50"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="175"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
@@ -1450,10 +1456,11 @@
 			</Textures>
 			<Stats>
 				<Life value="1500"/>
-				<WoodCost value="175"/>
-				<StoneCost value="0"/>
 				<BuildTime value="50"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<foodCost value="200"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
@@ -1471,10 +1478,12 @@
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
-				<WoodCost value="200"/>
-				<StoneCost value="0"/>
 				<BuildTime value="40"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="200"/>
+					<goldCost value="100"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
@@ -1492,10 +1501,12 @@
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
-				<WoodCost value="175"/>
-				<StoneCost value="0"/>
 				<BuildTime value="60"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<foodCost value="100"/>
+					<woodCost value="150"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
@@ -1513,10 +1524,13 @@
 			</Textures>
 			<Stats>
 				<Life value="1800"/>
-				<WoodCost value="150"/>
-				<StoneCost value="0"/>
 				<BuildTime value="40"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="50"/>
+					<stoneCost value="100"/>
+					<goldCost value="100"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
@@ -1534,59 +1548,17 @@
 			</Textures>
 			<Stats>
 				<Life value="600"/>
-				<WoodCost value="100"/>
-				<StoneCost value="0"/>
 				<BuildTime value="35"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="100"/>
+				</Cost>
 			</Stats>
 		</Building>
-		
-		<Building>
-      <Info>
-        <Name value = "WALL"/>
-        <ID value = "9"/>
-      </Info>
-			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
-			</Textures>
-			<Stats>
-				<Life value=""/>
-				<WoodCost value=""/>
-				<StoneCost value=""/>
-				<BuildTime value=""/>
-				<CanAttack value="false"/>
-			</Stats>
-		</Building>
-		
-		<Building>
-      <Info>
-        <Name value = "GATE"/>
-        <ID value = "10"/>
-      </Info>
-			<Textures>
-				<Idle value="textures/Buildings/"/>
-				<Die value="textures/Buildings/"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
-			</Textures>
-			<Stats>
-				<Life value=""/>
-				<WoodCost value=""/>
-				<StoneCost value=""/>
-				<BuildTime value=""/>
-				<CanAttack value="false"/>
-			</Stats>
-		</Building>
-		
 		<Building>
       <Info>
         <Name value = "OUTPOST"/>
-        <ID value = "11"/>
+        <ID value = "9"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/OutpostFP.png"/>
@@ -1597,17 +1569,19 @@
 			</Textures>
 			<Stats>
 				<Life value="1020"/>
-				<WoodCost value="25"/>
-				<StoneCost value="125"/>
 				<BuildTime value="15"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="25"/>
+					<stoneCost value="125"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
 		<Building>
       <Info>
         <Name value = "MONASTERY"/>
-        <ID value = "12"/>
+        <ID value = "10"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/MonasteryFP.png"/>
@@ -1618,17 +1592,19 @@
 			</Textures>
 			<Stats>
 				<Life value="2100"/>
-				<WoodCost value="175"/>
-				<StoneCost value="0"/>
 				<BuildTime value="40"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="175"/>
+					<goldCost value="100"/>
+				</Cost>
 			</Stats>
 		</Building>
 		
 		<Building>
       <Info>
         <Name value = "CASTLE"/>
-        <ID value = "13"/>
+        <ID value = "11"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/HouseFP2.png"/>
@@ -1639,56 +1615,199 @@
 			</Textures>
 			<Stats>
 				<Life value="4800"/>
-				<WoodCost value="0"/>
-				<StoneCost value="650"/>
 				<BuildTime value="200"/>
 				<CanAttack value="false"/>
+				<Cost>
+					<stoneCost value="650"/>
+				</Cost>
 			</Stats>
 		</Building>
-    <Building>
+
+ <Building>
       <Info>
         <Name value = "SAURON_TOWER"/>
-        <ID value = "14"/>
+        <ID value = "12"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/TowerOfSauron.png"/>
-				<Die value="textures/Buildings/TowerOfSauron.png"/>
+				<Idle value="textures/Buildings/BuildingsSA/TowerOfSauron.png"/>
+				<Die value="textures/Buildings/BuildingsSA/TowerOfSauron.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>
-				<Life value="4800"/>
-				<WoodCost value="0"/>
-				<StoneCost value="650"/>
-				<BuildTime value="200"/>
+				<Life value="2400"/>
+				<BuildTime value="150"/>
+				<CanAttack value="true"/>
+				<Cost>
+					<woodCost value="275"/>
+					<stoneCost value="100"/>
+				</Cost>
+			</Stats>
+		</Building>
+    
+    <Building>
+      <Info>
+        <Name value = "ORC_HOUSE"/>
+        <ID value = "13"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Buildings/BuildingsSA/houseSA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/houseSA.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="2"/>
+				<Life value="550"/>
+				<BuildTime value="25"/>
+				<CanAttack value="false"/>
+				<Cost>
+					<foodCost value="25"/>
+					<woodCost value="50"/>
+				</Cost>
+			</Stats>
+		</Building>
+    <Building>
+      <Info>
+        <Name value = "ORC_BARRACKS"/>
+        <ID value = "14"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Buildings/BuildingsSA/barracksSA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/barracksSA.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="2"/>
+				<Life value="1200"/>
+				<BuildTime value="50"/>
+				<Cost>
+					<woodCost value="150"/>
+				</Cost>
 				<CanAttack value="false"/>
 			</Stats>
 		</Building>
     <Building>
       <Info>
-        <Name value = "FARM"/>
+        <Name value = "ORC_ARCHERY_RANGE"/>
         <ID value = "15"/>
       </Info>
-      <Textures>
-        <Idle value="textures/Buildings/BuildingsFP/MillFP1.png"/>
-        <Die value="textures/Buildings/BuildingsFP/MillFP1.png"/>
-        <ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
-        <ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
-        <ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
-      </Textures>
-      <Stats>
-        <Faction value="0"/>
-        <Life value="1200"/>
-        <WoodCost value="0"/>
-        <StoneCost value="650"/>
-        <BuildTime value="200"/>
-        <CanAttack value="false"/>
-      </Stats>
-    </Building>
-	</Buildings>
+			<Textures>
+				<Idle value="textures/Buildings/BuildingsSA/archerySA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/archerySA.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="2"/>
+				<Life value="1500"/>
+				<BuildTime value="50"/>
+				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="175"/>
+				</Cost>
+			</Stats>
+		</Building>
 
+   <Building>
+      <Info>
+        <Name value = "BEAST_PIT"/>
+        <ID value = "16"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Buildings/BuildingsSA/StablesSA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/StablesSA.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="2"/>
+				<Life value="1500"/>
+				<BuildTime value="50"/>
+				<CanAttack value="false"/>
+				<Cost>
+					<foodCost value="200"/>
+				</Cost>
+			</Stats>
+		</Building>
+   <Building>
+      <Info>
+        <Name value = "URUK_HAI_PIT"/>
+        <ID value = "17"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Buildings/BuildingsSA/PitSA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/PitSA.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="2"/>
+				<Life value="1800"/>
+				<BuildTime value="40"/>
+				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="200"/>
+					<goldCost value="100"/>
+				</Cost>
+			</Stats>
+		</Building>
+   <Building>
+      <Info>
+        <Name value = "ORC_MARKET"/>
+        <ID value = "18"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Buildings/BuildingsSA/MarketSA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/MarketSA.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="2"/>
+				<Life value="1800"/>
+				<BuildTime value="60"/>
+				<CanAttack value="false"/>
+				<Cost>
+					<foodCost value="100"/>
+					<woodCost value="150"/>
+				</Cost>
+			</Stats>
+		</Building>
+   <Building>
+      <Info>
+        <Name value = "ORC_BLACKSMITH"/>
+        <ID value = "19"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Buildings/BuildingsSA/BlacksmithSA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/BlacksmithSA.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="2"/>
+				<Life value="1800"/>
+				<BuildTime value="40"/>
+				<CanAttack value="false"/>
+				<Cost>
+					<woodCost value="50"/>
+					<stoneCost value="100"/>
+					<goldCost value="100"/>
+				</Cost>
+			</Stats>
+		</Building>
+	</Buildings>
 <!-- Resources -->
     
   <Resources>
@@ -1954,8 +2073,7 @@
 	</Resource>
   </Resources>
 
-  <!---Techs ---->
-<Techs>
+<FPTechs>
   <Tech>
 	<Name value="Ranged Weapons"/>
 	<Desc value="asd"/>
@@ -2118,9 +2236,107 @@
 	<Research_time value="120"/>
 	<Cost foodCost="300" woodCost="0" stoneCost="100" goldCost="0"/>
   </Tech>
-</Techs>
-
-<!--- AI data --->
+</FPTechs>
+<SATechs>
+  <Tech>
+	<Name value="Orc mines"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="4"/>
+	<Unlockedtech value="2"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="12" building="14"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="14"/>
+	<Research_time value="30"/>
+	<Cost foodCost="200" woodCost="100" stoneCost="0" goldCost="0"/>
+  </Tech>
+<Tech>
+	<Name value="Guts commerce"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="3"/>
+	<Unlockedbuilding value="18"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="12"/>
+	<Research_time value="40"/>
+	<Cost foodCost="175" woodCost="100" stoneCost="0" goldCost="50"/>
+  </Tech>
+<Tech>
+	<Name value="Steel mines"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="19"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="12"/>
+	<Research_time value="40"/>
+	<Cost foodCost="100" woodCost="50" stoneCost="10" goldCost="50"/>
+  </Tech>
+<Tech>
+	<Name value="Skirmish Tactics"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="5"/>
+	<Unlockedtech value="6"/>
+	<Unlockedbuilding value="15"/>
+	<Unlockedunit unit_type="14" building="15"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="14"/>
+	<Research_time value="60"/>
+	<Cost foodCost="100" woodCost="200" stoneCost="0" goldCost="0"/>
+  </Tech>
+<Tech>
+	<Name value="Beast Taming"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="7"/>
+	<Unlockedbuilding value="16"/>
+	<Unlockedunit unit_type="15" building="16"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="14"/>
+	<Research_time value="90"/>
+	<Cost foodCost="300" woodCost="0" stoneCost="0" goldCost="50"/>
+  </Tech>
+<Tech>
+	<Name value="Saruman support"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="8"/>
+	<Unlockedbuilding value="17"/>
+	<Unlockedunit unit_type="13" building="14"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="14"/>
+	<Research_time value="120"/>
+	<Cost foodCost="100" woodCost="0" stoneCost="0" goldCost="350"/>
+  </Tech>
+<Tech>
+	<Name value="Haradrim Reinforcements"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="17" building="16"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="16"/>
+	<Research_time value="110"/>
+	<Cost foodCost="100" woodCost="100" stoneCost="0" goldCost="250"/>
+  </Tech>
+<Tech>
+	<Name value="Giant breed"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="9"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="19" building="14"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="14"/>
+	<Research_time value="120"/>
+	<Cost foodCost="450" woodCost="0" stoneCost="0" goldCost="0"/>
+  </Tech>
+<Tech>
+	<Name value="Call to the nine"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="19" building="12"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="2"/>
+	<Research_time value="100"/>
+	<Cost foodCost="100" woodCost="100" stoneCost="0" goldCost="300"/>
+  </Tech>
+</SATechs>
 
 <AI>
 	<Expansion>

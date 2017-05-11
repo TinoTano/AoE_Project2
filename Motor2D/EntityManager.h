@@ -97,8 +97,6 @@ public:
 	SDL_Rect NotHUD;
 	Building* buildingToCreate = nullptr;
 
-	TechTree* ally_techtree = nullptr;
-
 	map<int, Unit*> unitsDB;
 	map<int, Building*> buildingsDB;
 	map<int, Resource*> resourcesDB;
