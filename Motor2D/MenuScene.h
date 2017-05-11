@@ -45,11 +45,14 @@ public:
 
 	// UI ELEMENTS
 	WindowUI ui_menu;
+	WindowUI skirmish_menu;
+
 	Label* settings_lbl, *mute_lbl, *window_lbl;
+	Label* new_game_lbl, *load_game_lbl, *map_lbl;
 
-	enum IMAGES { BACKGROUND, YELLOW, SETTINGS };
+	enum IMAGES { BACKGROUND, YELLOW, SETTINGS, BACKGROUND_SKIRMISH, RIVERDALE };
 
-	enum BUTTONS { SKIRMISH, OPTIONS, QUIT, MUTE, SCREEN };
+	enum BUTTONS { SKIRMISH, OPTIONS, QUIT, MUTE, SCREEN, NEWGAME, LOADGAME };
 
 };
 
