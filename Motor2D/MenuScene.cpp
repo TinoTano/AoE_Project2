@@ -36,20 +36,33 @@ bool MenuScene::Start()
 	elements[2].position.first = (x / 3) + (x / 10);
 	elements[2].position.second = elements[1].position.second;
 
-	elements[3].position.first = elements[1].position.first + x / 180;
-	elements[3].position.second = elements[1].position.second + y / 50;
+	elements[3].position.first = (x / 4) + (x / 20);
+	elements[3].position.second = elements[1].position.second;
 
-	elements[4].position.first = elements[3].position.first;
-	elements[4].position.second = elements[3].position.second + y / 100 + elements[3].detect_sections.front().h;
+	elements[4].position.first = elements[3].position.first + (x / 150);
+	elements[4].position.second = elements[1].position.second + (y / 13);
 
-	elements[5].position.first = elements[4].position.first;
-	elements[5].position.second = elements[4].position.second + y / 100 + elements[4].detect_sections.front().h;
 
-	elements[6].position.first = elements[2].position.first + (x / 100);
-	elements[6].position.second = elements[2].position.second + (y / 15);
+	elements[5].position.first = elements[1].position.first + x / 180;
+	elements[5].position.second = elements[1].position.second + y / 50;
+
+	elements[6].position.first = elements[5].position.first;
+	elements[6].position.second = elements[5].position.second + y / 100 + elements[5].detect_sections.front().h;
 
 	elements[7].position.first = elements[6].position.first;
-	elements[7].position.second = elements[6].position.second + (y / 20);
+	elements[7].position.second = elements[6].position.second + y / 100 + elements[6].detect_sections.front().h;
+
+	elements[8].position.first = elements[2].position.first + (x / 100);
+	elements[8].position.second = elements[2].position.second + (y / 15);
+
+	elements[9].position.first = elements[8].position.first;
+	elements[9].position.second = elements[8].position.second + (y / 20);
+
+	elements[10].position.first = elements[3].position.first + (x / 30);
+	elements[10].position.second = elements[3].position.second + (y / 5) + (y / 30);
+
+	elements[11].position.first = elements[10].position.first;
+	elements[11].position.second = elements[10].position.second + (y / 15);
 
 
 	for (uint it = 0; it < elements.size(); ++it) {
@@ -65,6 +78,27 @@ bool MenuScene::Start()
 			break;
 		}
 	}
+
+	new_game_lbl = (Label*)App->gui->CreateLabel("New Game", buttons[NEWGAME]->pos.first + x / 20, buttons[NEWGAME]->pos.second, nullptr);
+
+	load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 20, buttons[LOADGAME]->pos.second, nullptr);
+
+	map_lbl = (Label*)App->gui->CreateLabel("Riverdale", images[RIVERDALE]->pos.first + x / 40, images[RIVERDALE]->pos.second + images[RIVERDALE]->section.h + y / 500, nullptr);
+
+	new_game_lbl->SetSize(18);
+	load_game_lbl->SetSize(18);
+	map_lbl->SetSize(12);
+
+	skirmish_menu.in_window.push_back(images[BACKGROUND_SKIRMISH]);
+	skirmish_menu.in_window.push_back(images[RIVERDALE]);
+	skirmish_menu.in_window.push_back(buttons[NEWGAME]);
+	skirmish_menu.in_window.push_back(buttons[LOADGAME]);
+	skirmish_menu.in_window.push_back(new_game_lbl);
+	skirmish_menu.in_window.push_back(load_game_lbl);
+	skirmish_menu.in_window.push_back(map_lbl);
+
+	skirmish_menu.WindowOff();
+	skirmish_menu.SetFocus(images[BACKGROUND_SKIRMISH]->pos.first, images[BACKGROUND_SKIRMISH]->pos.second, x, y);
 
 	settings_lbl = (Label*)App->gui->CreateLabel("Settings", images[SETTINGS]->pos.first + x / 100, images[SETTINGS]->pos.second, nullptr);
 
@@ -95,7 +129,7 @@ bool MenuScene::Start()
 
 	App->gui->SetPriority();
 
-	/*App->audio->active = false;*/
+	App->audio->active = false;
 	//LOAD FX
 	fx_button_click = App->audio->LoadFx("audio/fx/fx_button_click.wav");
 	App->audio->PlayMusic("audio/music/m_menu.ogg", 0.0f);
@@ -166,17 +200,23 @@ bool MenuScene::PostUpdate()
 	{
 		App->audio->PlayFx(fx_button_click);
 	}
-	else if (buttons[0]->current == CLICKUP)
+	else if (buttons[SKIRMISH]->current == CLICKUP)
 	{
-		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
-		/*App->cutscene->Start();
-		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);*/
+		if (!skirmish_menu.IsEnabled()) {
+			skirmish_menu.WindowOn();
+		}
+		else skirmish_menu.WindowOff();
 	}
 	else if (buttons[2]->current == CLICKUP)
 	{
 		App->quit = true;
 	}
-
+	else if (buttons[NEWGAME]->current == CLICKUP)
+	{
+		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
+		/*	App->cutscene->Start();
+		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);*/
+	}
 	return true;
 }
 
@@ -184,6 +224,7 @@ bool MenuScene::CleanUp()
 {
 	App->gui->DestroyALLUIElements();
 	ui_menu.CleanUp();
+	skirmish_menu.CleanUp();
 	elements.clear();
 	images.clear();
 	buttons.clear();

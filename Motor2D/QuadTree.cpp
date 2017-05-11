@@ -40,9 +40,10 @@ void QuadTree::SplitNode()
 	for (int i = 0; i < NODE_COUNT; i++) {
 
 		for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end(); it++) {
-
-			if (node[i]->Contains(*it))
-				node[i]->collidersList.push_back(*it);
+			if (*it != nullptr) {
+				if (node[i]->Contains(*it))
+					node[i]->collidersList.push_back(*it);
+			}
 		}
 	}
 	collidersList.clear();
@@ -74,9 +75,10 @@ void QuadTree::UpdateCol(Collider* col) {
 	}
 	else {
 		for (int i = 0; i < NODE_COUNT; i++) {
-
-			if (i != index && node[i]->IsInList(col) && !node[i]->Contains(col))
-				node[i]->collidersList.remove(col);
+			if (col != nullptr) {
+				if (i != index && node[i]->IsInList(col) && !node[i]->Contains(col))
+					node[i]->collidersList.remove(col);
+			}
 		}
 
 		node[index]->UpdateCol(col);
@@ -102,8 +104,10 @@ int QuadTree::GetNodeIndex(Collider* col, int start_from)
 
 	for (int i = start_from; i < NODE_COUNT; i++) {
 		if (node[i] != nullptr) {
-			if (node[i]->Contains(col)) {
-				index = node[i]->nodeIndex;
+			if (col != nullptr) {
+				if (node[i]->Contains(col)) {
+					index = node[i]->nodeIndex;
+				}
 			}
 		}
 	}

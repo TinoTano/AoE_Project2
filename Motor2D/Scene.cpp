@@ -445,6 +445,7 @@ void Scene::SaveScene()
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
 			resourceNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			resourceNodeInfo.append_child("State").append_attribute("value") = (*it)->isDamaged;
 	}
 
 	stringstream stream;
@@ -482,8 +483,12 @@ void Scene::LoadScene() {
 			unitTemplate->currentDirection = (unitDirection)unitNodeInfo.child("Direction").attribute("value").as_int();
 			unitTemplate->Life = unitNodeInfo.child("Life").attribute("value").as_int();
 			if (unitNodeInfo.child("State").attribute("value").as_int() == MOVING) {
-				unitTemplate->SetDestination({ unitNodeInfo.child("DestinationTile").attribute("x").as_int(), unitNodeInfo.child("DestinationTile").attribute("y").as_int() });
+				Order* moveOrder = new MoveToOrder({ unitNodeInfo.child("DestinationTile").attribute("x").as_int(), unitNodeInfo.child("DestinationTile").attribute("y").as_int() });
+				unitTemplate->order_list.push_back(moveOrder);
 			}
+			/*else if (unitNodeInfo.child("State").attribute("value").as_int() == ATTACKING) {
+			Order* attackOrder = new UnitAttackOrder()
+			}*/
 		}
 
 		for (pugi::xml_node buildingNodeInfo = scene.child("Buildings").child("Building"); buildingNodeInfo; buildingNodeInfo = buildingNodeInfo.next_sibling("Building")) {
@@ -493,9 +498,7 @@ void Scene::LoadScene() {
 				(buildingType)buildingNodeInfo.child("Type").attribute("value").as_int());
 
 			buildingTemplate->Life = buildingNodeInfo.child("Life").attribute("value").as_int();
-			//if (buildingNodeInfo.child("State").attribute("value").as_int() == BUILDING_DESTROYING) {
-			//	buildingTemplate->
-			//}
+			buildingTemplate->state = (EntityState)buildingNodeInfo.child("State").attribute("value").as_int();
 		}
 
 		for (pugi::xml_node resourceNodeInfo = scene.child("Resources").child("Resource"); resourceNodeInfo; resourceNodeInfo = resourceNodeInfo.next_sibling("Resource")) {
@@ -505,9 +508,9 @@ void Scene::LoadScene() {
 				(resourceItem)resourceNodeInfo.child("Type").attribute("value").as_int());
 
 			resourceTemplate->Life = resourceNodeInfo.child("Life").attribute("value").as_int();
-			//if (resourceNodeInfo.child("State").attribute("value").as_int() == RESOURCE_GATHERING) {
-			//	resourceTemplate->
-			//}
+			if (resourceNodeInfo.child("State").attribute("value").as_bool()) {
+				resourceTemplate->Damaged();
+			}
 		}
 	}
 

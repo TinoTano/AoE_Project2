@@ -295,6 +295,7 @@ private:
 	void StartBuildingInfo();
 	void StartResourceInfo();
 	SDL_Rect GetTechRect(uint id);
+	SDL_Rect GetRect(uint id);
 	void ClearMultiple();
 	void ClearSingle();
 	void ClearBuilding();
@@ -311,10 +312,12 @@ private:
 	//		  VILLAGERS
 	// -----------------------
 	enum HUDVillagerState {
+		VILLAGERNULL,
 		VILLAGERMENU,
 		VILLAGERCREATEBUILDINGS
 	};
 	HUDVillagerState villager_state;
+	vector<vector<SDL_Rect> > buildings_rects;
 	// ------- MENU ----------
 	Button* create_building_bt;
 	void HUDVillagerMenu();
@@ -323,6 +326,7 @@ private:
 	//		  HEROES
 	// -----------------------
 	enum HUDHeroState {
+		HERONULL,
 		HEROMENU
 	};
 	HUDHeroState hero_state;
@@ -334,9 +338,11 @@ private:
 	Button* create_town_center_bt, *create_house_bt, *create_archery_range_bt,
 		*create_stables_bt, *create_siege_workshop_bt, *create_market_bt, *create_blacksmith_bt, *create_mill_bt,
 		*create_outpost_bt, *create_monastery_bt, *create_castle_bt;
+
 	list<Button*> tech_bt;
 	vector<SDL_Rect> tech_rects;
 	bool tech = false;
+
 	void HUDCreateBuildings();
 	void HUDClearCreateBuildings();
 	// -----------------------
@@ -344,11 +350,13 @@ private:
 	// -----------------------
 
 	enum HUDBuildingState {
+		BUILDINGNULL,
 		BUILDINGMENU,
 		BUILDINGCREATEUNITS,
 		BUILDINGCREATEHERO
 	};
 	HUDBuildingState building_state;
+	vector<vector<SDL_Rect> > units_rects;
 	// ----- MENU -----
 	Button* create_unit_bt, *create_hero_bt, *create_villager_bt;
 	void HUDBuildingMenu();
@@ -360,12 +368,14 @@ private:
 	void HUDClearCreateHero();
 
 	// ----- CREATE UNITS ------
-	Button* create_elven_archer_bt, *create_elven_longblade_bt, *create_elven_cavalry_bt;
+	Button *create_elven_archer_bt, *create_elven_longblade_bt, *create_elven_cavalry_bt, *create_dwarven_mauler_bt, *create_gondor_spearman_bt,
+		*create_dunedain_range_bt, *create_gondor_kinght_bt, *create_rohan_kinght_bt, *create_mounted_dunedain_bt;
 	void HUDCreateUnits();
 	void HUDClearCreateUnits();
 
 
 	Button* cancel_bt;
+	vector<SDL_Rect> blit_sections;
 };
 
 

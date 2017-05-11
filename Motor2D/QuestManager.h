@@ -42,7 +42,8 @@ public:
 	~Quest();
 
 public:
-	int id;
+	string name;
+	string description;
 	int reward;
 	Event* trigger;
 	vector <Event*> steps;

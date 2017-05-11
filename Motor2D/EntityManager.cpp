@@ -64,7 +64,13 @@ bool EntityManager::Update(float arg_dt)
 	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
-			(*it)->Draw();
+		{
+			/*if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();*/
+			if ((*it)->faction == NATURE) (*it)->Draw();
+			/*else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();*/
+			else if ((*it)->faction == SAURON_ARMY) (*it)->Draw();
+			else if ((*it)->faction == FREE_MEN) (*it)->Draw();
+		}	
 	}
 
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
@@ -709,6 +715,16 @@ void EntityManager::OnCollision(Collision_data& col_data)
 		
 			break;
 
+		case COLLIDER_AOE_SKILL:
+			if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
+				Hero* hero = (Hero*)col_data.c2->GetUnit();
+				unit->Life -= hero->skill->damage;
+				hero->skill->Deactivate(hero);
+				if (unit->Life <= 0) {
+					unit->Destroy();
+				}
+			}
+			break;
 		default:
 			break;
 		}

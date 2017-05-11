@@ -14,7 +14,6 @@
 #include "TechTree.h"
 #include "Hero.h"
 
-
 //HUD
 HUD::HUD()
 {
@@ -48,13 +47,96 @@ void HUD::Start() {
 
 	buttons_positions.push_back({ (int)x / 30 - CAMERA_OFFSET_X, (int)y - (int)y / 8 - CAMERA_OFFSET_Y, 39,40 });
 	// 12
-
 	buttons_positions.push_back({ (int)x / 4 - (int)x / 40 - CAMERA_OFFSET_X, (int)y - (int)y / 10 - CAMERA_OFFSET_Y, 39,40 });
-
 	posx = x / 3 - x / 50;
 	posy = y - (y / 6);
-}
 
+	vector<SDL_Rect> blit_sections;
+
+	// Buildings
+	blit_sections.push_back({ 0, 0, 33, 32 });
+	blit_sections.push_back({ 0, 0, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 33, 0, 33, 32 });
+	blit_sections.push_back({ 33, 0, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 99, 0, 33, 32 });
+	blit_sections.push_back({ 99, 0, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 132, 0, 33, 32 });
+	blit_sections.push_back({ 132, 0, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 165, 0, 33, 32 });
+	blit_sections.push_back({ 165, 0, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 198, 0, 33, 32 });
+	blit_sections.push_back({ 198, 0, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 231, 0, 33, 32 });
+	blit_sections.push_back({ 231, 0, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 264, 0, 33, 32 });
+	blit_sections.push_back({ 264, 0, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 66, 32, 33, 32 });
+	blit_sections.push_back({ 66, 32, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 99, 32, 33, 32 });
+	blit_sections.push_back({ 99, 32, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 132, 32, 33, 32 });
+	blit_sections.push_back({ 132, 32, 33, 32 });
+	buildings_rects.push_back(blit_sections);
+	blit_sections.clear();
+
+	// Units
+	blit_sections.push_back({ 0, 0, 33, 32 });
+	blit_sections.push_back({ 0, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 33, 0, 33, 32 });
+	blit_sections.push_back({ 33, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 66, 0, 33, 32 });
+	blit_sections.push_back({ 66, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 99, 0, 33, 32 });
+	blit_sections.push_back({ 99, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 132, 0, 33, 32 });
+	blit_sections.push_back({ 132, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 165, 0, 33, 32 });
+	blit_sections.push_back({ 165, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 198, 0, 33, 32 });
+	blit_sections.push_back({ 198, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 231, 0, 33, 32 });
+	blit_sections.push_back({ 231, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+	blit_sections.push_back({ 264, 0, 33, 32 });
+	blit_sections.push_back({ 264, 0, 33, 32 });
+	units_rects.push_back(blit_sections);
+	blit_sections.clear();
+}
 
 void HUD::ClearBuilding() {
 	App->gui->DestroyUIElement(single);
@@ -69,7 +151,11 @@ void HUD::ClearBuilding() {
 	case BUILDINGCREATEUNITS:
 		HUDClearCreateUnits();
 		break;
+	case BUILDINGCREATEHERO:
+		HUDClearCreateHero();
+		break;
 	}
+	building_state = BUILDINGNULL;
 }
 
 void HUD::ClearResource()
@@ -234,8 +320,8 @@ void HUD::Update() {
 									else {
 										if (cancel_bt->current == CLICKUP)
 											HUDVillagerMenu();
-										else if (create_town_center_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										else if (create_town_center_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_town_center_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, TOWN_CENTER);
@@ -245,8 +331,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_house_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_house_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_house_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, HOUSE);
@@ -256,8 +342,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_stables_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_stables_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_stables_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, STABLES);
@@ -267,8 +353,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_archery_range_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_archery_range_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_archery_range_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, ARCHERY_RANGE);
@@ -278,8 +364,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_siege_workshop_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_siege_workshop_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_siege_workshop_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, SIEGE_WORKSHOP);
@@ -289,8 +375,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_market_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										else if (create_market_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_market_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MARKET);
@@ -300,8 +386,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_blacksmith_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_blacksmith_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_blacksmith_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, BLACKSMITH);
@@ -311,8 +397,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_mill_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_mill_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_mill_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MILL);
@@ -322,8 +408,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_outpost_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_outpost_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_outpost_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, OUTPOST);
@@ -333,8 +419,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_monastery_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_monastery_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_monastery_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MONASTERY);
@@ -344,8 +430,8 @@ void HUD::Update() {
 												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
 											}
 										}
-										else if (create_castle_bt->current == CLICKUP) {
-											if (!App->entityManager->placingBuilding) {
+										if (create_castle_bt != nullptr) {
+											if (!App->entityManager->placingBuilding && create_castle_bt->current == CLICKUP) {
 												int x, y;
 												App->input->GetMousePosition(x, y);
 												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, CASTLE);
@@ -461,80 +547,121 @@ void HUD::Update() {
 					bar.r = 0;
 					bar.g = 255;
 					App->render->ui_toDraw.push_back(bar);
-					if (name->str == "TOWN CENTER") {
-						switch (building_state) {
-						case BUILDINGMENU:
-							if (building_state != BUILDINGMENU)
-							{
-								HUDBuildingMenu();
-							}
-							else {
+					switch (building_state) {
+					case BUILDINGMENU:
+						if (building_state != BUILDINGMENU)
+						{
+							HUDBuildingMenu();
+						}
+						else {
+							if (create_unit_bt != nullptr) {
 								if (create_unit_bt->current == CLICKUP)
 								{
 									HUDCreateUnits();
 								}
-								else if (create_villager_bt->current == CLICKUP) {
-									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)){
-										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
-										create_villager_bt->current = FREE;
-										App->sceneManager->level1_scene->UpdateResources();
-										building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
-									}
+							}
+							if (create_villager_bt != nullptr) {
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost) && create_villager_bt->current == CLICKUP) {
+									App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
+									create_villager_bt->current = FREE;
+									App->sceneManager->level1_scene->UpdateResources();
+									building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
 								}
-								else if (create_hero_bt->current == CLICKUP) {
+							}
+							if (create_hero_bt != nullptr) {
+								if (create_hero_bt->current == CLICKUP) {
 									HUDCreateHero();
 								}
 							}
-							break;
-						case BUILDINGCREATEUNITS:
-							if (building_state != BUILDINGCREATEUNITS)
-							{
-								HUDCreateUnits();
-							}
-							else {
-								if (cancel_bt->current == CLICKUP)
-									HUDBuildingMenu();
-								else if (create_elven_archer_bt->current == CLICKUP)
-								{
-									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_ARCHER]->cost)) {
-										building->order_list.push_back(new CreateUnitOrder(ELVEN_ARCHER));
-										App->sceneManager->level1_scene->UpdateResources();
-										create_elven_archer_bt->current = FREE;
-									}
-								}
-								else if (create_elven_longblade_bt->current == CLICKUP)
-								{
-									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_LONGBLADE]->cost)){
-										building->order_list.push_back(new CreateUnitOrder(ELVEN_LONGBLADE));
-										App->sceneManager->level1_scene->UpdateResources();
-										create_elven_longblade_bt->current = FREE;
-									}
-								}
-								else if (create_elven_cavalry_bt->current == CLICKUP)
-								{
-									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[GONDOR_HERO]->cost)){
-										building->order_list.push_back(new CreateUnitOrder(GONDOR_HERO));
-										App->sceneManager->level1_scene->UpdateResources();
-										create_elven_cavalry_bt->current = FREE;
-									}
-								}
-							}
-							break;
-						case BUILDINGCREATEHERO:
-							if (building_state != BUILDINGCREATEHERO)
-							{
-								HUDCreateHero();
-							}
+						}
+						break;
+					case BUILDINGCREATEUNITS:
+						if (building_state != BUILDINGCREATEUNITS)
+						{
+							HUDCreateUnits();
+						}
+						else {
 							if (cancel_bt->current == CLICKUP)
 								HUDBuildingMenu();
-							else if (create_Legolas_bt->current == CLICKUP)
+							else if (create_elven_archer_bt != nullptr)
 							{
-								Order* new_order = new CreateUnitOrder(LEGOLAS);
-								building->order_list.push_back(new_order);
-							//	App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_ARCHER]->cost) && create_elven_archer_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(ELVEN_ARCHER));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
 							}
-							break;
+							if (create_elven_longblade_bt != nullptr)
+							{
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_LONGBLADE]->cost) && create_elven_longblade_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(ELVEN_LONGBLADE));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
+							if (create_elven_cavalry_bt != nullptr)
+							{
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELVEN_CAVALRY]->cost) && create_elven_cavalry_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(ELVEN_CAVALRY));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
+							if (create_dwarven_mauler_bt != nullptr)
+							{
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[DWARVEN_MAULER]->cost) && create_dwarven_mauler_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(DWARVEN_MAULER));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
+							if (create_gondor_spearman_bt != nullptr)
+							{
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[GONDOR_SPEARMAN]->cost) && create_gondor_spearman_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(GONDOR_SPEARMAN));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
+							if (create_dunedain_range_bt != nullptr)
+							{
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[DUNEDAIN_RANGE]->cost) && create_dunedain_range_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(DUNEDAIN_RANGE));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
+							if (create_gondor_kinght_bt != nullptr)
+							{
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[GONDOR_KNIGHT]->cost) && create_gondor_kinght_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(GONDOR_KNIGHT));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
+							if (create_rohan_kinght_bt != nullptr)
+							{
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ROHAN_KNIGHT]->cost) && create_rohan_kinght_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(ROHAN_KNIGHT));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
+							if (create_mounted_dunedain_bt != nullptr)
+							{
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[MOUNTED_DUNEDAIN]->cost) && create_mounted_dunedain_bt->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(MOUNTED_DUNEDAIN));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
 						}
+						break;
+					case BUILDINGCREATEHERO:
+						if (building_state != BUILDINGCREATEHERO)
+						{
+							HUDCreateHero();
+						}
+						if (cancel_bt->current == CLICKUP)
+							HUDBuildingMenu();
+						else if (create_Legolas_bt->current == CLICKUP)
+						{
+							Order* new_order = new CreateUnitOrder(LEGOLAS);
+							building->order_list.push_back(new_order);
+							//	App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+						}
+						break;
 					}
 				}
 				break;
@@ -607,7 +734,6 @@ void HUD::Update() {
 	}
 }
 
-
 void HUD::HUDVillagerMenu()
 {
 	switch (villager_state) {
@@ -624,12 +750,13 @@ void HUD::HUDVillagerMenu()
 	blit_sections.push_back({ 169, 24, 39, 40 });
 
 	create_building_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
+	blit_sections.clear();
 }
 
 void HUD::HUDClearVillagerMenu()
 {
 	App->gui->DestroyUIElement(create_building_bt);
+	blit_sections.clear();
 }
 
 void HUD::HUDHeroMenu()
@@ -644,11 +771,13 @@ void HUD::HUDHeroMenu()
 	blit_sections.push_back({ 249, 64, 39, 40 });
 
 	skill_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	blit_sections.clear();
 }
 
 void HUD::HUDClearHeroMenu()
 {
 	App->gui->DestroyUIElement(skill_bt);
+	blit_sections.clear();
 }
 
 void HUD::HUDCreateBuildings()
@@ -661,79 +790,56 @@ void HUD::HUDCreateBuildings()
 
 	villager_state = VILLAGERCREATEBUILDINGS;
 
-	vector<SDL_Rect> blit_sections;
+	vector<buildingType> available_buildings;
+	for (list<buildingType>::iterator it = App->entityManager->ally_techtree->available_buildings.begin(); it != App->entityManager->ally_techtree->available_buildings.end(); ++it) {
+		available_buildings.push_back(*it);
+	}
+	//TOWN_CENTER, HOUSE, ORC_BARRACKS, ARCHERY_RANGE, STABLES, SIEGE_WORKSHOP, MARKET, BLACKSMITH, MILL, OUTPOST, MONASTERY, CASTLE, SAURON_TOWER, FARM
 
-	blit_sections.push_back({ 0, 0, 33, 32 });
-	blit_sections.push_back({ 0, 0, 33, 32 });
-
-	create_town_center_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 33, 0, 33, 32 });
-	blit_sections.push_back({ 33, 0, 33, 32 });
-
-	create_house_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 99, 0, 33, 32 });
-	blit_sections.push_back({ 99, 0, 33, 32 });
-
-	create_archery_range_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 132, 0, 33, 32 });
-	blit_sections.push_back({ 132, 0, 33, 32 });
-
-	create_stables_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[3].x - CAMERA_OFFSET_X, buttons_positions[3].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 165, 0, 33, 32 });
-	blit_sections.push_back({ 165, 0, 33, 32 });
-
-	create_siege_workshop_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[4].x - CAMERA_OFFSET_X, buttons_positions[4].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 198, 0, 33, 32 });
-	blit_sections.push_back({ 198, 0, 33, 32 });
-
-	create_market_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[5].x - CAMERA_OFFSET_X, buttons_positions[5].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 231, 0, 33, 32 });
-	blit_sections.push_back({ 231, 0, 33, 32 });
-
-	create_blacksmith_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[6].x - CAMERA_OFFSET_X, buttons_positions[6].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 264, 0, 33, 32 });
-	blit_sections.push_back({ 264, 0, 33, 32 });
-
-	create_mill_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[7].x - CAMERA_OFFSET_X, buttons_positions[7].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 66, 32, 33, 32 });
-	blit_sections.push_back({ 66, 32, 33, 32 });
-
-	create_outpost_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[8].x - CAMERA_OFFSET_X, buttons_positions[8].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 99, 32, 33, 32 });
-	blit_sections.push_back({ 99, 32, 33, 32 });
-
-	create_monastery_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[9].x - CAMERA_OFFSET_X, buttons_positions[9].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 132, 32, 33, 32 });
-	blit_sections.push_back({ 132, 32, 33, 32 });
-
-	create_castle_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[10].x - CAMERA_OFFSET_X, buttons_positions[10].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
+	for (uint i = 0; i < available_buildings.size(); ++i) {
+		buttons_positions[i];
+		switch (available_buildings[i]) {
+		case TOWN_CENTER:
+			create_town_center_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, buildings_rects[0], buttons_positions, TIER2);
+			break;
+		case HOUSE:
+			create_house_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, buildings_rects[1], buttons_positions, TIER2);
+			break;
+		case ARCHERY_RANGE:
+			create_archery_range_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, buildings_rects[2], buttons_positions, TIER2);
+			break;
+		case STABLES:
+			create_stables_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[3].x - CAMERA_OFFSET_X, buttons_positions[3].y - CAMERA_OFFSET_Y, buildings_rects[3], buttons_positions, TIER2);
+			break;
+		case SIEGE_WORKSHOP:
+			create_siege_workshop_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[4].x - CAMERA_OFFSET_X, buttons_positions[4].y - CAMERA_OFFSET_Y, buildings_rects[4], buttons_positions, TIER2);
+			break;
+		case MARKET:
+			create_market_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[5].x - CAMERA_OFFSET_X, buttons_positions[5].y - CAMERA_OFFSET_Y, buildings_rects[5], buttons_positions, TIER2);
+			break;
+		case BLACKSMITH:
+			create_blacksmith_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[6].x - CAMERA_OFFSET_X, buttons_positions[6].y - CAMERA_OFFSET_Y, buildings_rects[6], buttons_positions, TIER2);
+			break;
+		case MILL:
+			create_mill_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[7].x - CAMERA_OFFSET_X, buttons_positions[7].y - CAMERA_OFFSET_Y, buildings_rects[7], buttons_positions, TIER2);
+			break;
+		case OUTPOST:
+			create_outpost_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[8].x - CAMERA_OFFSET_X, buttons_positions[8].y - CAMERA_OFFSET_Y, buildings_rects[8], buttons_positions, TIER2);
+			break;
+		case MONASTERY:
+			create_monastery_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[9].x - CAMERA_OFFSET_X, buttons_positions[9].y - CAMERA_OFFSET_Y, buildings_rects[9], buttons_positions, TIER2);
+			break;
+		case CASTLE:
+			create_castle_bt = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[10].x - CAMERA_OFFSET_X, buttons_positions[10].y - CAMERA_OFFSET_Y, buildings_rects[10], buttons_positions, TIER2);
+			break;
+		}
+	}
 
 	blit_sections.clear();
 	blit_sections.push_back({ 52, 64, 39, 40 });
 	blit_sections.push_back({ 91, 64, 39, 40 });
-
 	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[NUM_UI_BUTTONS].x - CAMERA_OFFSET_X, buttons_positions[NUM_UI_BUTTONS].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	blit_sections.clear();
 }
 
 void HUD::HUDClearCreateBuildings()
@@ -750,6 +856,7 @@ void HUD::HUDClearCreateBuildings()
 	App->gui->DestroyUIElement(create_monastery_bt);
 	App->gui->DestroyUIElement(create_castle_bt);
 	App->gui->DestroyUIElement(cancel_bt);
+	blit_sections.clear();
 }
 
 void HUD::HUDBuildingMenu()
@@ -767,16 +874,26 @@ void HUD::HUDBuildingMenu()
 	building_state = BUILDINGMENU;
 	vector<SDL_Rect> blit_sections;
 
-	if (name->str == "TOWN CENTER") {
-
+	bool create_units = false;
+	for (list<pair<unitType, buildingType>>::iterator it = App->entityManager->ally_techtree->available_units.begin(); it != App->entityManager->ally_techtree->available_units.end(); ++it) {
+		if (id == it._Ptr->_Myval.second) {
+			create_units = true;
+			break;
+		}
+	}
+	if (create_units)
+	{
 		blit_sections.push_back({ 130, 64, 39, 40 });
 		blit_sections.push_back({ 169, 64, 39, 40 });
 
 		create_unit_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 		blit_sections.clear();
 
-		blit_sections.push_back({ 208, 24, 39, 40 });
-		blit_sections.push_back({ 247, 24, 39, 40 });
+	}
+	if (name->str == "TOWN CENTER") {
+
+		blit_sections.push_back({ 210, 24, 39, 40 });
+		blit_sections.push_back({ 249, 24, 39, 40 });
 
 		create_hero_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 		blit_sections.clear();
@@ -786,14 +903,17 @@ void HUD::HUDBuildingMenu()
 		create_villager_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 		blit_sections.clear();
 	}
+
 	if (tech) {
 		uint tech_place = TECH_UI_BUTTON;
 		uint x = 0;
 		for (uint i = 0; i < tech_rects.size(); ++i) {
 			blit_sections.push_back(tech_rects[x]);
 			tech_rects[x].x += tech_rects[x].w;
+			blit_sections.push_back(tech_rects[x]);
 			tech_bt.push_back((Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2));
 			tech_place++;
+			blit_sections.clear();
 			x++;
 		}
 	}
@@ -804,11 +924,16 @@ void HUD::HUDClearBuildingMenu()
 	App->gui->DestroyUIElement(create_unit_bt);
 	App->gui->DestroyUIElement(create_hero_bt);
 	App->gui->DestroyUIElement(create_villager_bt);
+
 	tech = false;
 	tech_rects.clear();
+
 	for (list<Button*>::iterator it = tech_bt.begin(); it != tech_bt.end(); ++it) {
-	App->gui->DestroyUIElement(it._Ptr->_Myval);
+		App->gui->DestroyUIElement(it._Ptr->_Myval);
 	}
+
+	tech_bt.clear();
+	blit_sections.clear();
 }
 
 void HUD::HUDCreateHero()
@@ -824,8 +949,8 @@ void HUD::HUDCreateHero()
 	building_state = BUILDINGCREATEHERO;
 
 	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 0, 0, 33, 32 });
-	blit_sections.push_back({ 0, 0, 33, 32 });
+	blit_sections.push_back({ 99, 64, 33, 32 });
+	blit_sections.push_back({ 99, 63, 33, 32 });
 
 	create_Legolas_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 
@@ -834,12 +959,14 @@ void HUD::HUDCreateHero()
 	blit_sections.push_back({ 92, 64, 39, 40 });
 
 	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[NUM_UI_BUTTONS].x - CAMERA_OFFSET_X, buttons_positions[NUM_UI_BUTTONS].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	blit_sections.clear();
 }
 
 void HUD::HUDClearCreateHero()
 {
 	App->gui->DestroyUIElement(cancel_bt);
 	App->gui->DestroyUIElement(create_Legolas_bt);
+	blit_sections.clear();
 }
 
 
@@ -856,30 +983,52 @@ void HUD::HUDCreateUnits()
 	// THIS MUST BE DONE HERE
 	building_state = BUILDINGCREATEUNITS;
 
-	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 99, 0, 33, 32 });
-	blit_sections.push_back({ 99, 0, 33, 32 });
+	vector<unitType> available_units;
+	for (list<pair<unitType, buildingType>>::iterator it = App->entityManager->ally_techtree->available_units.begin(); it != App->entityManager->ally_techtree->available_units.end(); ++it) {
+		if (id == it._Ptr->_Myval.second)
+			available_units.push_back(it._Ptr->_Myval.first);
+	}
 
-	create_elven_archer_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	//TOWN_CENTER, HOUSE, ORC_BARRACKS, ARCHERY_RANGE, STABLES, SIEGE_WORKSHOP, MARKET, BLACKSMITH, MILL, OUTPOST, MONASTERY, CASTLE, SAURON_TOWER, FARM
 
-	blit_sections.clear();
-	blit_sections.push_back({ 0, 0, 33, 32 });
-	blit_sections.push_back({ 0, 0, 33, 32 });
-
-	create_elven_longblade_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	blit_sections.clear();
-	blit_sections.push_back({ 165, 0, 33, 32 });
-	blit_sections.push_back({ 165, 0, 33, 32 });
-
-	create_elven_cavalry_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
+	for (uint i = 0; i < available_units.size(); ++i) {
+		switch (available_units[i]) {
+		case ELVEN_LONGBLADE:
+			create_elven_longblade_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, units_rects[0], buttons_positions, TIER2);
+			break;
+		case  DWARVEN_MAULER:
+			create_dwarven_mauler_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, units_rects[1], buttons_positions, TIER2);
+			break;
+		case GONDOR_SPEARMAN:
+			create_gondor_spearman_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[4].x - CAMERA_OFFSET_X, buttons_positions[4].y - CAMERA_OFFSET_Y, units_rects[2], buttons_positions, TIER2);
+			break;
+		case ELVEN_ARCHER:
+			create_elven_archer_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[3].x - CAMERA_OFFSET_X, buttons_positions[3].y - CAMERA_OFFSET_Y, units_rects[3], buttons_positions, TIER2);
+			break;
+		case DUNEDAIN_RANGE:
+			create_dunedain_range_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[5].x - CAMERA_OFFSET_X, buttons_positions[5].y - CAMERA_OFFSET_Y, units_rects[4], buttons_positions, TIER2);
+			break;
+		case ELVEN_CAVALRY:
+			create_elven_cavalry_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, units_rects[5], buttons_positions, TIER2);
+			break;
+		case GONDOR_KNIGHT:
+			create_gondor_kinght_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[6].x - CAMERA_OFFSET_X, buttons_positions[6].y - CAMERA_OFFSET_Y, units_rects[6], buttons_positions, TIER2);
+			break;
+		case ROHAN_KNIGHT:
+			create_rohan_kinght_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[7].x - CAMERA_OFFSET_X, buttons_positions[7].y - CAMERA_OFFSET_Y, units_rects[7], buttons_positions, TIER2);
+			break;
+		case MOUNTED_DUNEDAIN:
+			create_mounted_dunedain_bt = (Button*)App->gui->CreateButton("gui/unitMiniatures.png", buttons_positions[8].x - CAMERA_OFFSET_X, buttons_positions[8].y - CAMERA_OFFSET_Y, units_rects[8], buttons_positions, TIER2);
+			break;
+		}
+	}
 
 	blit_sections.clear();
 	blit_sections.push_back({ 52, 64, 39, 40 });
 	blit_sections.push_back({ 91, 64, 39, 40 });
 
 	cancel_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[NUM_UI_BUTTONS].x - CAMERA_OFFSET_X, buttons_positions[NUM_UI_BUTTONS].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
+	blit_sections.clear();
 }
 
 void HUD::HUDClearCreateUnits()
@@ -887,7 +1036,16 @@ void HUD::HUDClearCreateUnits()
 	App->gui->DestroyUIElement(create_elven_archer_bt);
 	App->gui->DestroyUIElement(create_elven_longblade_bt);
 	App->gui->DestroyUIElement(create_elven_cavalry_bt);
+	App->gui->DestroyUIElement(create_dwarven_mauler_bt);
+	App->gui->DestroyUIElement(create_dunedain_range_bt);
+	App->gui->DestroyUIElement(create_rohan_kinght_bt);
+	App->gui->DestroyUIElement(create_gondor_kinght_bt);
+	App->gui->DestroyUIElement(create_gondor_spearman_bt);
+	App->gui->DestroyUIElement(create_mounted_dunedain_bt);
+
+
 	App->gui->DestroyUIElement(cancel_bt);
+	blit_sections.clear();
 }
 
 void HUD::StartResourceInfo()
@@ -917,20 +1075,20 @@ void HUD::StartResourceInfo()
 SDL_Rect HUD::GetTechRect(uint id)
 {
 
-	SDL_Rect ret = { 130,144,39,40 };
+	SDL_Rect ret = { 54,104,39,40 };
 
 	switch (id) {
 	case 0:
 		break;
 	case 1:
-		ret.x = 208;
+		ret.x = 132;
 		break;
 	case 2:
-		ret.x = 286;
+		ret.x = 210;
 		break;
 	default:
-		ret.y = 184;
-		for (uint it = 0, c = 1; it < id; it++) {
+		ret.y = 144;
+		for (uint it = 3, c = 1; it < id; it++) {
 			ret.x += 39 * 2;
 			if (c == 4) {
 				ret.x = 130;
@@ -972,16 +1130,24 @@ void HUD::StartBuildingInfo()
 	life_str += maxlife;
 
 	life = (Label*)App->gui->CreateLabel(life_str, posx + 50 - App->render->camera.x, posy + 35 - App->render->camera.y, nullptr);
+<<<<<<< HEAD
 	
 	for (uint i = 0; i < App->entityManager->player->tech_tree->all_techs.size(); ++i) {
 		for (list<TechType>::iterator it = App->entityManager->player->tech_tree->available_techs.begin(); it != App->entityManager->player->tech_tree->available_techs.end(); ++it) {
 			if (it._Ptr->_Myval == App->entityManager->player->tech_tree->all_techs[i]->id && App->entityManager->player->tech_tree->all_techs[i]->researched_in && id) {
 				tech_rects.push_back(GetTechRect(i));
+=======
+
+	for (list<TechType>::iterator it = App->entityManager->ally_techtree->available_techs.begin(); it != App->entityManager->ally_techtree->available_techs.end(); ++it) {
+		for (uint i = 0; i < App->entityManager->ally_techtree->all_techs.size(); ++i) {
+			if (it._Ptr->_Myval == App->entityManager->ally_techtree->all_techs[i]->id && App->entityManager->ally_techtree->all_techs[i]->researched_in == id) {
+				tech_rects.push_back(GetTechRect(it._Ptr->_Myval));
+>>>>>>> origin/master
 				tech = true;
 			}
 		}
 	}
-		HUDBuildingMenu();
+	HUDBuildingMenu();
 }
 
 
@@ -1112,12 +1278,20 @@ void HUD::ClearSingle()
 	case HEROMENU:
 		HUDClearHeroMenu();
 	}
+	blit_sections.clear();
+	villager_state = VILLAGERNULL;
+	hero_state = HERONULL;
 }
 
 void HUD::CleanUp()
 {
 	ClearMultiple();
 	ClearSingle();
+	ClearResource();
+	ClearBuilding();
+	buttons_positions.clear();
+	buildings_rects.clear();
+	units_rects.clear();
 	type = NONE;
 }
 
