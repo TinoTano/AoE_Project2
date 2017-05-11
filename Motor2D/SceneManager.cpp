@@ -3,6 +3,7 @@
 SceneManager::SceneManager()
 {
 	name = "sceneManager";
+
 	menu_scene = new MenuScene(); scenes.push_back(menu_scene);
 	level1_scene = new Scene(); scenes.push_back(level1_scene);
 	play_scene = new PlayScene(); scenes.push_back(play_scene);

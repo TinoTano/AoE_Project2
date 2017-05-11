@@ -53,7 +53,8 @@ void Map::Draw()
 
 				iPoint tileWorld = MapToWorld(x, y);
 
-				if (tile_id > 0 && visibility != 0) 
+				/*if (tile_id > 0 && visibility != 0) */
+					if (tile_id > 0)
 				{
 					if (tile_id > 0)
 					{
@@ -63,11 +64,11 @@ void Map::Draw()
 							SDL_Rect r = tileset->GetTileRect(tile_id);
 							App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
 
-							if (visibility == fow_grey)
+							/*if (visibility == fow_grey)
 							{
 								r = { 0, 0, 96, 51 };
 								App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
-							}
+							}*/
 						}
 					}
 				}
