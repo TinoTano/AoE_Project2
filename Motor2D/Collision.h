@@ -19,6 +19,7 @@ enum COLLIDER_TYPE
 	COLLIDER_LOS,
 	COLLIDER_RANGE,
 	COLLIDER_CREATING_BUILDING,
+	COLLIDER_AOE_SKILL,
 
 	COLLIDER_MAX
 };
@@ -39,6 +40,7 @@ struct Collider
 	int r = 0;
 	bool to_delete = false;
 	bool colliding = false;
+	bool enabled = true;
 	COLLIDER_TYPE type = COLLIDER_NONE;
 	Entity* entity = nullptr;
 	Module* callback = nullptr;

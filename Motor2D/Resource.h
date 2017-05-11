@@ -36,6 +36,7 @@ public:
 	SDL_Texture* resourceGatheringTexture = nullptr;
 	vector<SDL_Rect> resourceRectVector;
 	SDL_Rect resourceRect;
+	bool isDamaged = false; // just for save/load
 };
 
 #endif

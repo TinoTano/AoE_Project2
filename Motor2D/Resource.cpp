@@ -72,7 +72,7 @@ void Resource::Damaged() {
 	uint w = 0, h = 0;
 	App->tex->GetSize(resourceGatheringTexture, w, h);
 	resourceRect.x = 0, resourceRect.y = 0, resourceRect.w = w, resourceRect.h = h;
-
+	isDamaged = true;
 }
 
 void Resource::Destroy() {

@@ -700,6 +700,13 @@ void EntityManager::OnCollision(Collision_data& col_data)
 		
 			break;
 
+		case COLLIDER_AOE_SKILL:
+			if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
+				Hero* hero = (Hero*)col_data.c2->GetUnit();
+				unit->Life -= hero->skill->damage;
+				hero->skill->Deactivate(hero);
+			}
+			break;
 		default:
 			break;
 		}

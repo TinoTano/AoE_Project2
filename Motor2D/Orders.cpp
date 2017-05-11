@@ -16,6 +16,7 @@
 #include "Orders.h"
 #include "AI.h"
 #include "Squad.h"
+#include "Hero.h"
 
 
 //Move to Order:
@@ -56,6 +57,11 @@ void MoveToOrder::Execute() {
 		// ===============================================================
 
 		App->collision->quadTree->UpdateCol(unit->collider);
+		if (unit->IsHero) {
+			Hero* hero = (Hero*)unit;
+			App->collision->quadTree->UpdateCol(hero->aoeTargets);
+			hero->aoeTargets->pos = hero->next_step;
+		}
 	}
 	else
 		state = COMPLETED;
@@ -156,6 +162,11 @@ void ReachOrder::Execute() {
 		// ===============================================================
 
 		App->collision->quadTree->UpdateCol(unit->collider);
+		if (unit->IsHero) {
+			Hero* hero = (Hero*)unit;
+			App->collision->quadTree->UpdateCol(hero->aoeTargets);
+			hero->aoeTargets->pos = hero->next_step;
+		}
 	}
 	else
 		state = COMPLETED;
