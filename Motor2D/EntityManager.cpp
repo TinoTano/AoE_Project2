@@ -705,6 +705,9 @@ void EntityManager::OnCollision(Collision_data& col_data)
 				Hero* hero = (Hero*)col_data.c2->GetUnit();
 				unit->Life -= hero->skill->damage;
 				hero->skill->Deactivate(hero);
+				if (unit->Life <= 0) {
+					unit->Destroy();
+				}
 			}
 			break;
 		default:

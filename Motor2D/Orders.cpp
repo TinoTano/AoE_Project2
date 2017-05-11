@@ -59,8 +59,10 @@ void MoveToOrder::Execute() {
 		App->collision->quadTree->UpdateCol(unit->collider);
 		if (unit->IsHero) {
 			Hero* hero = (Hero*)unit;
-			App->collision->quadTree->UpdateCol(hero->aoeTargets);
-			hero->aoeTargets->pos = hero->next_step;
+			if (hero->aoeTargets != nullptr) {
+				App->collision->quadTree->UpdateCol(hero->aoeTargets);
+				hero->aoeTargets->pos = hero->next_step;
+			}
 		}
 	}
 	else
@@ -164,8 +166,10 @@ void ReachOrder::Execute() {
 		App->collision->quadTree->UpdateCol(unit->collider);
 		if (unit->IsHero) {
 			Hero* hero = (Hero*)unit;
-			App->collision->quadTree->UpdateCol(hero->aoeTargets);
-			hero->aoeTargets->pos = hero->next_step;
+			if (hero->aoeTargets != nullptr) {
+				App->collision->quadTree->UpdateCol(hero->aoeTargets);
+				hero->aoeTargets->pos = hero->next_step;
+			}
 		}
 	}
 	else

@@ -1252,7 +1252,7 @@
 				<FoodCost value=""/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
-				<SkillType value="1"/>
+				<SkillType value="3"/>
 			</Stats>
 			<Animations>
 				<Idle>
