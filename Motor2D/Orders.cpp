@@ -307,50 +307,53 @@ void GatherOrder::Start(Entity* entity) {
 		}
 	}
 
-	villager->resource_carried = resource->type;
+	if (resource != nullptr) {
+		villager->resource_carried = resource->type;
 
-	if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
+		if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
 
-		switch (villager->resource_carried) {
-		case WOOD:
-			App->entityManager->player->resources.wood += villager->curr_capacity;
-			break;
-		case GOLD:
-			App->entityManager->player->resources.gold += villager->curr_capacity;
-			break;
-		case FOOD:
-			App->entityManager->player->resources.food += villager->curr_capacity;
-			break;
-		case STONE:
-			App->entityManager->player->resources.stone += villager->curr_capacity;
-			break;
+			switch (villager->resource_carried) {
+			case WOOD:
+				App->entityManager->player->resources.wood += villager->curr_capacity;
+				break;
+			case GOLD:
+				App->entityManager->player->resources.gold += villager->curr_capacity;
+				break;
+			case FOOD:
+				App->entityManager->player->resources.food += villager->curr_capacity;
+				break;
+			case STONE:
+				App->entityManager->player->resources.stone += villager->curr_capacity;
+				break;
+			}
+
+			App->sceneManager->level1_scene->UpdateResources();
+			villager->curr_capacity = 0;
 		}
 
-		App->sceneManager->level1_scene->UpdateResources();
-		villager->curr_capacity = 0;
-	}
-
-	if (!villager->collider->CheckCollision(resource->collider)) {
-		villager->order_list.push_front(new ReachOrder(resource));
-		state = NEEDS_START;
-	}
-	else {
-		villager->SetTexture(GATHERING);
-		state = EXECUTING;
+		if (!villager->collider->CheckCollision(resource->collider)) {
+			villager->order_list.push_front(new ReachOrder(resource));
+			state = NEEDS_START;
+		}
+		else {
+			villager->SetTexture(GATHERING);
+			state = EXECUTING;
+		}
 	}
 }
 
 void GatherOrder::Execute() {
-
-	if (!CheckCompletion()) {
-		if (villager->currentAnim->Finished()) {
-			villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
-			resource->Life -= MIN(resource->Life, villager->gathering_speed);
+	if (resource != nullptr) {
+		if (!CheckCompletion()) {
+			if (villager->currentAnim->Finished()) {
+				villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
+				resource->Life -= MIN(resource->Life, villager->gathering_speed);
+			}
 		}
-	}
-	else {
-		state = NEEDS_START;
-		villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
+		else {
+			state = NEEDS_START;
+			villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
+		}
 	}
 }
 
