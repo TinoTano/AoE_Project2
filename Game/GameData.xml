@@ -2340,11 +2340,11 @@
 
 <AI>
 	<Expansion>
-		<Villager_num value=""/>
+		<Villager_num value="4"/>
 		<Tech value=""/>
 		<Tech value=""/>
-		<Building value=""/>
-		<Building value=""/>
+		<Building value="13"/>
+		<Building value="14"/>
 	</Expansion>
 
 </AI>

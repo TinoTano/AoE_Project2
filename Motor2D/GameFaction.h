@@ -12,7 +12,23 @@ class Building;
 class GameFaction{
 public:
 
-	GameFaction(Faction argfaction) : faction(argfaction) {};
+	GameFaction(Faction argfaction) : faction(argfaction) { tech_tree = new TechTree(); }
+
+	~GameFaction() 
+	{
+		RELEASE(tech_tree);
+	}
+
+	void Reset() {
+		resources.SetToZero();
+		Town_center = nullptr;
+
+		units.clear();
+		villagers.clear();
+		buildings.clear();
+
+		tech_tree->Reset(faction);
+	}
 
 	StoredResources resources;
 	Faction faction;

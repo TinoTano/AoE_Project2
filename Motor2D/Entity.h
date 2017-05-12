@@ -39,6 +39,11 @@ struct Cost {
 		return true;
 	}
 
+	void SetToZero() 
+	{
+		wood = stone = gold = food = 0;
+	}
+
 };
 
 class Entity

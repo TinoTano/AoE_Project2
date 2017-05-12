@@ -79,7 +79,9 @@ public:
 
 public:
 
-	void Start(pugi::xml_node gameData, Faction faction);
+	TechTree();
+
+	void Reset(Faction faction);
 	void Update();
 
 	void LoadTechTree(pugi::xml_node gameData);

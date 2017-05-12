@@ -20,27 +20,26 @@ EntityManager::EntityManager() : Module()
 {
 	name = "entityManager";
 	nextID = 1;
+
+	player = new GameFaction(FREE_MEN);
+	AI_faction = new GameFaction(SAURON_ARMY);
 }
 
 EntityManager::~EntityManager()
 {
+	RELEASE(player);
+	RELEASE(AI_faction);
+
 }
 
 bool EntityManager::Awake(pugi::xml_node & config)
 {
-
 	return true;
 }
 
 bool EntityManager::Start()
 {
 	LOG("Starting EntityManager");
-
-	player = new GameFaction(FREE_MEN);
-	AI_faction = new GameFaction(SAURON_ARMY);
-
-	player->tech_tree = new TechTree();
-	AI_faction->tech_tree = new TechTree();
 
 	bool ret = LoadGameData();
 	click_timer.Start();
@@ -268,10 +267,16 @@ bool EntityManager::CleanUp()
 {
 	LOG("Freeing EntityManager");
 
-	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
+	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) 
 		RELEASE((*it));
-	}
+	
 	WorldEntityList.clear();
+
+	player->Reset();
+	AI_faction->Reset();
+
+	aux_resource_list.clear();
+	selectedEntityList.clear();
 
 	return true;
 }
@@ -509,8 +514,8 @@ bool EntityManager::LoadGameData()
 			resourcesDB.insert(pair<int, Resource*>(resourceTemplate->visual, resourceTemplate));
 		}
 
-		player->tech_tree->Start(gameData.child("FPTechs"), player->faction);
-		AI_faction->tech_tree->Start(gameData.child("SATechs"), AI_faction->faction);
+		player->tech_tree->LoadTechTree(gameData.child("FPTechs"));
+		AI_faction->tech_tree->LoadTechTree(gameData.child("SATechs"));
 	}
 
 	return ret;

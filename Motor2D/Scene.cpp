@@ -319,8 +319,8 @@ bool Scene::CleanUp()
 	buttons.clear();
 	ui_menu.CleanUp();
 
-	App->entityManager->selectedEntityList.clear();
 	App->entityManager->CleanUp();
+	App->collision->CleanUp();
 	App->fog->CleanUp();
 	return true;
 }

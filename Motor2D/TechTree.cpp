@@ -1,11 +1,17 @@
 #include "TechTree.h"
 
-void TechTree::Start(pugi::xml_node gameData, Faction faction){
+TechTree::TechTree() {
 
 	for (int i = 0; i < MAX_MULTIPLIERS; i++)
 		multiplier_list.push_back(1);
 
-	LoadTechTree(gameData);
+}
+
+void TechTree::Reset(Faction faction){
+
+	available_buildings.clear();
+	available_techs.clear();
+	available_units.clear();
 
 	if (faction == FREE_MEN) {
 		available_buildings.push_back(HOUSE);

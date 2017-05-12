@@ -103,8 +103,6 @@
     <ClCompile Include="QuestManager.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="CutSceneManager.cpp" />
-    <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Squad.cpp">
       <Filter>Project 2\Tools</Filter>
     </ClCompile>
@@ -116,6 +114,12 @@
     </ClCompile>
     <ClCompile Include="AI.cpp">
       <Filter>Project 2\Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="CutSceneManager.cpp">
+      <Filter>Project 2\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayScene.cpp">
+      <Filter>Project 2\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -233,8 +237,6 @@
     <ClInclude Include="QuestManager.h">
       <Filter>Project 2\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="CutSceneManager.h" />
-    <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Squad.h">
       <Filter>Project 2\Tools</Filter>
     </ClInclude>
@@ -252,6 +254,12 @@
     </ClInclude>
     <ClInclude Include="GameFaction.h">
       <Filter>Project 2\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="CutSceneManager.h">
+      <Filter>Project 2\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayScene.h">
+      <Filter>Project 2\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
