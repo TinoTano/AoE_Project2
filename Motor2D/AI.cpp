@@ -12,15 +12,19 @@ bool AI::Awake(pugi::xml_node& gameData) {
 
 	Enemies = App->entityManager->AI_faction;
 	srand(time(NULL));
-
-	LoadAI_Data(gameData);
-
 	return true;
 }
 
 bool AI::Start() {
 
 	LoadExplorationMap();
+
+	pugi::xml_document gameDataFile;
+	pugi::xml_node gameData;
+	gameData = App->LoadGameDataFile(gameDataFile);
+
+	LoadAI_Data(gameData);
+
 	IncreaseExpansionLevel();
 
 	return true;
@@ -60,24 +64,26 @@ void AI::LoadAI_Data(pugi::xml_node& gameData) {
 
 
 	pugi::xml_node ExpansionData;
-	int expansion_count = 1;
 
 	if (gameData.empty() == false)
 	{
-
 		for (ExpansionData = gameData.child("AI").child("Expansion"); ExpansionData; ExpansionData = ExpansionData.next_sibling("Expansion")) {
 
 			pugi::xml_node techs;
+			list<TechType> expansion_techs;
 			for (techs = ExpansionData.child("Tech"); techs; techs = techs.next_sibling("Tech"))
-				expansion_tech_table.at(expansion_count).push_back((TechType)techs.attribute("value").as_int());
+				expansion_techs.push_back((TechType)techs.attribute("value").as_int());
+
+			expansion_tech_table.push_back(expansion_techs);
 
 			pugi::xml_node buildings;
+			list<buildingType> expansion_buildings;
 			for (buildings = ExpansionData.child("Building"); buildings; buildings = buildings.next_sibling("Building"))
-				expansion_build_table.at(expansion_count).push_back((buildingType)techs.attribute("value").as_int());
+				expansion_buildings.push_back((buildingType)buildings.attribute("value").as_int());
 
-			villager_expansion_table.at(expansion_level) = ExpansionData.child("Villager_num").attribute("value").as_int();
+			expansion_build_table.push_back(expansion_buildings);
 
-			expansion_count++;
+			villager_expansion_table.push_back(ExpansionData.child("Villager_num").attribute("value").as_int());
 		}
 	}
 }
@@ -85,44 +91,47 @@ void AI::LoadAI_Data(pugi::xml_node& gameData) {
 
 bool AI::Update(float dt) {
 
-	switch (state) {
+	if (enabled) {
+		switch (state) {
 
-	case DEFENSIVE:
+		case DEFENSIVE:
 
-		ManageUnitRequests();
-		ManageVillagerRequests();
-		break;
+			ManageUnitRequests();
+			ManageVillagerRequests();
+			break;
 
-		if (threats.empty())
-			state = EXPANDING;
+			if (threats.empty())
+				state = EXPANDING;
 
-		break;
+			break;
 
-	case EXPANDING:
+		case EXPANDING:
 
-		ManageVillagerRequests();
-		ManageBuildRequests();
-		ManageTechRequests();
-		ManageUnitRequests();
+			ManageVillagerRequests();
+			ManageBuildRequests();
+			ManageTechRequests();
+			ManageUnitRequests();
 
-		if (buildings_to_build.empty() && techs_to_research.empty() && unit_requests.empty() && villagers.size() >= villager_expansion_table.at(expansion_level))
-			state = OFFENSIVE;
+			if (buildings_to_build.empty() && techs_to_research.empty() && unit_requests.empty() && Enemies->villagers.size() >= villager_expansion_table.at(expansion_level)) {
+				state = OFFENSIVE;
+				AI_timer.Start();
+			}
+			break;
 
-		break;
+		case OFFENSIVE:
 
-	case OFFENSIVE:
+			ManageAttack();
+			ManageUnitRequests();
 
-		ManageAttack();
-		ManageUnitRequests();
+			if (expansion_level < 10) {
+				if (AI_timer.ReadSec() > (60 + (10 * expansion_level)))
+					IncreaseExpansionLevel();
+			}
+			else
+				StartAttack();
 
-		if (expansion_level < 10) {
-			if (AI_timer.ReadSec() > (60 + (10 * expansion_level)))
-				IncreaseExpansionLevel();
+			break;
 		}
-		else
-			StartAttack();
-
-		break;
 	}
 
 	return true;
@@ -169,7 +178,6 @@ void AI::ManageAttack() {
 
 void AI::IncreaseExpansionLevel() {
 
-	expansion_level++;
 
 	list<buildingType> to_build = expansion_build_table.at(expansion_level);
 	for (list<buildingType>::iterator it = to_build.begin(); it != to_build.end(); it++)
@@ -191,15 +199,20 @@ void AI::IncreaseExpansionLevel() {
 	for (list<Squad*>::iterator it3 = defensive_squads.begin(); it3 != defensive_squads.end(); it3++) 
 		(*it3)->RestoreUnits();
 
+	expansion_level++;
+
 	state = EXPANDING;
 }
 
 void AI::ManageBuildRequests() {
 
 	for (list<buildingType>::iterator it = buildings_to_build.begin(); it != buildings_to_build.end(); it++) {
-		if (Enemies->resources.Spend(App->entityManager->unitsDB[(*it)]->cost)) {
+		if (Enemies->resources.Spend(App->entityManager->buildingsDB[(*it)]->cost)) {
 			iPoint placing_point = PlaceBuilding(buildings_to_build.front());
-			Building* building = App->entityManager->CreateBuilding(placing_point.x, placing_point.y, buildings_to_build.front());
+			Building* building = App->entityManager->CreateBuilding(placing_point.x, placing_point.y, (*it));
+			building->Life = 1;
+			building->entityTexture = building->constructingPhase1;
+			building->state = BEING_BUILT;
 
 			for (int i = 0; i < building->MaxLife; i += 500)
 				villager_requests.push_front(new BuildOrder(building));
@@ -211,9 +224,11 @@ void AI::ManageBuildRequests() {
 
 void AI::ManageVillagerRequests() {
 
-	for (int i = villagers.size(); i < villager_expansion_table.at(expansion_level); i++) {
-		if (Enemies->resources.Spend(App->entityManager->unitsDB[VILLAGER]->cost)) 
+	for (int i = Enemies->villagers.size() + requested_villagers; i < villager_expansion_table.at(expansion_level); i++) {
+		if (Enemies->resources.Spend(App->entityManager->unitsDB[VILLAGER]->cost)) {
 			Enemies->Town_center->order_list.push_front(new CreateUnitOrder(VILLAGER));
+			requested_villagers++;
+		}
 	}
 }
 
@@ -247,17 +262,17 @@ void AI::ManageUnitRequests() {
 
 void AI::ManageTechRequests() {
 
-	if (!tech_requests.empty()) {
-		for (list<pair<int, buildingType>>::iterator requested_type = tech_requests.begin(); requested_type != tech_requests.end(); requested_type++) {
+	if (!techs_to_research.empty()) {
+		for (list<TechType>::iterator requested_type = techs_to_research.begin(); requested_type != techs_to_research.end(); requested_type++) {
 
 			list<Building*>* enemy_buildings = &Enemies->buildings;
 			for (list<Building*>::iterator building = enemy_buildings->begin(); building != enemy_buildings->end(); building++) {
 
-				if ((*requested_type).second == (*building)->type) {
+				if (Enemies->tech_tree->all_techs.at(*requested_type)->researched_in == (*building)->type) {
 
-					if (Enemies->resources.Spend(Enemies->tech_tree->all_techs.at((*requested_type).first)->cost)) {
-						Enemies->tech_tree->StartResearch((TechType)(*requested_type).first);
-						tech_requests.erase(requested_type);
+					if (Enemies->resources.Spend(Enemies->tech_tree->all_techs.at(*requested_type)->cost)) {
+						Enemies->tech_tree->StartResearch(*requested_type);
+						techs_to_research.erase(requested_type);
 					}
 					break;
 				}
@@ -279,14 +294,14 @@ void AI::Fetch_AICommand(Villager* villager) {
 
 
 void AI::FillResourceRequests() {
-
+/*
 	for (int i = 0; i < MAX(1, (FOOD_PROPORTION * villagers.size())); i++)
 		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(FOOD, Enemies->Town_center->entityPosition)));
-	for (int i = 0; i < MAX(1, (WOOD_PROPORTION * villagers.size())); i++)
+	*/for (int i = 0; i < MAX(1, (WOOD_PROPORTION * Enemies->villagers.size())); i++)
 		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(WOOD, Enemies->Town_center->entityPosition)));
-	for (int i = 0; i < STONE_PROPORTION * villagers.size(); i++)
+	for (int i = 0; i < STONE_PROPORTION * Enemies->villagers.size(); i++)
 		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(STONE, Enemies->Town_center->entityPosition)));
-	for (int i = 0; i < GOLD_PROPORTION * villagers.size(); i++)
+	for (int i = 0; i < GOLD_PROPORTION * Enemies->villagers.size(); i++)
 		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(GOLD, Enemies->Town_center->entityPosition)));
 
 }
@@ -301,7 +316,7 @@ iPoint AI::PlaceBuilding(buildingType type) {
 	int r = MAX(height, width);
 
 	iPoint ret{ -1,-1 };
-	for (int iterations = 1; iterations <= 5; iterations++) {
+	for (int iterations = 1; iterations <= 3; iterations++) {
 
 		for (int i = -iterations * r; i <= iterations * r; i += r) {
 			for (int j = -iterations * r; j <= iterations * r; j += r) {

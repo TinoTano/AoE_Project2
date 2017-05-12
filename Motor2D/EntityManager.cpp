@@ -63,14 +63,14 @@ bool EntityManager::Update(float arg_dt)
 	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
-		{
-			/*if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();*/
-			if ((*it)->faction == NATURE) (*it)->Draw();
-			/*else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();*/
-			else if ((*it)->faction == SAURON_ARMY) (*it)->Draw();
-			else if ((*it)->faction == FREE_MEN) (*it)->Draw();
-		}	
+			(*it)->Draw();
 	}
+	
+	//		*if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();*/
+	//		if ((*it)->faction == NATURE) (*it)->Draw();
+	//		/*else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();*/
+	//		else if ((*it)->faction == SAURON_ARMY) (*it)->Draw();
+	//		else if ((*it)->faction == FREE_MEN) (*it)->Draw();
 
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 		if ((*it)->state == DESTROYED)
@@ -486,6 +486,8 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->cost.gold = buildingNodeInfo.child("Stats").child("Cost").child("goldCost").attribute("value").as_int();
 
 			buildingTemplate->type = (buildingType)buildingNodeInfo.child("Info").child("ID").attribute("value").as_int();
+			buildingTemplate->GetBuildingBoundaries();
+
 
 			buildingsDB.insert(pair<int, Building*>(buildingTemplate->type, buildingTemplate));
 			buildingTemplate->MaxLife = buildingTemplate->Life;
@@ -528,7 +530,6 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	if (type == VILLAGER || type == ELF_VILLAGER) {
 
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
-		unit->resourcesWareHouse = player->Town_center;
 
 		if (unit->faction == player->faction) {
 			player->villagers.push_back((Villager*)unit);
@@ -585,6 +586,7 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceItem item)
 	resource->entityID = nextID;
 	nextID++;
 	WorldEntityList.push_back((Entity*)resource);
+	aux_resource_list.push_back(resource);
 
 	return resource;
 }
@@ -645,10 +647,9 @@ void EntityManager::DeleteEntity(Entity* entity)
 					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
 
 						if ((*it2)->order_type == GATHER) {
-
 							GatherOrder* gth_order = (GatherOrder*)(*it2);
 							if (gth_order->resource = (Resource*)entity)
-								gth_order->resource = nullptr;
+								gth_order->state = COMPLETED;
 						}
 					}
 				}

@@ -98,6 +98,9 @@ bool Unit::Update(float dt)
 				SetTexture(IDLE);
 				state = IDLE;
 			}
+
+			if (IsVillager && faction == App->entityManager->AI_faction->faction)
+				App->ai->Fetch_AICommand((Villager*)this);
 		}
 	}
 	else {

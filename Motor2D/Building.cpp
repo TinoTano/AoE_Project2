@@ -56,7 +56,7 @@ bool Building::IsEnemy() const
 
 void Building::GetBuildingBoundaries()
 {
-	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
+	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
 }
 
 bool Building::Update(float dt)
@@ -145,6 +145,10 @@ void Building::Destroy() {
 	App->collision->DeleteCollider(collider);
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);
+
+	if (faction == SAURON_ARMY)
+		App->ai->buildings_to_build.push_back(type);
+
 	state = DESTROYED;
 	App->entityManager->DeleteEntity(this);
 

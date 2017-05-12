@@ -103,6 +103,8 @@ void TechTree::LoadTechTree(pugi::xml_node Techs) {
 
 	if (Techs.empty() == false)
 	{
+		Tech* tech_0 = new Tech();
+		all_techs.push_back(tech_0);
 
 		for (TechData = Techs.child("Tech"); TechData; TechData = TechData.next_sibling("Tech")) {
 

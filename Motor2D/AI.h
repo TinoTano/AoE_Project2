@@ -40,7 +40,7 @@ struct TargetPriority
 class AI : public Module {
 public:
 
-	AI(){};
+	AI(){ name = "AI"; };
 
 	// Destructor
 	virtual ~AI() {};
@@ -86,7 +86,7 @@ public:
 	GameFaction* Enemies;
 	int expansion_level = 0;
 	AI_state state = EXPANDING;
-
+	bool enabled = false;
 
 	//expansion management
 	list<buildingType> buildings_to_build;
@@ -107,10 +107,9 @@ public:
 	void Fetch_AICommand(Villager* villager);
 	list<Order*> villager_requests;  // resource + build requests
 	list<pair<unitType, Squad*>> unit_requests;
-	list<pair<int, buildingType>> tech_requests;
 
 	//villager management
-	list<Unit*> villagers;
+	int requested_villagers = 0;
 
 };
 

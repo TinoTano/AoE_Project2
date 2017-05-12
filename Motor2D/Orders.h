@@ -158,7 +158,7 @@ class CreateUnitOrder : public Order {
 public:
 
 	Building* building = nullptr;
-	unitType type = VILLAGER;
+	unitType type = ELF_VILLAGER;
 	Squad* belongs_to;
 	Timer timer;
 

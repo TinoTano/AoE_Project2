@@ -1100,60 +1100,72 @@
         <Name value = "VILLAGER"/>
         <ID value = "19"/>
       </Info>
-			<Textures>
-				<Idle value="textures/Units/Human/HumanWalkingWorker.png"/>
-				<Move value="textures/Units/Human/HumanWalkingWorker.png"/>
-				<Attack value="textures/Units/Human/HumanWalkingWorker.png"/>
-        <Cut value="textures/Units/Human"/>
+			<Textures>	
+        <Idle value="textures/Units/Elf villager/ElfVillagerIdle.png"/>
+        <Move value="textures/Units/Elf villager/ElfVillagerMove.png"/>
+        <Attack value="textures/Units/Elf villager/ElfVillagerAttack.png"/>
+        <Cut value="textures/Units/Elf villager/ElfVillagerChopping.png"/>
         <Minning value="textures/Units/Human"/>
         <Collecting_animals value="textures/Units/Human"/>
         <Collecting_plant value="textures/Units/Human"/>
-				<Die value="textures/Units/Human/HumanWalkingWorker.png"/>
+        <Die value="textures/Units/Elf villager/ElfVillagerDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="0"/>
-				<Life value="25"/>
-				<Attack value="3"/>
-				<AttackSpeed value="1.5"/>
-				<Defense value="0"/>
-				<PiercingDamage value="0"/>
-				<MovementSpeed value="100.7"/>
-				<LineOfSight value="3"/>
+				<Faction value="2"/>
+        <Life value="25"/>
+        <Attack value="3"/>
+        <AttackSpeed value="1.5"/>
+        <Defense value="0"/>
+        <PiercingDamage value="0"/>
+        <MovementSpeed value="100.7"/>
+        <LineOfSight value="3"/>
         <Range value="30"/>
         <RangeOffset value="50"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
-				<BuildTime value=""/>
+        <FoodCost value=""/>
+     	<GoldCost value=""/>
+        <BuildTime value=""/>
+	<GatheringSpeed value="30"/>
+	<MaxCapacity value="50"/>
+	<Cost>
+		<woodCost value="50"/>
+	</Cost>
 			</Stats>
 			<Animations>
-				<Idle>
-					<Rows value="5"/>
-					<Columns value="15"/>
-					<Width value="42"/>
-					<Height value="51"/>
-					<Speed value="0.2f"/>
-				</Idle>
-				<Move>
-					<Rows value="5"/>
-					<Columns value="15"/>
-					<Width value="42"/>
-					<Height value="51"/> 
-					<Speed value="0.2f"/>
-				</Move>
-				<Attack>
-					<Rows value="5"/>
-					<Columns value="15"/>
-					<Width value="42"/>
-					<Height value="51"/>
-					<Speed value="0.2f"/>
-				</Attack>
-				<Die>
-					<Rows value="5"/>
-					<Columns value="15"/>
-					<Width value="42"/>
-					<Height value="51"/>
-					<Speed value="0.2f"/>
-				</Die>
+        <Idle>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="22"/>
+          <Height value="42"/>
+          <Speed value="0.2f"/>
+        </Idle>
+        <Move>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="28"/>
+          <Height value="45"/>
+          <Speed value="0.2f"/>
+        </Move>
+        <Attack>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="54"/>
+          <Height value="51"/>
+          <Speed value="0.2f"/>
+        </Attack>
+        <Chop>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="74"/>
+          <Height value="76"/>
+          <Speed value="0.2f"/>
+        </Chop>
+        <Die>
+          <Rows value="5"/>
+          <Columns value="15"/>
+          <Width value="77"/>
+          <Height value="68"/>
+          <Speed value="0.4f"/>
+        </Die>
 			</Animations>
     </Unit>
 
@@ -1653,8 +1665,8 @@
         <ID value = "13"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/BuildingsSA/houseSA.png"/>
-				<Die value="textures/Buildings/BuildingsSA/houseSA.png"/>
+				<Idle value="textures/Buildings/BuildingsSA/HouseSA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/HouseSA.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
@@ -1665,7 +1677,6 @@
 				<BuildTime value="25"/>
 				<CanAttack value="false"/>
 				<Cost>
-					<foodCost value="25"/>
 					<woodCost value="50"/>
 				</Cost>
 			</Stats>
@@ -1676,8 +1687,8 @@
         <ID value = "14"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/BuildingsSA/barracksSA.png"/>
-				<Die value="textures/Buildings/BuildingsSA/barracksSA.png"/>
+				<Idle value="textures/Buildings/BuildingsSA/BarracksSA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/BarracksSA.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
@@ -1698,8 +1709,8 @@
         <ID value = "15"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/BuildingsSA/archerySA.png"/>
-				<Die value="textures/Buildings/BuildingsSA/archerySA.png"/>
+				<Idle value="textures/Buildings/BuildingsSA/ArcherySA.png"/>
+				<Die value="textures/Buildings/BuildingsSA/ArcherySA.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
@@ -2248,7 +2259,7 @@
 	<Multiplier value="-1" multiplier="-1"/>
 	<Researched_in value="14"/>
 	<Research_time value="30"/>
-	<Cost foodCost="200" woodCost="100" stoneCost="0" goldCost="0"/>
+	<Cost foodCost="0" woodCost="100" stoneCost="0" goldCost="0"/>
   </Tech>
 <Tech>
 	<Name value="Guts commerce"/>
@@ -2259,7 +2270,7 @@
 	<Multiplier value="-1" multiplier="-1"/>
 	<Researched_in value="12"/>
 	<Research_time value="40"/>
-	<Cost foodCost="175" woodCost="100" stoneCost="0" goldCost="50"/>
+	<Cost foodCost="0" woodCost="100" stoneCost="0" goldCost="50"/>
   </Tech>
 <Tech>
 	<Name value="Steel mines"/>
@@ -2269,7 +2280,7 @@
 	<Multiplier value="-1" multiplier="-1"/>
 	<Researched_in value="12"/>
 	<Research_time value="40"/>
-	<Cost foodCost="100" woodCost="50" stoneCost="10" goldCost="50"/>
+	<Cost foodCost="0" woodCost="50" stoneCost="10" goldCost="50"/>
   </Tech>
 <Tech>
 	<Name value="Skirmish Tactics"/>
@@ -2340,11 +2351,50 @@
 
 <AI>
 	<Expansion>
-		<Villager_num value="4"/>
-		<Tech value=""/>
-		<Tech value=""/>
+		<Villager_num value="2"/>
 		<Building value="13"/>
 		<Building value="14"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="4"/>
+		<Tech value="1"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="6"/>
+		<Tech value="2"/>
+		<Tech value="4"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="8"/>
+		<Tech value="3"/>
+		<Building value="15"/>
+		<Building value="18"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="10"/>
+		<Tech value="5"/>
+		<Building value="19"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="12"/>
+		<Tech value="6"/>
+		<Building value="16"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="15"/>
+		<Tech value="8"/>
+		<Building value="17"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="20"/>
+		<Tech value="7"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="25"/>
+		<Tech value="9"/>
+	</Expansion>
+<Expansion>
+		<Villager_num value="35"/>
 	</Expansion>
 
 </AI>

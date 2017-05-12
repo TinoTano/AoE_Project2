@@ -312,18 +312,25 @@ void GatherOrder::Start(Entity* entity) {
 
 		if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
 
+
+			StoredResources* resources;
+			if (villager->faction == App->entityManager->player->faction)
+				resources = &App->entityManager->player->resources;
+			else
+				resources = &App->entityManager->AI_faction->resources;
+
 			switch (villager->resource_carried) {
 			case WOOD:
-				App->entityManager->player->resources.wood += villager->curr_capacity;
+				resources->wood += villager->curr_capacity;
 				break;
 			case GOLD:
-				App->entityManager->player->resources.gold += villager->curr_capacity;
+				resources->gold += villager->curr_capacity;
 				break;
 			case FOOD:
-				App->entityManager->player->resources.food += villager->curr_capacity;
+				resources->food += villager->curr_capacity;
 				break;
 			case STONE:
-				App->entityManager->player->resources.stone += villager->curr_capacity;
+				resources->stone += villager->curr_capacity;
 				break;
 			}
 
@@ -348,6 +355,8 @@ void GatherOrder::Execute() {
 			if (villager->currentAnim->Finished()) {
 				villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
 				resource->Life -= MIN(resource->Life, villager->gathering_speed);
+				if (resource->Life <= 0)
+					resource->Destroy();
 			}
 		}
 		else {
@@ -431,6 +440,9 @@ void CreateUnitOrder::Execute()
 		creation_place = App->pathfinding->FindNearestAvailable(creation_place, 10);
 		creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
 		Unit* unit = App->entityManager->CreateUnit(creation_place.x, creation_place.y, type);
+
+		if (type == VILLAGER)
+			App->ai->requested_villagers--;
 
 		if (belongs_to) 
 			belongs_to->units.push_back(unit);

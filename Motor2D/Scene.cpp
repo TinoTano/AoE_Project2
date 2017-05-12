@@ -170,6 +170,10 @@ bool Scene::Start()
 	//Resources
 	App->map->LoadResources(App->map->map_file.child("map"));
 
+	// Enable AI
+
+	App->ai->enabled = true;
+
 	// Units
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y - 150, GOBLIN_SOLDIER);
@@ -182,15 +186,20 @@ bool Scene::Start()
 	// Buildings
 	App->entityManager->player->Town_center = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
 	App->fog->AddEntity(App->entityManager->player->Town_center);
-	App->entityManager->AI_faction->Town_center = App->entityManager->CreateBuilding(3200, 1800, SAURON_TOWER);
+
+	iPoint enemyTownCenterPos{ 1800, 2800, };
+	App->entityManager->AI_faction->Town_center = App->entityManager->CreateBuilding(enemyTownCenterPos.x, enemyTownCenterPos.y, SAURON_TOWER);
 	App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
 
 	// Villager last!
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 150, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X - 180, TOWN_HALL_POS_Y + 200, ELF_VILLAGER);
+
+	App->entityManager->CreateUnit(enemyTownCenterPos.x - 250, enemyTownCenterPos.y + 200, VILLAGER);  
+	App->entityManager->CreateUnit(enemyTownCenterPos.x - 280, enemyTownCenterPos.y + 200, VILLAGER);
 
 	// ================================================================================================================
 
-	UpdateVillagers(3, 3);
 
 	timer.Start();
 	troll_timer.Start();
@@ -201,13 +210,10 @@ bool Scene::Start()
 
 	game_finished = false;
 
-	wave = 0;
-	orcs_to_spawn = 0;
-	trolls_to_spawn = 0;
 	App->entityManager->player->resources.wood = 100;
 	UpdateResources();
-	villagers_curr = 0;
-	villagers_total = 0;
+	villagers_curr = villagers_total =1;
+	UpdateVillagers(villagers_curr, villagers_total);
 
 	return true;
 }
@@ -318,6 +324,8 @@ bool Scene::CleanUp()
 	images.clear();
 	buttons.clear();
 	ui_menu.CleanUp();
+
+	App->ai->enabled = false;
 
 	App->entityManager->CleanUp();
 	App->collision->CleanUp();

@@ -61,7 +61,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	AddModule(particlemanager);
 	AddModule(gui);
-	//AddModule(ai);
+	AddModule(ai);
 	AddModule(cutscene);
  	AddModule(quest);
 
