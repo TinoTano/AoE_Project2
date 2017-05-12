@@ -60,9 +60,10 @@ struct Tech {
 	buildingType unlocks_building;
 
 	buildingType researched_in;
-	bool researched = false;
+	bool researching = false;
 	Cost cost;
 	int research_time;
+	int aux_timer;
 	Timer research_timer;
 
 };

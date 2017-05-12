@@ -60,9 +60,9 @@ void TechTree::Update(){
 
 	if (!available_techs.empty()) {
 		for (list<TechType>::iterator it = available_techs.begin(); it != available_techs.end(); it++) {
-			if (all_techs.at(*it)->research_timer.ReadSec() > all_techs.at(*it)->research_time)
+			Tech* tech = all_techs.at(*it);
+			if (tech->researching && tech->research_timer.ReadSec() > tech->aux_timer + (tech->research_time * 1000))
 				Researched(*it);
-
 		}
 	}
 }
@@ -70,7 +70,8 @@ void TechTree::Update(){
 
 void TechTree::StartResearch(TechType tech_id)
 {
-	all_techs.at(tech_id)->research_timer.Start();
+	all_techs.at(tech_id)->aux_timer = all_techs.at(tech_id)->research_timer.Read();
+	all_techs.at(tech_id)->researching = true;
 }
 
 
