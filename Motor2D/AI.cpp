@@ -246,7 +246,7 @@ void AI::ManageUnitRequests() {
 					list<Building*>* enemy_buildings = &Enemies->buildings;
 					for (list<Building*>::iterator building = enemy_buildings->begin(); building != enemy_buildings->end(); building++) {
 
-						if ((*units).first == (*building)->type) {
+						if ((*units).second == (*building)->type) {
 
 							if (Enemies->resources.Spend(App->entityManager->unitsDB[(*requested_type).first]->cost)) {
 								(*building)->order_list.push_front(new CreateUnitOrder((*requested_type).first, (*requested_type).second));
