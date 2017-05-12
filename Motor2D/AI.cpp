@@ -17,8 +17,6 @@ bool AI::Awake(pugi::xml_node& gameData) {
 
 bool AI::Start() {
 
-	LoadExplorationMap();
-
 	pugi::xml_document gameDataFile;
 	pugi::xml_node gameData;
 	gameData = App->LoadGameDataFile(gameDataFile);
@@ -30,30 +28,34 @@ bool AI::Start() {
 	return true;
 }
 
+bool TargetPriority(const Entity& lhs, const Entity& rhs)
+{
+	return (lhs.MaxLife > rhs.MaxLife);
+}
+
+bool ExplorationPriority(const iPoint& lhs, const iPoint& rhs)
+{
+	return (lhs.DistanceTo(App->ai->Enemies->Town_center->entityPosition) < rhs.DistanceTo(App->ai->Enemies->Town_center->entityPosition));
+}
+
+
 void AI::LoadExplorationMap() {
 
 	int width = App->map->data.mapWidth;
 	int height = App->map->data.mapHeight;
 
-	for (int i = 0; i < width; i += (width / 10)) {
-		for (int j = 0; j < height; j += (height / 10)) {
+	for (int i = width / 20; i < width - (width / 20); i += (width / 20)) {
+		for (int j = height / 20;  j < height - (height / 20); j += (height / 20)) {
 
 			iPoint p{ i,j };
 			iPoint Map_p = App->map->WorldToMap(p.x, p.y);
 
-			if (!App->pathfinding->IsWalkable(Map_p) || !App->collision->IsOccupied(p)) {
-
-				p = App->pathfinding->FindNearestAvailable(Map_p, 3);
-				Map_p = App->map->WorldToMap(p.x, p.y);
-
-				if (App->pathfinding->IsWalkable(Map_p) && App->collision->IsOccupied(p)) 
-					exploration_points.push_back(p);
-			}
-			else
+			if (App->pathfinding->IsWalkable(Map_p) && App->collision->IsOccupied(p)) 
 				exploration_points.push_back(p);
 		}
 	}
 
+	exploration_points.sort(ExplorationPriority);
 	//sort(exploration_points.begin(), exploration_points.end(), [](const iPoint& lhs, const iPoint& rhs, iPoint enemy_town_hall) { return lhs.DistanceTo(enemy_town_hall) < rhs.DistanceTo(enemy_town_hall); });
 
 }
@@ -187,11 +189,11 @@ void AI::IncreaseExpansionLevel() {
 	for (list<TechType>::iterator it2 = to_research.begin(); it2 != to_research.end(); it2++)
 		techs_to_research.push_front(*it2);
 
-	if (expansion_level == 3)
+	if (expansion_level == 1)
 		defensive_squads.push_back(new Squad());
-	else if (expansion_level == 6)
+	else if (expansion_level == 4)
 		defensive_squads.push_back(new Squad());
-	else if (expansion_level == 9)
+	else if (expansion_level == 7)
 		defensive_squads.push_back(new Squad());
 
 	squad_size *= 1.2;

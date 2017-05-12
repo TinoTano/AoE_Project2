@@ -170,10 +170,6 @@ bool Scene::Start()
 	//Resources
 	App->map->LoadResources(App->map->map_file.child("map"));
 
-	// Enable AI
-
-	App->ai->enabled = true;
-
 	// Units
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X - 50, TOWN_HALL_POS_Y - 280, GONDOR_HERO);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y - 150, GOBLIN_SOLDIER);
@@ -198,8 +194,12 @@ bool Scene::Start()
 	App->entityManager->CreateUnit(enemyTownCenterPos.x - 250, enemyTownCenterPos.y + 200, VILLAGER);  
 	App->entityManager->CreateUnit(enemyTownCenterPos.x - 280, enemyTownCenterPos.y + 200, VILLAGER);
 
-	// ================================================================================================================
+	// Enable AI
 
+	App->ai->enabled = true;
+	App->ai->LoadExplorationMap();
+
+	// ================================================================================================================
 
 	timer.Start();
 	troll_timer.Start();
@@ -212,7 +212,7 @@ bool Scene::Start()
 
 	App->entityManager->player->resources.wood = 100;
 	UpdateResources();
-	villagers_curr = villagers_total =1;
+	villagers_curr = villagers_total = 1;
 	UpdateVillagers(villagers_curr, villagers_total);
 
 	return true;

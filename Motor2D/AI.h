@@ -29,13 +29,6 @@ enum AI_state {
 	EXPANDING, DEFENSIVE, OFFENSIVE
 };
 
-struct TargetPriority
-{
-	bool operator()(const Entity& lhs, const Entity& rhs) const
-	{
-		return lhs.MaxLife > rhs.MaxLife;
-	}
-};
 
 class AI : public Module {
 public:
@@ -96,7 +89,7 @@ public:
 	vector<int> villager_expansion_table;
 
 	//army management
-	int squad_size = 10;
+	int squad_size = 7;
 	list<Squad*> defensive_squads;
 	list<Squad*> offensive_squads;
 	deque<Entity*> targets;
@@ -112,4 +105,3 @@ public:
 	int requested_villagers = 0;
 
 };
-

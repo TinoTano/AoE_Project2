@@ -67,7 +67,6 @@ void QuadTree::UpdateCol(Collider* col) {
 	int index = GetNodeIndex(col);
 	if (index == -1) {
 		if (!IsInList(col)) {
-
 			collidersList.push_back(col);
 			if (collidersList.size() > MAX_OBJECTS && level < MAX_LEVELS && node[0] == nullptr)
 				SplitNode();
