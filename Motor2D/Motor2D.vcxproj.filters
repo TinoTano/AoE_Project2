@@ -121,6 +121,9 @@
     <ClCompile Include="PlayScene.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="HUDFuncs.cpp">
+      <Filter>Project 2\Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">

@@ -210,7 +210,10 @@ bool Scene::Start()
 
 	game_finished = false;
 
-	App->entityManager->player->resources.wood = 100;
+	App->entityManager->player->resources.wood = 9000;
+	App->entityManager->player->resources.food = 9000;
+	App->entityManager->player->resources.stone = 9000;
+	App->entityManager->player->resources.gold = 9000;
 	UpdateResources();
 	villagers_curr = villagers_total = 1;
 	UpdateVillagers(villagers_curr, villagers_total);

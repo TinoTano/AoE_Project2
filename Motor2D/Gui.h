@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 #include <vector>
+#include "TechTree.h"
 #include "EntityManager.h"
 
 using namespace std;
@@ -23,7 +24,9 @@ using namespace std;
 #define TECH_UI_BUTTON 6
 
 struct _TTF_Font;
-
+struct unit_button;
+struct building_button;
+struct tech_button;
 
 enum ElementType {
 	IMAGE, LABEL, BUTTON, INPUTTEXT, SCROLLBAR, QUAD, CURSOR, UNKNOWN
@@ -128,7 +131,8 @@ public:
 	void Movement(pair<int, int> movement);
 	MouseState MouseDetect();
 	void DebugMode();
-
+	string name;
+	string desc;
 
 	vector<SDL_Rect> blit_sections;
 	vector<SDL_Rect> detect_sections;
@@ -294,12 +298,13 @@ private:
 	void GetSelection();
 	void StartBuildingInfo();
 	void StartResourceInfo();
-	SDL_Rect GetTechRect(uint id);
 	SDL_Rect GetRect(uint id);
 	void ClearMultiple();
 	void ClearSingle();
 	void ClearBuilding();
 	void ClearResource();
+	void ClearAll();
+	vector<Button*> all_bt;
 
 private:
 	//
@@ -308,6 +313,7 @@ private:
 	//        RESOURCE
 	//-----------------------
 	void HUDResourceMenu();
+	void DrawResourceBar();
 	// -----------------------
 	//		  VILLAGERS
 	// -----------------------
@@ -335,14 +341,6 @@ private:
 	void HUDHeroMenu();
 	void HUDClearHeroMenu();
 	// ------ CREATE BUILDINGS -------
-	Button* create_town_center_bt, *create_house_bt, *create_archery_range_bt,
-		*create_stables_bt, *create_siege_workshop_bt, *create_market_bt, *create_blacksmith_bt, *create_mill_bt,
-		*create_outpost_bt, *create_monastery_bt, *create_castle_bt;
-
-	list<Button*> tech_bt;
-	vector<SDL_Rect> tech_rects;
-	bool tech = false;
-
 	void HUDCreateBuildings();
 	void HUDClearCreateBuildings();
 	// -----------------------
@@ -357,6 +355,7 @@ private:
 	};
 	HUDBuildingState building_state;
 	vector<vector<SDL_Rect> > units_rects;
+	void DrawBuildingBar();
 	// ----- MENU -----
 	Button* create_unit_bt, *create_hero_bt, *create_villager_bt;
 	void HUDBuildingMenu();
@@ -372,10 +371,15 @@ private:
 		*create_dunedain_range_bt, *create_gondor_kinght_bt, *create_rohan_kinght_bt, *create_mounted_dunedain_bt;
 	void HUDCreateUnits();
 	void HUDClearCreateUnits();
-
-
-	Button* cancel_bt;
+	// GENERAL HELPINGS
+	Button* cancel_bt = nullptr;
 	vector<SDL_Rect> blit_sections;
+
+	// BLITING INFO
+	void BlitInfoUnit(unit_button bt);
+	void BlitInfoBuilding(building_button bt);
+	void BlitInfoTech(tech_button bt);
+	Label* info_lbl = nullptr, *desc_lbl = nullptr;
 };
 
 
@@ -438,6 +442,10 @@ private:
 	vector<Info> info;
 public:
 	vector<Info>GetElements(string scene);
+	vector<building_button> building_bt;
+	vector<unit_button> unit_bt;
+	vector<tech_button> tech_bt;
+
 	// ----- UNIT CLASS ----- //
 	// -------------------- //
 public:
@@ -490,4 +498,28 @@ public:
 		name(argname), id(argid), position(argpos), path(argpath), rect(argrect), scene(argscene), type(argtype) {}
 };
 
+
+struct building_button {
+	Button* button;
+	string name;
+	string desc;
+	vector<SDL_Rect> blit_sections;
+	buildingType type;
+};
+
+struct unit_button {
+	Button* button;
+	string name;
+	string desc;
+	vector<SDL_Rect> blit_sections;
+	unitType type;
+};
+
+struct tech_button {
+	Button* button;
+	string name;
+	string desc;
+	vector<SDL_Rect> blit_sections;
+	TechType type;
+};
 #endif // __j1GUI_H__
