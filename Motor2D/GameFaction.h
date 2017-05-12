@@ -2,9 +2,9 @@
 #define _GAMEFACTION_
 
 #include "Entity.h"
+#include "TechTree.h"
 #include <list>
 
-class TechTree;
 class Unit;
 class Villager;
 class Building;
@@ -12,7 +12,7 @@ class Building;
 class GameFaction{
 public:
 
-	GameFaction(Faction argfaction) : faction(argfaction) { tech_tree = new TechTree(); }
+	GameFaction(Faction argfaction) : faction(argfaction) { tech_tree = new TechTree(); Reset(); }
 
 	~GameFaction() 
 	{

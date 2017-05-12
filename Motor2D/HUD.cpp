@@ -322,123 +322,145 @@ void HUD::Update() {
 											HUDVillagerMenu();
 										else if (create_town_center_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_town_center_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, TOWN_CENTER);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, TOWN_CENTER);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_house_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_house_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, HOUSE);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, HOUSE);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_stables_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_stables_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, STABLES);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, STABLES);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_archery_range_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_archery_range_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, ARCHERY_RANGE);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, ARCHERY_RANGE);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_siege_workshop_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_siege_workshop_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, SIEGE_WORKSHOP);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, SIEGE_WORKSHOP);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										else if (create_market_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_market_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MARKET);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MARKET);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_blacksmith_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_blacksmith_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, BLACKSMITH);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, BLACKSMITH);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_mill_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_mill_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MILL);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MILL);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_outpost_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_outpost_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, OUTPOST);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, OUTPOST);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_monastery_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_monastery_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MONASTERY);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, MONASTERY);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										if (create_castle_bt != nullptr) {
 											if (!App->entityManager->placingBuilding && create_castle_bt->current == CLICKUP) {
-												int x, y;
-												App->input->GetMousePosition(x, y);
-												App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, CASTLE);
-												App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-												App->entityManager->placingBuilding = true;
-												App->entityManager->buildingToCreate->waitingToPlace = true;
-												App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[TOWN_CENTER]->cost)) {
+													int x, y;
+													App->input->GetMousePosition(x, y);
+													App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, CASTLE);
+													App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+													App->entityManager->placingBuilding = true;
+													App->entityManager->buildingToCreate->waitingToPlace = true;
+													App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
+												}
 											}
 										}
 										// AND SO ON

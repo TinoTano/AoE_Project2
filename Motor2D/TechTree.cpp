@@ -53,17 +53,18 @@ void TechTree::Reset(Faction faction){
 
 	}
 
-
 }
 
 
 void TechTree::Update(){
 
-	for (vector<Tech*>::iterator it = all_techs.begin(); it != all_techs.end(); it++) {
-		if ((*it)->research_timer.ReadSec() > (*it)->research_time)
-			Researched((TechType)(*it)->id);
-	}
+	if (!available_techs.empty()) {
+		for (list<TechType>::iterator it = available_techs.begin(); it != available_techs.end(); it++) {
+			if (all_techs.at(*it)->research_timer.ReadSec() > all_techs.at(*it)->research_time)
+				Researched(*it);
 
+		}
+	}
 }
 
 
