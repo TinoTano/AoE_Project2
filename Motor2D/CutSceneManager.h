@@ -16,14 +16,17 @@ class Unit;
 class Label;
 class UIElement;
 class Scene;
+class Building;
 
 enum unitType;
+enum buildingType;
 
 enum elements_groups
 {
 	e_g_map,
 	e_g_image,
 	e_g_unit,
+	e_g_building,
 	e_g_music,
 	e_g_sound_effect,
 	e_g_text,
@@ -89,6 +92,20 @@ public:
 
 private:
 	Unit*	unit;
+};
+
+class CutsceneBuilding : public CutsceneElement
+{
+public:
+	CutsceneBuilding(elements_groups group, const char* path, const char* name, buildingType type, bool active = true, iPoint pos = { 0,0 });
+	~CutsceneBuilding();
+
+	Building* GetBuilding()const;
+	void SetNull();
+	void SetBuilding(Building* b);
+
+private:
+	Building*	building;
 };
 
 class CutsceneMusic : public CutsceneElement
@@ -311,6 +328,7 @@ private:
 	void LoadMap(pugi::xml_node& node);
 	void LoadCSImage(pugi::xml_node& node);
 	void LoadUnit(pugi::xml_node& node);
+	void LoadBuilding(pugi::xml_node& node);
 	void LoadMusic(pugi::xml_node& node);
 	void LoadSoundEffect(pugi::xml_node& node);
 	void LoadText(pugi::xml_node& node);
@@ -322,7 +340,6 @@ private:
 	void LoadAction(pugi::xml_node& node);
 	void LoadMove(pugi::xml_node& node);
 	void LoadModify(pugi::xml_node& node);
-	void LoadChangeScene(pugi::xml_node& node);
 
 	//Perform Actions
 	void PerformMove(CutsceneElement* ele, CutsceneMove* move);
@@ -332,7 +349,6 @@ private:
 	void PerformModify(CutsceneElement* ele, CutsceneAction* act);
 	void PerformEnable(CutsceneElement* ele);
 	void PerformDisable(CutsceneElement* ele);
-	void PerformChangeScene(CutsceneAction* act);
 	void MoveCamera(CutsceneMove* move);
 
 private:

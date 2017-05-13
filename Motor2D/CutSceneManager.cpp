@@ -144,6 +144,7 @@ void CutSceneManager::Load(const char * path)
 			for (pugi::xml_node map = group.child("map"); map; map = map.next_sibling("map"))
 			{
 				LoadMap(map);
+				App->map->LoadResources(App->map->map_file.child("map"));
 				App->fog->Start();
 			}
 		}
@@ -159,6 +160,13 @@ void CutSceneManager::Load(const char * path)
 			for (pugi::xml_node unit = group.child("unit"); unit; unit = unit.next_sibling("unit"))
 			{
 				LoadUnit(unit);
+			}
+		}
+		else if (type == "building")
+		{
+			for (pugi::xml_node building = group.child("building"); building; building = building.next_sibling("building"))
+			{
+				LoadBuilding(building);
 			}
 		}
 		else if (type == "music")
@@ -197,10 +205,6 @@ void CutSceneManager::Load(const char * path)
 		else if (type == "modify")
 		{
 			LoadModify(act);
-		}
-		else if (type == "change_scene")
-		{
-			LoadChangeScene(act);
 		}
 		else
 		{
@@ -280,9 +284,6 @@ void CutSceneManager::PerformActions(float dt)
 			case a_disable:
 				PerformDisable(element);
 				break;
-			case a_change_scene:
-				PerformChangeScene(*act);
-				break;
 			default:
 				break;
 			}
@@ -294,15 +295,22 @@ void CutSceneManager::ClearScene()
 {
 	for (std::list<CutsceneElement*>::iterator it = elements.begin(); it != elements.end();)
 	{
-		if ((*it)->group == e_g_unit)
-		{
-			if ((*it)->group == e_g_map)
-				App->map->CleanUp();
+		if ((*it)->group == e_g_map)
+			App->map->CleanUp();
 
-			CutsceneUnit* unit = static_cast<CutsceneUnit*>(*it);
-			if (unit->GetUnit() != nullptr)
-				App->entityManager->DeleteEntity(unit->GetUnit());
+		/*if ((*it)->group == e_g_unit)
+		{
+		CutsceneUnit* unit = static_cast<CutsceneUnit*>(*it);
+		if (unit->GetUnit() != nullptr)
+		App->entityManager->DeleteEntity(unit->GetUnit());
 		}
+		if ((*it)->group == e_g_building)
+		{
+		CutsceneBuilding* building = static_cast<CutsceneBuilding*>(*it);
+		if (building->GetBuilding() != nullptr)
+		App->entityManager->DeleteEntity(building->GetBuilding());
+		}*/
+
 		RELEASE(*it);
 		it = elements.erase(it);
 	}
@@ -319,8 +327,6 @@ void CutSceneManager::ClearScene()
 		RELEASE(*it);
 		it = active_actions.erase(it);
 	}
-
-	App->audio->StopMusic();
 }
 
 void CutSceneManager::LoadMap(pugi::xml_node & node)
@@ -360,6 +366,14 @@ void CutSceneManager::LoadUnit(pugi::xml_node & node)
 	elements.push_back(e);
 }
 
+void CutSceneManager::LoadBuilding(pugi::xml_node & node)
+{
+	CutsceneBuilding* b = new CutsceneBuilding(e_g_building, node.attribute("path").as_string(), node.attribute("name").as_string(), (buildingType)node.attribute("type").as_uint(), node.attribute("active").as_bool(), { node.attribute("pos_x").as_int(),node.attribute("pos_y").as_int() });
+
+	elements.push_back(b);
+}
+
+
 void CutSceneManager::LoadMusic(pugi::xml_node & node)
 {
 	CutsceneMusic* m = new CutsceneMusic(e_g_music, node.attribute("path").as_string(), node.attribute("name").as_string(), node.attribute("active").as_bool());
@@ -397,7 +411,6 @@ void CutSceneManager::UpdateElements(float dt)
 		{
 			if ((*ele)->active == true)
 			{
-				//App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 				App->map->Draw();
 			}
 
@@ -527,26 +540,6 @@ void CutSceneManager::LoadModify(pugi::xml_node & node)
 			break;
 		}
 	}
-}
-
-void CutSceneManager::LoadChangeScene(pugi::xml_node & node)
-{
-	CutsceneChangeScene* cs = new CutsceneChangeScene(a_change_scene, node.attribute("element").as_string(), node.attribute("start").as_int(), node.attribute("duration").as_int());
-
-	cs->path = node.child("change_scene").attribute("path").as_string();
-
-	string effect = node.child("change_scene").attribute("effect").as_string();
-
-	if (effect == "fade")
-		cs->effect = c_s_e_fade;
-	else if (effect == "circle")
-		cs->effect = c_s_e_circle;
-	else if (effect == "star")
-		cs->effect = c_s_e_star;
-	else
-		cs->effect = c_s_e_null;
-
-	remaining_actions.push(cs);
 }
 
 void CutSceneManager::PerformMove(CutsceneElement * ele, CutsceneMove * move)
@@ -735,18 +728,6 @@ void CutSceneManager::PerformDisable(CutsceneElement * ele)
 	}
 }
 
-void CutSceneManager::PerformChangeScene(CutsceneAction * act)
-{
-	CutsceneChangeScene* cs = static_cast<CutsceneChangeScene*>(act);
-
-	change_scene = true;
-	changed = false;
-	change_scene_duration = cs->duration;
-	change_scene_effect = cs->effect;
-	new_scene = cs->path;
-	change_scene_timer.Start();
-}
-
 void CutSceneManager::MoveCamera(CutsceneMove * move)
 {
 	float rel_time = (scene_timer.ReadSec() - (float)move->start) / (float)move->duration;
@@ -850,6 +831,34 @@ void CutsceneUnit::SetNull()
 void CutsceneUnit::SetUnit(Unit * e)
 {
 	unit = e;
+}
+//----------------------
+
+//-----------------------
+// Building
+//-----------------------
+
+CutsceneBuilding::CutsceneBuilding(elements_groups group, const char * path, const char* name, buildingType type, bool active, iPoint pos) : CutsceneElement(group, path, name, active)
+{
+	building = App->entityManager->CreateBuilding(pos.x, pos.y, type);
+	building->isActive = active;
+}
+
+CutsceneBuilding::~CutsceneBuilding()
+{
+}
+
+Building * CutsceneBuilding::GetBuilding() const
+{
+	return building;
+}
+void CutsceneBuilding::SetNull()
+{
+	building = nullptr;
+}
+void CutsceneBuilding::SetBuilding(Building * b)
+{
+	building = b;
 }
 //----------------------
 
