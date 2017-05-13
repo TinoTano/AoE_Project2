@@ -71,10 +71,6 @@ bool Scene::Start()
 	App->render->cameraScene.left = 1680;
 	App->render->cameraScene.right = -1410;
 
-	// Init the map ================================================
-
-	App->minimap->InitMinimap();
-
 	// Loading UI ====================================================
 
 	uint x, y;
@@ -290,6 +286,8 @@ bool Scene::Update(float dt)
 	else App->gui->cursor->SetCursor(0);
 
 	questHUD.Update();
+
+	App->minimap->GetClickableArea(images[MINIMAP]->pos);
 
 	// ---------------------------------------
 

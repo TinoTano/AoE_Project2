@@ -138,15 +138,7 @@ bool Render::PostUpdate()
 		}
 
 		App->minimap->DrawUnits();
-
-		uint x, y;
-		App->win->GetWindowSize(x, y);
-		SDL_Rect rect;
-		rect.x = 1105 - App->render->camera.x - (App->render->camera.x * 0.035);
-		rect.y = 549 - App->render->camera.y - (App->render->camera.y * 0.035);
-		rect.w = x* 0.035;
-		rect.h = y* 0.035;
-		DrawQuad(rect, 255, 255, 255, false);
+		App->minimap->DrawCamera();
 	}
 
 	// ==============================================================================

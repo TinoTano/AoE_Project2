@@ -13,14 +13,17 @@ public:
 	//Destructor
 	virtual ~Minimap();
 
-	//Called before render is available
-	bool Awake(pugi::xml_node&);
+	//Start Elements
+	bool Start();
+
+	// Update Elements
+	bool Update(float dt);
 
 	//Called before quitting
 	bool CleanUp();
 
 	//Initialize minimap
-	void InitMinimap();
+	void GetClickableArea(std::pair<int, int> position);
 
 	//Draw terrain
 	void DrawTerrain(int x, int y, int r, int g, int b);
@@ -28,8 +31,13 @@ public:
 	//Draw units
 	void DrawUnits();
 
+	//Draw Camera
+	void DrawCamera();
+
+
 private:
 
+	SDL_Rect minimapClickable;
 	iPoint minimapPos;
 	double minimapRatio;
 

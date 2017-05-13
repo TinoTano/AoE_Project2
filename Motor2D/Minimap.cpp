@@ -5,6 +5,9 @@
 #include "Textures.h"
 #include "Map.h"
 #include "EntityManager.h"
+#include "SceneManager.h"
+#include "Window.h"
+#include "Gui.h"
 #include "p2Log.h"
 #include <math.h>
 
@@ -21,21 +24,57 @@ Minimap::Minimap() : Module()
 Minimap::~Minimap()
 {}
 
-bool Minimap::Awake(pugi::xml_node& config)
-{
-	return true;
-}
 
 bool Minimap::CleanUp()
 {
 	return true;
 }
 
-void Minimap::InitMinimap()
+bool Minimap::Start()
 {
+	minimapClickable.w = 108;
+	minimapClickable.h = 68;
+
 	minimapPos.x = 1105;
 	minimapPos.y = 549;
+
 	minimapRatio = 0.035;
+
+	return true;
+}
+
+bool Minimap::Update(float dt)
+{
+	SDL_Point mousePos;
+	iPoint cameraOldPos = { App->render->camera.x, App->render->camera.y };
+
+	App->input->GetMousePosition(mousePos.x, mousePos.y);
+
+	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
+	{
+		//este if se tiene que arreglar
+		if (SDL_PointInRect(&mousePos, &minimapClickable))
+		{
+			App->render->camera.x = (-mousePos.x + minimapPos.x) / minimapRatio;
+			App->render->camera.y = (-mousePos.y + minimapPos.y) / minimapRatio;
+
+			std::pair<int, int> movement;
+			movement.first = App->render->camera.x - cameraOldPos.x;
+			movement.second = App->render->camera.y - cameraOldPos.y;
+
+			App->gui->ScreenMoves(movement);
+
+		}
+	}
+
+	return true;
+}
+
+void Minimap::GetClickableArea(std::pair<int, int> position)
+{
+	minimapClickable.x = position.first + 131;
+	minimapClickable.y = position.second + 42;
+
 }
 
 void Minimap::DrawTerrain(int x, int y, int r, int g, int b)
@@ -71,4 +110,22 @@ void Minimap::DrawUnits()
 			App->render->DrawQuad(rect, 255, 0, 0, true);
 		}
 	}
+}
+
+
+void Minimap::DrawCamera()
+{
+	uint x, y;
+	SDL_Rect rect;
+
+	App->win->GetWindowSize(x, y);
+	rect.x = minimapPos.x - App->render->camera.x - (App->render->camera.x * minimapRatio);
+	rect.y = minimapPos.y - App->render->camera.y - (App->render->camera.y * minimapRatio);
+	rect.w = x * minimapRatio;
+	rect.h = y * minimapRatio;
+
+	App->render->DrawQuad(rect, 255, 255, 255, false);
+
+	//esto se tiene que borrar
+	App->render->DrawQuad(minimapClickable, 255, 255, 255, false);
 }
