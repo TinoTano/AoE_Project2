@@ -45,6 +45,7 @@ public:
 	string name;
 	string description;
 	int reward;
+	int id;
 	Event* trigger;
 	vector <Event*> steps;
 };
@@ -68,9 +69,9 @@ private:
 	string path;
 
 	list<Quest*> sleepQuests;
-	list<Quest*> activeQuests;
 	list<Quest*> closedQuests;
-
+public:
+	list<Quest*> activeQuests;
 };
 
 #endif

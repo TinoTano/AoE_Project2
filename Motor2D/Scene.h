@@ -60,7 +60,6 @@ private:
 
 	// UI ELEMENTS
 	WindowUI ui_menu;
-	QuestHUD questHUD;
 	Label* back_to_menu_lbl = nullptr, *quit_game_lbl = nullptr, *save_game_lbl = nullptr, *cancel_lbl = nullptr;
 
 	vector<Info> elements;
@@ -82,6 +81,7 @@ private:
 	Timer spawn_timer;
 	uint wave = 0, orcs_to_spawn = 0, trolls_to_spawn = 0;
 public:
+	QuestHUD questHUD;
 	///////
 	Unit* hero = nullptr;
 	// RESOURCES 

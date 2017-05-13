@@ -4,6 +4,8 @@
 #include "QuestManager.h"
 #include "FileSystem.h"
 #include "SceneManager.h"
+#include "QuestHUD.h"
+#include "Gui.h"
 
 
 QuestManager::QuestManager() : Module()
@@ -55,6 +57,7 @@ bool QuestManager::Start()
 		new_quest->name = quest.attribute("name").as_string();
 		new_quest->description = quest.attribute("description").as_string();
 		new_quest->reward = quest.attribute("reward").as_int();
+		new_quest->id = quest.attribute("id").as_int();
 
 		new_quest->trigger = createEvent(quest.child("trigger"));
 
@@ -67,7 +70,11 @@ bool QuestManager::Start()
 		uint state = quest.attribute("state").as_uint();
 
 		if (state == 0) sleepQuests.push_back(new_quest);
-		else if (state == 1) activeQuests.push_back(new_quest);
+		else if (state == 1)
+		{
+			activeQuests.push_back(new_quest);
+			App->sceneManager->level1_scene->questHUD.AddActiveQuest(new_quest->name, new_quest->description, 2);
+		}
 		else closedQuests.push_back(new_quest);
 	}
 
@@ -107,6 +114,7 @@ bool QuestManager::TriggerKillCallback(unitType t)
 			{
 				LOG("Quest Triggered");
 				activeQuests.push_back((*it));
+				App->sceneManager->level1_scene->questHUD.AddActiveQuest((*it)->name, (*it)->description, (*it)->id);
 				sleepQuests.erase(it);
 
 				return true;
