@@ -525,6 +525,12 @@
 		<Position x="99" y = "64"/>
 		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
+		<Unit>
+		<Name value = "GANDALF"/>
+        <ID value = "23"/>
+		<Position x="99" y = "64"/>
+		<Cost woodCost ="dumbledore" foodCost = "" goldCost = "" stoneCost ="100"/>
+		</Unit>
 	</Units>
 
 	<Buildings>

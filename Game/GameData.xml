@@ -1402,6 +1402,65 @@
 				</Die>
 			</Animations>
 		</Unit>
+		<Unit>
+      <Info>
+        <Name value = "GANDALF"/>
+        <ID value = "23"/>
+        <BasePoint x="10" y="15"/>
+        <SelectionRadius value="15"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Heroes/Gandalf/GandalfIdle.png"/>
+				<Move value="textures/Heroes/Gandalf/GandalfMove.png"/>
+				<Attack value="textures/Heroes/Gandalf/GandalfAttack.png"/>
+				<Die value="textures/Heroes/Gandalf/GandalfDie.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="0"/>
+				<Life value="250"/>
+				<Attack value="2"/>
+				<AttackSpeed value="8"/>
+				<Defense value="3"/>
+				<PiercingDamage value="0"/>
+				<MovementSpeed value="100.5"/>
+				<LineOfSight value="5"/>
+				<Range value=""/>
+				<FoodCost value=""/>
+				<GoldCost value=""/>
+				<BuildTime value=""/>
+				<SkillType value="4"/>
+			</Stats>
+			<Animations>
+				<Idle>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="39"/>
+					<Height value="57"/>
+					<Speed value="0.2f"/>
+				</Idle>
+				<Move>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="55"/>
+					<Height value="57"/>
+					<Speed value="0.2f"/>
+				</Move>
+				<Attack>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="98"/>
+					<Height value="77"/>
+					<Speed value="0.2f"/>
+				</Attack>
+				<Die>
+					<Rows value="10"/>
+					<Columns value="5"/>
+					<Width value="78"/>
+					<Height value="90"/>
+					<Speed value="0.2f"/>
+				</Die>
+			</Animations>
+		</Unit>
 	</Units>
 	
 	

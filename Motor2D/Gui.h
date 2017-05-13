@@ -362,13 +362,10 @@ private:
 	void HUDClearBuildingMenu();
 
 	// ----- CREATE HERO -------
-	Button* create_Legolas_bt;
 	void HUDCreateHero();
 	void HUDClearCreateHero();
 
 	// ----- CREATE UNITS ------
-	Button *create_elven_archer_bt, *create_elven_longblade_bt, *create_elven_cavalry_bt, *create_dwarven_mauler_bt, *create_gondor_spearman_bt,
-		*create_dunedain_range_bt, *create_gondor_kinght_bt, *create_rohan_kinght_bt, *create_mounted_dunedain_bt;
 	void HUDCreateUnits();
 	void HUDClearCreateUnits();
 	// GENERAL HELPINGS
