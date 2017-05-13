@@ -209,11 +209,9 @@ void HUD::HUDCreateHero()
 	building_state = BUILDINGCREATEHERO;
 
 	vector<SDL_Rect> blit_sections;
-	blit_sections.push_back({ 99, 64, 33, 32 });
-	blit_sections.push_back({ 99, 63, 33, 32 });
 
-	create_Legolas_bt = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-	all_bt.push_back(create_Legolas_bt);
+	App->gui->unit_bt[LEGOLAS].button = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, App->gui->unit_bt[LEGOLAS].blit_sections, buttons_positions, TIER2);
+	
 	blit_sections.clear();
 	blit_sections.push_back({ 53, 64, 39, 40 });
 	blit_sections.push_back({ 92, 64, 39, 40 });
@@ -226,7 +224,8 @@ void HUD::HUDCreateHero()
 void HUD::HUDClearCreateHero()
 {
 	App->gui->DestroyUIElement(cancel_bt);
-	App->gui->DestroyUIElement(create_Legolas_bt);
+	App->gui->DestroyUIElement(App->gui->unit_bt[LEGOLAS].button);
+	App->gui->unit_bt[LEGOLAS].button = nullptr;
 	blit_sections.clear();
 }
 
@@ -291,12 +290,15 @@ void HUD::BlitInfoBuilding(building_button bt)
 	quad.rect.y = y / 2 + (y / 8) + y / 50 - App->render->camera.y;
 	quad.rect.w = 400;
 	quad.rect.h = 80;
-	quad.b = 20;
 	quad.a = 180;
 	App->render->ui_toDraw.push_back(quad);
+
 	if (info_lbl == nullptr) {
 		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, nullptr);
 		info_lbl->SetColor({ 255, 255, 255, 255 });
+		info_lbl->SetSize(20);
+		cost_lbl = (Label*)App->gui->CreateLabel(bt.cost, quad.rect.x, quad.rect.y + 45, nullptr);
+		cost_lbl->SetColor({ 255, 255, 255, 255 });
 	}
 
 }
@@ -308,12 +310,14 @@ void HUD::BlitInfoUnit(unit_button bt)
 	quad.rect.y = y / 2 + (y / 8) + y / 50 - App->render->camera.y;
 	quad.rect.w = 400;
 	quad.rect.h = 80;
-	quad.b = 20;
 	quad.a = 180;
 	App->render->ui_toDraw.push_back(quad);
 	if (info_lbl == nullptr) {
 		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, nullptr);
 		info_lbl->SetColor({255, 255, 255, 255});
+		info_lbl->SetSize(20);
+		cost_lbl = (Label*)App->gui->CreateLabel(bt.cost, quad.rect.x, quad.rect.y + 45, nullptr);
+		cost_lbl->SetColor({ 255, 255, 255, 255 });
 	}
 
 }
@@ -324,12 +328,14 @@ void HUD::BlitInfoTech(tech_button bt)
 	quad.rect.y = y / 2 + (y / 8) + y / 50 - App->render->camera.y;
 	quad.rect.w = 400;
 	quad.rect.h = 80;
-	quad.b = 20;
 	quad.a = 180;
 	App->render->ui_toDraw.push_back(quad);
 	if (info_lbl == nullptr) {
 		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, nullptr);
 		info_lbl->SetColor({ 255, 255, 255, 255 });
+		info_lbl->SetSize(20);
+		cost_lbl = (Label*)App->gui->CreateLabel(bt.cost, quad.rect.x, quad.rect.y + 45, nullptr);
+		cost_lbl->SetColor({ 255, 255, 255, 255 });
 	}
 
 }

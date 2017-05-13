@@ -379,7 +379,7 @@ private:
 	void BlitInfoUnit(unit_button bt);
 	void BlitInfoBuilding(building_button bt);
 	void BlitInfoTech(tech_button bt);
-	Label* info_lbl = nullptr, *desc_lbl = nullptr;
+	Label* info_lbl = nullptr, *desc_lbl = nullptr, *cost_lbl = nullptr;
 };
 
 
@@ -503,6 +503,7 @@ struct building_button {
 	Button* button;
 	string name;
 	string desc;
+	string cost;
 	vector<SDL_Rect> blit_sections;
 	buildingType type;
 };
@@ -511,6 +512,7 @@ struct unit_button {
 	Button* button;
 	string name;
 	string desc;
+	string cost;
 	vector<SDL_Rect> blit_sections;
 	unitType type;
 };
@@ -519,6 +521,7 @@ struct tech_button {
 	Button* button;
 	string name;
 	string desc;
+	string cost;
 	vector<SDL_Rect> blit_sections;
 	TechType type;
 };

@@ -76,9 +76,6 @@
     <ClCompile Include="Console.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="HUD.cpp">
-      <Filter>Project 2\Modules</Filter>
-    </ClCompile>
     <ClCompile Include="MenuScene.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
@@ -121,8 +118,14 @@
     <ClCompile Include="PlayScene.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="QuestHUD.cpp">
+      <Filter>Project 2\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>Project 2\HUD</Filter>
+    </ClCompile>
     <ClCompile Include="HUDFuncs.cpp">
-      <Filter>Project 2\Modules</Filter>
+      <Filter>Project 2\HUD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -264,6 +267,9 @@
     <ClInclude Include="PlayScene.h">
       <Filter>Project 2\Scenes</Filter>
     </ClInclude>
+    <ClInclude Include="QuestHUD.h">
+      <Filter>Project 2\HUD</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">
@@ -283,6 +289,9 @@
     </Filter>
     <Filter Include="Project 2\Entities">
       <UniqueIdentifier>{52b054e4-6d6c-4d3b-8276-c912ba96e370}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Project 2\HUD">
+      <UniqueIdentifier>{bb69f020-f0bd-42d1-ab65-f50d43aa9470}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

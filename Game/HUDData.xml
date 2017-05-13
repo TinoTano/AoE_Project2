@@ -391,116 +391,139 @@
         <Name value = "ELVEN LONGBLADE"/>
         <ID value = "0"/>
 	<Position x="0" y ="0"/>
+	<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "DWARVEN MAULER"/>
         <ID value = "1"/>
 		<Position x="33" y ="0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "GONDOR SPEARMAN"/>
         <ID value = "2"/>
 		<Position x = "66" y = "0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "ELVEN ARCHER"/>
         <ID value = "3"/>
 		<Position x = "99" y = "0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "DUNEDAIN RANGE"/>
         <ID value = "4"/>
 		<Position x = "132" y = "0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "ELVEN CAVALRYE"/>
         <ID value = "5"/>
 		<Position x = "165" y = "0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "GONDOR KNIGHT"/>
         <ID value = "6"/>
 		<Position x = "198" y = "0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "ROHAN KNIGHT"/>
         <ID value = "7"/>
 		<Position x = "231" y = "0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "MOUNTED DUNEDAIN"/>
         <ID value = "8"/>
 		<Position x = "264" y = "0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "SIEGE TOWER"/>
         <ID value = "9"/>
 		<Position x="0" y ="32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "LIGHT_CATAPULT"/>
         <ID value = "10"/>
 		<Position x="33" y ="32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
 		 <Name value = "GOBLIN_SOLDIER"/>
         <ID value = "11"/>
 		<Position x="66" y ="32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "ORC SOLDIER"/>
         <ID value = "12"/>
 		<Position x="99" y ="32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "URUK HAI SOLDIER"/>
         <ID value = "13"/>
 		<Position x="132" y ="32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "ORC ARCHER"/>
         <ID value = "14"/>
 		<Position x = "165" y = "32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "VENOMOUS SPIDER"/>
         <ID value = "15"/>
 		<Position x = "198" y = "32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "HARADRIM OLIFANT"/>
         <ID value = "16"/>
 		<Position x = "231" y = "32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "NAZGUL"/>
         <ID value = "17"/>
 		<Position x = "264" y = "32"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
         <Name value = "TROLL MAULER"/>
         <ID value = "18"/>
 		<Position x = "0" y = "64"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
 		<Name value = "VILLAGER"/>
         <ID value = "19"/>
 		<Position x="33" y = "64"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
 		<Name value = "ELF VILLAGER"/>
         <ID value = "20"/>
 		<Position x="66" y = "64"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
 		<Name value = "GONDOR HERO"/>
         <ID value = "21"/>
 		<Position x="99" y = "0"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 		<Unit>
 		<Name value = "LEGOLAS"/>
         <ID value = "22"/>
 		<Position x="99" y = "64"/>
+		<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 	</Units>
 
@@ -509,94 +532,114 @@
         <Name value = "TOWN CENTER"/>
         <ID value = "0"/>
 		<Position x = "0" y = "0"/>
+		<Cost woodCost ="275" foodCost = "0" goldCost = "0" stoneCost ="100"/>
 		</Building>
 		<Building>
         <Name value = "HOUSE"/>
         <ID value = "1"/>
 		<Position x="0" y ="0"/>
+		<Cost woodCost ="50" foodCost = "25" goldCost = "0" stoneCost ="0"/>
 		</Building>
 		<Building>
         <Name value = "BARRACKS"/>
         <ID value = "2"/>
 		<Position x = "33" y = "0"/>
+		<Cost woodCost ="150" foodCost = "0" goldCost = "0" stoneCost ="0"/>
 		</Building>
 		<Building>
         <Name value = "ARCHERY RANGE"/>
          <ID value = "3"/>
 		<Position x = "99" y = "0"/>
+		<Cost woodCost ="175" foodCost = "0" goldCost = "0" stoneCost ="0"/>
 		</Building>
 		<Building>
         <Name value = "STABLES"/>
        <ID value = "4"/>
 		<Position x = "132" y = "0"/>
+		<Cost woodCost ="200" foodCost = "0" goldCost = "0" stoneCost ="0"/>
 		</Building>
 		<Building>
         <Name value = "SIEGE WORKSHOP"/>
         <ID value = "5"/>
 		<Position x = "165" y = "0"/>
+		<Cost woodCost ="200" foodCost = "0" goldCost = "100" stoneCost ="0"/>
 		</Building>
 		<Building>
         <Name value = "MARKET"/>
          <ID value = "6"/>
 		<Position x = "198" y = "0"/>
+		<Cost woodCost ="150" foodCost = "100" goldCost = "0" stoneCost ="0"/>
 		</Building>
 		<Building>
         <Name value = "BLACKSMITH"/>
         <ID value = "7"/>
 		<Position x = "231" y = "0"/>
+		<Cost woodCost ="50" foodCost = "0" goldCost = "100" stoneCost ="100"/>
 		</Building>
 		<Building>
         <Name value = "MILL"/>
         <ID value = "8"/>
 		<Position x = "264" y = "0"/>
+		<Cost woodCost ="100" foodCost = "0" goldCost = "0" stoneCost ="0"/>
 		</Building>
 		<Building>
         <Name value = "OUTPOST"/>
        <ID value = "9"/>
 		<Position x="66" y ="32"/>
+		<Cost woodCost ="25" foodCost = "0" goldCost = "0" stoneCost ="125"/>
 		</Building>
 		<Building>
         <Name value = "MONASTERY"/>
         <ID value = "10"/>
 		<Position x="99" y ="32"/>
+		<Cost woodCost ="175" foodCost = "0" goldCost = "100" stoneCost ="0"/>
 		</Building>
 		<Building>
         <Name value = "CASTLE"/>
         <ID value = "11"/>
 		<Position x="132" y ="32"/>
+		<Cost woodCost ="0" foodCost = "0" goldCost = "0" stoneCost ="650"/>
 		</Building>
 		<Building>
         <Name value = "SAURON TOWER"/>
         <ID value = "12"/>
 		<Position x = "165" y = "32"/>
+		<Cost woodCost ="275" foodCost = "0" goldCost = "0" stoneCost ="100"/>
 		</Building>
 	<Building>
         <Name value = "ORC_HOUSE"/>
         <ID value = "13"/>
+		<Cost woodCost ="50" foodCost = "0" goldCost = "0" stoneCost ="0"/>
 		</Building>
     <Building>
         <Name value = "ORC_BARRACKS"/>
         <ID value = "14"/>
+		<Cost woodCost ="150" foodCost = "0" goldCost = "0" stoneCost ="0"/>
 		</Building>
     <Building>
         <Name value = "ORC_ARCHERY_RANGE"/>
         <ID value = "15"/>
+		<Cost woodCost ="175" foodCost = "0" goldCost = "0" stoneCost ="0"/>
 		</Building>
    <Building>
         <Name value = "BEAST_PIT"/>
         <ID value = "16"/>
+		<Cost woodCost ="0" foodCost = "200" goldCost = "0" stoneCost ="0"/>
 		</Building>
    <Building>
         <Name value = "URUK_HAI_PIT"/>
         <ID value = "17"/>
+		<Cost woodCost ="200" foodCost = "0" goldCost = "100" stoneCost ="0"/>
 		</Building>
    <Building>
         <Name value = "ORC_MARKET"/>
         <ID value = "18"/>
+		<Cost woodCost ="100" foodCost = "100" goldCost = "0" stoneCost ="0"/>
 		</Building>
    <Building>
         <Name value = "ORC_BLACKSMITH"/>
         <ID value = "19"/>
+		<Cost woodCost ="50" foodCost = "0" goldCost = "100" stoneCost ="100"/>
 		</Building>
 	</Buildings>
 	<Resources>
@@ -627,90 +670,105 @@
 	<Desc value="asd"/>
 	<ID value ="1"/>
 	<Position x="54" y="104"/>
+	<Cost woodCost ="200" foodCost = "100" goldCost = "0" stoneCost ="0"/>
   </Tech>
 <Tech>
 	<Name value="Horse Training"/>
 	<Desc value="asd"/>
 	<ID value ="2"/>
 	<Position x="132" y="104"/>
+	<Cost woodCost ="200" foodCost = "175" goldCost = "0" stoneCost ="0"/>
   </Tech>
 <Tech>
 	<Name value="Town Militia"/>
 	<Desc value="asd"/>
 	<ID value ="3"/>
 	<Position x="210" y="104"/>
+	<Cost woodCost ="100" foodCost = "100" goldCost = "50" stoneCost ="0"/>
   </Tech>
   <Tech>
 	<Name value="Enhanced Blacksmithing"/>
 	<Desc value="asd"/>
 	<ID value ="4"/>
 	<Position x="288" y="104"/>
+	<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
   </Tech>
   <Tech>
 	<Name value="Mountain Forge"/>
 	<Desc value="asd"/>
 	<ID value ="5"/>
 	<Position x="54" y="144"/>
+	<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
   </Tech>
 <Tech>
 	<Name value="Dwarven Steel"/>
 	<Desc value="asd"/>
 	<ID value ="6"/>
 	<Position x="132" y="144"/>
+	<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
   </Tech>
 <Tech>
 	<Name value="Dwarven Tactics"/>
 	<Desc value="asd"/>
 	<ID value ="7"/>
 	<Position x="210" y="144"/>
+	<Cost woodCost ="275" foodCost = "" goldCost = "" stoneCost ="100"/>
   </Tech>
 <Tech>
 	<Name value="Enhanced Training"/>
 	<Desc value="asd"/>
 	<ID value ="8"/>
 	<Position x="288" y="144"/>
+	<Cost woodCost ="0" foodCost = "200" goldCost = "150" stoneCost ="0"/>
   </Tech>
 <Tech>
 	<Name value="Elven Tactics"/>
 	<Desc value="asd"/>
 	<ID value ="9"/>
 	<Position x="54" y="184"/>
+	<Cost woodCost ="0" foodCost = "0" goldCost = "350" stoneCost ="0"/>
   </Tech>
 <Tech>
 	<Name value="Elven Steel"/>
 	<Desc value="asd"/>
 	<ID value ="10"/>
 	<Position x="132" y="184"/>
+	<Cost woodCost ="100" foodCost = "0" goldCost = "150" stoneCost ="200"/>
   </Tech>
 <Tech>
 	<Name value="Library"/>
 	<Desc value="asd"/>
 	<ID value ="11"/>
 	<Position x="210" y="184"/>
+	<Cost woodCost ="100" foodCost = "0" goldCost = "250" stoneCost ="100"/>
   </Tech>
 <Tech>
 	<Name value="Enhanced Villagers"/>
 	<Desc value="asd"/>
 	<ID value ="12"/>
 	<Position x="288" y="184"/>
+	<Cost woodCost ="0" foodCost = "150" goldCost = "150" stoneCost ="0"/>
   </Tech>
 <Tech>
 	<Name value="Human Warfare"/>
 	<Desc value="asd"/>
 	<ID value ="13"/>
 	<Position x="54" y="224"/>
+	<Cost woodCost ="200" foodCost = "200" goldCost = "0" stoneCost ="0"/>
   </Tech>
 <Tech>
 	<Name value="Rohan Knights"/>
 	<Desc value="asd"/>
 	<ID value ="14"/>
 	<Position x="132" y="224"/>
+	<Cost woodCost ="0" foodCost = "300" goldCost = "200" stoneCost ="0"/>
   </Tech>
 <Tech>
 	<Name value="Dunedain Outpost"/>
 	<Desc value="asd"/>
 	<ID value ="15"/>
 	<Position x="210" y="224"/>
+	<Cost woodCost ="0" foodCost = "0" goldCost = "200" stoneCost ="130"/>
   </Tech>
 </FPTechs>
 <SATechs>

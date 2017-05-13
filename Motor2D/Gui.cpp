@@ -58,9 +58,6 @@ bool Gui::Start()
 	sprites_cursor.push_back({ 490, 50, 70, 50 });
 	sprites_cursor.push_back({ 560, 50, 70, 50 });
 
-
-
-
 	hud = new HUD();
 	hud->Start();
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
@@ -468,6 +465,8 @@ void Label::Draw()
 
 	lbl.pos.x = pos.first;
 	lbl.pos.y = pos.second;
+	lbl.a = 255;
+	lbl.priority = 10;
 	lbl.rect = text_size;
 	lbl.texture = texture;
 	App->render->ui_toDraw.push_back(lbl);

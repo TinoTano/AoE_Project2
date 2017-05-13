@@ -105,6 +105,7 @@
     <ClCompile Include="PerfTimer.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="QuadTree.cpp" />
+    <ClCompile Include="QuestHUD.cpp" />
     <ClCompile Include="QuestManager.cpp" />
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="PerfTimer.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="QuadTree.h" />
+    <ClInclude Include="QuestHUD.h" />
     <ClInclude Include="QuestManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />

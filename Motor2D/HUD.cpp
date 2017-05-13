@@ -443,11 +443,14 @@ void HUD::Update() {
 						}
 						if (cancel_bt->current == CLICKUP)
 							HUDBuildingMenu();
-						else if (create_Legolas_bt->current == CLICKUP)
+						for (uint i = 0; i < App->gui->unit_bt.size(); ++i)
 						{
-							Order* new_order = new CreateUnitOrder(LEGOLAS);
-							building->order_list.push_back(new_order);
-							//	App->sceneManager->level1_scene->UpdateResources(App->sceneManager->level1_scene->wood, App->sceneManager->level1_scene->woodCount -= 350);
+							if (App->gui->unit_bt[i].button != nullptr) {
+								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost) && App->gui->unit_bt[i].button->current == CLICKUP) {
+									building->order_list.push_back(new CreateUnitOrder(App->gui->unit_bt[i].type));
+									App->sceneManager->level1_scene->UpdateResources();
+								}
+							}
 						}
 						break;
 					}
@@ -536,6 +539,8 @@ void HUD::Update() {
 		App->gui->DestroyUIElement(info_lbl);
 		info_lbl = nullptr;
 		App->gui->DestroyUIElement(desc_lbl);
+		App->gui->DestroyUIElement(cost_lbl);
+		cost_lbl = nullptr;
 	}
 }
 
@@ -637,6 +642,13 @@ bool Gui::LoadHUDData()
 			bt.blit_sections.push_back(proportions);
 			bt.blit_sections.push_back(proportions);
 			bt.button = nullptr;
+			string wood(unitNodeInfo.child("Cost").attribute("woodCost").as_string());
+			string food(unitNodeInfo.child("Cost").attribute("foodCost").as_string());
+			string gold(unitNodeInfo.child("Cost").attribute("goldCost").as_string());
+			string stone(unitNodeInfo.child("Cost").attribute("stoneCost").as_string());
+			string costs = "wood: " + wood + " food: " + food + " gold: " + gold + " stone: " + stone;
+			bt.cost = costs;
+
 			unit_bt.push_back(bt);
 			UnitSprite unit(type, proportions, id, name);
 			SpriteUnits.push_back(unit);
@@ -657,7 +669,16 @@ bool Gui::LoadHUDData()
 			bt.blit_sections.push_back(proportions);
 			bt.blit_sections.push_back(proportions);
 			bt.button = nullptr;
+			
+			string wood(unitNodeInfo.child("Cost").attribute("woodCost").as_string());
+			string food(unitNodeInfo.child("Cost").attribute("foodCost").as_string());
+			string gold(unitNodeInfo.child("Cost").attribute("goldCost").as_string());
+			string stone(unitNodeInfo.child("Cost").attribute("stoneCost").as_string());
+			string costs = "wood: " + wood + " food: " + food + " gold: " + gold + " stone: " + stone;
+			bt.cost = costs;
+
 			building_bt.push_back(bt);
+
 			UnitSprite building(type, proportions, id, name);
 			SpriteBuildings.push_back(building);
 		}
@@ -691,6 +712,14 @@ bool Gui::LoadHUDData()
 			proportions.x += proportions.w;
 			bt.blit_sections.push_back(proportions);
 			bt.button = nullptr;
+
+			string wood(unitNodeInfo.child("Cost").attribute("woodCost").as_string());
+			string food(unitNodeInfo.child("Cost").attribute("foodCost").as_string());
+			string gold(unitNodeInfo.child("Cost").attribute("goldCost").as_string());
+			string stone(unitNodeInfo.child("Cost").attribute("stoneCost").as_string());
+			string costs = "wood: " + wood + " food: " + food + " gold: " + gold + " stone: " + stone;
+			bt.cost = costs;
+
 			tech_bt.push_back(bt);
 		}
 
