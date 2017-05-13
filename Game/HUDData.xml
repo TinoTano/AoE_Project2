@@ -545,6 +545,12 @@
 		<Position x="99" y = "64"/>
 		<Cost woodCost ="0" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
+		<Unit>
+		<Name value = "BALROG"/>
+        <ID value = "24"/>
+		<Position x="99" y = "64"/>
+		<Cost woodCost ="0" foodCost = "0" goldCost = "0" stoneCost ="0"/>
+		</Unit>
 	</Units>
 
 	<Buildings>

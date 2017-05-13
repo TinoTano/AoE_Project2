@@ -214,6 +214,7 @@ void HUD::HUDCreateHero()
 	
 	App->gui->unit_bt[GANDALF].button = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, App->gui->unit_bt[GANDALF].blit_sections, buttons_positions, TIER2);
 
+	App->gui->unit_bt[BALROG].button = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, App->gui->unit_bt[BALROG].blit_sections, buttons_positions, TIER2);
 
 	blit_sections.clear();
 	blit_sections.push_back({ 53, 64, 39, 40 });
@@ -231,6 +232,8 @@ void HUD::HUDClearCreateHero()
 	App->gui->unit_bt[LEGOLAS].button = nullptr;
 	App->gui->DestroyUIElement(App->gui->unit_bt[GANDALF].button);
 	App->gui->unit_bt[GANDALF].button = nullptr;
+	App->gui->DestroyUIElement(App->gui->unit_bt[BALROG].button);
+	App->gui->unit_bt[BALROG].button = nullptr;
 	blit_sections.clear();
 }
 

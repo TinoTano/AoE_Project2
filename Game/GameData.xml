@@ -1461,6 +1461,65 @@
 				</Die>
 			</Animations>
 		</Unit>
+		<Unit>
+      <Info>
+        <Name value = "BALROG"/>
+        <ID value = "24"/>
+        <BasePoint x="15" y="20"/>
+        <SelectionRadius value="40"/>
+      </Info>
+			<Textures>
+				<Idle value="textures/Heroes/Balrog/BalrogIdle.png"/>
+				<Move value="textures/Heroes/Balrog/BalrogMove.png"/>
+				<Attack value="textures/Heroes/Balrog/BalrogAttack.png"/>
+				<Die value="textures/Heroes/Balrog/BalrogDie.png"/>
+			</Textures>
+			<Stats>
+				<Faction value="1"/>
+				<Life value="180"/>
+				<Attack value="8"/>
+				<AttackSpeed value="1"/>
+				<Defense value="5"/>
+				<PiercingDamage value="0"/>
+				<MovementSpeed value="100.5"/>
+				<LineOfSight value="5"/>
+				<Range value=""/>
+				<FoodCost value=""/>
+				<GoldCost value=""/>
+				<BuildTime value=""/>
+				<SkillType value="2"/>
+			</Stats>
+			<Animations>
+				<Idle>
+					<Rows value="5"/>
+					<Columns value="15"/>
+					<Width value="310"/>
+					<Height value="289"/>
+					<Speed value="0.2f"/>
+				</Idle>
+				<Move>
+					<Rows value="5"/>
+					<Columns value="15"/>
+					<Width value="277"/>
+					<Height value="290"/>
+					<Speed value="0.2f"/>
+				</Move>
+				<Attack>
+					<Rows value="5"/>
+					<Columns value="15"/>
+					<Width value="275"/>
+					<Height value="311"/>
+					<Speed value="0.2f"/>
+				</Attack>
+				<Die>
+					<Rows value="5"/>
+					<Columns value="15"/>
+					<Width value="294"/>
+					<Height value="301"/>
+					<Speed value="0.2f"/>
+				</Die>
+			</Animations>
+		</Unit>
 	</Units>
 	
 	
