@@ -793,40 +793,68 @@
 </FPTechs>
 <SATechs>
   <Tech>
-	<Name value="Orc mines"/>
+	<Name value="Orc Mines"/>
 	<Desc value="asd"/>
+	<ID value ="1"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="0" woodCost="100" stoneCost="0" goldCost="0"/>
   </Tech>
 <Tech>
 	<Name value="Guts commerce"/>
 	<Desc value="asd"/>
+		<ID value ="2"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="0" woodCost="100" stoneCost="0" goldCost="50"/>
   </Tech>
 <Tech>
 	<Name value="Steel mines"/>
 	<Desc value="asd"/>
+		<ID value ="3"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="0" woodCost="50" stoneCost="10" goldCost="50"/>
   </Tech>
 <Tech>
 	<Name value="Skirmish Tactics"/>
-	<Desc value="asd"/>
+	<Desc value="asd"/>	
+	<ID value ="4"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="100" woodCost="200" stoneCost="0" goldCost="0"/>
   </Tech>
 <Tech>
 	<Name value="Beast Taming"/>
 	<Desc value="asd"/>
+	<ID value ="5"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="300" woodCost="0" stoneCost="0" goldCost="50"/>
   </Tech>
 <Tech>
 	<Name value="Saruman support"/>
 	<Desc value="asd"/>
+	<ID value ="6"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="100" woodCost="0" stoneCost="0" goldCost="350"/>
   </Tech>
 <Tech>
 	<Name value="Haradrim Reinforcements"/>
 	<Desc value="asd"/>
+	<ID value ="7"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="100" woodCost="100" stoneCost="0" goldCost="250"/>
   </Tech>
 <Tech>
 	<Name value="Giant breed"/>
 	<Desc value="asd"/>
+	<ID value ="8"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="450" woodCost="0" stoneCost="0" goldCost="0"/>
   </Tech>
 <Tech>
 	<Name value="Call to the nine"/>
 	<Desc value="asd"/>
+	<ID value ="9"/>
+	<Position x="54" y="104"/>
+	<Cost foodCost="100" woodCost="100" stoneCost="0" goldCost="300"/>
   </Tech>
 </SATechs>
+
 </HUDData>

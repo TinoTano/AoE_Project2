@@ -44,7 +44,6 @@ void HUD::Start() {
 	// 10
 	buttons_positions.push_back({ (int)x / 6 - CAMERA_OFFSET_X, (int)y - (int)y / 7 + (int)(y / 100) - CAMERA_OFFSET_Y, 39,40 });
 
-
 	buttons_positions.push_back({ (int)x / 30 - CAMERA_OFFSET_X, (int)y - (int)y / 8 - CAMERA_OFFSET_Y, 39,40 });
 	// 12
 	buttons_positions.push_back({ (int)x / 4 - (int)x / 40 - CAMERA_OFFSET_X, (int)y - (int)y / 10 - CAMERA_OFFSET_Y, 39,40 });
@@ -721,6 +720,34 @@ bool Gui::LoadHUDData()
 			bt.cost = costs;
 
 			tech_bt.push_back(bt);
+		}
+		for (unitNodeInfo = HUDData.child("SATechs").child("Tech"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Tech"))
+		{
+			tech_button bt;
+			string name(unitNodeInfo.child("Name").attribute("value").as_string());
+			bt.name = name;
+			string desc(unitNodeInfo.child("Description").attribute("value").as_string());
+			bt.desc = desc;
+			int id = unitNodeInfo.child("ID").attribute("value").as_int();
+			bt.type = (TechType)id;
+
+			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
+			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
+			proportions.w = 39;
+			proportions.h = 40;
+			bt.blit_sections.push_back(proportions);
+			proportions.x += proportions.w;
+			bt.blit_sections.push_back(proportions);
+			bt.button = nullptr;
+
+			string wood(unitNodeInfo.child("Cost").attribute("woodCost").as_string());
+			string food(unitNodeInfo.child("Cost").attribute("foodCost").as_string());
+			string gold(unitNodeInfo.child("Cost").attribute("goldCost").as_string());
+			string stone(unitNodeInfo.child("Cost").attribute("stoneCost").as_string());
+			string costs = "wood: " + wood + " food: " + food + " gold: " + gold + " stone: " + stone;
+			bt.cost = costs;
+
+			sauron_tech_bt.push_back(bt);
 		}
 
 	}

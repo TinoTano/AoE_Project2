@@ -442,6 +442,7 @@ public:
 	vector<building_button> building_bt;
 	vector<unit_button> unit_bt;
 	vector<tech_button> tech_bt;
+	vector<tech_button> sauron_tech_bt;
 
 	// ----- UNIT CLASS ----- //
 	// -------------------- //
