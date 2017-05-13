@@ -224,6 +224,8 @@ bool Scene::Start()
 	villagers_curr = villagers_total = 1;
 	UpdateVillagers(villagers_curr, villagers_total);
 
+	questHUD.Start();
+
 	return true;
 }
 
@@ -288,6 +290,7 @@ bool Scene::Update(float dt)
 		App->gui->cursor->SetCursor(3);
 	else App->gui->cursor->SetCursor(0);
 
+	questHUD.Update();
 
 	// ---------------------------------------
 
@@ -323,6 +326,7 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
+	questHUD.CleanUp();
 	App->gui->DestroyALLUIElements();
 	elements.clear();
 	images.clear();

@@ -5,6 +5,7 @@
 #include "SceneElement.h"
 #include "Timer.h"
 #include "Gui.h"
+#include "QuestHUD.h"
 #include <string>
 
 
@@ -59,6 +60,7 @@ private:
 
 	// UI ELEMENTS
 	WindowUI ui_menu;
+	QuestHUD questHUD;
 	Label* back_to_menu_lbl = nullptr, *quit_game_lbl = nullptr, *save_game_lbl = nullptr, *cancel_lbl = nullptr;
 
 	vector<Info> elements;

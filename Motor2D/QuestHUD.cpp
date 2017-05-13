@@ -4,30 +4,94 @@
 #include "Window.h"
 
 
-void QuestHUD::Start(int stx, int sty)
+void QuestHUD::Start()
 {
+	uint x, y;
+	App->win->GetWindowSize(x, y);
+	winx = x; winy = y;
 
-	//uint x, y;
-	//App->win->GetWindowSize(x, y);
+	objective_lbl = (Label*)App->gui->CreateLabel("Objectives", x - App->render->camera.x - 300, y / 2 - App->render->camera.y, nullptr);
+	objective_lbl->SetColor({ 255, 255 ,255 ,255 });
+	objective_lbl->SetSize(16);
 
-	////quad = (Quad*)App->gui->CreateQuad({ -stx + (int)x - (int)(x/6), - sty + (int) y/2, 40, 40  }, { 100,100,100,60 });
+	desc_lbl = (Label*)App->gui->CreateLabel("Destroy Sauron's tower to win.", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 22, nullptr);
+	desc_lbl->SetColor({ 255, 255 ,255 ,255 });
 
-	//quad = (Quad*)App->gui->CreateQuad({ -stx , -sty , 40, 40 }, { 255, 255, 255, 255 });
-	//quad->area;
-	//int a = 3;
+	questx = x - App->render->camera.x - 300;
 
-	//if (App->quest->activeQuests.front() != nullptr) {
-	//	name = (Label*)App->gui->CreateLabel(App->quest->activeQuests.front()->name, -stx + (int)x - (int)(x / 6), -sty + (int)y / 2, nullptr);
-	//	name->SetColor({ 255,255,255,255 });
+	quest_lbl = (Label*)App->gui->CreateLabel("Side Quests", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 40, nullptr);
+	quest_lbl->SetColor({ 255, 255 ,255 ,255 });
+	quest_lbl->SetSize(16);
 
-	//	desc = (Label*)App->gui->CreateLabel(App->quest->activeQuests.front()->description, -stx + (int)x - (int)(x / 6), -sty + (int)y / 2 + 30, nullptr);
-	//	name->SetColor({ 255,255,255,255 });
-	//}
+	questy = y / 2 - App->render->camera.y + 58;
 }
 void QuestHUD::Update()
 {
-	/*if (App->quest->activeQuests.front() != nullptr) {
+	Sprite quad;
+	quad.rect.x = winx - App->render->camera.x - 300;
+	quad.rect.y = winy / 2 - App->render->camera.y;
+	quad.rect.w = 300;
+	quad.rect.h = 175;
+	quad.a = 180;
+	App->render->ui_toDraw.push_back(quad);
 
-		int x = 2;
-	}*/
+	if (vec_quest.size() == 0 && no_quest_lbl == nullptr) {
+		no_quest_lbl = (Label*)App->gui->CreateLabel("No quests to complete", questx,questy, nullptr);
+		no_quest_lbl->SetColor({ 255,255,255,255 });
+	}
+	else if (vec_quest.size() > 0 && no_quest_lbl != nullptr) {
+		App->gui->DestroyUIElement(no_quest_lbl);
+		no_quest_lbl = nullptr;
+	}
+	else if (vec_quest.size() > 0) {
+		if (vec_quest.front().name_lbl != nullptr) {
+			vec_quest.front().name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front().name, questx, questy, nullptr);
+			vec_quest.front().name_lbl->SetColor({255, 255, 255, 255});
+			int size = 14;
+			vec_quest.front().name_lbl->SetSize(size);
+			vec_quest.front().desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front().desc, questx, questy + size, nullptr);
+			vec_quest.front().desc_lbl->SetColor({ 255, 255, 255, 255 });
+		}
+	}
+
+}
+
+void QuestHUD::CleanUp()
+{
+	App->gui->DestroyUIElement(objective_lbl);
+	objective_lbl = nullptr;
+	App->gui->DestroyUIElement(desc_lbl);
+	desc_lbl = nullptr;
+	App->gui->DestroyUIElement(quest_lbl);
+	quest_lbl = nullptr;
+	App->gui->DestroyUIElement(no_quest_lbl);
+	no_quest_lbl = nullptr;
+}
+
+void QuestHUD::AddActiveQuest(string argname, string argdesc, int id)
+{
+	QuestsShown quest;
+	quest.AddQuest(argname, argdesc, id);
+	vec_quest.push_back(quest);
+}
+
+void QuestHUD::RemoveQuest(int argid)
+{
+	for (list<QuestsShown>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it){
+		if (argid = it->id) {
+			it->CleanUpQuest();
+			vec_quest.remove(*it);
+		}
+	}
+}
+
+void QuestsShown::AddQuest(string argname, string argdesc, int argid) {
+	name = argname; desc = argdesc; id = argid;
+}
+
+void QuestsShown::CleanUpQuest() {
+	App->gui->DestroyUIElement(name_lbl);
+	name = nullptr;
+	App->gui->DestroyUIElement(desc_lbl);
+	desc = nullptr;
 }
