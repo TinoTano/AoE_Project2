@@ -506,6 +506,9 @@ bool Map::LoadResources(pugi::xml_node & node)
 		else if (name == "blacktrees") {
 			type = BLACK_TREE;
 		}
+		else if (name == "bush") {
+			type = BUSH;
+		}
 		else if (name == "mount1") {
 			type = MOUNT_1;
 		}

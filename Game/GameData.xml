@@ -2003,16 +2003,22 @@
       <Info>
         <ID value ="3"/>
 	      <Type value="3"/>
-        <BasePoint x="" y=""/>
-        <SelectionWidth value=""/>
+        <BasePoint x="85" y="73"/>
+        <SelectionWidth value="100"/>
       </Info>
       <Textures>
-        <Idle value="textures/Resources/"/>
-        <Gathering value="textures/Resources/"/>
+        <Idle value="textures/Resources/Bushes/bush.png"/>
+        <Gathering value="textures/Resources/Bushes/bush.png"/>
       </Textures>
       <Stats>
         <Life value ="100"/>
       </Stats>
+	  <Rects>
+          <Rect x="8" y="3" w="69" h="48"/>
+          <Rect x="85" y="4" w="85" h="49"/>
+          <Rect x="179" y="0" w="67" h="62"/>
+          <Rect x="260" y="3" w="78" h="55"/>
+      </Rects>
     </Resource>
     <Resource value ="STONE_MINE">
       <Info>
@@ -2033,8 +2039,9 @@
           <Rect x="95" y="1" w="74" h="46"/>
           <Rect x="179" y="0" w="85" h="48"/>
           <Rect x="278" y="0" w="80" h="46"/>
-          <Rect x="458" y="5" w="75" h="41"/>
-          <Rect x="549" y="5" w="68" h="44"/>
+		   <Rect x="371" y="5" w="73" h="40"/>
+		   <Rect x="458" y="5" w="75" h="41"/>
+		  <Rect x="549" y="5" w="68" h="44"/>
       </Rects>
     </Resource>
      <Resource value ="FOREST_ROCK">
