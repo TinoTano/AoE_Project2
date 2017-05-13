@@ -20,6 +20,7 @@
 #include "QuadTree.h"
 #include "Building.h"
 #include "FogOfWar.h"
+#include "Minimap.h"
 
 Scene::Scene() : SceneElement("scene")
 {
@@ -69,6 +70,10 @@ bool Scene::Start()
 	App->render->cameraScene.up = -1180;
 	App->render->cameraScene.left = 1680;
 	App->render->cameraScene.right = -1410;
+
+	// Init the map ================================================
+
+	App->minimap->InitMinimap();
 
 	// Loading UI ====================================================
 

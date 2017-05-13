@@ -19,11 +19,19 @@ public:
 	//Called before quitting
 	bool CleanUp();
 
+	//Initialize minimap
+	void InitMinimap();
+
 	//Draw terrain
 	void DrawTerrain(int x, int y, int r, int g, int b);
 
 	//Draw units
 	void DrawUnits();
+
+private:
+
+	iPoint minimapPos;
+	double minimapRatio;
 
 
 };

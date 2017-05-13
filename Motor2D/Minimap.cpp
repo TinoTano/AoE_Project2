@@ -31,11 +31,18 @@ bool Minimap::CleanUp()
 	return true;
 }
 
+void Minimap::InitMinimap()
+{
+	minimapPos.x = 1105;
+	minimapPos.y = 549;
+	minimapRatio = 0.035;
+}
+
 void Minimap::DrawTerrain(int x, int y, int r, int g, int b)
 {
 	SDL_Rect rect;
-	rect.x = 1105 - App->render->camera.x + (x * 0.035);
-	rect.y = 549 - App->render->camera.y + (y * 0.035);
+	rect.x = minimapPos.x - App->render->camera.x + (x * minimapRatio);
+	rect.y = minimapPos.y - App->render->camera.y + (y * minimapRatio);
 	rect.w = 2;
 	rect.h = 2;
 	App->render->DrawQuad(rect, r, g, b, true);
@@ -46,8 +53,8 @@ void Minimap::DrawUnits()
 	for (list<Unit*>::iterator it = App->entityManager->player->units.begin(); it != App->entityManager->player->units.end(); it++) {
 
 		SDL_Rect rect;
-		rect.x = 1105 - App->render->camera.x + ((*it)->entityPosition.x * 0.035);
-		rect.y = 549 - App->render->camera.y + ((*it)->entityPosition.y * 0.035);
+		rect.x = minimapPos.x - App->render->camera.x + ((*it)->entityPosition.x * minimapRatio);
+		rect.y = minimapPos.y - App->render->camera.y + ((*it)->entityPosition.y * minimapRatio);
 		rect.w = 4;
 		rect.h = 4;
 		App->render->DrawQuad(rect, 0, 0, 255, true);
@@ -57,8 +64,8 @@ void Minimap::DrawUnits()
 
 		if ((*it)->isActive) {
 			SDL_Rect rect;
-			rect.x = 1105 - App->render->camera.x + ((*it)->entityPosition.x * 0.035);
-			rect.y = 549 - App->render->camera.y + ((*it)->entityPosition.y * 0.035);
+			rect.x = minimapPos.x - App->render->camera.x + ((*it)->entityPosition.x * minimapRatio);
+			rect.y = minimapPos.y - App->render->camera.y + ((*it)->entityPosition.y * minimapRatio);
 			rect.w = 4;
 			rect.h = 4;
 			App->render->DrawQuad(rect, 255, 0, 0, true);
