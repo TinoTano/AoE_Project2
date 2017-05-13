@@ -39,6 +39,8 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	unitMoveTexture = unit->unitMoveTexture;
 	unitAttackTexture = unit->unitAttackTexture;
 	unitDieTexture = unit->unitDieTexture;
+	selectionRadius = unit->selectionRadius;
+	selectionAreaCenterPoint = unit->selectionAreaCenterPoint;
 
 	Life = unit->Life;
 	MaxLife = unit->MaxLife;
@@ -146,6 +148,11 @@ bool Unit::Draw()
 		drawLife({ entityPosition.x - 25, entityPosition.y - (r.h / 2) }); //25:  HPBAR_WIDTH / 2
 
 	return true;
+}
+
+void Unit::GetUnitBoundaries()
+{
+	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
 }
 
 unitType Unit::GetType() const

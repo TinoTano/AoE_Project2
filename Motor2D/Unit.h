@@ -50,6 +50,7 @@ public:
 	void LookAt();
 	void SetAnim(EntityState state);
 	void SetTexture(EntityState state);
+	void GetUnitBoundaries();
 
 private:
 
@@ -78,6 +79,7 @@ public:
 	list<Order*> order_list;
 	Building* buildingToCreate = nullptr;
 	Building* resourcesWareHouse = nullptr;
+	int selectionRadius = 0;
 
 	//Animations
 	vector<Animation> idleAnimations;

@@ -82,6 +82,10 @@ public:
 	int last_life = 0;
 	Timer lifebar_timer;
 
+	uint imageWidth = 0;
+	uint imageHeight = 0;
+	iPoint selectionAreaCenterPoint = { 0,0 };
+
 };
 
 typedef Cost StoredResources;

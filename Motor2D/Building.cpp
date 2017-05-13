@@ -36,6 +36,8 @@ Building::Building(int posX, int posY, Building* building)
 	Attack = building->Attack;
 	Defense = building->Defense;
 	canAttack = building->canAttack;
+	selectionWidth = building->selectionWidth;
+	selectionAreaCenterPoint = building->selectionAreaCenterPoint;
 
 	GetBuildingBoundaries();
 

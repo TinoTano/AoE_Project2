@@ -6,7 +6,8 @@
       <Info>
         <Name value = "ELVEN_LONGBLADE"/>
         <ID value = "0"/>
-        <Collider w="" h=""/>
+        <BasePoint x="13" y="40"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/ElvenLongblade/ElvenLongbladeIdle.png"/>
@@ -64,6 +65,8 @@
       <Info>
         <Name value = "DWARVEN_MAULER"/>
         <ID value = "1"/>
+        <BasePoint x="10" y="32"/>
+        <SelectionRadius value="15"/>
       </Info>
       <Textures>
 				<Idle value="textures/Units/DwarvenMauler/DwarvenMaulerIdle.png"/>
@@ -121,6 +124,8 @@
       <Info>
         <Name value = "GONDOR_SPEARMAN"/>
         <ID value = "2"/>
+        <BasePoint x="" y=""/>
+        <SelectionRadius value=""/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
@@ -178,6 +183,8 @@
       <Info>
         <Name value = "ELVEN_ARCHER"/>
         <ID value = "3"/>
+        <BasePoint x="10" y="41"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/ElvenArcher/ElvenArcherIdle.png"/>
@@ -235,6 +242,8 @@
       <Info>
         <Name value = "DUNEDAIN_RANGE"/>
         <ID value = "4"/>
+        <BasePoint x="10" y="43"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/DunedainRanger/DunedainRangerIdle.png"/>
@@ -292,6 +301,8 @@
       <Info>
         <Name value = "ELVEN_CAVALRYE"/>
         <ID value = "5"/>
+        <BasePoint x="15" y="80"/>
+        <SelectionRadius value="20"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/ElvenCavalery/elvenCavaleryIdle.png"/>
@@ -349,6 +360,8 @@
       <Info>
         <Name value = "GONDOR_KNIGHT"/>
         <ID value = "6"/>
+        <BasePoint x="15" y="80"/>
+        <SelectionRadius value="20"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/GondorKnight/GondorKnightIdle.png"/>
@@ -406,6 +419,8 @@
       <Info>
         <Name value = "ROHAN_KNIGHT"/>
         <ID value = "7"/>
+        <BasePoint x="15" y="130"/>
+        <SelectionRadius value="20"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
@@ -463,6 +478,8 @@
       <Info>
         <Name value = "MOUNTED_DUNEDAIN"/>
         <ID value = "4"/>
+        <BasePoint x="15" y="152"/>
+        <SelectionRadius value="20"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
@@ -520,6 +537,8 @@
       <Info>
         <Name value = "SIEGE_TOWER"/>
         <ID value = "9"/>
+        <BasePoint x="" y=""/>
+        <SelectionRadius value=""/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
@@ -577,6 +596,8 @@
       <Info>
         <Name value = "LIGHT_CATAPULT"/>
         <ID value = "10"/>
+        <BasePoint x="" y=""/>
+        <SelectionRadius value=""/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/"/>
@@ -635,6 +656,8 @@
       <Info>
         <Name value = "GOBLIN_SOLDIER"/>
         <ID value = "11"/>
+        <BasePoint x="10" y="17"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/GoblinSoldier/GoblinSoldierIdle.png"/>
@@ -693,6 +716,8 @@
       <Info>
         <Name value = "ORC_SOLDIER"/>
         <ID value = "12"/>
+        <BasePoint x="10" y="10"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/OrcSoldier/OrcSoldierIdle.png"/>
@@ -751,6 +776,8 @@
       <Info>
         <Name value = "URUK_HAI_SOLDIER"/>
         <ID value = "13"/>
+        <BasePoint x="10" y="46"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/Uruk-haiSoldier/Uruk-haiSoldierIdle.png"/>
@@ -809,6 +836,8 @@
       <Info>
         <Name value = "ORC_ARCHER"/>
         <ID value = "14"/>
+        <BasePoint x="10" y="43"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/OrcArcher/OrcArcherIdle.png"/>
@@ -867,6 +896,8 @@
       <Info>
         <Name value = "VENOMOUS_SPIDER"/>
         <ID value = "15"/>
+        <BasePoint x="15" y="45"/>
+        <SelectionRadius value="20"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/VenomousSpider/VenomousSpiderIdle.png"/>
@@ -925,6 +956,8 @@
       <Info>
         <Name value = "HARADRIM_OLIFANT"/>
         <ID value = "16"/>
+        <BasePoint x="50" y="285"/>
+        <SelectionRadius value="80"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/HaradrimOlifant/HaradrimOlifantIdle.png"/>
@@ -983,6 +1016,8 @@
       <Info>
         <Name value = "NAZGUL"/>
         <ID value = "17"/>
+        <BasePoint x="15" y="83"/>
+        <SelectionRadius value="20"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/Nazgul/NazgulIdle.png"/>
@@ -1041,6 +1076,8 @@
       <Info>
         <Name value = "TROLL_MAULER"/>
         <ID value = "18"/>
+        <BasePoint x="30" y="100"/>
+        <SelectionRadius value="50"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/troll/trollIdle.png"/>
@@ -1099,6 +1136,8 @@
       <Info>
         <Name value = "VILLAGER"/>
         <ID value = "19"/>
+        <BasePoint x="10" y="20"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>	
         <Idle value="textures/Units/Elf villager/ElfVillagerIdle.png"/>
@@ -1173,6 +1212,8 @@
       <Info>
         <Name value = "ELF_VILLAGER"/>
         <ID value = "20"/>
+        <BasePoint x="10" y="18"/>
+        <SelectionRadius value="15"/>
       </Info>
       <Textures>
         <Idle value="textures/Units/Elf villager/ElfVillagerIdle.png"/>
@@ -1244,6 +1285,8 @@
       <Info>
         <Name value = "GONDOR_HERO"/>
         <ID value = "21"/>
+        <BasePoint x="15" y="30"/>
+        <SelectionRadius value="30"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/GondorKnight/GondorKnightIdle.png"/>
@@ -1304,6 +1347,8 @@
       <Info>
         <Name value = "LEGOLAS"/>
         <ID value = "22"/>
+        <BasePoint x="10" y="15"/>
+        <SelectionRadius value="15"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Heroes/Legolas/LegolasIdle.png"/>
@@ -1368,6 +1413,8 @@
       <Info>
         <Name value = "TOWN_CENTER"/>
         <ID value = "0"/>
+        <BasePoint x="190" y="260"/>
+        <SelectionWidth value="380"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/TownHall.png"/>
@@ -1391,6 +1438,8 @@
       <Info>
         <Name value = "HOUSE"/>
         <ID value = "1"/>
+        <BasePoint x="95" y="87"/>
+        <SelectionWidth value="190"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/HouseFP.png"/>
@@ -1414,6 +1463,8 @@
       <Info>
         <Name value = "BARRACKS"/>
         <ID value = "2"/>
+        <BasePoint x="178" y="204"/>
+        <SelectionWidth value="257"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/BarracksFP.png"/>
@@ -1436,6 +1487,8 @@
       <Info>
         <Name value = "ARCHERY_RANGE"/>
         <ID value = "3"/>
+        <BasePoint x="125" y="267"/>
+        <SelectionWidth value="250"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/ArcheryRangeFP.png"/>
@@ -1458,6 +1511,8 @@
       <Info>
         <Name value = "STABLES"/>
         <ID value = "4"/>
+        <BasePoint x="140" y="267"/>
+        <SelectionWidth value="280"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/StablesFP.png"/>
@@ -1480,6 +1535,8 @@
       <Info>
         <Name value = "SIEGE_WORKSHOP"/>
         <ID value = "5"/>
+        <BasePoint x="185" y="232"/>
+        <SelectionWidth value="370"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/SiegeWorkshopFP.png"/>
@@ -1503,6 +1560,8 @@
       <Info>
         <Name value = "MARKET"/>
         <ID value = "6"/>
+        <BasePoint x="182" y="165"/>
+        <SelectionWidth value="364"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/MarketFP.png"/>
@@ -1526,6 +1585,8 @@
       <Info>
         <Name value = "BLACKSMITH"/>
         <ID value = "7"/>
+        <BasePoint x="144" y="195"/>
+        <SelectionWidth value="288"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/BlacksmithFP.png"/>
@@ -1550,6 +1611,8 @@
       <Info>
         <Name value = "MILL"/>
         <ID value = "8"/>
+        <BasePoint x="107" y="117"/>
+        <SelectionWidth value="214"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/MillFP.png"/>
@@ -1571,6 +1634,8 @@
       <Info>
         <Name value = "OUTPOST"/>
         <ID value = "9"/>
+        <BasePoint x="50" y="257"/>
+        <SelectionWidth value="100"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/OutpostFP.png"/>
@@ -1594,6 +1659,8 @@
       <Info>
         <Name value = "MONASTERY"/>
         <ID value = "10"/>
+        <BasePoint x="170" y="237"/>
+        <SelectionWidth value="340"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/MonasteryFP.png"/>
@@ -1617,6 +1684,8 @@
       <Info>
         <Name value = "CASTLE"/>
         <ID value = "11"/>
+        <BasePoint x="" y=""/>
+        <SelectionWidth value=""/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsFP/HouseFP2.png"/>
@@ -1639,6 +1708,8 @@
       <Info>
         <Name value = "SAURON_TOWER"/>
         <ID value = "12"/>
+        <BasePoint x="150" y="360"/>
+        <SelectionWidth value="300"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/TowerOfSauron.png"/>
@@ -1685,6 +1756,8 @@
       <Info>
         <Name value = "ORC_BARRACKS"/>
         <ID value = "14"/>
+        <BasePoint x="133" y="215"/>
+        <SelectionWidth value="265"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/BarracksSA.png"/>
@@ -1707,6 +1780,8 @@
       <Info>
         <Name value = "ORC_ARCHERY_RANGE"/>
         <ID value = "15"/>
+        <BasePoint x="140" y="245"/>
+        <SelectionWidth value="277"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/ArcherySA.png"/>
@@ -1730,6 +1805,8 @@
       <Info>
         <Name value = "BEAST_PIT"/>
         <ID value = "16"/>
+        <BasePoint x="168" y="110"/>
+        <SelectionWidth value="235"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/StablesSA.png"/>
@@ -1752,6 +1829,8 @@
       <Info>
         <Name value = "URUK_HAI_PIT"/>
         <ID value = "17"/>
+        <BasePoint x="170" y="198"/>
+        <SelectionWidth value="340"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/PitSA.png"/>
@@ -1775,6 +1854,8 @@
       <Info>
         <Name value = "ORC_MARKET"/>
         <ID value = "18"/>
+        <BasePoint x="183" y="250"/>
+        <SelectionWidth value="365"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/MarketSA.png"/>
@@ -1798,6 +1879,8 @@
       <Info>
         <Name value = "ORC_BLACKSMITH"/>
         <ID value = "19"/>
+        <BasePoint x="162" y="138"/>
+        <SelectionWidth value="223"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/BlacksmithSA.png"/>
@@ -1826,7 +1909,9 @@
     <Resource value="BlackTrees">
         <Info>
           <ID value="0"/>
-	  <Type value="1"/>
+	        <Type value="1"/>
+          <BasePoint x="14" y="187"/>
+          <SelectionWidth value="40"/>
         </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/BlackTrees.png"/>
@@ -1859,7 +1944,9 @@
 	<Resource value ="GreenTrees">
         <Info>
           <ID value="1"/>
-	  <Type value="1"/>
+	        <Type value="1"/>
+          <BasePoint x="14" y="187"/>
+          <SelectionWidth value="40"/>
         </Info>
         <Textures>
           <Idle value="textures/Resources/Trees/GreenTrees.png"/>
@@ -1892,7 +1979,9 @@
     <Resource value ="GOLD_MINE">
       <Info>
         <ID value ="2"/>
-	<Type value="2"/>
+	      <Type value="2"/>
+        <BasePoint x="37" y="70"/>
+        <SelectionWidth value="75"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/Gold/Gold.png"/>
@@ -1913,7 +2002,9 @@
     <Resource value ="BUSH">
       <Info>
         <ID value ="3"/>
-	<Type value="3"/>
+	      <Type value="3"/>
+        <BasePoint x="" y=""/>
+        <SelectionWidth value=""/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/"/>
@@ -1926,7 +2017,9 @@
     <Resource value ="STONE_MINE">
       <Info>
         <ID value ="4"/>
-	<Type value="4"/>
+	      <Type value="4"/>
+        <BasePoint x="85" y="73"/>
+        <SelectionWidth value="100"/>
       </Info>
       <Textures>
         <Idle value="textures/Resources/Stone/stone.png"/>

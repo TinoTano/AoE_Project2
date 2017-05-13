@@ -347,7 +347,7 @@ bool Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b,
 	return ret;
 }
 
-bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
+bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool isIsometric, bool use_camera) const
 {
 	bool ret = true;
 	uint scale = App->win->GetScale();
@@ -368,10 +368,14 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 		y += camera.y;
 	}
 
-	for(uint i = 0; i < 360; ++i)
+	float angleMultiplier = 1;
+	if (isIsometric) {
+		angleMultiplier = 0.5f;
+	}
+	for (uint i = 0; i < 360; ++i)
 	{
 		points[i].x = (int)(x + radius * cos(i * factor));
-		points[i].y = (int)(y + radius * sin(i * factor));
+		points[i].y = (int)((y + radius * sin(i * factor) * angleMultiplier));
 	}
 
 	result = SDL_RenderDrawPoints(renderer, points, 360);
@@ -383,4 +387,18 @@ bool Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uin
 	}
 
 	return ret;
+}
+
+bool Render::DrawIsometricRect(iPoint center, uint width) const
+{
+	App->render->DrawLine(center.x, center.y - (width * 0.25f), center.x + (width * 0.5f), center.y, 255, 255, 255, 255);
+	App->render->DrawLine(center.x, center.y - (width * 0.25f), center.x - (width * 0.5f), center.y, 255, 255, 255, 255);
+	App->render->DrawLine(center.x, center.y + (width * 0.25f), center.x + (width * 0.5f), center.y, 255, 255, 255, 255);
+	App->render->DrawLine(center.x, center.y + (width * 0.25f), center.x - (width * 0.5f), center.y, 255, 255, 255, 255);
+	return true;
+}
+
+bool Render::DrawIsometricCircle(int x1, int y1, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
+{
+	return DrawCircle(x1, y1, radius, r, g, b, a, true, use_camera);
 }

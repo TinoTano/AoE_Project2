@@ -26,6 +26,7 @@ public:
 	bool Draw();
 	void Destroy();
 	void Damaged();
+	void GetResourceBoundaries();
 
 private:
 
@@ -37,6 +38,7 @@ public:
 	vector<SDL_Rect> resourceRectVector;
 	SDL_Rect resourceRect;
 	bool isDamaged = false; // just for save/load
+	int selectionWidth = 0;
 };
 
 #endif

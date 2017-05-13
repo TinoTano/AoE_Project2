@@ -22,6 +22,8 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	Life = resource->Life;
 	resourceIdleTexture = resource->resourceIdleTexture;
 	resourceGatheringTexture = resource->resourceGatheringTexture;
+	selectionWidth = resource->selectionWidth;
+	selectionAreaCenterPoint = resource->selectionAreaCenterPoint;
 	
 
 	if (resource->resourceRectVector.size() > 0) {
@@ -39,7 +41,9 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	}
 
 
-	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - (resourceRect.w / 2)}, resourceRect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+	if (type == GOLD_MINE || type == STONE_MINE || type == BLACK_TREE || type == GREEN_TREE || type == BUSH) {
+		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - (resourceRect.w / 2) }, resourceRect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+	}
 	entityTexture = resourceIdleTexture;
 	faction = NATURE;
 	App->fog->AddEntity(this);
@@ -48,6 +52,11 @@ Resource::Resource(int posX, int posY, Resource* resource)
 
 Resource::~Resource()
 {
+}
+
+void Resource::GetResourceBoundaries()
+{
+	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
 }
 
 bool Resource::Update(float dt)

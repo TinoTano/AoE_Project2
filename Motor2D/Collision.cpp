@@ -128,7 +128,7 @@ bool Collision::PreUpdate()
 	}
 
 	for (list<Collision_data*>::iterator collisions = collision_list.begin(); collisions != collision_list.end(); collisions++) {
-
+	
 		if ((*collisions)->state == UNSOLVED) {
 			(*collisions)->c1->callback->OnCollision(*(*collisions));
 			continue;

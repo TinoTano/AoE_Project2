@@ -47,6 +47,7 @@ public:
 	bool canAttack = false;
 	bool waitingToPlace = false;
 	bool canBePlaced = false;
+	int selectionWidth = 0;
 
 	//Utilities
 	Timer attack_timer;

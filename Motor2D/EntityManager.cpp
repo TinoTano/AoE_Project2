@@ -310,6 +310,9 @@ bool EntityManager::LoadGameData()
 				unitTemplate = new Unit();
 
 			unitTemplate->type = (unitType)unitNodeInfo.child("Info").child("ID").attribute("value").as_int();
+			unitTemplate->selectionRadius = unitNodeInfo.child("Info").child("SelectionRadius").attribute("value").as_uint();
+			unitTemplate->selectionAreaCenterPoint.x = unitNodeInfo.child("Info").child("BasePoint").attribute("x").as_int();
+			unitTemplate->selectionAreaCenterPoint.y = unitNodeInfo.child("Info").child("BasePoint").attribute("y").as_int();
 
 			string idleTexturePath = unitNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			string moveTexturePath = unitNodeInfo.child("Textures").child("Move").attribute("value").as_string();
@@ -486,6 +489,9 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->cost.gold = buildingNodeInfo.child("Stats").child("Cost").child("goldCost").attribute("value").as_int();
 
 			buildingTemplate->type = (buildingType)buildingNodeInfo.child("Info").child("ID").attribute("value").as_int();
+			buildingTemplate->selectionWidth = buildingNodeInfo.child("Info").child("SelectionWidth").attribute("value").as_uint();
+			buildingTemplate->selectionAreaCenterPoint.x = buildingNodeInfo.child("Info").child("BasePoint").attribute("x").as_int();
+			buildingTemplate->selectionAreaCenterPoint.y = buildingNodeInfo.child("Info").child("BasePoint").attribute("y").as_int();
 			buildingTemplate->GetBuildingBoundaries();
 
 
@@ -512,6 +518,9 @@ bool EntityManager::LoadGameData()
 
 			resourceTemplate->visual = (resourceItem)resourceNodeInfo.child("Info").child("ID").attribute("value").as_int();
 			resourceTemplate->type = (resourceType)resourceNodeInfo.child("Info").child("Type").attribute("value").as_int();
+			resourceTemplate->selectionWidth = resourceNodeInfo.child("Info").child("SelectionWidth").attribute("value").as_uint();
+			resourceTemplate->selectionAreaCenterPoint.x = resourceNodeInfo.child("Info").child("BasePoint").attribute("x").as_int();
+			resourceTemplate->selectionAreaCenterPoint.y = resourceNodeInfo.child("Info").child("BasePoint").attribute("y").as_int();
 
 			resourcesDB.insert(pair<int, Resource*>(resourceTemplate->visual, resourceTemplate));
 		}
@@ -1021,8 +1030,11 @@ void EntityManager::FillSelectedList() {
 			for (list<Resource*>::iterator it = aux_resource_list.begin(); it != aux_resource_list.end(); it++) {
 				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
 
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect))
-					selectedEntityList.push_back((Entity*)(*it));
+				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
+					if ((*it)->type == GOLD_MINE || (*it)->type == STONE_MINE || (*it)->type == BLACK_TREE || (*it)->type == GREEN_TREE || (*it)->type == BUSH) {
+						selectedEntityList.push_back((Entity*)(*it));
+					}
+				}
 			}
 		}
 	}
@@ -1037,24 +1049,21 @@ void EntityManager::DrawSelectedList() {
 
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 
-		Sprite circle;
-
 		if (selectedListType == COLLIDER_UNIT) {
 			Unit* unit = (Unit*)(*it);
-			circle.pos = { unit->entityPosition.x, unit->entityPosition.y + (unit->r.h / 2) };
-			circle.priority = (*it)->entityPosition.y - (unit->r.h / 2) + unit->r.h - 1;
+			unit->GetUnitBoundaries();
+			App->render->DrawIsometricCircle(unit->entityPosition.x, unit->entityPosition.y + (*it)->selectionAreaCenterPoint.y, unit->selectionRadius, 255, 255, 255, 255);
 		}
-		else {
-			circle.pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-			circle.priority = (*it)->entityPosition.y;// -(r.h / 2) + r.h - 1;
+		else if (selectedListType == COLLIDER_BUILDING) {
+			Building* building = (Building*)(*it);
+			building->GetBuildingBoundaries();
+			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y + ((int)building->imageHeight - (*it)->selectionAreaCenterPoint.y) }, building->selectionWidth);
 		}
-
-		circle.radius = (*it)->collider->r;
-		circle.r = 255;
-		circle.g = 255;
-		circle.b = 255;
-
-		App->render->sprites_toDraw.push_back(circle);
+		else if (selectedListType == COLLIDER_RESOURCE) {
+			Resource* resource = (Resource*)(*it);
+			resource->GetResourceBoundaries();
+			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y + ((int)resource->imageHeight - (*it)->selectionAreaCenterPoint.y) }, resource->selectionWidth);
+		}
 	}
 }
 

@@ -57,7 +57,6 @@ void Entity::drawLife(iPoint barPos) {
 
 }
 
-
 bool Entity::Update(float dt)
 {
 	return true;
