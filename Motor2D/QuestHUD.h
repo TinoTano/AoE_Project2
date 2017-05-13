@@ -25,7 +25,7 @@ public:
 private:
 	int winx, winy;
 	int questx, questy;
-	list<QuestsShown> vec_quest;
+	list<QuestsShown*> vec_quest;
 	Label* objective_lbl = nullptr, *desc_lbl = nullptr, *quest_lbl = nullptr, *no_quest_lbl = nullptr;
 };
 #pragma once

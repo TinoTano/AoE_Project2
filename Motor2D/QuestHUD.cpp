@@ -44,13 +44,13 @@ void QuestHUD::Update()
 		no_quest_lbl = nullptr;
 	}
 	else if (vec_quest.size() > 0) {
-		if (vec_quest.front().name_lbl != nullptr) {
-			vec_quest.front().name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front().name, questx, questy, nullptr);
-			vec_quest.front().name_lbl->SetColor({255, 255, 255, 255});
+		if (vec_quest.front()->name_lbl != nullptr) {
+			vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy, nullptr);
+			vec_quest.front()->name_lbl->SetColor({255, 255, 255, 255});
 			int size = 14;
-			vec_quest.front().name_lbl->SetSize(size);
-			vec_quest.front().desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front().desc, questx, questy + size, nullptr);
-			vec_quest.front().desc_lbl->SetColor({ 255, 255, 255, 255 });
+			vec_quest.front()->name_lbl->SetSize(size);
+			vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + size, nullptr);
+			vec_quest.front()->desc_lbl->SetColor({ 255, 255, 255, 255 });
 		}
 	}
 
@@ -66,20 +66,26 @@ void QuestHUD::CleanUp()
 	quest_lbl = nullptr;
 	App->gui->DestroyUIElement(no_quest_lbl);
 	no_quest_lbl = nullptr;
+
+	for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it) {
+		RELEASE((it._Ptr->_Myval));
+	}
 }
 
 void QuestHUD::AddActiveQuest(string argname, string argdesc, int id)
 {
-	QuestsShown quest;
-	quest.AddQuest(argname, argdesc, id);
+	QuestsShown* quest;
+	quest = new QuestsShown();
+	quest->AddQuest(argname, argdesc, id);
+
 	vec_quest.push_back(quest);
 }
 
 void QuestHUD::RemoveQuest(int argid)
 {
-	for (list<QuestsShown>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it){
-		if (argid = it->id) {
-			it->CleanUpQuest();
+	for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it){
+		if (argid = it._Ptr->_Myval->id) {
+			it._Ptr->_Myval->CleanUpQuest();
 			vec_quest.remove(*it);
 		}
 	}
