@@ -7,7 +7,7 @@
 
 #define MAX_OBJECTS 15 //Number of obects in a node before split
 #define NODE_COUNT 4 //4 nodes. NW, NE, SW, SE. 
-#define MAX_LEVELS 3
+#define MAX_LEVELS 4
 
 using namespace std;
 

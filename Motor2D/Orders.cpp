@@ -56,11 +56,11 @@ void MoveToOrder::Execute() {
 		unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
 		// ===============================================================
 
-		App->collision->quadTree->UpdateCol(unit->collider);
+		//App->collision->quadTree->UpdateCol(unit->collider);
 		if (unit->IsHero) {
 			Hero* hero = (Hero*)unit;
 			if (hero->aoeTargets != nullptr) {
-				App->collision->quadTree->UpdateCol(hero->aoeTargets);
+				//App->collision->quadTree->UpdateCol(hero->aoeTargets);
 				hero->aoeTargets->pos = hero->next_step;
 			}
 		}
@@ -163,11 +163,11 @@ void ReachOrder::Execute() {
 		unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
 		// ===============================================================
 
-		App->collision->quadTree->UpdateCol(unit->collider);
+		//App->collision->quadTree->UpdateCol(unit->collider);
 		if (unit->IsHero) {
 			Hero* hero = (Hero*)unit;
 			if (hero->aoeTargets != nullptr) {
-				App->collision->quadTree->UpdateCol(hero->aoeTargets);
+				//App->collision->quadTree->UpdateCol(hero->aoeTargets);
 				hero->aoeTargets->pos = hero->next_step;
 			}
 		}

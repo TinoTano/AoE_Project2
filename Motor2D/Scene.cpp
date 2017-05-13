@@ -203,6 +203,7 @@ bool Scene::Start()
 
 	App->ai->enabled = true;
 	App->ai->LoadExplorationMap();
+	App->collision->quadTree;
 
 	// ================================================================================================================
 
@@ -290,11 +291,6 @@ bool Scene::Update(float dt)
 
 	// ---------------------------------------
 
-
-	if (timer.ReadSec() > (quadtree_flag + 20)) {
-		App->collision->quadTree->UpdateTree();
-		quadtree_flag = timer.ReadSec();
-	}
 	return true;
 }
 

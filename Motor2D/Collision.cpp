@@ -5,7 +5,7 @@
 #include "Entity.h"
 #include "Render.h"
 #include "Window.h"
-#include "QuadTree.h"
+#include "StaticQuadtree.h"
 
 Collision::Collision() : Module()
 {
@@ -81,7 +81,7 @@ bool Collision::Start()
 {
 	uint w, h;
 	App->win->GetWindowSize(w, h);
-	quadTree = new QuadTree({ -4800, 0, 9600, 4800 }, 0);
+	quadTree = new StaticQuadTree();
 	return true;
 }
 

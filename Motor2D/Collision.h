@@ -8,7 +8,7 @@ class Unit;
 class Entity;
 class Building;
 class Resource;
-class QuadTree;
+class StaticQuadTree;
 
 enum COLLIDER_TYPE
 {
@@ -38,6 +38,7 @@ struct Collider
 {
 	iPoint pos = { 0,0 };
 	int r = 0;
+	int quadtree_node = 0;
 	bool to_delete = false;
 	bool colliding = false;
 	bool enabled = true;
@@ -116,7 +117,7 @@ private:
 public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
 	list<Collision_data*> collision_list;
-	QuadTree* quadTree = nullptr;
+	StaticQuadTree* quadTree = nullptr;
 };
 
 #endif // __ModuleCollision_H__

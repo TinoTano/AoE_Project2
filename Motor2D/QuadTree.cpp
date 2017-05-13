@@ -41,10 +41,12 @@ void QuadTree::SplitNode()
 
 		for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end(); it++) {
 			if (*it != nullptr) {
-				if (node[i]->Contains(*it))
+				if (node[i]->Contains(*it)) {
 					node[i]->collidersList.push_back(*it);
+				}
 			}
 		}
+		break;
 	}
 	collidersList.clear();
 }
@@ -61,28 +63,28 @@ void QuadTree::MergeNode() {
 	}
 	
 }
-
-void QuadTree::UpdateCol(Collider* col) {
-
-	int index = GetNodeIndex(col);
-	if (index == -1) {
-		if (!IsInList(col)) {
-			collidersList.push_back(col);
-			if (collidersList.size() > MAX_OBJECTS && level < MAX_LEVELS && node[0] == nullptr)
-				SplitNode();
-		}
-	}
-	else {
-		for (int i = 0; i < NODE_COUNT; i++) {
-			if (col != nullptr) {
-				if (i != index && node[i]->IsInList(col) && !node[i]->Contains(col))
-					node[i]->collidersList.remove(col);
-			}
-		}
-
-		node[index]->UpdateCol(col);
-	}
-}
+//
+//void QuadTree::UpdateCol(Collider* col) {
+//
+//	int index = GetNodeIndex(col);
+//	if (index == -1) {
+//		if (!IsInList(col)) {
+//			collidersList.push_back(col);
+//			if (collidersList.size() > MAX_OBJECTS && level < MAX_LEVELS && node[0] == nullptr)
+//				SplitNode();
+//		}
+//	}
+//	else {
+//		for (int i = 0; i < NODE_COUNT; i++) {
+//			if (col != nullptr) {
+//				if (i != index && node[i]->IsInList(col) && !node[i]->Contains(col))
+//					node[i]->collidersList.remove(col);
+//			}
+//		}
+//
+//		node[index]->UpdateCol(col);
+//	}
+//}
 
 void QuadTree::UpdateTree() {
 

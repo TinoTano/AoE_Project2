@@ -111,6 +111,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="Squad.cpp" />
+    <ClCompile Include="StaticQuadtree.cpp" />
     <ClCompile Include="TechTree.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Render.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="SceneElement.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="Squad.h" />
+    <ClInclude Include="StaticQuadtree.h" />
     <ClInclude Include="TechTree.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Audio.h" />
