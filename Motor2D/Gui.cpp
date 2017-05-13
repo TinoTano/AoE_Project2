@@ -390,6 +390,7 @@ void Image::Draw()
 	img.pos.y = pos.second;
 	img.rect = section;
 	img.texture = texture;
+
 	App->render->ui_toDraw.push_back(img);
 }
 

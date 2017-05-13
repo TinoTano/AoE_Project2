@@ -42,27 +42,29 @@ bool MenuScene::Start()
 	elements[4].position.first = elements[3].position.first + (x / 150);
 	elements[4].position.second = elements[1].position.second + (y / 13);
 
+	elements[5].position.first = elements[3].position.first + (x / 150) + elements[4].rect.w + (x/40);
+	elements[5].position.second = elements[4].position.second;
 
-	elements[5].position.first = elements[1].position.first + x / 180;
-	elements[5].position.second = elements[1].position.second + y / 50;
-
-	elements[6].position.first = elements[5].position.first;
-	elements[6].position.second = elements[5].position.second + y / 100 + elements[5].detect_sections.front().h;
+	elements[6].position.first = elements[1].position.first + x / 180;
+	elements[6].position.second = elements[1].position.second + y / 50;
 
 	elements[7].position.first = elements[6].position.first;
 	elements[7].position.second = elements[6].position.second + y / 100 + elements[6].detect_sections.front().h;
 
-	elements[8].position.first = elements[2].position.first + (x / 100);
-	elements[8].position.second = elements[2].position.second + (y / 15);
+	elements[8].position.first = elements[7].position.first;
+	elements[8].position.second = elements[7].position.second + y / 100 + elements[7].detect_sections.front().h;
 
-	elements[9].position.first = elements[8].position.first;
-	elements[9].position.second = elements[8].position.second + (y / 20);
+	elements[9].position.first = elements[2].position.first + (x / 100);
+	elements[9].position.second = elements[2].position.second + (y / 15);
 
-	elements[10].position.first = elements[3].position.first + (x / 30);
-	elements[10].position.second = elements[3].position.second + (y / 5) + (y / 30);
+	elements[10].position.first = elements[9].position.first;
+	elements[10].position.second = elements[9].position.second + (y / 20);
 
-	elements[11].position.first = elements[10].position.first;
-	elements[11].position.second = elements[10].position.second + (y / 15);
+	elements[11].position.first = elements[3].position.first + (x / 30);
+	elements[11].position.second = elements[3].position.second + (y / 5) + (y / 30);
+
+	elements[12].position.first = elements[11].position.first;
+	elements[12].position.second = elements[11].position.second + (y / 15);
 
 
 
@@ -84,19 +86,23 @@ bool MenuScene::Start()
 
 	load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 20, buttons[LOADGAME]->pos.second, nullptr);
 
-	map_lbl = (Label*)App->gui->CreateLabel("Riverdale", images[RIVERDALE]->pos.first + x / 40, images[RIVERDALE]->pos.second + images[RIVERDALE]->section.h + y / 500, nullptr);
-
+	freepeople_lbl = (Label*)App->gui->CreateLabel("FREE PEOPLE", images[FREEPEOPLE]->pos.first + x / 40, images[FREEPEOPLE]->pos.second + images[FREEPEOPLE]->section.h + y / 500, nullptr);
+	sauronarmy_lbl = (Label*)App->gui->CreateLabel("SAURON ARMY", images[SAURONARMY]->pos.first + x / 40, images[SAURONARMY]->pos.second + images[SAURONARMY]->section.h + y / 500, nullptr);
+	map_lbl = (Label*)App->gui->CreateLabel("Map: Riverdale", images[BACKGROUND_SKIRMISH]->pos.first + x / 15, images[BACKGROUND_SKIRMISH]->pos.second + y / 500, nullptr);
 	new_game_lbl->SetSize(18);
 	load_game_lbl->SetSize(18);
-	map_lbl->SetSize(12);
+	map_lbl->SetSize(14);
 
 	skirmish_menu.in_window.push_back(images[BACKGROUND_SKIRMISH]);
-	skirmish_menu.in_window.push_back(images[RIVERDALE]);
+	skirmish_menu.in_window.push_back(images[FREEPEOPLE]);
+	skirmish_menu.in_window.push_back(images[SAURONARMY]);
 	skirmish_menu.in_window.push_back(buttons[NEWGAME]);
 	skirmish_menu.in_window.push_back(buttons[LOADGAME]);
 	skirmish_menu.in_window.push_back(new_game_lbl);
 	skirmish_menu.in_window.push_back(load_game_lbl);
 	skirmish_menu.in_window.push_back(map_lbl);
+	skirmish_menu.in_window.push_back(freepeople_lbl);
+	skirmish_menu.in_window.push_back(sauronarmy_lbl);
 
 	skirmish_menu.WindowOff();
 	skirmish_menu.SetFocus(images[BACKGROUND_SKIRMISH]->pos.first, images[BACKGROUND_SKIRMISH]->pos.second, x, y);
@@ -178,9 +184,17 @@ bool MenuScene::Update(float dt)
 		if (!ui_menu.IsEnabled()) {
 			ui_menu.WindowOn();
 		}
-		else ui_menu.WindowOff();
+		else {
+			ui_menu.WindowOff();
+		}
 	}
 
+	if (images[FREEPEOPLE]->current == CLICKUP) {
+		team = 0;
+	}
+	else if (images[SAURONARMY]->current == CLICKUP) {
+		team = 1;
+	}
 	bool cursoron = false;
 	for (uint i = 0; i < buttons.size(); ++i) {
 		if (buttons[i]->current == HOVER || buttons[i]->current == CLICKIN)
@@ -207,6 +221,7 @@ bool MenuScene::PostUpdate()
 			skirmish_menu.WindowOn();
 		}
 		else skirmish_menu.WindowOff();
+		team = -1;
 	}
 	else if (buttons[2]->current == CLICKUP)
 	{
@@ -217,6 +232,23 @@ bool MenuScene::PostUpdate()
 		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
 		/*	App->cutscene->Start();
 		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);*/
+	}
+
+	if (final_team != team)
+	{
+		final_team = team;
+		if (final_team == 0)
+		{
+			App->gui->DestroyUIElement(ring);
+			ring = (Image*)App->gui->CreateImage("gui/ring.png", images[FREEPEOPLE]->pos.first, images[FREEPEOPLE]->pos.second, { 0,0, 125, 70 });
+		}
+		else if (final_team == 1)
+		{
+			App->gui->DestroyUIElement(ring);
+			ring = (Image*)App->gui->CreateImage("gui/ring.png", images[SAURONARMY]->pos.first, images[SAURONARMY]->pos.second, {0,0, 125, 70});
+		}
+		else if (final_team == -1)
+			App->gui->DestroyUIElement(ring);
 	}
 	return true;
 }

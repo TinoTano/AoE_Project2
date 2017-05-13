@@ -48,9 +48,11 @@ public:
 	WindowUI skirmish_menu;
 
 	Label* settings_lbl, *mute_lbl, *window_lbl;
-	Label* new_game_lbl, *load_game_lbl, *map_lbl;
-
-	enum IMAGES { BACKGROUND, YELLOW, SETTINGS, BACKGROUND_SKIRMISH, RIVERDALE };
+	Label* new_game_lbl, *load_game_lbl, *map_lbl, *freepeople_lbl, *sauronarmy_lbl;
+	Image* ring;
+	int team = -1;
+	int final_team = -1;
+	enum IMAGES { BACKGROUND, YELLOW, SETTINGS, BACKGROUND_SKIRMISH, FREEPEOPLE, SAURONARMY };
 
 	enum BUTTONS { SKIRMISH, OPTIONS, QUIT, MUTE, SCREEN, NEWGAME, LOADGAME };
 

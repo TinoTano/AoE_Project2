@@ -59,12 +59,26 @@
 			</HUD>
 			<HUD>
 				<Info>
-					<Name value = "RIVERDALE"/>
+					<Name value = "FREEPEOPLE"/>
 					<ID value = "4"/>
 					<Position x = "0" y = "0"/>
 				</Info>
 				<Texture>
-					<Path value = "gui/riverdale.png"/>
+					<Path value = "gui/freepeople.png"/>
+					<Rect x = "0" y = "0" w="125" h="70"/>
+				</Texture>
+				<Scenes>
+					<Scene value = "MENUSCENE"/>
+				</Scenes>
+			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "SAURONARMY"/>
+					<ID value = "5"/>
+					<Position x = "0" y = "0"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/sauronarmy.png"/>
 					<Rect x = "0" y = "0" w="125" h="70"/>
 				</Texture>
 				<Scenes>
@@ -132,7 +146,7 @@
 	<HUD>
 				<Info>
 					<Name value = "SKIRMISH"/>
-					<ID value = "5"/>
+					<ID value = "6"/>
 					<Position x = "200" y = "30"/>
 					<Tier value = "2"/>
 				</Info>
@@ -153,7 +167,7 @@
 			<HUD>
 				<Info>
 					<Name value = "OPTIONS"/>
-					<ID value = "6"/>
+					<ID value = "7"/>
 					<Position x = "200" y = "100"/>
 					<Tier value = "2"/>
 				</Info>
@@ -174,7 +188,7 @@
 			<HUD>
 				<Info>
 					<Name value = "QUIT"/>
-					<ID value = "7"/>
+					<ID value = "8"/>
 					<Position x = "200" y = "200"/>
 					<Tier value = "2"/>
 				</Info>
@@ -195,7 +209,7 @@
 			<HUD>
 				<Info>
 					<Name value = "MUTE"/>
-					<ID value = "8"/>
+					<ID value = "9"/>
 					<Position x = "0" y = "0"/>
 					<Tier value = "2"/>
 				</Info>
@@ -216,7 +230,7 @@
 			<HUD>
 				<Info>
 					<Name value = "FULLSCREEN"/>
-					<ID value = "9"/>
+					<ID value = "10"/>
 					<Position x = "0" y = "0"/>
 					<Tier value = "2"/>
 				</Info>
@@ -237,7 +251,7 @@
 			<HUD>
 			<Info>
 					<Name value = "NEWGAME"/>
-					<ID value = "10"/>
+					<ID value = "11"/>
 					<Position x = "0" y = "0"/>
 					<Tier value = "2"/>
 				</Info>
@@ -258,7 +272,7 @@
 			<HUD>
 			<Info>
 					<Name value = "LOADGAME"/>
-					<ID value = "11"/>
+					<ID value = "12"/>
 					<Position x = "0" y = "0"/>
 					<Tier value = "2"/>
 				</Info>
@@ -529,7 +543,7 @@
 		<Name value = "GANDALF"/>
         <ID value = "23"/>
 		<Position x="99" y = "64"/>
-		<Cost woodCost ="dumbledore" foodCost = "" goldCost = "" stoneCost ="100"/>
+		<Cost woodCost ="0" foodCost = "" goldCost = "" stoneCost ="100"/>
 		</Unit>
 	</Units>
 
