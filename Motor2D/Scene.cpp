@@ -182,9 +182,6 @@ bool Scene::Start()
 	villagers = (Label*)App->gui->CreateLabel("0/0", -STARTING_CAMERA_X + 480, -STARTING_CAMERA_Y + 5, nullptr);
 	villagers->SetColor({ 255, 255, 255 ,255 });
 
-	// Priority
-	App->gui->SetPriority();
-
 	// Music ==========================================================================================================
 
 	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
@@ -351,11 +348,11 @@ bool Scene::CleanUp()
 	LOG("Freeing scene");
 
 	questHUD.CleanUp();
+	ui_menu.CleanUp();
 	App->gui->DestroyALLUIElements();
 	elements.clear();
 	images.clear();
 	buttons.clear();
-	ui_menu.CleanUp();
 
 	App->ai->enabled = false;
 

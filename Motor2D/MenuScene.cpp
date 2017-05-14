@@ -6,6 +6,7 @@
 #include "Window.h"
 #include "Audio.h"
 #include "CutSceneManager.h"
+#include "Video.h"
 
 MenuScene::MenuScene() : SceneElement("menu")
 {
@@ -149,6 +150,13 @@ bool MenuScene::PreUpdate()
 
 bool MenuScene::Update(float dt)
 {
+	if (App->video->want_to_play == false)
+	{
+		uint w, h;
+		App->win->GetWindowSize(w, h);
+		App->video->PlayVideo("VideoLogoNemesis.ogv");
+	}
+
 	// --------------------------------------------
 	//						UI
 	//---------------------------------------------
@@ -253,9 +261,9 @@ bool MenuScene::PostUpdate()
 
 bool MenuScene::CleanUp()
 {
-	App->gui->DestroyALLUIElements();
 	ui_menu.CleanUp();
 	skirmish_menu.CleanUp();
+	App->gui->DestroyALLUIElements();
 	elements.clear();
 	images.clear();
 	buttons.clear();

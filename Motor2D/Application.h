@@ -28,6 +28,7 @@ class Minimap;
 class AI;
 class QuestManager;
 class CutSceneManager;
+class Video;
 
 class Application
 {
@@ -115,6 +116,8 @@ public:
 	Minimap*			minimap = NULL;
 	QuestManager*		quest = NULL;
 	CutSceneManager*	cutscene = NULL;
+	Video*	            video = NULL;
+
 	bool				quit = false;
 
 private:

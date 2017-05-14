@@ -22,6 +22,7 @@
 #include "Minimap.h"
 #include "QuestManager.h"
 #include "CutSceneManager.h"
+#include "Video.h"
 
 
 // Constructor
@@ -48,6 +49,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	minimap = new Minimap();
 	quest = new QuestManager();
 	cutscene = new CutSceneManager();
+	video = new Video();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -64,6 +66,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(ai);
 	AddModule(cutscene);
  	AddModule(quest);
+	AddModule(video);
 
 	// scene last
 	AddModule(sceneManager);

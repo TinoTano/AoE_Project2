@@ -43,21 +43,6 @@ bool PlayScene::Start()
 		}
 	}
 
-	// Labels
-	wood = (Label*)App->gui->CreateLabel(to_string(woodCount), -STARTING_CAMERA_X + 50, -STARTING_CAMERA_Y + 5, nullptr);
-	wood->SetColor({ 255, 255, 255 ,255 });
-	food = (Label*)App->gui->CreateLabel(to_string(foodCount), -STARTING_CAMERA_X + 150, -STARTING_CAMERA_Y + 5, nullptr);
-	food->SetColor({ 255, 255, 255 ,255 });
-	gold = (Label*)App->gui->CreateLabel(to_string(goldCount), -STARTING_CAMERA_X + 280, -STARTING_CAMERA_Y + 5, nullptr);
-	gold->SetColor({ 255, 255, 255 ,255 });
-	stone = (Label*)App->gui->CreateLabel(to_string(stoneCount), -STARTING_CAMERA_X + 360, -STARTING_CAMERA_Y + 5, nullptr);
-	stone->SetColor({ 255, 255, 255 ,255 });
-	villagers = (Label*)App->gui->CreateLabel("0/0", -STARTING_CAMERA_X + 480, -STARTING_CAMERA_Y + 5, nullptr);
-	villagers->SetColor({ 255, 255, 255 ,255 });
-
-	// Priority
-	App->gui->SetPriority();
-
 	return true;
 }
 
@@ -79,9 +64,9 @@ bool PlayScene::PostUpdate()
 bool PlayScene::CleanUp()
 {
 	App->gui->DestroyALLUIElements();
-	elements.clear();
 	images.clear();
 	buttons.clear();
+	elements.clear();
 
 	return true;
 }

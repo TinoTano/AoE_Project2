@@ -113,10 +113,12 @@
     <ClCompile Include="Squad.cpp" />
     <ClCompile Include="StaticQuadtree.cpp" />
     <ClCompile Include="TechTree.cpp" />
+    <ClCompile Include="theoraplay.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="Video.cpp" />
     <ClCompile Include="Villager.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
@@ -158,6 +160,7 @@
     <ClInclude Include="Squad.h" />
     <ClInclude Include="StaticQuadtree.h" />
     <ClInclude Include="TechTree.h" />
+    <ClInclude Include="theoraplay.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Input.h" />
@@ -166,6 +169,7 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Unit.h" />
+    <ClInclude Include="Video.h" />
     <ClInclude Include="Villager.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
