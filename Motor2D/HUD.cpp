@@ -393,9 +393,11 @@ void HUD::Update() {
 								}
 							}
 							if (create_villager_bt != nullptr && id == TOWN_CENTER) {
-								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost) && create_villager_bt->current == CLICKUP) {
-									App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
-									building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
+								if (create_villager_bt->current == CLICKUP) {
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) {
+										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
+										building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
+									}
 								}
 							}
 							if (create_hero_bt != nullptr && id == TOWN_CENTER) {
@@ -424,9 +426,11 @@ void HUD::Update() {
 								for (uint i = 0; i < App->gui->unit_bt.size(); ++i)
 								{
 									if (App->gui->unit_bt[i].button != nullptr) {
-										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost) && App->gui->unit_bt[i].button->current == CLICKUP) {
-											building->order_list.push_back(new CreateUnitOrder(App->gui->unit_bt[i].type));
-											App->sceneManager->level1_scene->UpdateResources();
+										if (App->gui->unit_bt[i].button->current == CLICKUP) {
+											if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost)) {
+												building->order_list.push_back(new CreateUnitOrder(App->gui->unit_bt[i].type));
+												App->sceneManager->level1_scene->UpdateResources();
+											}
 										}
 									}
 								}
@@ -443,9 +447,11 @@ void HUD::Update() {
 						for (uint i = 0; i < App->gui->unit_bt.size(); ++i)
 						{
 							if (App->gui->unit_bt[i].button != nullptr) {
-								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost) && App->gui->unit_bt[i].button->current == CLICKUP) {
-									building->order_list.push_back(new CreateUnitOrder(App->gui->unit_bt[i].type));
-									App->sceneManager->level1_scene->UpdateResources();
+								if (App->gui->unit_bt[i].button->current == CLICKUP) {
+									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost)) {
+										building->order_list.push_back(new CreateUnitOrder(App->gui->unit_bt[i].type));
+										App->sceneManager->level1_scene->UpdateResources();
+									}
 								}
 							}
 						}

@@ -1241,6 +1241,9 @@
         <BuildTime value=""/>
 	<GatheringSpeed value="30"/>
 	<MaxCapacity value="50"/>
+<Cost>
+		<woodCost value="50"/>
+	</Cost>
       </Stats>
       <Animations>
         <Idle>
