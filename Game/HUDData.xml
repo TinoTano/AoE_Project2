@@ -395,6 +395,27 @@
 					<Scene value = "LEVEL"/>
 				</Scenes>
 			</HUD>
+			<HUD>
+				<Info>
+					<Name value = "LOADGAME"/>
+					<ID value = "9"/>
+					<Position x = "0" y = "0"/>
+					<Tier value = "2"/>
+				</Info>
+				<Texture>
+					<Path value = "gui/button.png"/>
+				</Texture>
+				<Blit>
+					<Section x = "0" y = "0" w="220" h="30"/>
+					<Section x = "0" y = "30" w="220" h="30"/>
+				</Blit>
+				<Detect>
+					<Section x = "0" y = "0" w="220" h="30"/>
+				</Detect>
+				<Scenes>
+					<Scene value = "LEVEL"/>
+				</Scenes>
+			</HUD>
 	</Buttons>
 	<Sprites>
 		<Proportions width ="33" height="32"/>

@@ -89,7 +89,7 @@ public:
 	Unit* guard1= nullptr;
 	Unit* guard2= nullptr;
 
-	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL };
+	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL, LOADGAME };
 	enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
 
 };

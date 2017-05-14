@@ -108,6 +108,9 @@ bool Scene::Start()
 	elements[8].position.first = elements[7].position.first;
 	elements[8].position.second = elements[7].position.second + elements[7].detect_sections.front().h + y / 100;
 
+	elements[9].position.first = elements[8].position.first;
+	elements[9].position.second = elements[8].position.second + elements[8].detect_sections.front().h + y / 100;
+
 	for (uint it = 0; it < elements.size(); ++it) {
 		switch (elements[it].type)
 		{
@@ -126,21 +129,24 @@ bool Scene::Start()
 	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", buttons[QUITGAME]->pos.first + x / 20, buttons[QUITGAME]->pos.second, nullptr);
 	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", buttons[SAVEGAME]->pos.first + x / 20, buttons[SAVEGAME]->pos.second, nullptr);
 	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", buttons[CANCEL]->pos.first + x / 15, buttons[CANCEL]->pos.second, nullptr);
-
+	Label* load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 35, buttons[LOADGAME]->pos.second, nullptr);
 	back_to_menu_lbl->SetSize(16);
 	quit_game_lbl->SetSize(16);
 	save_game_lbl->SetSize(16);
 	cancel_lbl->SetSize(16);
+	load_game_lbl->SetSize(16);
 
 	ui_menu.in_window.push_back(images[WINDOW]);
 	ui_menu.in_window.push_back(buttons[BACKTOMENU]);
 	ui_menu.in_window.push_back(buttons[QUITGAME]);
 	ui_menu.in_window.push_back(buttons[SAVEGAME]);
 	ui_menu.in_window.push_back(buttons[CANCEL]);
+	ui_menu.in_window.push_back(buttons[LOADGAME]);
 	ui_menu.in_window.push_back(back_to_menu_lbl);
 	ui_menu.in_window.push_back(quit_game_lbl);
 	ui_menu.in_window.push_back(save_game_lbl);
 	ui_menu.in_window.push_back(cancel_lbl);
+	ui_menu.in_window.push_back(load_game_lbl);
 
 	ui_menu.WindowOff();
 	ui_menu.SetFocus(images[3]->pos.first, images[3]->pos.second, 280, 280);
@@ -250,7 +256,7 @@ bool Scene::Update(float dt)
 		LoadScene();
 	}
 */
-
+	
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
 
@@ -268,7 +274,7 @@ bool Scene::Update(float dt)
 	//---------------------------------------------
 	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
 
-	if (buttons[MENU]->current == CLICKUP) {
+	if (buttons[MENU]->current == CLICKUP || App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
 		UpdateVillagers(5, 10);
 		ui_menu.WindowOn();
 	}
