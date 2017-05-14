@@ -43,6 +43,25 @@ bool Scene::Awake(pugi::xml_node & config)
 bool Scene::Start()
 {
 	active = true;
+
+	// Loading sounds ================================================
+
+	soundAttack = App->audio->LoadFx("audio/fx/Swords.wav");
+	soundSpiderAttack = App->audio->LoadFx("audio/fx/AmbientSounds/Spiders.wav");
+	soundTrollAttack = App->audio->LoadFx("audio/fx/"); //no hay
+	soundBalrogAttack = App->audio->LoadFx("audio/fx/"); //no hay
+	soundArcherAttack = App->audio->LoadFx("audio/fx/bow.wav");
+	soundHorseAttack = App->audio->LoadFx("audio/fx/Dead_Horse_1.wav");
+
+	soundWood = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
+	soundStone = App->audio->LoadFx("audio/fx/Fight_2.wav");
+	soundFruit = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
+	soundBuilding = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
+	
+	soundCreateVillager = App->audio->LoadFx("audio/fx/Swords.wav");
+	soundCreateUnit = App->audio->LoadFx("audio/fx/Swords.wav");
+	soundCreateLegolas = App->audio->LoadFx("audio/fx/Swords.wav");
+
 	// Creating map ==================================================
 
 	if (start == false)

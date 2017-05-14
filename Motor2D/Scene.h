@@ -92,6 +92,22 @@ public:
 	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL, LOADGAME };
 	enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
 
+	//Sounds
+	uint soundAttack;
+	uint soundSpiderAttack;
+	uint soundTrollAttack;
+	uint soundBalrogAttack;
+	uint soundArcherAttack;
+	uint soundHorseAttack;
+
+	uint soundWood;
+	uint soundStone;
+	uint soundFruit;
+	uint soundBuilding;
+
+	uint soundCreateVillager;
+	uint soundCreateUnit;
+	uint soundCreateLegolas;
 };
 
 #endif // __SCENE_H__

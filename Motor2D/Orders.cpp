@@ -17,6 +17,7 @@
 #include "AI.h"
 #include "Squad.h"
 #include "Hero.h"
+#include "Audio.h"
 
 
 //Move to Order:
@@ -220,8 +221,22 @@ void UnitAttackOrder::Execute() {
 			unit->order_list.push_front(new ReachOrder(target));
 			state = NEEDS_START;
 		}
-		else if (unit->currentAnim->Finished())
+		else if (unit->currentAnim->Finished()) 
+		{
+			if (unit->type == VENOMOUS_SPIDER && unit->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundSpiderAttack);
+
+			else if (unit->type == GONDOR_KNIGHT || unit->type == ELVEN_CAVALRY && unit->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundHorseAttack);
+
+			else if (unit->type == ELVEN_ARCHER || unit->type == LEGOLAS && unit->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundArcherAttack);
+
+			else if (unit->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundAttack);
+
 			target->Life -= unit->Attack - target->Defense;
+		}
 
 		if (target->Life <= 0)
 			target->Destroy();
@@ -353,6 +368,16 @@ void GatherOrder::Execute() {
 	if (resource != nullptr) {
 		if (!CheckCompletion()) {
 			if (villager->currentAnim->Finished()) {
+
+				/*if (resource->type == WOOD && resource->isActive == true)
+					App->audio->PlayFx(App->sceneManager->level1_scene->soundWood);
+				
+				else if (resource->type == STONE || resource->type == GOLD && resource->isActive == true)
+					App->audio->PlayFx(App->sceneManager->level1_scene->soundStone);
+
+				else if (resource->type == FOOD && resource->isActive == true)
+					App->audio->PlayFx(App->sceneManager->level1_scene->soundFruit);*/
+
 				villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
 				resource->Life -= MIN(resource->Life, villager->gathering_speed);
 				if (resource->Life <= 0)
@@ -398,9 +423,12 @@ void BuildOrder::Start(Entity* entity) {
 void BuildOrder::Execute()
 {
 	if (!CheckCompletion()) {
-		if (villager->currentAnim->Finished())
+		if (villager->currentAnim->Finished()) {
+			/*if(building->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundBuilding); */
 			//building->Life += MIN(building->MaxLife - building->Life, villager->buildingSpeed);
 			building->Life += 200;
+		}
 	}
 	else
 		state = COMPLETED;
