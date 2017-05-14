@@ -226,16 +226,16 @@ void UnitAttackOrder::Execute() {
 		}
 		else if (unit->currentAnim->Finished())
 		{
-			if (unit->type == VENOMOUS_SPIDER && unit->isActive == true)
+			if (unit->type == VENOMOUS_SPIDER)
 				App->audio->PlayFx(App->sceneManager->level1_scene->soundSpiderAttack);
 
-			else if (unit->type == GONDOR_KNIGHT || unit->type == ELVEN_CAVALRY && unit->isActive == true)
+			else if (unit->type == GONDOR_KNIGHT || unit->type == ELVEN_CAVALRY)
 				App->audio->PlayFx(App->sceneManager->level1_scene->soundHorseAttack);
 
-			else if (unit->type == ELVEN_ARCHER || unit->type == LEGOLAS && unit->isActive == true)
+			else if (unit->type == ELVEN_ARCHER || unit->type == LEGOLAS)
 				App->audio->PlayFx(App->sceneManager->level1_scene->soundArcherAttack);
 
-			else if (unit->isActive == true)
+			else
 				App->audio->PlayFx(App->sceneManager->level1_scene->soundAttack);
 
 			target->Life -= unit->Attack - target->Defense;
