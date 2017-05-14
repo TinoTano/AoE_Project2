@@ -301,7 +301,7 @@
       <Info>
         <Name value = "ELVEN_CAVALRYE"/>
         <ID value = "5"/>
-        <BasePoint x="15" y="80"/>
+        <BasePoint x="15" y="25"/>
         <SelectionRadius value="20"/>
       </Info>
 			<Textures>
@@ -1852,13 +1852,15 @@
       <Info>
         <Name value = "ORC_HOUSE"/>
         <ID value = "13"/>
+        <BasePoint x="133" y="215"/>
+        <SelectionWidth value="265"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/HouseSA.png"/>
 				<Die value="textures/Buildings/BuildingsSA/HouseSA.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>
@@ -1880,9 +1882,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/BarracksSA.png"/>
 				<Die value="textures/Buildings/BuildingsSA/BarracksSA.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>
@@ -1904,9 +1906,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/ArcherySA.png"/>
 				<Die value="textures/Buildings/BuildingsSA/ArcherySA.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>
@@ -1929,9 +1931,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/StablesSA.png"/>
 				<Die value="textures/Buildings/BuildingsSA/StablesSA.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>
@@ -1953,9 +1955,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/PitSA.png"/>
 				<Die value="textures/Buildings/BuildingsSA/PitSA.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>
@@ -1978,9 +1980,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/MarketSA.png"/>
 				<Die value="textures/Buildings/BuildingsSA/MarketSA.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>
@@ -2003,9 +2005,9 @@
 			<Textures>
 				<Idle value="textures/Buildings/BuildingsSA/BlacksmithSA.png"/>
 				<Die value="textures/Buildings/BuildingsSA/BlacksmithSA.png"/>
-				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Big_1.png"/>
-				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Big_2.png"/>
-				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Big_3.png"/>
+				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
+				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
+				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="2"/>

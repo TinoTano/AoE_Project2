@@ -42,7 +42,7 @@ Resource::Resource(int posX, int posY, Resource* resource)
 
 
 	if (type == GOLD_MINE || type == STONE_MINE || type == BLACK_TREE || type == GREEN_TREE || type == BUSH) {
-		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - (resourceRect.w / 2) }, resourceRect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - (selectionAreaCenterPoint.y / 4)) }, resourceRect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
 	}
 	entityTexture = resourceIdleTexture;
 	faction = NATURE;

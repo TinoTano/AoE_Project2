@@ -37,8 +37,9 @@ void MoveToOrder::Execute() {
 
 	if (!CheckCompletion()) {
 		unit->entityPosition = unit->next_step;
-		unit->collider->pos = unit->next_step;
-		unit->range->pos = unit->entityPosition;
+		unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
+		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 
 		unit->CalculateVelocity();
 
@@ -88,10 +89,11 @@ void FollowPathOrder::Start(Entity* entity)
 void FollowPathOrder::Execute() {
 
 	if (!CheckCompletion()) {
-		iPoint destinationWorld = App->map->MapToWorld(unit->path->front().x, unit->path->front().y);
-		unit->order_list.push_front(new MoveToOrder(destinationWorld));
-		unit->path->erase(unit->path->begin());
-
+		if (unit->path) {
+			iPoint destinationWorld = App->map->MapToWorld(unit->path->front().x, unit->path->front().y);
+			unit->order_list.push_front(new MoveToOrder(destinationWorld));
+			unit->path->erase(unit->path->begin());
+		}
 	}
 	else {
 		App->pathfinding->DeletePath(unit->path);
@@ -126,7 +128,7 @@ void ReachOrder::Start(Entity* argunit) {
 		}
 	}
 
-	if (!unit->path->empty())
+	if (unit->path && !unit->path->empty())
 		unit->order_list.push_front(new FollowPathOrder());
 
 	state = EXECUTING;
@@ -143,9 +145,9 @@ void ReachOrder::Execute() {
 		}
 
 		unit->entityPosition = unit->next_step;
-		unit->collider->pos = unit->next_step;
-		unit->range->pos = unit->entityPosition;
-		unit->los->pos = unit->entityPosition;
+		unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
+		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 
 		unit->CalculateVelocity();
 
@@ -180,10 +182,7 @@ void ReachOrder::Execute() {
 
 bool ReachOrder::CheckCompletion()
 {
-	if (entity->collider->GetUnit())
-		return (entity->collider->pos.DistanceTo(unit->entityPosition) < unit->range->r);
-	else
-		return (entity->collider->pos.DistanceTo(unit->entityPosition) < (entity->collider->r + unit->collider->r));
+	return (entity->collider->CheckCollision(unit->collider));
 }
 
 
@@ -194,7 +193,7 @@ void UnitAttackOrder::Start(Entity* entity)
 		unit->state = ATTACKING;
 		App->entityManager->RallyCall(unit);
 
-		if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->range->r)
+		if (!unit->collider->CheckCollision(target->collider))
 			unit->order_list.push_front(new ReachOrder(target));
 		else {
 			unit->SetTexture(ATTACKING);
@@ -217,7 +216,7 @@ void UnitAttackOrder::Execute() {
 
 	if (!CheckCompletion()) {
 
-		if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->range->r) {
+		if (!unit->collider->CheckCollision(target->collider)) {
 			unit->order_list.push_front(new ReachOrder(target));
 			state = NEEDS_START;
 		}
@@ -239,7 +238,7 @@ bool UnitAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-			if (unit->entityPosition.DistanceTo(target->entityPosition) < unit->los->r)
+			if (unit->collider->CheckCollision(target->collider));
 				return false;
 		}
 	}
@@ -284,7 +283,8 @@ bool BuildingAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-			if (building->entityPosition.DistanceTo(target->entityPosition) < building->range->r)
+			//if (building->entityPosition.DistanceTo(target->entityPosition) < building->range->r)
+			if(building->collider->CheckCollision(target->collider))
 				return false;
 		}
 	}

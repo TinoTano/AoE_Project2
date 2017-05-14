@@ -193,7 +193,17 @@ void Collision::DeleteCollider(Collider * collider)
 
 bool Collider::CheckCollision(Collider* c2) const
 {
-	return (pos.DistanceTo(c2->pos) < (r + c2->r));
+	if (c2 == nullptr)return false;
+
+	int radius = r + c2->r + 3;
+	int deltaX = pos.x - c2->pos.x;
+	int deltaY = pos.y - c2->pos.y;
+
+
+	bool ret = abs(deltaX) < radius && abs(deltaY) < radius*sin(0.54f);
+
+	return ret;
+	//return (pos.DistanceTo(c2->pos) < (r + c2->r));
 }
 
 Unit* Collider::GetUnit() {
@@ -234,9 +244,9 @@ void Collision::DebugDraw()
 	{
 		if (App->render->CullingCam((*it)->pos)) {
 			if ((*it)->colliding)
-				App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255);
+				App->render->DrawIsometricCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255);
 			else
-				App->render->DrawCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255);
+				App->render->DrawIsometricCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255);
 		}
 	}
 }

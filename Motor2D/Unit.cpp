@@ -60,9 +60,9 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	SDL_Rect r = currentAnim->GetCurrentFrame();
 
-	collider = App->collision->AddCollider(entityPosition, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
-	range = App->collision->AddCollider(entityPosition, r.w , COLLIDER_RANGE, App->entityManager, (Entity*)this);
-	los = App->collision->AddCollider(entityPosition, r.w * 4, COLLIDER_LOS, App->entityManager, (Entity*)this);
+	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
+	range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w , COLLIDER_RANGE, App->entityManager, (Entity*)this);
+	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w * 4, COLLIDER_LOS, App->entityManager, (Entity*)this);
 
 }
 
@@ -186,7 +186,12 @@ bool Unit::SetDestination(iPoint destination)
 
 	iPoint origin = App->map->WorldToMap(collider->pos.x, collider->pos.y);
 	path = App->pathfinding->CreatePath(origin, destination);
-
+	for (list<iPoint>::iterator it = path->begin(); it != path->end(); it++) {
+		iPoint destWorld = App->map->MapToWorld(path->back().x, path->back().y);
+		if (destWorld.DistanceTo(App->map->MapToWorld((*it).x, (*it).y)) > destWorld.DistanceTo(entityPosition)) {
+			path->remove(*it);
+		}
+	}
 	return (!path->empty());
 }
 
