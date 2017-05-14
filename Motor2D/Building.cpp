@@ -58,7 +58,7 @@ bool Building::IsEnemy() const
 
 void Building::GetBuildingBoundaries()
 {
-	App->tex->GetSize(buildingIdleTexture, imageWidth, imageHeight);
+	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
 }
 
 bool Building::Update(float dt)

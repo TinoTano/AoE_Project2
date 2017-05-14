@@ -6,7 +6,7 @@
       <Info>
         <Name value = "ELVEN_LONGBLADE"/>
         <ID value = "0"/>
-        <BasePoint x="13" y="40"/>
+        <BasePoint x="13" y="15"/>
         <SelectionRadius value="15"/>
       </Info>
 			<Textures>
@@ -65,7 +65,7 @@
       <Info>
         <Name value = "DWARVEN_MAULER"/>
         <ID value = "1"/>
-        <BasePoint x="10" y="32"/>
+        <BasePoint x="10" y="12"/>
         <SelectionRadius value="15"/>
       </Info>
       <Textures>
@@ -183,7 +183,7 @@
       <Info>
         <Name value = "ELVEN_ARCHER"/>
         <ID value = "3"/>
-        <BasePoint x="10" y="41"/>
+        <BasePoint x="10" y="15"/>
         <SelectionRadius value="15"/>
       </Info>
 			<Textures>
@@ -242,7 +242,7 @@
       <Info>
         <Name value = "DUNEDAIN_RANGE"/>
         <ID value = "4"/>
-        <BasePoint x="10" y="43"/>
+        <BasePoint x="10" y="15"/>
         <SelectionRadius value="15"/>
       </Info>
 			<Textures>
@@ -360,7 +360,7 @@
       <Info>
         <Name value = "GONDOR_KNIGHT"/>
         <ID value = "6"/>
-        <BasePoint x="15" y="80"/>
+        <BasePoint x="15" y="25"/>
         <SelectionRadius value="20"/>
       </Info>
 			<Textures>
@@ -419,7 +419,7 @@
       <Info>
         <Name value = "ROHAN_KNIGHT"/>
         <ID value = "7"/>
-        <BasePoint x="15" y="130"/>
+        <BasePoint x="15" y="35"/>
         <SelectionRadius value="20"/>
       </Info>
 			<Textures>
@@ -478,7 +478,7 @@
       <Info>
         <Name value = "MOUNTED_DUNEDAIN"/>
         <ID value = "4"/>
-        <BasePoint x="15" y="152"/>
+        <BasePoint x="15" y="30"/>
         <SelectionRadius value="20"/>
       </Info>
 			<Textures>
@@ -776,7 +776,7 @@
       <Info>
         <Name value = "URUK_HAI_SOLDIER"/>
         <ID value = "13"/>
-        <BasePoint x="10" y="46"/>
+        <BasePoint x="10" y="15"/>
         <SelectionRadius value="15"/>
       </Info>
 			<Textures>
@@ -786,7 +786,7 @@
 				<Die value="textures/Units/Uruk-haiSoldier/Uruk-haiSoldierDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
+				<Faction value="2"/>
 				<Life value="75"/>
 				<Attack value="7"/>
 				<AttackSpeed value="2"/>
@@ -836,7 +836,7 @@
       <Info>
         <Name value = "ORC_ARCHER"/>
         <ID value = "14"/>
-        <BasePoint x="10" y="43"/>
+        <BasePoint x="10" y="15"/>
         <SelectionRadius value="15"/>
       </Info>
 			<Textures>
@@ -846,7 +846,7 @@
 				<Die value="textures/Units/OrcArcher/OrcArcherDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
+				<Faction value="2"/>
 				<Life value="40"/>
 				<Attack value="4"/>
 				<AttackSpeed value="2"/>
@@ -896,8 +896,8 @@
       <Info>
         <Name value = "VENOMOUS_SPIDER"/>
         <ID value = "15"/>
-        <BasePoint x="15" y="45"/>
-        <SelectionRadius value="20"/>
+        <BasePoint x="15" y="5"/>
+        <SelectionRadius value="30"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/VenomousSpider/VenomousSpiderIdle.png"/>
@@ -906,7 +906,7 @@
 				<Die value="textures/Units/VenomousSpider/VenomousSpiderDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
+				<Faction value="2"/>
 				<Life value="80"/>
 				<Attack value="4"/>
 				<AttackSpeed value="2.1"/>
@@ -956,7 +956,7 @@
       <Info>
         <Name value = "HARADRIM_OLIFANT"/>
         <ID value = "16"/>
-        <BasePoint x="50" y="285"/>
+        <BasePoint x="50" y="70"/>
         <SelectionRadius value="80"/>
       </Info>
 			<Textures>
@@ -966,7 +966,7 @@
 				<Die value="textures/Units/HaradrimOlifant/HaradrimOlifantDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
+				<Faction value="2"/>
 				<Life value="250"/>
 				<Attack value="8"/>
 				<AttackSpeed value="1.9"/>
@@ -1016,7 +1016,7 @@
       <Info>
         <Name value = "NAZGUL"/>
         <ID value = "17"/>
-        <BasePoint x="15" y="83"/>
+        <BasePoint x="15" y="20"/>
         <SelectionRadius value="20"/>
       </Info>
 			<Textures>
@@ -1026,7 +1026,7 @@
 				<Die value="textures/Units/Nazgul/NazgulDie.png"/>
 			</Textures>
 			<Stats>
-				<Faction value="1"/>
+				<Faction value="2"/>
 				<Life value="120"/>
 				<Attack value="6"/>
 				<AttackSpeed value="2.1"/>
@@ -1076,8 +1076,8 @@
       <Info>
         <Name value = "TROLL_MAULER"/>
         <ID value = "18"/>
-        <BasePoint x="30" y="100"/>
-        <SelectionRadius value="50"/>
+        <BasePoint x="30" y="35"/>
+        <SelectionRadius value="40"/>
       </Info>
 			<Textures>
 				<Idle value="textures/Units/troll/trollIdle.png"/>
@@ -1852,12 +1852,12 @@
       <Info>
         <Name value = "ORC_HOUSE"/>
         <ID value = "13"/>
-        <BasePoint x="133" y="215"/>
-        <SelectionWidth value="265"/>
+        <BasePoint x="90" y="107"/>
+        <SelectionWidth value="179"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/BuildingsSA/HouseSA.png"/>
-				<Die value="textures/Buildings/BuildingsSA/HouseSA.png"/>
+				<Idle value="textures/Buildings/BuildingsSA/House1.png"/>
+				<Die value="textures/Buildings/BuildingsSA/House1.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>

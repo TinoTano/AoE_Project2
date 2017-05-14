@@ -229,8 +229,10 @@ void Unit::LookAt()
 	else if (angle >= -67.5 && angle <= -22.5)
 		direction = UP_RIGHT;
 
-	if (direction != currentDirection)
+	if (direction != currentDirection) {
 		currentDirection = direction;
+		SetAnim(state);
+	}
 	
 }
 
