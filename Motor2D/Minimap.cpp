@@ -49,6 +49,9 @@ bool Minimap::Update(float dt)
 	iPoint cameraOldPos = { App->render->camera.x, App->render->camera.y };
 
 	App->input->GetMousePosition(mousePos.x, mousePos.y);
+	mousePos.x -= STARTING_CAMERA_X;
+	mousePos.y -= STARTING_CAMERA_Y;
+
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
 	{
@@ -57,13 +60,14 @@ bool Minimap::Update(float dt)
 		{
 			App->render->camera.x = (-mousePos.x + minimapPos.x) / minimapRatio;
 			App->render->camera.y = (-mousePos.y + minimapPos.y) / minimapRatio;
+			App->render->culling_cam.x = -App->render->camera.x - 300;
+			App->render->culling_cam.y = -App->render->camera.y - 300;
 
 			std::pair<int, int> movement;
 			movement.first = App->render->camera.x - cameraOldPos.x;
 			movement.second = App->render->camera.y - cameraOldPos.y;
 
 			App->gui->ScreenMoves(movement);
-
 		}
 	}
 
