@@ -83,17 +83,26 @@ bool Unit::Update(float dt)
 			hero->HeroUpdate();
 		}
 
-		if (!order_list.empty()) {
-			Order* current_order = order_list.front();
+		list<Order*>* current_orders = nullptr;
+		if (order_list.empty()) {
+			if (squad)
+				if (!squad->squad_orderlist.empty())
+					current_orders = &squad->squad_orderlist;
+		}
+		else
+			current_orders = &order_list;
 
-			if (current_order->state == NEEDS_START)
-				current_order->Start((Entity*)this);
 
-			if (current_order->state == EXECUTING)
-				current_order->Execute();
+		if (current_orders != nullptr && !current_orders->empty()) {
 
-			if (current_order->state == COMPLETED)
-				order_list.pop_front();
+			if (current_orders->front()->state == NEEDS_START)
+				current_orders->front()->Start((Entity*)this);
+
+			if (current_orders->front()->state == EXECUTING)
+				current_orders->front()->Execute();
+
+			if (current_orders->front()->state == COMPLETED)
+				current_orders->pop_front();
 		}
 		else {
 			if (state != IDLE) {
@@ -106,7 +115,7 @@ bool Unit::Update(float dt)
 		}
 	}
 	else {
-		if (currentAnim->Finished()) 
+		if (currentAnim->Finished())
 			App->entityManager->DeleteEntity(this);
 	}
 

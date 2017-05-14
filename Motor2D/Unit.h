@@ -24,7 +24,7 @@ enum unitType {
 
 	GONDOR_HERO,
 
-	LEGOLAS, GANDALF
+	LEGOLAS, GANDALF, BALROG
 };
 
 enum unitDirection {

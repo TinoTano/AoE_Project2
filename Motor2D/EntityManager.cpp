@@ -622,6 +622,10 @@ void EntityManager::DeleteEntity(Entity* entity)
 					AI_faction->villagers.remove((Villager*)unit);
 			}
 
+
+			//if(squad)
+			//squad->Deassign(this);
+
 			break;
 		case COLLIDER_BUILDING:
 			if (entity->faction == player->faction)
@@ -641,8 +645,15 @@ void EntityManager::DeleteEntity(Entity* entity)
 						if ((*it2)->order_type == GATHER) {
 
 							GatherOrder* gth_order = (GatherOrder*)(*it2);
-							if (gth_order->resource = (Resource*)entity) 
+							if (gth_order->resource == (Resource*)entity) 
 								gth_order->resource = nullptr;
+						}
+
+						if ((*it2)->order_type == REACH) {
+
+							ReachOrder* rch_order = (ReachOrder*)(*it2);
+							if (rch_order->entity == entity)
+								rch_order->state = COMPLETED;
 						}
 					}
 				}
