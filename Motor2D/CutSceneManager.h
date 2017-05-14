@@ -91,7 +91,7 @@ public:
 	void SetUnit(Unit* e);
 
 private:
-	Unit*	unit;
+	Unit*	unit = nullptr;
 };
 
 class CutsceneBuilding : public CutsceneElement
@@ -105,7 +105,7 @@ public:
 	void SetBuilding(Building* b);
 
 private:
-	Building*	building;
+	Building*	building = nullptr;
 };
 
 class CutsceneMusic : public CutsceneElement

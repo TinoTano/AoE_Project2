@@ -23,8 +23,8 @@ public:
 	void AddActiveQuest(string, string, int);
 	void RemoveQuest(int);
 private:
-	int winx, winy;
-	int questx, questy;
+	int winx = 0, winy = 0;
+	int questx = 0, questy = 0;
 	list<QuestsShown*> vec_quest;
 	Label* objective_lbl = nullptr, *desc_lbl = nullptr, *quest_lbl = nullptr, *no_quest_lbl = nullptr;
 };

@@ -37,7 +37,7 @@ public:
 public:
 
 	list<_TTF_Font*>	fonts;
-	_TTF_Font*			default;
+	_TTF_Font*			default = nullptr;
 
 private:
 	const char* default_path;

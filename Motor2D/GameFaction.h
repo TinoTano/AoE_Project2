@@ -32,9 +32,9 @@ public:
 
 	StoredResources resources;
 	Faction faction;
-	TechTree* tech_tree;
+	TechTree* tech_tree = nullptr;
 
-	Building* Town_center;
+	Building* Town_center = nullptr;
 
 	list<Unit*> units;
 	list<Villager*> villagers;

@@ -80,7 +80,7 @@ private:
 	int mouseY;
 
 public:
-	int nextID;
+	int nextID = 0;
 	list<Entity*> selectedEntityList;
 	COLLIDER_TYPE selectedListType = COLLIDER_NONE;
 
@@ -94,7 +94,7 @@ public:
 	bool placingBuilding = false;
 	float dt = 0;
 	buildingType creatingBuildingType = ORC_BARRACKS;
-	SDL_Rect NotHUD;
+	SDL_Rect NotHUD = { 0,0,0,0 };
 	Building* buildingToCreate = nullptr;
 
 	map<int, Unit*> unitsDB;

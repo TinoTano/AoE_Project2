@@ -45,9 +45,9 @@ public:
 	bool alive = true;
 	float dg;
 	ParticleType type;
-	SDL_Texture* texture;
+	SDL_Texture* texture = nullptr;
 	string name;
-	Collider* collider;
+	Collider* collider = nullptr;
 	Animation anim;
 	Timer timer;
 	uint states;

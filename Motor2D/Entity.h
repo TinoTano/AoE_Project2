@@ -66,11 +66,11 @@ public:
 
 
 public:
-	int entityID;
+	int entityID = 0;
 	bool isActive = false;
-	SDL_Texture* entityTexture;
-	iPoint entityPosition;
-	Collider* collider;
+	SDL_Texture* entityTexture = nullptr;
+	iPoint entityPosition = { 0,0 };
+	Collider* collider = nullptr;
 	EntityState state = IDLE;
 	Faction faction = FREE_MEN;
 

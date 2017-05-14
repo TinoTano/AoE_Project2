@@ -148,7 +148,7 @@ private:
 
 	string				folder;
 	bool				map_loaded;
-	SDL_Surface*		fogSurface;
+	SDL_Surface*		fogSurface = nullptr;;
 };
 
 #endif // __MAP_H__

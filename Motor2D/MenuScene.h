@@ -47,9 +47,9 @@ public:
 	WindowUI ui_menu;
 	WindowUI skirmish_menu;
 
-	Label* settings_lbl, *mute_lbl, *window_lbl;
-	Label* new_game_lbl, *load_game_lbl, *map_lbl, *freepeople_lbl, *sauronarmy_lbl;
-	Image* ring;
+	Label* settings_lbl = nullptr, *mute_lbl = nullptr, *window_lbl = nullptr;
+	Label* new_game_lbl = nullptr, *load_game_lbl = nullptr, *map_lbl = nullptr, *freepeople_lbl = nullptr, *sauronarmy_lbl = nullptr;
+	Image* ring = nullptr;
 	int team = -1;
 	int final_team = -1;
 	enum IMAGES { BACKGROUND, YELLOW, SETTINGS, BACKGROUND_SKIRMISH, FREEPEOPLE, SAURONARMY };

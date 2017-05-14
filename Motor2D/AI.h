@@ -76,7 +76,7 @@ public:
 
 	// general utilities
 	Timer AI_timer;
-	GameFaction* Enemies;
+	GameFaction* Enemies = nullptr;
 	int expansion_level = 0;
 	AI_state state = EXPANDING;
 	bool enabled = false;

@@ -67,8 +67,8 @@ public:
 
 	UIElement* parent = nullptr;
 	pair<int, int> pos, parent_pos;
-	ElementType type;
-	MouseState current;
+	ElementType type = UNKNOWN;
+	MouseState current = FREE;
 
 	SDL_Texture* texture = nullptr;
 	SDL_Color debug_color;
@@ -112,7 +112,7 @@ public:
 
 private:
 	int width = 0, height = 0, size = 0;
-	_TTF_Font* font;
+	_TTF_Font* font = nullptr;
 
 
 	SDL_Color color;
@@ -151,7 +151,7 @@ public:
 
 
 	int width = 0, height = 0;
-	_TTF_Font* font;
+	_TTF_Font* font = nullptr;
 
 	string		str;
 	string		cpy_str;
@@ -281,11 +281,11 @@ private:
 	char armor[65], damage[65], currlife[65], maxlife[65];
 	uint posx, posy;
 	//BUILDINGINFO
-	Building* selected_building;
+	Building* selected_building = nullptr;
 	uint attack, defense, max_life, curr_life;
 
 	// RESOURCEINFO
-	Resource* selected_resource;
+	Resource* selected_resource = nullptr;
 	uint gathering;
 
 	// BUTTONS POSITIONS
@@ -337,7 +337,7 @@ private:
 	};
 	HUDHeroState hero_state;
 	// ------- MENU ----------
-	Button* skill_bt;
+	Button* skill_bt = nullptr;
 	void HUDHeroMenu();
 	void HUDClearHeroMenu();
 	// ------ CREATE BUILDINGS -------
@@ -486,7 +486,7 @@ public:
 	SDL_Rect rect;
 
 	string scene;
-	SDL_Texture* texture;
+	SDL_Texture* texture = nullptr;
 	ElementType type;
 
 	vector<SDL_Rect> blit_sections;
@@ -498,7 +498,7 @@ public:
 
 
 struct building_button {
-	Button* button;
+	Button* button = nullptr;
 	string name;
 	string desc;
 	string cost;
@@ -507,7 +507,7 @@ struct building_button {
 };
 
 struct unit_button {
-	Button* button;
+	Button* button = nullptr;
 	string name;
 	string desc;
 	string cost;
@@ -516,7 +516,7 @@ struct unit_button {
 };
 
 struct tech_button {
-	Button* button;
+	Button* button = nullptr;
 	string name;
 	string desc;
 	string cost;

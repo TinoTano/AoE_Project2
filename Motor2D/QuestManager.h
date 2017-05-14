@@ -46,7 +46,7 @@ public:
 	string description;
 	int reward;
 	int id;
-	Event* trigger;
+	Event* trigger = nullptr;
 	vector <Event*> steps;
 };
 

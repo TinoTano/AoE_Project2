@@ -160,7 +160,7 @@ public:
 
 	Building* building = nullptr;
 	unitType type = ELF_VILLAGER;
-	Squad* belongs_to;
+	Squad* belongs_to = nullptr;
 	Timer timer;
 
 public:
