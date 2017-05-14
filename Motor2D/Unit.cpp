@@ -58,12 +58,12 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	SetAnim(state);
 
-	SDL_Rect r = currentAnim->GetCurrentFrame();
-
-	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
-	range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w , COLLIDER_RANGE, App->entityManager, (Entity*)this);
-	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w * 4, COLLIDER_LOS, App->entityManager, (Entity*)this);
-
+	if (currentAnim != nullptr) {
+		SDL_Rect r = currentAnim->GetCurrentFrame();
+		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
+		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w, COLLIDER_RANGE, App->entityManager, (Entity*)this);
+		los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w * 4, COLLIDER_LOS, App->entityManager, (Entity*)this);
+	}
 }
 
 Unit::~Unit()

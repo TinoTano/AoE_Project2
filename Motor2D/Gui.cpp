@@ -343,13 +343,13 @@ UIElement * Gui::CreateCursor(char* path, vector<SDL_Rect> cursor_list)
 
 void Gui::DestroyUIElement(UIElement* element)
 {
-
+	UIElement* c;
 	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
 	{
 		if (element == it._Ptr->_Myval)
 		{
-			it._Ptr->_Myval->CleanUp();
 			Elements.remove(it._Ptr->_Myval);
+			it._Ptr->_Myval->CleanUp();
 			RELEASE((element));
 		}
 	}
@@ -364,6 +364,7 @@ void Gui::DestroyALLUIElements() {
 		Elements.remove(it._Ptr->_Myval);
 		RELEASE((it._Ptr->_Myval));
 	}
+	Elements.clear();
 }
 
 

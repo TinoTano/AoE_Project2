@@ -128,10 +128,10 @@
         <SelectionRadius value=""/>
       </Info>
 			<Textures>
-				<Idle value="textures/Units/"/>
-				<Move value="textures/Units/"/>
-				<Attack value="textures/Units/"/>
-				<Die value="textures/Units/"/>
+				<Idle value="textures/Units/ElvenLongblade/ElvenLongbladeIdle.png"/>
+				<Move value="textures/Units/ElvenLongblade/ElvenLongbladeMove.png"/>
+				<Attack value="textures/Units/ElvenLongblade/ElvenLongbladeAttack.png"/>
+				<Die value="textures/Units/ElvenLongblade/ElvenLongbladeDie.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="0"/>
@@ -149,31 +149,31 @@
 			</Stats>
 			<Animations>
 				<Idle>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="43"/>
+					<Height value="49"/>
 					<Speed value="0.2f"/>
 				</Idle>
 				<Move>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="51"/>
+					<Height value="51"/>
 					<Speed value="0.2f"/>
 				</Move>
 				<Attack>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="67"/>
+					<Height value="61"/>
 					<Speed value="0.2f"/>
 				</Attack>
 				<Die>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="70"/>
+					<Height value="54"/>
 					<Speed value="0.2f"/>
 				</Die>
 			</Animations>
@@ -423,10 +423,10 @@
         <SelectionRadius value="20"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Units/"/>
-				<Move value="textures/Units/"/>
-				<Attack value="textures/Units/"/>
-				<Die value="textures/Units/"/>
+				<Idle value="textures/Units/RohanKnight/RohanKnightIdle.png"/>
+				<Move value="textures/Units/RohanKnight/RohanKnightMove.png"/>
+				<Attack value="textures/Units/RohanKnight/RohanKnightAttack.png"/>
+				<Die value="textures/Units/RohanKnight/RohanKnightDie.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="0"/>
@@ -444,31 +444,31 @@
 			</Stats>
 			<Animations>
 				<Idle>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="108"/>
+					<Height value="143"/>
 					<Speed value="0.2f"/>
 				</Idle>
 				<Move>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="9"/>
+					<Width value="87"/>
+					<Height value="141"/>
 					<Speed value="0.2f"/>
 				</Move>
 				<Attack>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="137"/>
+					<Height value="122"/>
 					<Speed value="0.2f"/>
 				</Attack>
 				<Die>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="15"/>
+					<Width value="172"/>
+					<Height value="166"/>
 					<Speed value="0.2f"/>
 				</Die>
 			</Animations>
@@ -482,10 +482,10 @@
         <SelectionRadius value="20"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Units/"/>
-				<Move value="textures/Units/"/>
-				<Attack value="textures/Units/"/>
-				<Die value="textures/Units/"/>
+				<Idle value="textures/Units/MountedDunedain/MountedDunedainIdle.png"/>
+				<Move value="textures/Units/MountedDunedain/MountedDunedainMove.png"/>
+				<Attack value="textures/Units/MountedDunedain/MountedDunedainAttack.png"/>
+				<Die value="textures/Units/MountedDunedain/MountedDunedainDie.png"/>
 			</Textures>
 			<Stats>
 				<Faction value="0"/>
@@ -503,31 +503,31 @@
 			</Stats>
 			<Animations>
 				<Idle>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="81"/>
+					<Height value="163"/>
 					<Speed value="0.2f"/>
 				</Idle>
 				<Move>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="87"/>
+					<Height value="93"/>
 					<Speed value="0.2f"/>
 				</Move>
 				<Attack>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="79"/>
+					<Height value="97"/>
 					<Speed value="0.2f"/>
 				</Attack>
 				<Die>
-					<Rows value=""/>
-					<Columns value=""/>
-					<Width value=""/>
-					<Height value=""/>
+					<Rows value="5"/>
+					<Columns value="10"/>
+					<Width value="114"/>
+					<Height value="89"/>
 					<Speed value="0.2f"/>
 				</Die>
 			</Animations>

@@ -141,7 +141,7 @@ bool AI::Update(float dt) {
 
 void AI::StartAttack() {
 
-	if(offensive_squads.size() < defensive_squads.size())
+	/*if(offensive_squads.size() < defensive_squads.size())
 		offensive_squads.push_back(new Squad());
 
 	for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
@@ -154,12 +154,12 @@ void AI::StartAttack() {
 	if (!targets.empty())
 		targets.sort(ExplorationPriority);
 
-	AI_timer.Start();
+	AI_timer.Start();*/
 }
 
 void AI::ManageAttack() {
 
-	for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
+	/*for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
 
 		if ((*it)->state == IDLE && (*it)->IsRestored()) {
 
@@ -183,7 +183,7 @@ void AI::ManageAttack() {
 				break;
 			}
 		}
-	}
+	}*/
 }
 
 
