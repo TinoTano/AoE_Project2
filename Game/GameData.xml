@@ -25,8 +25,8 @@
 				<MovementSpeed value="110.1"/>
 				<LineOfSight value="3"/>
         <Range value="20"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
+				<FoodCost value="25"/>
+				<GoldCost value="10"/>
 				<BuildTime value=""/>
 			</Stats>
 			<Animations>
@@ -84,8 +84,8 @@
 				<MovementSpeed value="110.9"/>
 				<LineOfSight value="3"/>
         <Range value="30"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
+				<FoodCost value="25"/>
+				<GoldCost value="10"/>
 				<BuildTime value=""/>
 			</Stats>
 			<Animations>
@@ -143,8 +143,8 @@
 				<MovementSpeed value="110"/>
 				<LineOfSight value="4"/>
         <Range value="35"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
+				<FoodCost value="35"/>
+				<GoldCost value="20"/>
 				<BuildTime value=""/>
 			</Stats>
 			<Animations>
@@ -202,7 +202,7 @@
 				<MovementSpeed value="110.1"/>
 				<LineOfSight value="7"/>
         <Range value="150"/>
-				<FoodCost value=""/>
+				<FoodCost value="30"/>
 				<GoldCost value=""/>
 				<BuildTime value=""/>
 			</Stats>
@@ -261,8 +261,8 @@
 				<MovementSpeed value="110"/>
 				<LineOfSight value="6"/>
         <Range value="30"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
+				<FoodCost value="30"/>
+				<GoldCost value="10"/>
 				<BuildTime value=""/>
 			</Stats>
 			<Animations>
@@ -320,8 +320,8 @@
 				<MovementSpeed value="130.5"/>
 				<LineOfSight value="6"/>
         <Range value="165"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
+				<FoodCost value="40"/>
+				<GoldCost value="20"/>
 				<BuildTime value=""/>
 			</Stats>
 			<Animations>
@@ -379,8 +379,8 @@
 				<MovementSpeed value="110.5"/>
 				<LineOfSight value="5"/>
         <Range value="35"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
+				<FoodCost value="50"/>
+				<GoldCost value="20"/>
 				<BuildTime value=""/>
 			</Stats>
 			<Animations>
@@ -438,8 +438,8 @@
 				<MovementSpeed value="110.3"/>
 				<LineOfSight value="3"/>
         <Range value="35"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
+				<FoodCost value="50"/>
+				<GoldCost value="20"/>
 				<BuildTime value=""/>
 			</Stats>
 			<Animations>
@@ -490,15 +490,15 @@
 			<Stats>
 				<Faction value="0"/>
 				<Life value="120"/>
-				<Attack value="4"/>
+				<Attack value="6"/>
 				<AttackSpeed value="2"/>
 				<Defense value="0"/>
 				<PiercingDamage value="3"/>
 				<MovementSpeed value="110.4"/>
 				<LineOfSight value="4"/>
         <Range value="35"/>
-				<FoodCost value=""/>
-				<GoldCost value=""/>
+				<FoodCost value="60"/>
+				<GoldCost value="20"/>
 				<BuildTime value=""/>
 			</Stats>
 			<Animations>
@@ -1236,7 +1236,7 @@
         <LineOfSight value="3"/>
         <Range value="30"/>
         <RangeOffset value="50"/>
-        <FoodCost value=""/>
+        <FoodCost value="200"/>
         <GoldCost value=""/>
         <BuildTime value=""/>
 	<GatheringSpeed value="30"/>
