@@ -70,8 +70,12 @@ void QuestHUD::CleanUp()
 	App->gui->DestroyUIElement(no_quest_lbl);
 	no_quest_lbl = nullptr;
 
-	for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it) {
-		RELEASE((it._Ptr->_Myval));
+	if (vec_quest.size() > 0) {
+		int h = vec_quest.front()->id;
+		for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it) {
+			RemoveQuest(h);
+			++h;
+		}
 	}
 }
 
