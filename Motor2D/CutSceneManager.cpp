@@ -300,14 +300,18 @@ void CutSceneManager::ClearScene()
 		if ((*it)->group == e_g_unit)
 		{
 			CutsceneUnit* unit = static_cast<CutsceneUnit*>(*it);
-			if (unit->GetUnit() != nullptr)
+			if (unit->GetUnit() != nullptr) {
+				unit->GetUnit()->Destroy();
 				App->entityManager->DeleteEntity(unit->GetUnit());
+			}
 		}
 		if ((*it)->group == e_g_building)
 		{
 			CutsceneBuilding* building = static_cast<CutsceneBuilding*>(*it);
-			if (building->GetBuilding() != nullptr)
+			if (building->GetBuilding() != nullptr) {
+				building->GetBuilding()->Destroy();
 				App->entityManager->DeleteEntity(building->GetBuilding());
+			}
 		}
 
 		RELEASE(*it);

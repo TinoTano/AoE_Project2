@@ -188,12 +188,15 @@ Collider * Collision::AddCollider(iPoint position, int radius, COLLIDER_TYPE typ
 
 void Collision::DeleteCollider(Collider * collider)
 {
-	collider->to_delete = true;
+	if (collider != nullptr) {
+		collider->to_delete = true;
+	}
 }
 
 bool Collider::CheckCollision(Collider* c2) const
 {
 	if (c2 == nullptr)return false;
+	if (this == nullptr)return false;
 
 	int radius = r + c2->r + 3;
 	int deltaX = pos.x - c2->pos.x;

@@ -274,8 +274,21 @@ bool EntityManager::CleanUp()
 	player->Reset();
 	AI_faction->Reset();
 
+	NotHUD = { 0,0,0,0 };
+
 	aux_resource_list.clear();
 	selectedEntityList.clear();
+	removeEntityList.clear();
+	clicked_entity = nullptr;
+	mouseX = 0;
+	mouseY = 0;
+	nextID = 0;
+	selectedListType = COLLIDER_NONE;
+	player = nullptr;
+	AI_faction = nullptr;
+	placingBuilding = false;
+	dt = 0;
+	buildingToCreate = nullptr;
 
 	return true;
 }

@@ -87,8 +87,8 @@ public:
 	list<Entity*> WorldEntityList;
 	list<Resource*> aux_resource_list;
 
-	GameFaction* player;
-	GameFaction* AI_faction;
+	GameFaction* player = nullptr;
+	GameFaction* AI_faction = nullptr;
 
 	CursorHovering cursor_hover = HOVERING_TERRAIN;
 	bool placingBuilding = false;

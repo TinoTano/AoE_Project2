@@ -115,8 +115,10 @@ bool Unit::Update(float dt)
 		}
 	}
 	else {
-		if (currentAnim->Finished())
+		if (currentAnim->Finished()) {
+			Destroy();
 			App->entityManager->DeleteEntity(this);
+		}
 	}
 
 
