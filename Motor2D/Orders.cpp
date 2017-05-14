@@ -17,6 +17,7 @@
 #include "AI.h"
 #include "Squad.h"
 #include "Hero.h"
+#include "Audio.h"
 
 #define SEARCH_ENEMIES_RANGE 75
 
@@ -38,8 +39,9 @@ void MoveToOrder::Execute() {
 
 	if (!CheckCompletion()) {
 		unit->entityPosition = unit->next_step;
-		unit->collider->pos = unit->next_step;
-		unit->range->pos = unit->entityPosition;
+		unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
+		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 
 		unit->CalculateVelocity();
 
@@ -89,14 +91,16 @@ void FollowPathOrder::Start(Entity* entity)
 void FollowPathOrder::Execute() {
 
 	if (!CheckCompletion()) {
-		iPoint destinationWorld = App->map->MapToWorld(unit->path->front().x, unit->path->front().y);
-		unit->order_list.push_front(new MoveToOrder(destinationWorld));
-		unit->path->erase(unit->path->begin());
-
+		if (unit->path) {
+			iPoint destinationWorld = App->map->MapToWorld(unit->path->front().x, unit->path->front().y);
+			unit->order_list.push_front(new MoveToOrder(destinationWorld));
+			unit->path->erase(unit->path->begin());
+		}
 	}
-	else 
+	else {
+		App->pathfinding->DeletePath(unit->path);
 		state = COMPLETED;
-
+	}
 }
 
 bool FollowPathOrder::CheckCompletion() {
@@ -117,15 +121,16 @@ void ReachOrder::Start(Entity* argunit) {
 	unit = (Unit*)argunit;
 
 	if (unit->SetDestination(entity->collider->pos)) {
+		if (unit->path) {
+			for (list<iPoint>::iterator it = unit->path->end(); it != unit->path->begin(); it--) {
 
-		for (list<iPoint>::iterator it = unit->path->end(); it != unit->path->begin(); it--) {
-
-			if (entity->collider->pos.DistanceTo(*it) < entity->collider->r)
-				unit->path->pop_back();
+				if (entity->collider->pos.DistanceTo(*it) < entity->collider->r)
+					unit->path->pop_back();
+			}
 		}
 	}
 
-	if (!unit->path->empty())
+	if (unit->path && !unit->path->empty())
 		unit->order_list.push_front(new FollowPathOrder());
 
 	state = EXECUTING;
@@ -142,9 +147,9 @@ void ReachOrder::Execute() {
 		}
 
 		unit->entityPosition = unit->next_step;
-		unit->collider->pos = unit->next_step;
-		unit->range->pos = unit->entityPosition;
-		unit->los->pos = unit->entityPosition;
+		unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
+		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 
 		unit->CalculateVelocity();
 
@@ -180,13 +185,8 @@ void ReachOrder::Execute() {
 bool ReachOrder::CheckCompletion()
 {
 	if (entity->collider != nullptr) {
-		if (entity->collider->GetUnit())
-			return (entity->collider->pos.DistanceTo(unit->entityPosition) < unit->range->r);
-		else
-			return (entity->collider->pos.DistanceTo(unit->entityPosition) < (entity->collider->r + unit->collider->r));
+		return (entity->collider->CheckCollision(unit->collider));
 	}
-	else
-		return true;
 }
 
 
@@ -197,7 +197,7 @@ void UnitAttackOrder::Start(Entity* entity)
 		unit->state = ATTACKING;
 		App->entityManager->RallyCall(unit);
 
-		if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->range->r)
+		if (!unit->collider->CheckCollision(target->collider))
 			unit->order_list.push_front(new ReachOrder(target));
 		else {
 			unit->SetTexture(ATTACKING);
@@ -220,12 +220,26 @@ void UnitAttackOrder::Execute() {
 
 	if (!CheckCompletion()) {
 
-		if (unit->entityPosition.DistanceTo(target->entityPosition) > unit->range->r) {
+		if (!unit->collider->CheckCollision(target->collider)) {
 			unit->order_list.push_front(new ReachOrder(target));
 			state = NEEDS_START;
 		}
 		else if (unit->currentAnim->Finished())
+		{
+			if (unit->type == VENOMOUS_SPIDER && unit->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundSpiderAttack);
+
+			else if (unit->type == GONDOR_KNIGHT || unit->type == ELVEN_CAVALRY && unit->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundHorseAttack);
+
+			else if (unit->type == ELVEN_ARCHER || unit->type == LEGOLAS && unit->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundArcherAttack);
+
+			else if (unit->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundAttack);
+
 			target->Life -= unit->Attack - target->Defense;
+		}
 
 		if (target->Life <= 0)
 			target->Destroy();
@@ -242,7 +256,7 @@ bool UnitAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-			if (unit->entityPosition.DistanceTo(target->entityPosition) < unit->los->r)
+			if (unit->collider->CheckCollision(target->collider));
 				return false;
 		}
 	}
@@ -287,7 +301,7 @@ bool BuildingAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-			if (building->entityPosition.DistanceTo(target->entityPosition) < building->range->r)
+			if (building->collider->CheckCollision(target->collider))
 				return false;
 		}
 	}
@@ -356,6 +370,15 @@ void GatherOrder::Execute() {
 	if (resource != nullptr) {
 		if (!CheckCompletion()) {
 			if (villager->currentAnim->Finished()) {
+				/*if (resource->type == WOOD && resource->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundWood);
+
+				else if (resource->type == STONE || resource->type == GOLD && resource->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundStone);
+
+				else if (resource->type == FOOD && resource->isActive == true)
+				App->audio->PlayFx(App->sceneManager->level1_scene->soundFruit);*/
+
 				villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
 				resource->Life -= MIN(resource->Life, villager->gathering_speed);
 				if (resource->Life <= 0)
@@ -401,9 +424,12 @@ void BuildOrder::Start(Entity* entity) {
 void BuildOrder::Execute()
 {
 	if (!CheckCompletion()) {
-		if (villager->currentAnim->Finished())
+		if (villager->currentAnim->Finished()) {
+			/*if(building->isActive == true)
+			App->audio->PlayFx(App->sceneManager->level1_scene->soundBuilding); */
 			//building->Life += MIN(building->MaxLife - building->Life, villager->buildingSpeed);
 			building->Life += 200;
+		}
 	}
 	else
 		state = COMPLETED;
@@ -449,7 +475,7 @@ void CreateUnitOrder::Execute()
 			App->ai->requested_villagers--;
 
 		if (belongs_to)
-			belongs_to->Assign(unit);
+			belongs_to->units.push_back(unit);
 
 		state = COMPLETED;
 	}
