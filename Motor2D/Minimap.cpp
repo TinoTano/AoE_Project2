@@ -49,8 +49,8 @@ bool Minimap::Update(float dt)
 	iPoint cameraOldPos = { App->render->camera.x, App->render->camera.y };
 
 	App->input->GetMousePosition(mousePos.x, mousePos.y);
-	mousePos.x -= STARTING_CAMERA_X;
-	mousePos.y -= STARTING_CAMERA_Y;
+	mousePos.x -= App->render->camera.x;
+	mousePos.y -= App->render->camera.y;
 
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
