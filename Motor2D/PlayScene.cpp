@@ -83,6 +83,5 @@ bool PlayScene::CleanUp()
 	images.clear();
 	buttons.clear();
 
-	App->fog->CleanUp();
 	return true;
 }

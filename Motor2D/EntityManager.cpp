@@ -63,14 +63,12 @@ bool EntityManager::Update(float arg_dt)
 	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
-			(*it)->Draw();
+		{
+			if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
+			else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();
+			else if ((*it)->faction == FREE_MEN) (*it)->Draw();
+		}
 	}
-	
-	//		*if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();*/
-	//		if ((*it)->faction == NATURE) (*it)->Draw();
-	//		/*else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();*/
-	//		else if ((*it)->faction == SAURON_ARMY) (*it)->Draw();
-	//		else if ((*it)->faction == FREE_MEN) (*it)->Draw();
 
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 		if ((*it)->state == DESTROYED)
@@ -566,7 +564,7 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 
 
 	WorldEntityList.push_back((Entity*)unit);
-	//App->fog->AddEntity(unit);
+	App->fog->AddEntity(unit);
 
 	return unit;
 }

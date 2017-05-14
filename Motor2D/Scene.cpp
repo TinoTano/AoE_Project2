@@ -48,15 +48,15 @@ bool Scene::Start()
 
 	soundAttack = App->audio->LoadFx("audio/fx/Swords.wav");
 	soundSpiderAttack = App->audio->LoadFx("audio/fx/AmbientSounds/Spiders.wav");
-	soundTrollAttack = App->audio->LoadFx("audio/fx/"); //no hay
-	soundBalrogAttack = App->audio->LoadFx("audio/fx/"); //no hay
+	//soundTrollAttack = App->audio->LoadFx("audio/fx/"); //no hay
+	//soundBalrogAttack = App->audio->LoadFx("audio/fx/"); //no hay
 	soundArcherAttack = App->audio->LoadFx("audio/fx/bow.wav");
 	soundHorseAttack = App->audio->LoadFx("audio/fx/Dead_Horse_1.wav");
 
-	soundWood = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
-	soundStone = App->audio->LoadFx("audio/fx/Fight_2.wav");
-	soundFruit = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
-	soundBuilding = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
+	//soundWood = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
+	//soundStone = App->audio->LoadFx("audio/fx/Fight_2.wav");
+	//soundFruit = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
+	//soundBuilding = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
 	
 	soundCreateVillager = App->audio->LoadFx("audio/fx/Swords.wav");
 	soundCreateUnit = App->audio->LoadFx("audio/fx/Swords.wav");
@@ -191,16 +191,13 @@ bool Scene::Start()
 
 	// Fog of war, entities & resources ===============================================================================
 
-	App->fog->Start();
+	/*App->fog->Start();*/
 
 	//Resources
 	App->map->LoadResources(App->map->map_file.child("map"));
 
 	// Units
 	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y, ELVEN_CAVALRY);
-	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y - 150, GOBLIN_SOLDIER);
-	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
-	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 120, GOBLIN_SOLDIER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 500, TOWN_HALL_POS_Y + 1100, VENOMOUS_SPIDER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 380, TOWN_HALL_POS_Y + 1070, TROLL_MAULER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 400, TOWN_HALL_POS_Y + 1200, VENOMOUS_SPIDER);

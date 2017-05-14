@@ -295,21 +295,21 @@ void CutSceneManager::ClearScene()
 {
 	for (std::list<CutsceneElement*>::iterator it = elements.begin(); it != elements.end();)
 	{
-		if ((*it)->group == e_g_map)
-			App->map->CleanUp();
+		//if ((*it)->group == e_g_map)
+		//	App->map->CleanUp();
 
-		/*if ((*it)->group == e_g_unit)
+		if ((*it)->group == e_g_unit)
 		{
-		CutsceneUnit* unit = static_cast<CutsceneUnit*>(*it);
-		if (unit->GetUnit() != nullptr)
-		App->entityManager->DeleteEntity(unit->GetUnit());
+			CutsceneUnit* unit = static_cast<CutsceneUnit*>(*it);
+			if (unit->GetUnit() != nullptr)
+				App->entityManager->DeleteEntity(unit->GetUnit());
 		}
 		if ((*it)->group == e_g_building)
 		{
-		CutsceneBuilding* building = static_cast<CutsceneBuilding*>(*it);
-		if (building->GetBuilding() != nullptr)
-		App->entityManager->DeleteEntity(building->GetBuilding());
-		}*/
+			CutsceneBuilding* building = static_cast<CutsceneBuilding*>(*it);
+			if (building->GetBuilding() != nullptr)
+				App->entityManager->DeleteEntity(building->GetBuilding());
+		}
 
 		RELEASE(*it);
 		it = elements.erase(it);
@@ -841,6 +841,7 @@ void CutsceneUnit::SetUnit(Unit * e)
 CutsceneBuilding::CutsceneBuilding(elements_groups group, const char * path, const char* name, buildingType type, bool active, iPoint pos) : CutsceneElement(group, path, name, active)
 {
 	building = App->entityManager->CreateBuilding(pos.x, pos.y, type);
+	App->fog->AddEntity(building);
 	building->isActive = active;
 }
 

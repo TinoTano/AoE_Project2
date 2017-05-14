@@ -53,22 +53,18 @@ void Map::Draw()
 
 				iPoint tileWorld = MapToWorld(x, y);
 
-				/*if (tile_id > 0 && visibility != 0) */
-					if (tile_id > 0)
+				if (tile_id > 0 && visibility != 0) 
 				{
-					if (tile_id > 0)
+					if (App->render->CullingCam(tileWorld))
 					{
-						if (App->render->CullingCam(tileWorld))
-						{
-							TileSet* tileset = GetTilesetFromTileId(tile_id);
-							SDL_Rect r = tileset->GetTileRect(tile_id);
-							App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
+						TileSet* tileset = GetTilesetFromTileId(tile_id);
+						SDL_Rect r = tileset->GetTileRect(tile_id);
+						App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
 
-							/*if (visibility == fow_grey)
-							{
-								r = { 0, 0, 96, 51 };
-								App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
-							}*/
+						if (visibility == fow_grey)
+						{
+							r = { 0, 0, 96, 51 };
+							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
 						}
 					}
 				}
@@ -532,7 +528,7 @@ bool Map::LoadResources(pugi::xml_node & node)
 		for (prop = resourceNode.child("object"); prop; prop = prop.next_sibling("object"))
 		{
 			Resource* resource = App->entityManager->CreateResource(prop.attribute("x").as_int(), prop.attribute("y").as_int(), (resourceItem)type);
-			//	App->fog->AddEntity(resource);
+			App->fog->AddEntity(resource);
 		}
 	}
 	return ret;

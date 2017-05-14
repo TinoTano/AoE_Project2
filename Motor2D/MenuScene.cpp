@@ -133,10 +133,8 @@ bool MenuScene::Start()
 	ui_menu.WindowOff();
 	ui_menu.SetFocus(elements[0].position.first, elements[0].position.second, x, y);
 
-
 	App->gui->SetPriority();
 
-	App->audio->active = false;
 	//LOAD FX
 	fx_button_click = App->audio->LoadFx("audio/fx/fx_button_click.wav");
 	App->audio->PlayMusic("audio/music/m_menu.ogg", 0.0f);
@@ -229,9 +227,9 @@ bool MenuScene::PostUpdate()
 	}
 	else if (buttons[NEWGAME]->current == CLICKUP)
 	{
-		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
-		/*	App->cutscene->Start();
-		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);*/
+		//App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
+		App->cutscene->Start();
+		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
 	}
 
 	if (final_team != team)

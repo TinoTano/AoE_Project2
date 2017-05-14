@@ -286,6 +286,7 @@ bool FogOfWar::IsVisible(iPoint char_pos, Faction faction)
 
 	if (faction == NATURE && Get(char_pos.x, char_pos.y) != fow_black) ret = true;
 	if (faction == SAURON_ARMY && Get(char_pos.x, char_pos.y) == fow_clear) ret = true;
+	if (faction == FREE_MEN) ret = true;
 
 	return ret;
 }
