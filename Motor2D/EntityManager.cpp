@@ -616,78 +616,108 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceItem item)
 
 void EntityManager::DeleteEntity(Entity* entity)
 {
+
 	if (entity != nullptr) {
 
 		removeEntityList.push_back(entity);
 		Unit* unit = nullptr; 
+		Building* building = nullptr;
+		if (entity->collider != nullptr) {
+			switch (entity->collider->type) {
+			case COLLIDER_UNIT:
 
-		switch (entity->collider->type) {
-		case COLLIDER_UNIT:
+				unit = (Unit*)entity;
 
-			unit = (Unit*)entity;
+				if (entity->faction == player->faction) {
+					player->units.remove(unit);
+					if (unit->IsVillager)
+						player->villagers.remove((Villager*)unit);
+				}
+				else {
+					AI_faction->units.remove(unit);
+					if (unit->IsVillager)
+						AI_faction->villagers.remove((Villager*)unit);
+				}
 
-			if (entity->faction == player->faction) {
-				player->units.remove(unit);
-				if (unit->IsVillager)
-					player->villagers.remove((Villager*)unit);
-			}
-			else {
-				AI_faction->units.remove(unit);
-				if (unit->IsVillager)
-					AI_faction->villagers.remove((Villager*)unit);
-			}
+				App->collision->DeleteCollider(unit->collider);
+				unit->collider = nullptr;
+				App->collision->DeleteCollider(unit->range);
+				unit->range = nullptr;
+				App->collision->DeleteCollider(unit->los);
+				unit->los = nullptr;
 
 
-			//if(squad)
-			//squad->Deassign(this);
+				//if(squad)
+				//squad->Deassign(this);
 
-			break;
-		case COLLIDER_BUILDING:
-			if (entity->faction == player->faction)
-				player->buildings.remove((Building*)entity);
-			else
-				AI_faction->buildings.remove((Building*)entity);
-			break;
+				break;
+			case COLLIDER_BUILDING:
+				if (entity->faction == player->faction)
+					player->buildings.remove((Building*)entity);
+				else
+					AI_faction->buildings.remove((Building*)entity);
 
-		case COLLIDER_RESOURCE:
-			aux_resource_list.remove((Resource*)entity);
+				building = (Building*)entity;
+				App->collision->DeleteCollider(building->collider);
+				building->collider = nullptr;
+				App->collision->DeleteCollider(building->range);
+				building->range = nullptr;
+				App->collision->DeleteCollider(building->los);
+				building->los = nullptr;
 
-			for (list<Villager*>::iterator it = player->villagers.begin(); it != player->villagers.end(); it++) {
+				break;
 
-				if ((*it)->state == GATHERING) {
-					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+			case COLLIDER_RESOURCE:
+				aux_resource_list.remove((Resource*)entity);
 
-						if ((*it2)->order_type == GATHER) {
+				for (list<Villager*>::iterator it = player->villagers.begin(); it != player->villagers.end(); it++) {
 
-							GatherOrder* gth_order = (GatherOrder*)(*it2);
-							if (gth_order->resource == (Resource*)entity) 
-								gth_order->resource = nullptr;
-						}
+					if ((*it)->state == GATHERING) {
+						for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
 
-						if ((*it2)->order_type == REACH) {
+							if ((*it2)->order_type == GATHER) {
 
-							ReachOrder* rch_order = (ReachOrder*)(*it2);
-							if (rch_order->entity == entity)
-								rch_order->state = COMPLETED;
+								GatherOrder* gth_order = (GatherOrder*)(*it2);
+								if (gth_order->resource == (Resource*)entity)
+									gth_order->state = COMPLETED;
+							}
+
+							if ((*it2)->order_type == REACH) {
+
+								ReachOrder* rch_order = (ReachOrder*)(*it2);
+								if (rch_order->entity == entity)
+									rch_order->state = COMPLETED;
+							}
 						}
 					}
 				}
-			}
 
-			for (list<Villager*>::iterator it = AI_faction->villagers.begin(); it != AI_faction->villagers.end(); it++) {
+				for (list<Villager*>::iterator it = AI_faction->villagers.begin(); it != AI_faction->villagers.end(); it++) {
 
-				if ((*it)->state == GATHERING) {
-					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+					if ((*it)->state == GATHERING) {
+						for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
 
-						if ((*it2)->order_type == GATHER) {
-							GatherOrder* gth_order = (GatherOrder*)(*it2);
-							if (gth_order->resource = (Resource*)entity)
-								gth_order->state = COMPLETED;
+							if ((*it2)->order_type == GATHER) {
+								GatherOrder* gth_order = (GatherOrder*)(*it2);
+								if (gth_order->resource = (Resource*)entity)
+									gth_order->state = COMPLETED;
+							}
+
+							if ((*it2)->order_type == REACH) {
+
+								ReachOrder* rch_order = (ReachOrder*)(*it2);
+								if (rch_order->entity == entity)
+									rch_order->state = COMPLETED;
+							}
 						}
 					}
 				}
+
+				App->collision->DeleteCollider(entity->collider);
+				entity->collider = nullptr;
+
+				break;
 			}
-			break;
 		}
 
 		WorldEntityList.remove(entity);
@@ -777,7 +807,7 @@ Resource* EntityManager::FindNearestResource(resourceType type, iPoint pos) {
 
 	Resource* ret = aux_resource_list.front();
 
-	if (type != NONE) {
+	if (type != NONE && type != MOUNT_1 && type != MOUNT_2 && type != MOUNT_3 && type != MOUNT_4 && type != MOUNT_5 && type != MOUNT_6) {
 		for (list<Resource*>::iterator it = aux_resource_list.begin(); it != aux_resource_list.end(); it++) {
 			if ((*it)->type == type) {
 				if (pos.DistanceTo((*it)->entityPosition) < pos.DistanceTo(ret->entityPosition))
@@ -1025,42 +1055,6 @@ void EntityManager::FillSelectedList() {
 			}
 		}
 
-		if (selectedCount == 0) {
-
-			for (list<Unit*>::iterator it = AI_faction->units.begin(); it != AI_faction->units.end(); it++) {
-				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-					selectedEntityList.push_back((Entity*)(*it));
-					selectedCount++;
-				}
-			}
-		}
-
-		if (selectedCount == 0) {
-
-			for (list<Building*>::iterator it = AI_faction->buildings.begin(); it != AI_faction->buildings.end(); it++) {
-				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-					selectedEntityList.push_back((Entity*)(*it));
-					selectedCount++;
-				}
-			}
-		}
-
-		if (selectedCount == 0) {
-
-			for (list<Resource*>::iterator it = aux_resource_list.begin(); it != aux_resource_list.end(); it++) {
-				SDL_Point pos = { (*it)->entityPosition.x, (*it)->entityPosition.y };
-
-				if ((bool)SDL_PointInRect(&pos, &multiSelectionRect)) {
-					if ((*it)->type == GOLD_MINE || (*it)->type == STONE_MINE || (*it)->type == BLACK_TREE || (*it)->type == GREEN_TREE || (*it)->type == BUSH) {
-						selectedEntityList.push_back((Entity*)(*it));
-					}
-				}
-			}
-		}
 	}
 
 	if (!selectedEntityList.empty())

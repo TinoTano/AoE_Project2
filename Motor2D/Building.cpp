@@ -144,9 +144,6 @@ void Building::Destroy() {
 
 
 	App->entityManager->Untarget(this);
-	App->collision->DeleteCollider(collider);
-	App->collision->DeleteCollider(range);
-	App->collision->DeleteCollider(los);
 
 	if (faction == SAURON_ARMY)
 		App->ai->buildings_to_build.push_back(type);

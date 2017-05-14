@@ -402,8 +402,9 @@ bool GatherOrder::CheckCompletion() {
 
 			return true;
 		}
+		return false;
 	}
-	return false;
+	return true;
 }
 
 //Build order:

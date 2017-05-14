@@ -131,9 +131,6 @@ void Unit::Destroy() {
 		App->quest->StepKillCallback(this->type);
 
 	SetTexture(DESTROYED);
-	App->collision->DeleteCollider(collider);
-	App->collision->DeleteCollider(range);
-	App->collision->DeleteCollider(los);
 	state = DESTROYED;
 
 	App->entityManager->DeleteEntity(this);

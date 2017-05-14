@@ -397,6 +397,7 @@ void HUD::Update() {
 									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) {
 										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
 										building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
+										App->sceneManager->level1_scene->UpdateResources();
 									}
 								}
 							}
@@ -408,6 +409,7 @@ void HUD::Update() {
 							for (uint i = 0; i < App->gui->tech_bt.size(); ++i) {
 								if (App->gui->tech_bt[i].button != nullptr) {
 									if (App->gui->tech_bt[i].button->current == CLICKUP) {
+										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) {
 										App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
 									}
 								}
@@ -427,7 +429,6 @@ void HUD::Update() {
 								{
 									if (App->gui->unit_bt[i].button != nullptr) {
 										if (App->gui->unit_bt[i].button->current == CLICKUP) {
-											if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost)) {
 												building->order_list.push_back(new CreateUnitOrder(App->gui->unit_bt[i].type));
 												App->sceneManager->level1_scene->UpdateResources();
 											}
