@@ -39,6 +39,8 @@ private:
 
 	SDL_Rect minimapClickable;
 	iPoint minimapPos;
+	SDL_Point minimapNewPos;
+
 	double minimapRatio;
 
 

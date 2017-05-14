@@ -49,17 +49,19 @@ bool Minimap::Update(float dt)
 	iPoint cameraOldPos = { App->render->camera.x, App->render->camera.y };
 
 	App->input->GetMousePosition(mousePos.x, mousePos.y);
+
+	minimapNewPos = mousePos;
+
 	mousePos.x -= App->render->camera.x;
 	mousePos.y -= App->render->camera.y;
 
 
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
 	{
-		//este if se tiene que arreglar
 		if (SDL_PointInRect(&mousePos, &minimapClickable))
 		{
-			App->render->camera.x = (-mousePos.x + minimapPos.x) / minimapRatio;
-			App->render->camera.y = (-mousePos.y + minimapPos.y) / minimapRatio;
+			App->render->camera.x = (-minimapNewPos.x + minimapPos.x) / minimapRatio;
+			App->render->camera.y = (-minimapNewPos.y + minimapPos.y) / minimapRatio;
 			App->render->culling_cam.x = -App->render->camera.x - 300;
 			App->render->culling_cam.y = -App->render->camera.y - 300;
 
@@ -129,7 +131,4 @@ void Minimap::DrawCamera()
 	rect.h = y * minimapRatio;
 
 	App->render->DrawQuad(rect, 255, 255, 255, false);
-
-	//esto se tiene que borrar
-	App->render->DrawQuad(minimapClickable, 255, 255, 255, false);
 }
