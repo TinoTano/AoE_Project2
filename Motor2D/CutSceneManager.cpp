@@ -144,7 +144,6 @@ void CutSceneManager::Load(const char * path)
 			for (pugi::xml_node map = group.child("map"); map; map = map.next_sibling("map"))
 			{
 				LoadMap(map);
-				App->map->LoadResources(App->map->map_file.child("map"));
 				App->fog->Start();
 			}
 		}
