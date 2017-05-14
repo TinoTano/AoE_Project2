@@ -538,6 +538,7 @@ void HUD::Update() {
 		App->gui->DestroyUIElement(info_lbl);
 		info_lbl = nullptr;
 		App->gui->DestroyUIElement(desc_lbl);
+		desc_lbl = nullptr;
 		App->gui->DestroyUIElement(cost_lbl);
 		cost_lbl = nullptr;
 	}

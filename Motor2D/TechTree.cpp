@@ -61,7 +61,7 @@ void TechTree::Update(){
 	if (!available_techs.empty()) {
 		for (list<TechType>::iterator it = available_techs.begin(); it != available_techs.end(); it++) {
 			Tech* tech = all_techs.at(*it);
-			if (tech->researching && tech->research_timer.ReadSec() > tech->aux_timer + (tech->research_time * 1000))
+			if (tech->researching && tech->research_timer.Read() > tech->aux_timer + (tech->research_time * 1000))
 				Researched(*it);
 		}
 	}

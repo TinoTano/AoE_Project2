@@ -104,6 +104,7 @@ bool Console::Save(pugi::xml_node &) const
 {
 	return true;
 }
+
 void Console::MoveEverything() {
 	cbackground->area.x = 0 - App->render->camera.x;
 	cbackground->area.y = 0 - App->render->camera.y;

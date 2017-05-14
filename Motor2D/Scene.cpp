@@ -265,14 +265,6 @@ bool Scene::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		questHUD.RemoveQuest(2);
 	}
-
-	if (buttons[SAVEGAME]->current == CLICKUP) {
-		SaveScene();
-	}
-	else if (buttons[LOADGAME]->current == CLICKUP)
-	{
-		LoadScene();
-	}
 	/*
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		SaveScene();
