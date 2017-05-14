@@ -134,8 +134,8 @@ bool QuestManager::StepKillCallback(unitType t)
 		{
 			KillEvent* event = ((KillEvent*)(*it)->steps[0]);
 
-			if (event->unit_type == t && event->enemies_to_kill > 0) event->enemies_to_kill--;
-			if (event->unit_type == t && event->enemies_to_kill == 0)
+			if ((t == TROLL_MAULER || t == VENOMOUS_SPIDER) && event->enemies_to_kill > 0) event->enemies_to_kill--;
+			if ((t == TROLL_MAULER || t == VENOMOUS_SPIDER) && event->enemies_to_kill == 0)
 			{
 				LOG("Step Completed");
 
