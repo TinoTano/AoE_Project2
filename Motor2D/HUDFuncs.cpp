@@ -158,12 +158,14 @@ void HUD::HUDBuildingMenu()
 	}
 
 	vector<TechType> available_techs;
+
 	for (uint i = 0; i < App->entityManager->player->tech_tree->all_techs.size(); ++i)
 	{
-		for (list<TechType>::iterator it = App->entityManager->player->tech_tree->available_techs.begin(); it != App->entityManager->player->tech_tree->available_techs.end(); ++it) {
-			if (it._Ptr->_Myval == App->entityManager->player->tech_tree->all_techs[i]->id && App->entityManager->player->tech_tree->all_techs[i]->researched_in == id) {
-				available_techs.push_back(it._Ptr->_Myval);
-				int x = 2;
+		for (list<TechType>::iterator it = App->entityManager->player->tech_tree->available_techs.begin(); it != App->entityManager->player->tech_tree->available_techs.end(); ++it)
+		{
+			if ((*it) == App->entityManager->player->tech_tree->all_techs[i]->id && App->entityManager->player->tech_tree->all_techs[i]->researched_in == id)
+			{
+				available_techs.push_back((*it));
 			}
 		}
 	}
@@ -174,10 +176,13 @@ void HUD::HUDBuildingMenu()
 	{
 		for (uint i2 = 0; i2 < App->gui->tech_bt.size(); ++i2)
 		{
-			if (available_techs[i] == App->gui->tech_bt[i2].type && App->gui->tech_bt[i2].button == nullptr) {
+			if (available_techs[i] == App->gui->tech_bt[i2].type)
+			{
+				if (App->gui->tech_bt[i2].button == nullptr) {
 				App->gui->tech_bt[i2].button = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, App->gui->tech_bt[i2].blit_sections, buttons_positions, TIER2);
 				all_bt.push_back(App->gui->tech_bt[i2].button);
 				tech_place++;
+				}
 			}
 		}
 	}

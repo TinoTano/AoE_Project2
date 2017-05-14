@@ -1049,7 +1049,9 @@ void EntityManager::FillSelectedList() {
 	}
 
 	if (!selectedEntityList.empty())
-		selectedListType = selectedEntityList.front()->collider->type;
+		if (selectedEntityList.front()->collider != nullptr) {
+			selectedListType = selectedEntityList.front()->collider->type;
+		}
 
 	multiSelectionRect = { 0,0,0,0 };
 }

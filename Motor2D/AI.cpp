@@ -92,7 +92,7 @@ void AI::LoadAI_Data(pugi::xml_node& gameData) {
 
 bool AI::Update(float dt) {
 
-	if (enabled) {
+	/*if (enabled) {
 		switch (state) {
 
 		case DEFENSIVE:
@@ -134,7 +134,7 @@ bool AI::Update(float dt) {
 
 			break;
 		}
-	}
+	}*/
 
 	return true;
 }

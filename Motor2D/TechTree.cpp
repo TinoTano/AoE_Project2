@@ -100,7 +100,7 @@ void TechTree::Researched(TechType tech_id) {
 void TechTree::LoadTechTree(pugi::xml_node Techs) {
 
 	pugi::xml_node TechData;
-	int id_count = 0;
+	int id_count = 1;
 
 	if (Techs.empty() == false)
 	{

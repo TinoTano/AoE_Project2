@@ -2320,7 +2320,7 @@
 	<Name value="Horse Training"/>
 	<Desc value="asd"/>
 	<Unlockedtech value="11"/>
-	<Unlockedbuilding value="4"/>
+	<Unlockedbuilding value="-1"/>
 	<Unlockedunit unit_type="-1" building="-1"/>
 	<Multiplier value="-1" multiplier="-1"/>
 	<Researched_in value="4"/>
