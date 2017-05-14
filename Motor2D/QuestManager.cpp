@@ -73,7 +73,7 @@ bool QuestManager::Start()
 		else if (state == 1)
 		{
 			activeQuests.push_back(new_quest);
-			App->sceneManager->level1_scene->questHUD.AddActiveQuest(new_quest->name, new_quest->description, 2);
+			App->sceneManager->level1_scene->questHUD.AddActiveQuest(new_quest->name, new_quest->description, new_quest->id);
 		}
 		else closedQuests.push_back(new_quest);
 	}
@@ -145,6 +145,8 @@ bool QuestManager::StepKillCallback(unitType t)
 				// Close the quest if there's no more steps and add reward
 				if ((*it)->steps.size() == 0)
 				{
+					App->sceneManager->level1_scene->questHUD.RemoveQuest((*it)->id);
+
 					LOG("Quest completed");
 					closedQuests.push_back((*it));
 					activeQuests.erase(it);

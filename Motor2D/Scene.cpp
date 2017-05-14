@@ -238,6 +238,9 @@ bool Scene::Update(float dt)
 		//debug = !debug;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
+		questHUD.RemoveQuest(2);
+	}
 	/*
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		SaveScene();

@@ -25,8 +25,10 @@ void QuestHUD::Start()
 
 	questy = y / 2 - App->render->camera.y + 58;
 }
+
 void QuestHUD::Update()
 {
+
 	Sprite quad;
 	quad.rect.x = winx - App->render->camera.x - 300;
 	quad.rect.y = winy / 2 - App->render->camera.y;
@@ -44,8 +46,9 @@ void QuestHUD::Update()
 		no_quest_lbl = nullptr;
 	}
 	else if (vec_quest.size() > 0) {
-		if (vec_quest.front()->name_lbl != nullptr) {
-			vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy, nullptr);
+		if (vec_quest.front()->name_lbl == nullptr) {
+			vec_quest.front()->name += ":";
+			vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name , questx, questy, nullptr);
 			vec_quest.front()->name_lbl->SetColor({255, 255, 255, 255});
 			int size = 14;
 			vec_quest.front()->name_lbl->SetSize(size);
@@ -83,12 +86,14 @@ void QuestHUD::AddActiveQuest(string argname, string argdesc, int id)
 
 void QuestHUD::RemoveQuest(int argid)
 {
+	QuestsShown* c;
 	for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it){
-		if (argid = it._Ptr->_Myval->id) {
+		if (argid == it._Ptr->_Myval->id) {
+			c = it._Ptr->_Myval;
 			it._Ptr->_Myval->CleanUpQuest();
-			vec_quest.remove(*it);
 		}
 	}
+	vec_quest.remove(c);
 }
 
 void QuestsShown::AddQuest(string argname, string argdesc, int argid) {
@@ -97,7 +102,7 @@ void QuestsShown::AddQuest(string argname, string argdesc, int argid) {
 
 void QuestsShown::CleanUpQuest() {
 	App->gui->DestroyUIElement(name_lbl);
-	name = nullptr;
+	name_lbl = nullptr;
 	App->gui->DestroyUIElement(desc_lbl);
-	desc = nullptr;
+	desc_lbl = nullptr;
 }
