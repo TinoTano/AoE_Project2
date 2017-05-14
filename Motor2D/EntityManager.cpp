@@ -64,6 +64,7 @@ bool EntityManager::Update(float arg_dt)
 		(*it)->Update(dt);
 		if (App->render->CullingCam((*it)->entityPosition))
 		{
+			(*it)->Draw();
 			if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
 			else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();
 			else if ((*it)->faction == FREE_MEN) (*it)->Draw();
@@ -490,8 +491,8 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->selectionWidth = buildingNodeInfo.child("Info").child("SelectionWidth").attribute("value").as_uint();
 			buildingTemplate->selectionAreaCenterPoint.x = buildingNodeInfo.child("Info").child("BasePoint").attribute("x").as_int();
 			buildingTemplate->selectionAreaCenterPoint.y = buildingNodeInfo.child("Info").child("BasePoint").attribute("y").as_int();
+			buildingTemplate->entityTexture = buildingTemplate->buildingIdleTexture;
 			buildingTemplate->GetBuildingBoundaries();
-
 
 			buildingsDB.insert(pair<int, Building*>(buildingTemplate->type, buildingTemplate));
 			buildingTemplate->MaxLife = buildingTemplate->Life;
