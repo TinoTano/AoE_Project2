@@ -135,6 +135,8 @@ void Unit::Destroy() {
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);
 	state = DESTROYED;
+
+	App->entityManager->DeleteEntity(this);
 }
 
 bool Unit::Draw()
