@@ -17,7 +17,6 @@ void TechTree::Reset(Faction faction){
 		available_buildings.push_back(HOUSE);
 		available_buildings.push_back(BARRACKS);
 		available_buildings.push_back(ARCHERY_RANGE);
-		available_buildings.push_back(STABLES);
 		available_buildings.push_back(MILL);
 
 		available_techs.push_back(RANGED_WEAPONS);
@@ -70,8 +69,10 @@ void TechTree::Update(){
 
 void TechTree::StartResearch(TechType tech_id)
 {
-	all_techs.at(tech_id)->aux_timer = all_techs.at(tech_id)->research_timer.Read();
-	all_techs.at(tech_id)->researching = true;
+	if (!all_techs.at(tech_id)->researching) {
+		all_techs.at(tech_id)->aux_timer = all_techs.at(tech_id)->research_timer.Read();
+		all_techs.at(tech_id)->researching = true;
+	}
 }
 
 
@@ -79,7 +80,7 @@ void TechTree::Researched(TechType tech_id) {
 
 	Tech* tech = all_techs.at(tech_id);
 
-	if (tech->unlocks_tech.empty()) {
+	if (!tech->unlocks_tech.empty()) {
 		for(list<TechType>::iterator it = tech->unlocks_tech.begin(); it != tech->unlocks_tech.end(); it++)
 			available_techs.push_back(*it);
 	}
@@ -111,7 +112,7 @@ void TechTree::LoadTechTree(pugi::xml_node Techs) {
 
 			Tech* new_Tech = new Tech();
 
-			for (pugi::xml_node unlocked_techs = TechData.child("Unlockedtech"); unlocked_techs; unlocked_techs = TechData.next_sibling("Unlockedtech"))
+			for (pugi::xml_node unlocked_techs = TechData.child("Unlockedtech"); unlocked_techs; unlocked_techs = unlocked_techs.next_sibling("Unlockedtech"))
 				new_Tech->unlocks_tech.push_back((TechType)unlocked_techs.attribute("value").as_int());
 
 			new_Tech->unlocks_building = (buildingType)TechData.child("Unlockedbuilding").attribute("value").as_int();
