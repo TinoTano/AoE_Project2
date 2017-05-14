@@ -71,15 +71,11 @@ public:
 	void UpdateVillagers(uint available_villagers, uint total_villagers);
 private:
 	// TIMER
-
 	Timer timer;
 	int quadtree_flag = 0;
 	Label* Timer_lbl = nullptr;
 	void UpdateTime(float time);
 	void TimeEvents();
-	Timer orc_timer, troll_timer;
-	Timer spawn_timer;
-	uint wave = 0, orcs_to_spawn = 0, trolls_to_spawn = 0;
 public:
 	QuestHUD questHUD;
 	///////

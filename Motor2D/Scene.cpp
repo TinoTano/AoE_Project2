@@ -229,7 +229,6 @@ bool Scene::Start()
 	// ================================================================================================================
 
 	timer.Start();
-	troll_timer.Start();
 
 	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, nullptr);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
@@ -328,6 +327,8 @@ bool Scene::Update(float dt)
 
 	// ---------------------------------------
 
+	UpdateTime(timer.ReadSec());
+
 	return true;
 }
 
@@ -376,33 +377,6 @@ bool Scene::CleanUp()
 }
 
 void Scene::TimeEvents() {
-
-	if ((int)timer.ReadSec() > 120) {
-		Timer_lbl->SetColor({ 255, 0,0,255 });
-	}
-
-	if ((int)timer.ReadSec() == 120) {
-		orc_timer.Start();
-		wave = 2;
-	}
-	else if ((int)timer.ReadSec() < 120) {
-		orc_timer.Start();
-	}
-	if ((int)troll_timer.ReadSec() == 300) {
-		App->entityManager->CreateUnit(2800, 2100, TROLL_MAULER);
-		troll_timer.Start();
-	}
-	if ((int)orc_timer.ReadSec() == 40)
-	{
-		orcs_to_spawn = wave;
-		wave++;
-		orc_timer.Start();
-	}
-		if ((int)orcs_to_spawn > 0 && (int)spawn_timer.ReadSec() > 2) {
-			App->entityManager->CreateUnit(2800, 2100, ORC_SOLDIER);
-			orcs_to_spawn--;
-			spawn_timer.Start();
-		}
 }
 void Scene::UpdateTime(float time)
 {
@@ -441,8 +415,10 @@ void Scene::SaveScene()
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			destTileNode.append_attribute("x") = (*it)->path->back().x;
-			destTileNode.append_attribute("y") = (*it)->path->back().y;
+			if ((*it)->path != nullptr) {
+				destTileNode.append_attribute("x") = (*it)->path->back().x;
+				destTileNode.append_attribute("y") = (*it)->path->back().y;
+			}
 		}
 	}
 
@@ -457,8 +433,10 @@ void Scene::SaveScene()
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			destTileNode.append_attribute("x") = (*it)->path->back().x;
-			destTileNode.append_attribute("y") = (*it)->path->back().y;
+			if ((*it)->path != nullptr) {
+				destTileNode.append_attribute("x") = (*it)->path->back().x;
+				destTileNode.append_attribute("y") = (*it)->path->back().y;
+			}
 		}
 	}
 
