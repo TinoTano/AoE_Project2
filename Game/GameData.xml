@@ -2320,10 +2320,10 @@
 	<Name value="Horse Training"/>
 	<Desc value="asd"/>
 	<Unlockedtech value="11"/>
-	<Unlockedbuilding value="-1"/>
+	<Unlockedbuilding value="4"/>
 	<Unlockedunit unit_type="-1" building="-1"/>
 	<Multiplier value="-1" multiplier="-1"/>
-	<Researched_in value="4"/>
+	<Researched_in value="2"/>
 	<Research_time value="40"/>
 	<Cost foodCost="175" woodCost="200" stoneCost="0" goldCost="0"/>
   </Tech>
