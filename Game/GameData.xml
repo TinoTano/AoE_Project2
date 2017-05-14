@@ -1733,8 +1733,8 @@
         <SelectionWidth value="214"/>
       </Info>
 			<Textures>
-				<Idle value="textures/Buildings/BuildingsFP/MillFP.png"/>
-				<Die value="textures/Buildings/BuildingsFP/MillFPP.png"/>
+				<Idle value="textures/Buildings/BuildingsFP/MillFP1.png"/>
+				<Die value="textures/Buildings/BuildingsFP/MillFP1.png"/>
 				<ConstructingPhase1 value="textures/Buildings/Construction/InConstruction_Medium_1.png"/>
 				<ConstructingPhase2 value="textures/Buildings/Construction/InConstruction_Medium_2.png"/>
 				<ConstructingPhase3 value="textures/Buildings/Construction/InConstruction_Medium_3.png"/>
