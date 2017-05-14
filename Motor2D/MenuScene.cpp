@@ -150,12 +150,12 @@ bool MenuScene::PreUpdate()
 
 bool MenuScene::Update(float dt)
 {
-	if (App->video->want_to_play == false)
-	{
-		uint w, h;
-		App->win->GetWindowSize(w, h);
-		App->video->PlayVideo("VideoLogoNemesis.ogv");
-	}
+	//if (App->video->want_to_play == false)
+	//{
+	//	uint w, h;
+	//	App->win->GetWindowSize(w, h);
+	//	App->video->PlayVideo("VideoLogoNemesis.ogv");
+	//}
 
 	// --------------------------------------------
 	//						UI
