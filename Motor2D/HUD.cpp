@@ -386,13 +386,13 @@ void HUD::Update() {
 							HUDBuildingMenu();
 						}
 						else {
-							if (create_unit_bt != nullptr) {
+							if (create_unit_bt != nullptr && id != TOWN_CENTER) {
 								if (create_unit_bt->current == CLICKUP)
 								{
 									HUDCreateUnits();
 								}
 							}
-							if (create_villager_bt != nullptr) {
+							if (create_villager_bt != nullptr && id == TOWN_CENTER) {
 								if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost) && create_villager_bt->current == CLICKUP) {
 									App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
 									create_villager_bt->current = FREE;
@@ -400,7 +400,7 @@ void HUD::Update() {
 									building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
 								}
 							}
-							if (create_hero_bt != nullptr) {
+							if (create_hero_bt != nullptr && id == TOWN_CENTER) {
 								if (create_hero_bt->current == CLICKUP) {
 									HUDCreateHero();
 								}

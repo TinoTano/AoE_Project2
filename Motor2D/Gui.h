@@ -270,13 +270,13 @@ private:
 
 	//SINGLEINFO
 private:
-	Unit* selected_unit;
+	Unit* selected_unit = nullptr;
 
-	Image* single;			Label* name;
-	Label* armor_val;		Label* damage_val;
-	Label* life;
+	Image* single = nullptr;			Label* name = nullptr;
+	Label* armor_val = nullptr;		Label* damage_val = nullptr;
+	Label* life = nullptr;
 
-	Image* sword_img;		Image* armor_img;
+	Image* sword_img = nullptr;		Image* armor_img = nullptr;
 	uint id;
 	char armor[65], damage[65], currlife[65], maxlife[65];
 	uint posx, posy;
@@ -325,7 +325,7 @@ private:
 	HUDVillagerState villager_state;
 	vector<vector<SDL_Rect> > buildings_rects;
 	// ------- MENU ----------
-	Button* create_building_bt;
+	Button* create_building_bt = nullptr;
 	void HUDVillagerMenu();
 	void HUDClearVillagerMenu();
 	// -----------------------
@@ -357,7 +357,7 @@ private:
 	vector<vector<SDL_Rect> > units_rects;
 	void DrawBuildingBar();
 	// ----- MENU -----
-	Button* create_unit_bt, *create_hero_bt, *create_villager_bt;
+	Button* create_unit_bt = nullptr, *create_hero_bt = nullptr, *create_villager_bt = nullptr;
 	void HUDBuildingMenu();
 	void HUDClearBuildingMenu();
 

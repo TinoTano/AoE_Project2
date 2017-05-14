@@ -140,7 +140,8 @@ void HUD::HUDBuildingMenu()
 		all_bt.push_back(create_unit_bt);
 		blit_sections.clear();
 	}
-	else if (name->str == "TOWN CENTER") {
+
+	if (name->str == "TOWN CENTER") {
 
 		blit_sections.push_back({ 210, 24, 39, 40 });
 		blit_sections.push_back({ 249, 24, 39, 40 });

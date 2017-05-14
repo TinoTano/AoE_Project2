@@ -2338,6 +2338,49 @@
 	<Research_time value="40"/>
 	<Cost foodCost="100" woodCost="100" stoneCost="0" goldCost="50"/>
   </Tech>
+  <Tech>
+	<Name value="Enhanced Blacksmithing"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="5"/>
+	<Unlockedbuilding value="7"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="2"/>
+	<Research_time value="70"/>
+	<Cost foodCost="0" woodCost="0" stoneCost="150" goldCost="150"/>
+  </Tech>
+<Tech>
+	<Name value="Mountain Forge"/>
+	<Desc value="asd"/>
+	<Unlockedtech value="6"/>
+	<Unlockedtech value="7"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="10" building="5"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="7"/>
+	<Research_time value="100"/>
+	<Cost foodCost="0" woodCost="150" stoneCost="200" goldCost="50"/>
+  </Tech>
+<Tech>
+	<Name value="Dwarven Steel"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="-1" building="-1"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="7"/>
+	<Research_time value="120"/>
+	<Cost foodCost="100" woodCost="0" stoneCost="200" goldCost="100"/>
+  </Tech>
+<Tech>
+	<Name value="Dwarven Tactics"/>
+	<Desc value="asd"/>
+	<Unlockedbuilding value="-1"/>
+	<Unlockedunit unit_type="1" building="2"/>
+	<Multiplier value="-1" multiplier="-1"/>
+	<Researched_in value="11"/>
+	<Research_time value="120"/>
+	<Cost foodCost="300" woodCost="0" stoneCost="100" goldCost="0"/>
+  </Tech>
 <Tech>
 	<Name value="Enhanced Training"/>
 	<Desc value="asd"/>
@@ -2423,49 +2466,6 @@
 	<Researched_in value="10"/>
 	<Research_time value="150"/>
 	<Cost foodCost="0" woodCost="0" stoneCost="300" goldCost="200"/>
-  </Tech>
-<Tech>
-	<Name value="Enhanced Blacksmithing"/>
-	<Desc value="asd"/>
-	<Unlockedtech value="5"/>
-	<Unlockedbuilding value="7"/>
-	<Unlockedunit unit_type="-1" building="-1"/>
-	<Multiplier value="-1" multiplier="-1"/>
-	<Researched_in value="2"/>
-	<Research_time value="70"/>
-	<Cost foodCost="0" woodCost="0" stoneCost="150" goldCost="150"/>
-  </Tech>
-<Tech>
-	<Name value="Mountain Forge"/>
-	<Desc value="asd"/>
-	<Unlockedtech value="6"/>
-	<Unlockedtech value="7"/>
-	<Unlockedbuilding value="-1"/>
-	<Unlockedunit unit_type="10" building="5"/>
-	<Multiplier value="-1" multiplier="-1"/>
-	<Researched_in value="7"/>
-	<Research_time value="100"/>
-	<Cost foodCost="0" woodCost="150" stoneCost="200" goldCost="50"/>
-  </Tech>
-<Tech>
-	<Name value="Dwarven Steel"/>
-	<Desc value="asd"/>
-	<Unlockedbuilding value="-1"/>
-	<Unlockedunit unit_type="-1" building="-1"/>
-	<Multiplier value="-1" multiplier="-1"/>
-	<Researched_in value="7"/>
-	<Research_time value="120"/>
-	<Cost foodCost="100" woodCost="0" stoneCost="200" goldCost="100"/>
-  </Tech>
-<Tech>
-	<Name value="Dwarven Tactics"/>
-	<Desc value="asd"/>
-	<Unlockedbuilding value="-1"/>
-	<Unlockedunit unit_type="1" building="2"/>
-	<Multiplier value="-1" multiplier="-1"/>
-	<Researched_in value="11"/>
-	<Research_time value="120"/>
-	<Cost foodCost="300" woodCost="0" stoneCost="100" goldCost="0"/>
   </Tech>
 </FPTechs>
 <SATechs>
