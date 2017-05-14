@@ -176,9 +176,10 @@ bool Scene::Start()
 	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y - 150, GOBLIN_SOLDIER);
 	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 180, GOBLIN_SOLDIER);
 	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 120, GOBLIN_SOLDIER);
-	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 150, TOWN_HALL_POS_Y + 250, ORC_SOLDIER);
-	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 280, ORC_SOLDIER);
-	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 100, TOWN_HALL_POS_Y + 220, ORC_SOLDIER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 500, TOWN_HALL_POS_Y + 1100, VENOMOUS_SPIDER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 380, TOWN_HALL_POS_Y + 1070, TROLL_MAULER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 400, TOWN_HALL_POS_Y + 1200, VENOMOUS_SPIDER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y + 1020, VENOMOUS_SPIDER);
 
 	// Buildings
 	App->entityManager->player->Town_center = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
