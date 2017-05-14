@@ -1,5 +1,5 @@
-#ifndef __UNIT_H__
-#define __UNIT_H__
+#ifndef _UNIT_H_
+#define _UNIT_H_
 
 #include "p2Point.h"
 #include "Entity.h"
@@ -12,6 +12,7 @@
 
 class Building;
 class Order;
+class Squad;
 
 enum unitType {
 	ELVEN_LONGBLADE, DWARVEN_MAULER, GONDOR_SPEARMAN, ELVEN_ARCHER, DUNEDAIN_RANGE, ELVEN_CAVALRY, GONDOR_KNIGHT,
@@ -23,10 +24,7 @@ enum unitType {
 
 	GONDOR_HERO,
 
-	LEGOLAS, GANDALF,
-
-	BALROG
-
+	LEGOLAS, GANDALF
 };
 
 enum unitDirection {
@@ -83,6 +81,7 @@ public:
 	Building* buildingToCreate = nullptr;
 	Building* resourcesWareHouse = nullptr;
 	int selectionRadius = 0;
+	Squad* squad = nullptr;
 
 	//Animations
 	vector<Animation> idleAnimations;

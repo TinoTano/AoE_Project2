@@ -29,9 +29,11 @@ void Squad::Start() {
 void Squad::Assign(Unit* unit) {
 
 	units.push_back(unit);
+	unit->squad = this;
 
 	if (commander == nullptr)
 		commander = unit;
+
 }
 
 void Squad::RestoreUnits() {
@@ -42,47 +44,18 @@ void Squad::RestoreUnits() {
 	}
 }
 
-void Squad::Attack() {
+void Squad::ClearOrders() {
 
-	if (commander->SetDestination(App->ai->targets.front()->entityPosition)) {
+	if (!units.empty()) {
+		for (list<Unit*>::iterator it = units.begin(); it != units.end(); it++)
+			(*it)->order_list.clear();
 
-		if (units.size() > 1) {
-
-			units.remove(commander);
-			App->pathfinding->SharePath(commander, units);
-			units.push_front(commander);
-
-		}
-
-		for (list<Entity*>::iterator it = units.begin(); it != units.end(); it++) {
-			Unit* unit = (Unit*)(*it);
-			unit->order_list.push_back(new FollowPathOrder());
-			unit->order_list.push_back(new UnitAttackOrder(App->ai->targets.front()));
-		}
-
-		App->ai->targets.pop_front();
-	}
-
-}
-
-void Squad::Explore() {
-
-	if (commander->SetDestination(App->ai->exploration_points.front())) {
-
-		if (units.size() > 1) {
-
-			units.remove(commander);
-			App->pathfinding->SharePath(commander, units);
-			units.push_front(commander);
-
-		}
-
-		for (list<Entity*>::iterator it = units.begin(); it != units.end(); it++) {
-			Unit* unit = (Unit*)(*it);
-			unit->order_list.push_back(new FollowPathOrder());
-		}
-
-		App->ai->exploration_points.pop_front();
 	}
 }
+
+bool Squad::IsRestored()
+{
+	return (units.size() >= App->ai->squad_size);
+}
+
 

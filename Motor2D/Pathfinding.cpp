@@ -418,8 +418,6 @@ void PathFinding::SharePath(Unit* commander, list<Entity*> followers) {
 					(*it3)->push_back(cells_in_use.back());
 				}
 
-				cells_in_use.clear();
-
 			}
 		}
 	}

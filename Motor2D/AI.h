@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef _AI_H_
+#define _AI_H_
 
 #include "Module.h"
 #include "Timer.h" 
@@ -92,8 +92,8 @@ public:
 	int squad_size = 7;
 	list<Squad*> defensive_squads;
 	list<Squad*> offensive_squads;
-	deque<Entity*> targets;
-	deque<Entity*> threats;
+	list<iPoint> targets;
+	list<Entity*> threats;
 	list<iPoint> exploration_points;
 
 	//requests management
@@ -105,3 +105,5 @@ public:
 	int requested_villagers = 0;
 
 };
+
+#endif

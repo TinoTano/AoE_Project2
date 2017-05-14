@@ -28,9 +28,9 @@ bool AI::Start() {
 	return true;
 }
 
-bool TargetPriority(const Entity& lhs, const Entity& rhs)
+bool TargetPriority(const Entity* lhs, const Entity* rhs)
 {
-	return (lhs.MaxLife > rhs.MaxLife);
+	return (lhs->MaxLife > rhs->MaxLife);
 }
 
 bool ExplorationPriority(const iPoint& lhs, const iPoint& rhs)
@@ -56,7 +56,6 @@ void AI::LoadExplorationMap() {
 	}
 
 	exploration_points.sort(ExplorationPriority);
-	//sort(exploration_points.begin(), exploration_points.end(), [](const iPoint& lhs, const iPoint& rhs, iPoint enemy_town_hall) { return lhs.DistanceTo(enemy_town_hall) < rhs.DistanceTo(enemy_town_hall); });
 
 }
 
@@ -117,6 +116,7 @@ bool AI::Update(float dt) {
 			if (buildings_to_build.empty() && techs_to_research.empty() && unit_requests.empty() && Enemies->villagers.size() >= villager_expansion_table.at(expansion_level)) {
 				state = OFFENSIVE;
 				AI_timer.Start();
+				StartAttack();
 			}
 			break;
 
@@ -125,12 +125,12 @@ bool AI::Update(float dt) {
 			ManageAttack();
 			ManageUnitRequests();
 
-			if (expansion_level < 10) {
-				if (AI_timer.ReadSec() > (60 + (10 * expansion_level)))
+			if (AI_timer.ReadSec() > (90 + (10 * expansion_level))) {
+				if (expansion_level < 10)
 					IncreaseExpansionLevel();
+				else
+					state = EXPANDING;
 			}
-			else
-				StartAttack();
 
 			break;
 		}
@@ -151,8 +151,8 @@ void AI::StartAttack() {
 			(*it)->RestoreUnits();
 	}
 
-	if(!targets.empty())
-		//sort(targets.begin(), targets.end(), [](const Entity& lhs, const Entity& rhs) { return lhs.MaxLife > rhs.MaxLife; });
+	if (!targets.empty())
+		targets.sort(ExplorationPriority);
 
 	AI_timer.Start();
 }
@@ -161,16 +161,25 @@ void AI::ManageAttack() {
 
 	for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
 
-		if ((*it)->state == IDLE) {
+		if ((*it)->state == IDLE && (*it)->IsRestored()) {
 
 			if (targets.empty()) {
-				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++)
-					(*it)->Explore();
+				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
+					iPoint target = targets.front();
+					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(target));
+					targets.pop_front(); 
+					targets.push_back(target);
+
+				}
 				break;
 			}
 			else {
-				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++)
-					(*it)->Attack();
+				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
+					iPoint point = exploration_points.front();
+					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(point));
+					exploration_points.pop_front();
+					exploration_points.push_back(point);
+				}
 				break;
 			}
 		}
@@ -296,10 +305,10 @@ void AI::Fetch_AICommand(Villager* villager) {
 
 
 void AI::FillResourceRequests() {
-/*
-	for (int i = 0; i < MAX(1, (FOOD_PROPORTION * villagers.size())); i++)
+
+	for (int i = 0; i < MAX(1, (FOOD_PROPORTION * Enemies->villagers.size())); i++)
 		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(FOOD, Enemies->Town_center->entityPosition)));
-	*/for (int i = 0; i < MAX(1, (WOOD_PROPORTION * Enemies->villagers.size())); i++)
+	for (int i = 0; i < MAX(1, (WOOD_PROPORTION * Enemies->villagers.size())); i++)
 		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(WOOD, Enemies->Town_center->entityPosition)));
 	for (int i = 0; i < STONE_PROPORTION * Enemies->villagers.size(); i++)
 		villager_requests.push_back(new GatherOrder(App->entityManager->FindNearestResource(STONE, Enemies->Town_center->entityPosition)));

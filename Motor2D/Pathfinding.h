@@ -73,6 +73,7 @@ private:
 	uchar* map;
 	// we store the created path here
 	list<iPoint> lastPath;
+public:
 	list<list<iPoint>*> paths;
 };
 

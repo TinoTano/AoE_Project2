@@ -3,13 +3,16 @@
 
 #include "Unit.h"
 
+class Order;
+
 class Squad {
 
 public:
-	list<Entity*> units;
+	list<Unit*> units;
 	Unit* commander = nullptr;
 	unitType type = ORC_SOLDIER;
 	EntityState state = IDLE;
+	list<Order*> squad_orderlist;
 
 public:
 
@@ -18,8 +21,8 @@ public:
 	void Start();
 	void Assign(Unit* unit);
 	void RestoreUnits();
-	void Attack();
-	void Explore();
+	void ClearOrders();
+	bool IsRestored();
 
 };
 

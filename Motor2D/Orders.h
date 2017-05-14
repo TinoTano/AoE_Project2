@@ -1,5 +1,5 @@
-#ifndef _Order_
-#define _Order_
+#ifndef _ORDERS_
+#define _ORDERS_
 
 #include "Unit.h"
 #include "Building.h"
@@ -8,13 +8,14 @@
 #include "Collision.h"
 #include "AI.h"
 #include "Timer.h"
+#include "Pathfinding.h"
 
 enum Order_state {
 	NEEDS_START, EXECUTING, COMPLETED
 };
 
 enum OrderType {
-	MOVETO, ATTACK, FOLLOWPATH, GATHER, BUILD, CREATE, REACH
+	MOVETO, ATTACK, FOLLOWPATH, GATHER, BUILD, CREATE, REACH, SQUADFOLLOWPATH, SQUADATTACK
 };
 
 class Order {
@@ -171,5 +172,47 @@ public:
 	bool CheckCompletion();
 
 };
+
+
+
+class SquadFollowPathOrder : public Order {
+
+public:
+
+	Squad* squad = nullptr;
+	list<iPoint>* path = nullptr;
+	iPoint target;
+
+public:
+
+	SquadFollowPathOrder(iPoint argtarget) : target(argtarget) { order_type = SQUADFOLLOWPATH; }
+
+	void Start(Entity* entity);
+	void Execute();
+	bool CheckCompletion();
+
+};
+
+
+
+class SquadAttackOrder : public Order {
+
+public:
+
+	Squad* squad = nullptr;
+	iPoint target;
+	list<Unit*> enemies_in_range;
+
+public:
+
+	SquadAttackOrder(iPoint argtarget) : target(argtarget) { order_type = SQUADATTACK; }
+
+	void Start(Entity* entity);
+	void Execute();
+	bool CheckCompletion();
+
+};
+
+
 
 #endif
