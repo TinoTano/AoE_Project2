@@ -271,8 +271,10 @@ bool EntityManager::CleanUp()
 	
 	WorldEntityList.clear();
 
-	player->Reset();
-	AI_faction->Reset();
+	if (player != nullptr) {
+		player->Reset();
+		AI_faction->Reset();
+	}
 
 	NotHUD = { 0,0,0,0 };
 
