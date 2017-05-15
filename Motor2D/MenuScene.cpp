@@ -88,8 +88,8 @@ bool MenuScene::Start()
 
 	load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 20, buttons[LOADGAME]->pos.second, App->font->fonts[EIGHTEEN]);
 
-	freepeople_lbl = (Label*)App->gui->CreateLabel("FREE PEOPLE", images[FREEPEOPLE]->pos.first + x / 40, images[FREEPEOPLE]->pos.second + images[FREEPEOPLE]->section.h + y / 500, App->font->fonts[EIGHTEEN]);
-	sauronarmy_lbl = (Label*)App->gui->CreateLabel("SAURON ARMY", images[SAURONARMY]->pos.first + x / 40, images[SAURONARMY]->pos.second + images[SAURONARMY]->section.h + y / 500, App->font->fonts[EIGHTEEN]);
+	freepeople_lbl = (Label*)App->gui->CreateLabel("FREE PEOPLE", images[FREEPEOPLE]->pos.first + x / 40, images[FREEPEOPLE]->pos.second + images[FREEPEOPLE]->section.h + y / 500, nullptr);
+	sauronarmy_lbl = (Label*)App->gui->CreateLabel("SAURON ARMY", images[SAURONARMY]->pos.first + x / 40, images[SAURONARMY]->pos.second + images[SAURONARMY]->section.h + y / 500, nullptr);
 	map_lbl = (Label*)App->gui->CreateLabel("Map: Riverdale", images[BACKGROUND_SKIRMISH]->pos.first + x / 15, images[BACKGROUND_SKIRMISH]->pos.second + y / 500, App->font->fonts[FOURTEEN]);
 	
 	skirmish_menu.in_window.push_back(images[BACKGROUND_SKIRMISH]);
@@ -230,11 +230,10 @@ bool MenuScene::PostUpdate()
 	}
 	else if (buttons[NEWGAME]->current == CLICKUP)
 	{
-		//App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
+		/*App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);*/
 		App->cutscene->Start();
 		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
 	}
-
 	if (final_team != team)
 	{
 		final_team = team;
