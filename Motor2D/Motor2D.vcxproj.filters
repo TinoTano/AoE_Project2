@@ -130,12 +130,8 @@
     <ClCompile Include="StaticQuadtree.cpp">
       <Filter>Project 2\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Video.cpp">
-      <Filter>Project 2\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="theoraplay.cpp">
-      <Filter>Project 2\Player</Filter>
-    </ClCompile>
+    <ClCompile Include="Video.cpp" />
+    <ClCompile Include="theoraplay.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -282,12 +278,8 @@
     <ClInclude Include="StaticQuadtree.h">
       <Filter>Project 2\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Video.h">
-      <Filter>Project 2\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="theoraplay.h">
-      <Filter>Project 2\Player</Filter>
-    </ClInclude>
+    <ClInclude Include="Video.h" />
+    <ClInclude Include="theoraplay.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">
@@ -310,9 +302,6 @@
     </Filter>
     <Filter Include="Project 2\HUD">
       <UniqueIdentifier>{bb69f020-f0bd-42d1-ab65-f50d43aa9470}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Project 2\Player">
-      <UniqueIdentifier>{ab4792b0-178c-476a-b9bc-1ebfbe8f183f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

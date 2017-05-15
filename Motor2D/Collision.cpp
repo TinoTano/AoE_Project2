@@ -89,15 +89,17 @@ bool Collision::PreUpdate()
 {
 
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
-		if ((*it)->to_delete == true)
+		if ((*it) != nullptr && (*it)->to_delete == true)
 		{
 			quadTree->Remove(*it);
 			colliders.erase(it);
 			RELEASE(*it);
 
 			for (list<Collision_data*>::iterator it2 = collision_list.begin(); it2 != collision_list.end(); it2++) {
-				if ((*it) == (*it2)->c1 || (*it) == (*it2)->c2)
-					(*it2)->state = SOLVED;
+				if ((*it2)->c1 != nullptr || (*it2)->c2 != nullptr) {
+					if ((*it) == (*it2)->c1 || (*it) == (*it2)->c2)
+						(*it2)->state = SOLVED;
+				}
 			}
 		}
 	}
@@ -107,20 +109,22 @@ bool Collision::PreUpdate()
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
 
-		if ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING) {// || (*col1)->type == COLLIDER_RANGE) {
+		if ((*col1) != nullptr && ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING)) {// || (*col1)->type == COLLIDER_RANGE) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
 			quadTree->Retrieve(potential_collisions, c1);
 
 			for (list<Collider*>::iterator col2 = potential_collisions.begin(); col2 != potential_collisions.end(); col2++) {
-				c2 = (*col2);
+				if ((*col2) != nullptr) {
+					c2 = (*col2);
 
-				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c2->enabled) {
+					if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c2->enabled) {
 
-					if (!FindCollision(c1, c2)) {
-						Collision_data* collision = new Collision_data(c1, c2);   // c1 can only be unit or range
-						collision_list.push_back(collision);
+						if (!FindCollision(c1, c2)) {
+							Collision_data* collision = new Collision_data(c1, c2);   // c1 can only be unit or range
+							collision_list.push_back(collision);
+						}
 					}
 				}
 			}
@@ -180,8 +184,10 @@ bool Collision::CleanUp()
 Collider * Collision::AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback, Entity* entity)
 {
 	Collider* ret = new Collider(position, radius, type, callback, entity);
-	colliders.push_back(ret);
-	quadTree->Insert(ret);
+	if (ret != nullptr) {
+		colliders.push_back(ret);
+		quadTree->Insert(ret);
+	}
 
 	return ret;
 }
@@ -213,8 +219,9 @@ Unit* Collider::GetUnit() {
 
 	Unit* unit = nullptr;
 
-	if (type == COLLIDER_UNIT || type == COLLIDER_AOE_SKILL)
+	if (this != nullptr && (type == COLLIDER_UNIT || type == COLLIDER_AOE_SKILL)) {
 		unit = (Unit*)entity;
+	}
 
 	return unit;
 }
@@ -223,7 +230,7 @@ Building* Collider::GetBuilding() {
 
 	Building* building = nullptr;
 
-	if (type == COLLIDER_BUILDING || type == COLLIDER_CREATING_BUILDING)
+	if (this != nullptr && (type == COLLIDER_BUILDING || type == COLLIDER_CREATING_BUILDING))
 		building = (Building*)entity;
 
 	return building;
@@ -233,7 +240,7 @@ Resource* Collider::GetResource() {
 
 	Resource* resource = nullptr;
 
-	if (type == COLLIDER_RESOURCE)
+	if (this != nullptr && type == COLLIDER_RESOURCE)
 		resource = (Resource*)entity;
 
 	return resource;
@@ -245,11 +252,13 @@ void Collision::DebugDraw()
 
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++)
 	{
-		if (App->render->CullingCam((*it)->pos)) {
-			if ((*it)->colliding)
-				App->render->DrawIsometricCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255);
-			else
-				App->render->DrawIsometricCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255);
+		if ((*it) != nullptr) {
+			if (App->render->CullingCam((*it)->pos)) {
+				if ((*it)->colliding)
+					App->render->DrawIsometricCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 255, 0, 0, 255);
+				else
+					App->render->DrawIsometricCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255);
+			}
 		}
 	}
 }
@@ -257,9 +266,10 @@ void Collision::DebugDraw()
 bool Collision::FindCollision(Collider* col1, Collider* col2) {
 
 	for (list<Collision_data*>::iterator it = collision_list.begin(); it != collision_list.end(); it++) {
-
-		if (((*it)->c1 == col1 && (*it)->c2 == col2) || ((*it)->c2 == col1 && (*it)->c1 == col2))
-			return true;
+		if ((*it)->c1 != nullptr && (*it)->c2 != nullptr) {
+			if (((*it)->c1 == col1 && (*it)->c2 == col2) || ((*it)->c2 == col1 && (*it)->c1 == col2))
+				return true;
+		}
 	}
 
 	return false;
@@ -272,12 +282,13 @@ Collider* Collision::FindNearestCollider(iPoint point) {
 	if (colliders.size() > 0) {
 		col = colliders.front();
 		for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
+			if ((*it) != nullptr) {
+				if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)
+					continue;
 
-			if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)
-				continue;
-
-			if ((*it)->pos.DistanceTo(point) < col->pos.DistanceTo(point))
-				col = (*it);
+				if ((*it)->pos.DistanceTo(point) < col->pos.DistanceTo(point))
+					col = (*it);
+			}
 		}
 	}
 	return col;
@@ -287,12 +298,13 @@ Collider* Collision::FindNearestCollider(iPoint point) {
 bool Collision::IsOccupied(iPoint worldPos) {
 
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
+		if ((*it) != nullptr) {
+			if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)
+				continue;
 
-		if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)
-			continue;
-
-		if ((*it)->pos.DistanceTo(worldPos) < (*it)->r)
-			return true;
+			if ((*it)->pos.DistanceTo(worldPos) < (*it)->r)
+				return true;
+		}
 	}
 
 	return false;

@@ -286,7 +286,9 @@ void HUD::Update() {
 															int x, y;
 															App->input->GetMousePosition(x, y);
 															App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, App->gui->building_bt[i].type);
-															App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+															if (App->entityManager->buildingToCreate->collider != nullptr) {
+																App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
+															}
 															App->entityManager->placingBuilding = true;
 															App->entityManager->buildingToCreate->waitingToPlace = true;
 															App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing

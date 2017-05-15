@@ -180,7 +180,9 @@ bool EntityManager::Update(float arg_dt)
 				buildingToCreate->state = BEING_BUILT;
 				buildingToCreate->entityTexture = buildingToCreate->constructingPhase1;
 				buildingToCreate->GetBuildingBoundaries();
-				buildingToCreate->collider->type = COLLIDER_BUILDING;
+				if (buildingToCreate->collider != nullptr) {
+					buildingToCreate->collider->type = COLLIDER_BUILDING;
+				}
 				buildingToCreate->waitingToPlace = false;
 				App->fog->AddEntity(buildingToCreate);
 
@@ -236,8 +238,12 @@ bool EntityManager::Update(float arg_dt)
 
 	if (placingBuilding) {
 		buildingToCreate->entityPosition = { mouseX, mouseY };
-		buildingToCreate->collider->pos = { buildingToCreate->entityPosition.x,buildingToCreate->entityPosition.y };
-		buildingToCreate->range->pos = { buildingToCreate->entityPosition.x,buildingToCreate->entityPosition.y };
+		if (buildingToCreate->collider != nullptr) {
+			buildingToCreate->collider->pos = { buildingToCreate->entityPosition.x,buildingToCreate->entityPosition.y };
+		}
+		if (buildingToCreate->range != nullptr) {
+			buildingToCreate->range->pos = { buildingToCreate->entityPosition.x,buildingToCreate->entityPosition.y };
+		}
 	}
 
 	return true;
@@ -733,6 +739,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 	Building* building = nullptr;
 	Resource* resource = nullptr;
 
+	if (col_data.c1 == nullptr || col_data.c2 == nullptr) return;
 	col_data.c1->colliding = true;
 	col_data.c2->colliding = true;
 	col_data.state = SOLVING;
@@ -824,6 +831,7 @@ Resource* EntityManager::FindNearestResource(resourceType type, iPoint pos) {
 void EntityManager::RallyCall(Entity* entity) {
 
 	list<Unit*>* allied_units = nullptr;
+	if (entity == nullptr) return;
 
 	if (entity->faction == player->faction)
 		allied_units = &player->units;
@@ -831,10 +839,12 @@ void EntityManager::RallyCall(Entity* entity) {
 		allied_units = &AI_faction->units;
 
 	for (list<Unit*>::iterator it = allied_units->begin(); it != allied_units->end(); it++) {
-		if (entity->entityPosition.DistanceTo((*it)->entityPosition) < (*it)->los->r && (*it)->state == IDLE) {
-			Entity* target = nullptr;
-			if (target = App->entityManager->FindTarget((*it)))
-				(*it)->order_list.push_back(new UnitAttackOrder(target));
+		if ((*it) != nullptr) {
+			if (entity->entityPosition.DistanceTo((*it)->entityPosition) < (*it)->los->r && (*it)->state == IDLE) {
+				Entity* target = nullptr;
+				if (target = App->entityManager->FindTarget((*it)))
+					(*it)->order_list.push_back(new UnitAttackOrder(target));
+			}
 		}
 	}
 	
@@ -843,6 +853,7 @@ void EntityManager::RallyCall(Entity* entity) {
 Entity* EntityManager::FindTarget(Unit* unit) {
 
 	list<Unit*>* enemy_units = nullptr;
+	if (unit == nullptr || unit->collider == nullptr || unit->range == nullptr || unit->los == nullptr) return nullptr;
 
 	if (unit->faction == player->faction)
 		enemy_units = &AI_faction->units;
@@ -953,6 +964,8 @@ void EntityManager::DestroyEntity(Entity* entity)
 Collider* EntityManager::CheckCursorHover(iPoint cursor_pos) {
 
 	Collider* nearest_col = App->collision->FindNearestCollider(cursor_pos);
+
+	if (nearest_col == nullptr) return nullptr;
 
 	if (cursor_pos.DistanceTo(nearest_col->pos) < nearest_col->r) {
 

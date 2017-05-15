@@ -27,7 +27,9 @@ Hero::Hero(int posx, int posy, Hero* unit) : Unit(posx, posy, (Unit*)unit) {
 	case AOE_SKILL:
 		skill = (Skill*) new AOESkill();
 		aoeTargets = App->collision->AddCollider(entityPosition, skill->range, COLLIDER_AOE_SKILL, App->entityManager, (Entity*)this);
-		aoeTargets->enabled = false;
+		if (aoeTargets != nullptr) {
+			aoeTargets->enabled = false;
+		}
 		break;
 	default:
 		break;

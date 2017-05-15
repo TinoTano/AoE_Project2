@@ -25,7 +25,9 @@ bool FogOfWar::AddEntity(Entity* new_entity)
 	else if (new_entity->faction == FREE_MEN) 
 	{
 		in_fog_entity new_ally;
-		new_ally.pos = App->map->WorldToMap(new_entity->collider->pos.x, new_entity->collider->pos.y);
+		if (new_entity->collider != nullptr) {
+			new_ally.pos = App->map->WorldToMap(new_entity->collider->pos.x, new_entity->collider->pos.y);
+		}
 		GetEntitiesCircleArea(new_ally);
 		new_ally.id = new_entity->entityID;
 		entities_on_fog.push_back(new_ally);

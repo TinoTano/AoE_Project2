@@ -55,8 +55,11 @@ void QuadTree::MergeNode() {
 
 	for (int i = 0; i < NODE_COUNT; i++) {
 
-		for (list<Collider*>::iterator it = node[i]->collidersList.begin(); it != node[i]->collidersList.end(); it++)
-			collidersList.push_back(*it);
+		for (list<Collider*>::iterator it = node[i]->collidersList.begin(); it != node[i]->collidersList.end(); it++){
+			if ((*it) != nullptr) {
+				collidersList.push_back(*it);
+			}
+		}
 
 		RELEASE(node[i]);
 		node[i] = nullptr;
@@ -118,7 +121,7 @@ int QuadTree::GetNodeIndex(Collider* col, int start_from)
 
 void QuadTree::Insert(Collider* col)
 {
-
+	if (col == nullptr) return;
 	if (node[0] != nullptr) {
 		int index = GetNodeIndex(col);
 
@@ -137,7 +140,7 @@ void QuadTree::Insert(Collider* col)
 }
 
 void QuadTree::Remove(Collider* col) {
-
+	if (col == nullptr) return;
 	int index = GetNodeIndex(col);
 	if (index != -1 && node[0] != nullptr) {
 		node[index]->Remove(col);
@@ -149,7 +152,7 @@ void QuadTree::Remove(Collider* col) {
 
 void QuadTree::Retrieve(list<Collider*> &possibleColliders, Collider* col)
 {
-
+	if (col == nullptr) return;
 	int index = GetNodeIndex(col);
 	if (index == -1) {
 		for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end(); it++) {
@@ -169,14 +172,15 @@ void QuadTree::Retrieve(list<Collider*> &possibleColliders, Collider* col)
 
 bool QuadTree::Contains(Collider * col)
 {
+	if (col == nullptr) return false;
 	return (col->pos.x >= (nodeRect.x - col->r) && col->pos.x <= (nodeRect.x + nodeRect.w + col->r) &&
 		col->pos.y >= (nodeRect.y - col->r) && col->pos.y <= (nodeRect.y + nodeRect.h + col->r));
 }
 
 bool QuadTree::IsInList(Collider* col) {
-
+	if (col == nullptr) return false;
 	for (list<Collider*>::iterator it = collidersList.begin(); it != collidersList.end(); it++) {
-		if (col == (*it))
+		if ((*it) != nullptr && (col == (*it)))
 			return true;
 	}
 	return false;

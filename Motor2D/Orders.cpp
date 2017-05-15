@@ -39,9 +39,15 @@ void MoveToOrder::Execute() {
 
 	if (!CheckCompletion()) {
 		unit->entityPosition = unit->next_step;
-		unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
-		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		if (unit->collider != nullptr) {
+			unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
+		}
+		if (unit->range != nullptr) {
+			unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		}
+		if (unit->los != nullptr) {
+			unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		}
 
 		unit->CalculateVelocity();
 
@@ -56,7 +62,9 @@ void MoveToOrder::Execute() {
 		// Moving fog of war
 		App->fog->Update(unit->prev_pos, unit->next_pos, unit->entityID);			        // This updates the FOW
 		unit->prev_pos = unit->next_pos;
-		unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
+		if (unit->collider != nullptr) {
+			unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
+		}
 		// ===============================================================
 
 		App->collision->quadTree->UpdateCol(unit->collider);
@@ -119,13 +127,14 @@ bool FollowPathOrder::CheckCompletion() {
 void ReachOrder::Start(Entity* argunit) {
 
 	unit = (Unit*)argunit;
+	if (entity->collider != nullptr) {
+		if (unit->SetDestination(entity->collider->pos)) {
+			if (unit->path) {
+				for (list<iPoint>::iterator it = unit->path->end(); it != unit->path->begin(); it--) {
 
-	if (unit->SetDestination(entity->collider->pos)) {
-		if (unit->path) {
-			for (list<iPoint>::iterator it = unit->path->end(); it != unit->path->begin(); it--) {
-
-				if (entity->collider->pos.DistanceTo(*it) < entity->collider->r)
-					unit->path->pop_back();
+					if (entity->collider->pos.DistanceTo(*it) < entity->collider->r)
+						unit->path->pop_back();
+				}
 			}
 		}
 	}
@@ -142,14 +151,22 @@ void ReachOrder::Execute() {
 	if (!CheckCompletion()) {
 
 		if (unit->destinationTileWorld != entity->entityPosition) {
-			unit->destinationTileWorld = entity->collider->pos;
+			if (entity->collider != nullptr) {
+				unit->destinationTileWorld = entity->collider->pos;
+			}
 			unit->SetTexture(MOVING);
 		}
 
 		unit->entityPosition = unit->next_step;
-		unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
-		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		if (unit->collider != nullptr) {
+			unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
+		}
+		if (unit->range != nullptr) {
+			unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		}
+		if (unit->los != nullptr) {
+			unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		}
 
 		unit->CalculateVelocity();
 
@@ -164,7 +181,9 @@ void ReachOrder::Execute() {
 		// Moving fog of war
 		App->fog->Update(unit->prev_pos, unit->next_pos, unit->entityID);			        // This updates the FOW
 		unit->prev_pos = unit->next_pos;
-		unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
+		if (unit->collider != nullptr) {
+			unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
+		}
 		// ===============================================================
 
 		App->collision->quadTree->UpdateCol(unit->collider);
@@ -184,7 +203,7 @@ void ReachOrder::Execute() {
 
 bool ReachOrder::CheckCompletion()
 {
-	if (entity->collider != nullptr) {
+	if (entity->collider != nullptr && unit->collider != nullptr) {
 		return (entity->collider->CheckCollision(unit->collider));
 	}
 }
@@ -192,7 +211,7 @@ bool ReachOrder::CheckCompletion()
 
 void UnitAttackOrder::Start(Entity* entity)
 {
-	
+	if (entity->collider == nullptr && target->collider == nullptr) return;
 	if (unit = entity->collider->GetUnit()) {
 		unit->state = ATTACKING;
 		App->entityManager->RallyCall(unit);
@@ -219,7 +238,7 @@ void UnitAttackOrder::Start(Entity* entity)
 void UnitAttackOrder::Execute() {
 
 	if (!CheckCompletion()) {
-
+		if (unit->collider == nullptr && target->collider == nullptr) return;
 		if (!unit->collider->CheckCollision(target->collider)) {
 			unit->order_list.push_front(new ReachOrder(target));
 			state = NEEDS_START;
@@ -256,8 +275,10 @@ bool UnitAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-			if (unit->collider->CheckCollision(target->collider));
+			if (unit->collider != nullptr && target->collider != nullptr) {
+				if (unit->collider->CheckCollision(target->collider));
 				return false;
+			}
 		}
 	}
 	return true;
@@ -266,7 +287,7 @@ bool UnitAttackOrder::CheckCompletion() {
 
 void BuildingAttackOrder::Start(Entity* entity)
 {
-
+	if (entity->collider == nullptr) return;
 	if (building = entity->collider->GetBuilding()) {
 		App->entityManager->RallyCall(building);
 		building->attack_timer.Start();
@@ -301,8 +322,10 @@ bool BuildingAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-			if (building->collider->CheckCollision(target->collider))
-				return false;
+			if (building->collider != nullptr && target->collider != nullptr) {
+				if (building->collider->CheckCollision(target->collider))
+					return false;
+			}
 		}
 	}
 	return true;
@@ -324,17 +347,19 @@ void GatherOrder::Start(Entity* entity) {
 		}
 	}
 
-	if (resource != nullptr) {
+	if (resource != nullptr && villager->collider != nullptr && villager->resourcesWareHouse != nullptr && villager->resourcesWareHouse->collider != nullptr) {
 		villager->resource_carried = resource->type;
 
 		if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
 
 
 			StoredResources* resources;
-			if (villager->faction == App->entityManager->player->faction)
-				resources = &App->entityManager->player->resources;
-			else
-				resources = &App->entityManager->AI_faction->resources;
+			if (App->entityManager->player != nullptr) {
+				if (villager->faction == App->entityManager->player->faction)
+					resources = &App->entityManager->player->resources;
+				else
+					resources = &App->entityManager->AI_faction->resources;
+			}
 
 			switch (villager->resource_carried) {
 			case WOOD:
@@ -443,7 +468,9 @@ bool BuildOrder::CheckCompletion() {
 			building->Life = building->MaxLife;
 			building->entityTexture = building->buildingIdleTexture;
 			building->GetBuildingBoundaries();
-			building->collider->type = COLLIDER_BUILDING;
+			if (building->collider != nullptr) {
+				building->collider->type = COLLIDER_BUILDING;
+			}
 			building->state = IDLE;
 
 			if (building->type == MILL) 

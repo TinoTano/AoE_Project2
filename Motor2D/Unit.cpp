@@ -193,7 +193,7 @@ bool Unit::SetDestination(iPoint destination)
 		App->pathfinding->DeletePath(path);
 		path = nullptr;
 	}
-
+	if (collider == nullptr) return false;
 	iPoint origin = App->map->WorldToMap(collider->pos.x, collider->pos.y);
 	path = App->pathfinding->CreatePath(origin, destination);
 	for (list<iPoint>::iterator it = path->begin(); it != path->end(); it++) {

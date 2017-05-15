@@ -101,7 +101,7 @@ bool Building::Update(float dt)
 	}
 
 	if (waitingToPlace) {
-		if (collider->colliding) {
+		if (collider != nullptr && collider->colliding) {
 			SDL_SetTextureColorMod(entityTexture, 255, 0, 0);
 			canBePlaced = false;
 		}
