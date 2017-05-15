@@ -226,9 +226,9 @@ bool Scene::Start()
 
 	// ================================================================================================================
 
-	timer.Start();
+	//timer.Start();
 
-	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, App->font->fonts[TWENTYSIX]);
+	Timer_lbl = (Label*)App->gui->CreateLabel(" ", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, App->font->fonts[TWENTYSIX]);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
 
 	game_finished = false;
@@ -260,9 +260,9 @@ bool Scene::Update(float dt)
 		//debug = !debug;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
-		questHUD.RemoveQuest(2);
-	}
+	//if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
+	//	questHUD.RemoveQuest(2);
+	//}
 	/*
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		SaveScene();
@@ -317,7 +317,7 @@ bool Scene::Update(float dt)
 
 	// ---------------------------------------
 
-	UpdateTime(timer.ReadSec());
+	//UpdateTime(timer.ReadSec());
 
 	return true;
 }

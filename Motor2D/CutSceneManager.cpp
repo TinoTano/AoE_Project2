@@ -87,8 +87,8 @@ bool CutSceneManager::Update(float dt)
 		finished = true;
 		if (App->sceneManager->current_scene == App->sceneManager->play_scene)
 		{
-			App->sceneManager->ChangeScene(App->sceneManager->current_scene, App->sceneManager->level1_scene);
 			ClearScene();
+			App->sceneManager->ChangeScene(App->sceneManager->current_scene, App->sceneManager->level1_scene);
 		}
 	}
 

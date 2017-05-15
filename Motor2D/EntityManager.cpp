@@ -65,10 +65,10 @@ bool EntityManager::Update(float arg_dt)
 			(*it)->Update(dt);
 			if (App->render->CullingCam((*it)->entityPosition))
 			{
-				(*it)->Draw();
-				/*	if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
+				/*(*it)->Draw();*/
+				if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
 				else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();
-				else if ((*it)->faction == FREE_MEN) (*it)->Draw();*/
+				else if ((*it)->faction == FREE_MEN) (*it)->Draw();
 			}
 		}
 	}
