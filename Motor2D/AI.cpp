@@ -170,7 +170,7 @@ void AI::ManageAttack() {
 				}
 				break;
 			}
-			else {
+			else if (!exploration_points.empty()){
 				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
 					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(exploration_points.front()));
 					exploration_points.pop_front();

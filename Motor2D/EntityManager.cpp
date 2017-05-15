@@ -687,46 +687,45 @@ void EntityManager::DeleteEntity(Entity* entity)
 
 				for (list<Villager*>::iterator it = player->villagers.begin(); it != player->villagers.end(); it++) {
 
-					if ((*it)->state == GATHERING) {
-						for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
 
-							if ((*it2)->order_type == GATHER) {
+						if ((*it2)->order_type == GATHER) {
 
-								GatherOrder* gth_order = (GatherOrder*)(*it2);
-								if (gth_order->resource == (Resource*)entity)
-									gth_order->resource = nullptr;
-							}
+							GatherOrder* gth_order = (GatherOrder*)(*it2);
+							if (gth_order->resource == (Resource*)entity)
+								gth_order->resource = nullptr;
+						}
 
-							if ((*it2)->order_type == REACH) {
+						if ((*it2)->order_type == REACH) {
 
-								ReachOrder* rch_order = (ReachOrder*)(*it2);
-								if (rch_order->entity == entity)
-									rch_order->state = COMPLETED;
-							}
+							ReachOrder* rch_order = (ReachOrder*)(*it2);
+							if (rch_order->entity == entity)
+								rch_order->state = COMPLETED;
 						}
 					}
+
 				}
+			
 
 				for (list<Villager*>::iterator it = AI_faction->villagers.begin(); it != AI_faction->villagers.end(); it++) {
 
-					if ((*it)->state == GATHERING) {
-						for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
 
-							if ((*it2)->order_type == GATHER) {
-								GatherOrder* gth_order = (GatherOrder*)(*it2);
-								if (gth_order->resource = (Resource*)entity)
-									gth_order->resource = nullptr;
-							}
+						if ((*it2)->order_type == GATHER) {
+							GatherOrder* gth_order = (GatherOrder*)(*it2);
+							if (gth_order->resource = (Resource*)entity)
+								gth_order->resource = nullptr;
+						}
 
-							if ((*it2)->order_type == REACH) {
+						if ((*it2)->order_type == REACH) {
 
-								ReachOrder* rch_order = (ReachOrder*)(*it2);
-								if (rch_order->entity == entity)
-									rch_order->state = COMPLETED;
-							}
+							ReachOrder* rch_order = (ReachOrder*)(*it2);
+							if (rch_order->entity == entity)
+								rch_order->state = COMPLETED;
 						}
 					}
 				}
+				
 
 				App->collision->DeleteCollider(entity->collider);
 				entity->collider = nullptr;
@@ -779,7 +778,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 		case COLLIDER_BUILDING:
 
 			if (unit->path)
-				App->pathfinding->Repath(unit->path, unit->entityPosition);
+				//App->pathfinding->Repath(unit->path, unit->entityPosition);
 
 			if (!unit->order_list.empty()) {
 				if (unit->order_list.front()->order_type == MOVING) {
