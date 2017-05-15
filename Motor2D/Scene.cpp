@@ -45,7 +45,6 @@ bool Scene::Awake(pugi::xml_node & config)
 bool Scene::Start()
 {
 	active = true;
-	App->collision->quadTree->ClearTree();
 
 	// Loading sounds ================================================
 

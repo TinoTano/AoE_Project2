@@ -19,6 +19,7 @@ public:
 
 	void Start();
 	void Assign(Unit* unit);
+	void Deassign(Unit* unit);
 	void RestoreUnits();
 	void ClearOrders();
 	bool IsRestored();

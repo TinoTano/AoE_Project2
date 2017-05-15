@@ -35,6 +35,21 @@ void Squad::Assign(Unit* unit) {
 
 }
 
+void Squad::Deassign(Unit* unit) {
+
+	units.remove(unit);
+
+	if (commander == unit) {
+		if (units.size() > 0)
+			commander = units.front();
+		else
+			commander = nullptr;
+
+	}
+
+}
+
+
 void Squad::RestoreUnits() {
 
 	for (int i = units.size(); i <= App->ai->squad_size; i++) {

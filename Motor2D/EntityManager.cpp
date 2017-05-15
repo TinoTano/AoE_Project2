@@ -645,6 +645,7 @@ void EntityManager::DeleteEntity(Entity* entity)
 
 				if (entity->faction == player->faction) {
 					player->units.remove(unit);
+					App->ai->RemoveThreats(entity);
 					if (unit->IsVillager)
 						player->villagers.remove((Villager*)unit);
 				}
@@ -661,15 +662,15 @@ void EntityManager::DeleteEntity(Entity* entity)
 				App->collision->DeleteCollider(unit->los);
 				//unit->los = nullptr;
 
-
-
-				//if(squad)
-				//squad->Deassign(this);
+				if(unit->squad)
+					unit->squad->Deassign(unit);
 
 				break;
 			case COLLIDER_BUILDING:
-				if (entity->faction == player->faction)
+				if (entity->faction == player->faction) {
 					player->buildings.remove((Building*)entity);
+					App->ai->RemoveThreats(entity);
+				}
 				else
 					AI_faction->buildings.remove((Building*)entity);
 
@@ -748,7 +749,9 @@ void EntityManager::OnCollision(Collision_data& col_data)
 	Building* building = nullptr;
 	Resource* resource = nullptr;
 
-	if (col_data.c1 == nullptr || col_data.c2 == nullptr) return;
+	if (col_data.c1 == nullptr || col_data.c2 == nullptr)
+		return;
+
 	col_data.c1->colliding = true;
 	col_data.c2->colliding = true;
 	col_data.state = SOLVING;
@@ -760,6 +763,27 @@ void EntityManager::OnCollision(Collision_data& col_data)
 			if (building = col_data.c1->entity->collider->GetBuilding()) 
 				building->order_list.push_front(new BuildingAttackOrder(col_data.c2->entity));
 		}
+	}
+	if (col_data.c1->type == COLLIDER_LOS) {
+
+		if (col_data.c1->entity->faction == AI_faction->faction && col_data.c2->entity->faction == player->faction) {
+			if (col_data.c1->type == COLLIDER_UNIT) {
+				App->ai->UpdateTargets(col_data.c2->entity);
+				if (unit->squad) {
+					unit->squad->ClearOrders();
+					unit->squad->squad_orderlist.push_front(new SquadAttackOrder(col_data.c2->entity->entityPosition));
+				}
+			}
+			else
+				App->ai->UpdateThreats(col_data.c2->entity);
+
+			if (col_data.c1->CheckCollision(col_data.c2) == false)
+				col_data.state = SOLVED;
+			else
+				col_data.state = UNSOLVED;
+		}
+		else
+			col_data.state = SOLVED;
 	}
 	else if (col_data.c1->type == COLLIDER_UNIT) {    // c1->type == COLLIDER_UNIT
 

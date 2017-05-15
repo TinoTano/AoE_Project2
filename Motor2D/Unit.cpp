@@ -132,6 +132,8 @@ bool Unit::Update(float dt)
 
 void Unit::Destroy() {
 
+	App->entityManager->Untarget(this);
+
 	if (App->quest->TriggerKillCallback(this->type) == false)
 		App->quest->StepKillCallback(this->type);
 

@@ -15,8 +15,8 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_UNIT][COLLIDER_BUILDING] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_RESOURCE] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_RANGE] = false;
-	matrix[COLLIDER_UNIT][COLLIDER_LOS] = true;
-	matrix[COLLIDER_UNIT][COLLIDER_CREATING_BUILDING] = true;
+	matrix[COLLIDER_UNIT][COLLIDER_LOS] = false;
+	matrix[COLLIDER_UNIT][COLLIDER_CREATING_BUILDING] = false;
 	matrix[COLLIDER_UNIT][COLLIDER_AOE_SKILL] = true;
 
 	matrix[COLLIDER_BUILDING][COLLIDER_UNIT] = true;
@@ -44,7 +44,7 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_RANGE][COLLIDER_AOE_SKILL] = false;
 
 	matrix[COLLIDER_LOS][COLLIDER_UNIT] = true;
-	matrix[COLLIDER_LOS][COLLIDER_BUILDING] = false;
+	matrix[COLLIDER_LOS][COLLIDER_BUILDING] = true;
 	matrix[COLLIDER_LOS][COLLIDER_RESOURCE] = false;
 	matrix[COLLIDER_LOS][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_LOS][COLLIDER_LOS] = false;
@@ -110,7 +110,8 @@ bool Collision::PreUpdate()
 	Collider *c2 =	nullptr;
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
-		if ((*col1) != nullptr && ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING)) {
+		if ((*col1) != nullptr && (*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING || 
+			(*col1)->type == COLLIDER_RANGE || (*col1)->type == COLLIDER_LOS) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
@@ -127,6 +128,7 @@ bool Collision::PreUpdate()
 							collision_list.push_back(collision);
 						}
 					}
+
 				}
 			}
 		}
@@ -179,6 +181,17 @@ bool Collision::CleanUp()
 	}
 
 	colliders.clear();
+
+	list<Collision_data*>::reverse_iterator it2 = collision_list.rbegin();
+
+	while (it2 != collision_list.rend())
+	{
+		RELEASE(*it2);
+		++it2;
+	}
+
+	collision_list.clear();
+	quadTree->ClearTree();
 
 	return true;
 }

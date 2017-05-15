@@ -239,7 +239,7 @@ void UnitAttackOrder::Execute() {
 
 	if (!CheckCompletion()) {
 		if (unit == nullptr && unit->collider == nullptr && target == nullptr && target->collider == nullptr) return;
-		if (!unit->collider->CheckCollision(target->collider)) {
+		if (!unit->range->CheckCollision(target->collider)) {
 			unit->order_list.push_front(new ReachOrder(target));
 			state = NEEDS_START;
 		}
@@ -276,8 +276,8 @@ bool UnitAttackOrder::CheckCompletion() {
 	if (target != nullptr) {
 		if (target->Life > 0) {
 			if (unit != nullptr && unit->collider != nullptr && target->collider != nullptr) {
-				if (unit->collider->CheckCollision(target->collider));
-				return false;
+				if (unit->los->CheckCollision(target->collider));
+					return false;
 			}
 		}
 	}

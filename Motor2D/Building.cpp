@@ -142,7 +142,6 @@ bool Building::Draw()
 
 void Building::Destroy() {
 
-
 	App->entityManager->Untarget(this);
 
 	if (faction == SAURON_ARMY)

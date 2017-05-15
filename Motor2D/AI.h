@@ -59,16 +59,20 @@ public:
 	void ManageAttack();
 	void StartAttack();
 
+	void UpdateThreats(Entity* entity);
+	void UpdateTargets(Entity* entity);
+	void RemoveThreats(Entity* entity);
+
 	void ManageUnitRequests();
 	void ManageBuildRequests();
 	void ManageVillagerRequests();
 	void ManageTechRequests();
 
 	void FillResourceRequests();
+	iPoint PlaceBuilding(buildingType type);
 
 	void IncreaseExpansionLevel();
 
-	iPoint PlaceBuilding(buildingType type);
 	void LoadExplorationMap();
 	void LoadAI_Data(pugi::xml_node& gameData);
 
@@ -92,8 +96,8 @@ public:
 	int squad_size = 5;
 	list<Squad*> defensive_squads;
 	list<Squad*> offensive_squads;
-	list<iPoint> targets;
-	list<Entity*> threats;
+	list<pair<Entity*, iPoint>> targets;
+	list<pair<Entity*, iPoint>> threats;
 	list<iPoint> exploration_points;
 
 	//requests management

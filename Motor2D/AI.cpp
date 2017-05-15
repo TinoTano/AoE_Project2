@@ -28,9 +28,14 @@ bool AI::Start() {
 	return true;
 }
 
-bool TargetPriority(const Entity* lhs, const Entity* rhs)
+bool TargetPriority(const pair<Entity*, iPoint> lhs, const  pair<Entity*, iPoint> rhs)
 {
-	return (lhs->MaxLife > rhs->MaxLife);
+	return (lhs.first->MaxLife > rhs.first->MaxLife);
+}
+
+bool ThreatPriority(const pair<Entity*, iPoint>* lhs, const  pair<Entity*, iPoint>* rhs)
+{
+	return (lhs->second.DistanceTo(App->ai->Enemies->Town_center->entityPosition) > rhs->second.DistanceTo(App->ai->Enemies->Town_center->entityPosition));
 }
 
 bool ExplorationPriority(const iPoint& lhs, const iPoint& rhs)
@@ -152,7 +157,7 @@ void AI::StartAttack() {
 	}
 
 	if (!targets.empty())
-		targets.sort(ExplorationPriority);
+		targets.sort(TargetPriority);
 
 	AI_timer.Start();
 }
@@ -164,7 +169,7 @@ void AI::ManageAttack() {
 		if ((*it)->squad_orderlist.empty() && (*it)->IsRestored()) {
 			if (!targets.empty()) {
 				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
-					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(targets.front()));
+					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(targets.front().second));
 					targets.pop_front(); 
 
 				}
@@ -338,4 +343,51 @@ iPoint AI::PlaceBuilding(buildingType type) {
 
 	ret.create(-1, -1);
 	return ret;
+}
+
+
+void AI::UpdateThreats(Entity* entity) {
+
+	for (list<pair<Entity*, iPoint>>::iterator threat = threats.begin(); threat != threats.end(); threat++) {
+		if ((*threat).first == entity) {
+			(*threat).second = entity->entityPosition;
+			return;
+		}
+	}
+
+	pair<Entity*, iPoint> new_threat = { entity, entity->entityPosition };
+	threats.push_back(new_threat);
+
+}
+
+void AI::UpdateTargets(Entity* entity) {
+
+	for (list<pair<Entity*, iPoint>>::iterator target = targets.begin(); target != targets.end(); target++) {
+		if ((*target).first == entity) {
+			(*target).second = entity->entityPosition;
+			return;
+		}
+	}
+
+	pair<Entity*, iPoint> new_target = { entity, entity->entityPosition };
+	targets.push_back(new_target);
+
+}
+
+void AI::RemoveThreats(Entity* entity) {
+
+	for (list<pair<Entity*, iPoint>>::iterator target = targets.begin(); target != targets.end(); target++) {
+		if ((*target).first == entity) {
+			targets.erase(target);
+			break;
+		}
+	}
+
+	for (list<pair<Entity*, iPoint>>::iterator threat = threats.begin(); threat != threats.end(); threat++) {
+		if ((*threat).first == entity) {
+			threats.erase(threat);
+			break;
+		}
+	}
+
 }
