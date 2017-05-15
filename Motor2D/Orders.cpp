@@ -538,13 +538,13 @@ void SquadFollowPathOrder::Start(Entity* entity)
 	Unit* unit = (Unit*)entity;
 	squad = unit->squad;
 
-	iPoint targetMap = App->map->WorldToMap(target.x, target.y);
+	iPoint targetWorld = App->map->MapToWorld(target.x, target.y);
 	iPoint origin = App->map->WorldToMap(squad->commander->entityPosition.x, squad->commander->entityPosition.y);
 
 	list<iPoint>* ret = new list<iPoint>;
 
-	if (!App->pathfinding->IsWalkable(targetMap) || App->collision->IsOccupied(target))
-		target = App->pathfinding->FindNearestAvailable(targetMap, 5);
+	if (!App->pathfinding->IsWalkable(target) || App->collision->IsOccupied(targetWorld))
+		target = App->pathfinding->FindNearestAvailable(target, 5);
 
 	if (target.x == -1 || target == squad->commander->entityPosition) {
 		state = COMPLETED;
@@ -554,7 +554,7 @@ void SquadFollowPathOrder::Start(Entity* entity)
 	Path pth;
 	pth.open.pathNodeList.push_back(PathNode(0, 0, origin, NULL));
 	pth.origin = origin;
-	pth.destination = targetMap;
+	pth.destination = target;
 
 	App->pathfinding->CalculatePath(&pth);
 

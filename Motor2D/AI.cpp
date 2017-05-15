@@ -41,16 +41,16 @@ bool ExplorationPriority(const iPoint& lhs, const iPoint& rhs)
 
 void AI::LoadExplorationMap() {
 
-	int width = App->map->data.mapWidth;
-	int height = App->map->data.mapHeight;
+	int width = App->map->data.height;
+	int height = App->map->data.width;
 
 	for (int i = width / 20; i < width - (width / 20); i += (width / 20)) {
 		for (int j = height / 20;  j < height - (height / 20); j += (height / 20)) {
 
 			iPoint p{ i,j };
-			iPoint Map_p = App->map->WorldToMap(p.x, p.y);
+			iPoint World_p = App->map->MapToWorld(p.x, p.y);
 
-			if (App->pathfinding->IsWalkable(Map_p) && App->collision->IsOccupied(p)) 
+			if (App->pathfinding->IsWalkable(p) && App->collision->IsOccupied(World_p))
 				exploration_points.push_back(p);
 		}
 	}
