@@ -922,6 +922,13 @@ void EntityManager::Untarget(Entity* destroyed_entity) {
 					if (atk_order->target == destroyed_entity)
 						atk_order->state = COMPLETED;
 				}
+
+				if ((*it2)->order_type == REACH) {
+
+					ReachOrder* rch_order = (ReachOrder*)(*it2);
+					if (rch_order->entity == destroyed_entity)
+						rch_order->state = COMPLETED;
+				}
 			}
 		}
 	}
@@ -934,10 +941,17 @@ void EntityManager::Untarget(Entity* destroyed_entity) {
 			for (list<Order*>::iterator it4 = (*it3)->order_list.begin(); it4 != (*it3)->order_list.end(); it4++) {
 
 				if ((*it4)->order_type == ATTACK) {
-					UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it3);
+					UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it4);
 
 					if (atk_order->target == destroyed_entity)
 						atk_order->state = COMPLETED;
+				}
+
+				if ((*it4)->order_type == REACH) {
+
+					ReachOrder* rch_order = (ReachOrder*)(*it4);
+					if (rch_order->entity == destroyed_entity)
+						rch_order->state = COMPLETED;
 				}
 			}
 		}

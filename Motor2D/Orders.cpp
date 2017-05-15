@@ -565,7 +565,7 @@ void SquadFollowPathOrder::Execute() {
 	if (!CheckCompletion()) {
 
 		int level = 1;
-		int i = path->front().x -level, j = path->front().x - level;
+		int i = path->front().x -level, j = path->front().y - level;
 
 		list<Unit*>::iterator it = squad->units.begin();
 
@@ -578,11 +578,12 @@ void SquadFollowPathOrder::Execute() {
 				it++;
 			}
 
-			if (j == level) {
-				i++; j = -level;
+			j++;
+			if (j == (path->front().y + level)) {
+				i++; j = path->front().y - level;
 			}
-			if (j == level && i == level) {
-				level++; i = j = -level;
+			if (j == (path->front().y + level) && i == path->front().x + level) {
+				level++; i = path->front().x - level;  j = path->front().y - level;
 			}
 		}
 
