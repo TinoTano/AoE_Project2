@@ -662,6 +662,7 @@ void EntityManager::DeleteEntity(Entity* entity)
 				unit->los = nullptr;
 
 
+
 				//if(squad)
 				//squad->Deassign(this);
 
@@ -907,7 +908,7 @@ void EntityManager::Untarget(Entity* destroyed_entity) {
 	list<Building*>* enemy_buildings = nullptr;
 
 
-	if (destroyed_entity->faction == player->faction){
+	if (destroyed_entity->faction == player->faction) {
 		enemy_units = &AI_faction->units;
 		enemy_buildings = &AI_faction->buildings;
 	}
@@ -919,23 +920,20 @@ void EntityManager::Untarget(Entity* destroyed_entity) {
 
 	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
 
-		if ((*it)->state == ATTACKING) {
+		for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
 
-			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
+			if ((*it2)->order_type == ATTACK) {
+				UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it);
 
-				if ((*it2)->order_type == ATTACK) {
-					UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it);
+				if (atk_order->target == destroyed_entity)
+					atk_order->state = COMPLETED;
+			}
 
-					if (atk_order->target == destroyed_entity)
-						atk_order->state = COMPLETED;
-				}
+			if ((*it2)->order_type == REACH) {
 
-				if ((*it2)->order_type == REACH) {
-
-					ReachOrder* rch_order = (ReachOrder*)(*it2);
-					if (rch_order->entity == destroyed_entity)
-						rch_order->state = COMPLETED;
-				}
+				ReachOrder* rch_order = (ReachOrder*)(*it2);
+				if (rch_order->entity == destroyed_entity)
+					rch_order->state = COMPLETED;
 			}
 		}
 	}
@@ -943,26 +941,24 @@ void EntityManager::Untarget(Entity* destroyed_entity) {
 
 	for (list<Building*>::iterator it3 = enemy_buildings->begin(); it3 != enemy_buildings->end(); it3++) {
 
-		if ((*it3)->state == ATTACKING) {
+		for (list<Order*>::iterator it4 = (*it3)->order_list.begin(); it4 != (*it3)->order_list.end(); it4++) {
 
-			for (list<Order*>::iterator it4 = (*it3)->order_list.begin(); it4 != (*it3)->order_list.end(); it4++) {
+			if ((*it4)->order_type == ATTACK) {
+				UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it4);
 
-				if ((*it4)->order_type == ATTACK) {
-					UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it4);
+				if (atk_order->target == destroyed_entity)
+					atk_order->state = COMPLETED;
+			}
 
-					if (atk_order->target == destroyed_entity)
-						atk_order->state = COMPLETED;
-				}
+			if ((*it4)->order_type == REACH) {
 
-				if ((*it4)->order_type == REACH) {
-
-					ReachOrder* rch_order = (ReachOrder*)(*it4);
-					if (rch_order->entity == destroyed_entity)
-						rch_order->state = COMPLETED;
-				}
+				ReachOrder* rch_order = (ReachOrder*)(*it4);
+				if (rch_order->entity == destroyed_entity)
+					rch_order->state = COMPLETED;
 			}
 		}
 	}
+
 }
 
 void EntityManager::DestroyEntity(Entity* entity)
