@@ -164,20 +164,16 @@ void AI::ManageAttack() {
 		if ((*it)->squad_orderlist.empty() && (*it)->IsRestored()) {
 			if (!targets.empty()) {
 				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
-					iPoint target = targets.front();
-					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(target));
+					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(targets.front()));
 					targets.pop_front(); 
-					targets.push_back(target);
 
 				}
 				break;
 			}
 			else {
 				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
-					iPoint point = exploration_points.front();
-					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(point));
+					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(exploration_points.front()));
 					exploration_points.pop_front();
-					exploration_points.push_back(point);
 				}
 				break;
 			}

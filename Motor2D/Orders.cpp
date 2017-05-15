@@ -342,17 +342,17 @@ void GatherOrder::Start(Entity* entity) {
 	if (resource == nullptr) {
 		if (villager->resource_carried != NONE)
 			resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition);
+			
 		else {
 			state = COMPLETED;
 			return;
 		}
 	}
-	else {
-		if (resource->collider == nullptr) {
-			resource = nullptr;
-			state = NEEDS_START;
-			return;
-		}
+	
+	if (resource->collider == nullptr) {
+		resource = nullptr;
+		state = NEEDS_START;
+		return;
 	}
 
 
