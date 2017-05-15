@@ -16,6 +16,7 @@
 #include "Unit.h"
 #include "FogOfWar.h"
 #include "Orders.h"
+#include "Fonts.h"
 
 #define MASK_W  128
 #define MASK_H  72
@@ -399,8 +400,7 @@ void CutSceneManager::LoadSoundEffect(pugi::xml_node & node)
 void CutSceneManager::LoadText(pugi::xml_node & node)
 {
 	CutsceneText* t = new CutsceneText(e_g_text, node.attribute("path").as_string(), node.attribute("name").as_string(), node.attribute("active").as_bool(), { -STARTING_CAMERA_X + node.attribute("pos_x").as_int(), -STARTING_CAMERA_Y + node.attribute("pos_y").as_int() });
-	t->label = (Label*)App->gui->CreateLabel(node.attribute("txt").as_string(), -STARTING_CAMERA_X + node.attribute("pos_x").as_int(), -STARTING_CAMERA_Y + node.attribute("pos_y").as_int(), nullptr);
-	t->label->SetSize(20);
+	t->label = (Label*)App->gui->CreateLabel(node.attribute("txt").as_string(), -STARTING_CAMERA_X + node.attribute("pos_x").as_int(), -STARTING_CAMERA_Y + node.attribute("pos_y").as_int(), App->font->fonts[TWENTY]);
 
 	elements.push_back(t);
 }
@@ -660,7 +660,6 @@ void CutSceneManager::PerformModify(CutsceneElement * ele, CutsceneAction * act)
 			CutsceneModifyText* modify = static_cast<CutsceneModifyText*>(act);
 
 			t->label->SetText((char*)modify->txt.c_str());
-			t->label->SetSize(20);
 		}
 	}
 }

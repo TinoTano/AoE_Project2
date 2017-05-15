@@ -435,23 +435,22 @@ void Image::CleanUp()
 		App->tex->UnLoad(texture);
 }
 // LABEL 
-
 Label::Label(char* text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {
 	color = { 0,0,0,250 };
-	texture = App->font->Print(str.c_str(), color);
-	App->font->CalcSize(str.c_str(), width, height);
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 Label::Label(string text, int x, int y, _TTF_Font* font) : UIElement(true, x, y, LABEL, nullptr), str(text), font(font) {
 	color = { 0,0,0,250 };
-	texture = App->font->Print(str.c_str(), color);
-	App->font->CalcSize(str.c_str(), width, height);
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 Label::Label(char * text, SDL_Rect area, _TTF_Font* font) : UIElement(true, area.x, area.y, LABEL, nullptr), str(text), font(font) {
 	color = { 0,0,0,250 };
-	texture = App->font->Print(str.c_str(), color);
-	App->font->CalcSize(str.c_str(), width, height);
+	texture = App->font->Print(str.c_str(), color, font);
+	App->font->CalcSize(str.c_str(), width, height, font);
 
 }
 
@@ -480,8 +479,9 @@ void Label::SetText(char* text) {
 		App->tex->UnLoad(texture);
 	}
 	texture = App->font->Print(str.c_str(), color, font);
-	App->font->CalcSize(str.c_str(), width, height);
+	App->font->CalcSize(str.c_str(), width, height, font);
 }
+
 void Label::SetString(string text) {
 	if (str != text)
 	{
@@ -495,13 +495,13 @@ void Label::SetString(string text) {
 }
 
 void Label::SetSize(int size) {
-	font = App->font->Load(nullptr, size);
+	/*font = App->font->Load(nullptr, size);
 	this->size = size;
 	if (texture != nullptr) {
-		App->tex->UnLoad(texture);
+	App->tex->UnLoad(texture);
 	}
 	texture = App->font->Print(str.c_str(), color, font);
-	App->font->CalcSize(str.c_str(), width, height, font);
+	App->font->CalcSize(str.c_str(), width, height, font);*/
 }
 
 void Label::SetColor(SDL_Color color)
@@ -509,7 +509,6 @@ void Label::SetColor(SDL_Color color)
 	if (texture != nullptr) App->tex->UnLoad(texture);
 	this->color = color;
 	texture = App->font->Print(str.c_str(), color, font);
-	App->font->CalcSize(str.c_str(), width, height, font);
 }
 
 void Label::CleanUp()
@@ -517,7 +516,7 @@ void Label::CleanUp()
 	parent = nullptr;
 	font = nullptr;
 	App->tex->UnLoad(texture);
-	App->font->DeleteFont(font);
+	//App->font->DeleteFont(font);
 	str.clear();
 }
 

@@ -18,7 +18,9 @@ public:
 
 	// Destructor
 	virtual ~Fonts();
+	
 
+	bool Start();
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
 
@@ -36,12 +38,15 @@ public:
 
 public:
 
-	list<_TTF_Font*>	fonts;
+	vector<_TTF_Font*>	fonts;
+
 	_TTF_Font*			default = nullptr;
 
 private:
 	const char* default_path;
 };
+
+enum fontslist { EIGHT, SIXTEEN, TWENTY, FOURTEEN, EIGHTEEN, TWENTYSIX };
 
 
 #endif // __FONTS_H__

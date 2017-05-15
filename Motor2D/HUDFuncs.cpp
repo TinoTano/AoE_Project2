@@ -308,9 +308,8 @@ void HUD::BlitInfoBuilding(building_button bt)
 	App->render->ui_toDraw.push_back(quad);
 
 	if (info_lbl == nullptr) {
-		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, nullptr);
+		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, App->font->fonts[TWENTY]);
 		info_lbl->SetColor({ 255, 255, 255, 255 });
-		info_lbl->SetSize(20);
 		desc_lbl = (Label*)App->gui->CreateLabel(bt.desc, quad.rect.x, quad.rect.y + 22, nullptr);
 		desc_lbl->SetColor({ 255, 255, 255, 255 });
 
@@ -330,9 +329,8 @@ void HUD::BlitInfoUnit(unit_button bt)
 	quad.a = 180;
 	App->render->ui_toDraw.push_back(quad);
 	if (info_lbl == nullptr) {
-		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, nullptr);
+		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, App->font->fonts[TWENTY]);
 		info_lbl->SetColor({255, 255, 255, 255});
-		info_lbl->SetSize(20);
 		desc_lbl = (Label*)App->gui->CreateLabel(bt.desc, quad.rect.x, quad.rect.y + 22, nullptr);
 		desc_lbl->SetColor({ 255, 255, 255, 255 });
 
@@ -351,9 +349,8 @@ void HUD::BlitInfoTech(tech_button bt)
 	quad.a = 180;
 	App->render->ui_toDraw.push_back(quad);
 	if (info_lbl == nullptr) {
-		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, nullptr);
+		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, App->font->fonts[TWENTY]);
 		info_lbl->SetColor({ 255, 255, 255, 255 });
-		info_lbl->SetSize(20);
 		desc_lbl = (Label*)App->gui->CreateLabel(bt.desc, quad.rect.x, quad.rect.y + 22, nullptr);
 		desc_lbl->SetColor({ 255, 255, 255, 255 });
 		cost_lbl = (Label*)App->gui->CreateLabel(bt.cost, quad.rect.x, quad.rect.y + 45, nullptr);

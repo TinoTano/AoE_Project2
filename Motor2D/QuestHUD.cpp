@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "Gui.h"
 #include "Window.h"
-
+#include "Fonts.h"
 
 void QuestHUD::Start()
 {
@@ -10,18 +10,16 @@ void QuestHUD::Start()
 	App->win->GetWindowSize(x, y);
 	winx = x; winy = y;
 
-	objective_lbl = (Label*)App->gui->CreateLabel("Objectives", x - App->render->camera.x - 300, y / 2 - App->render->camera.y, nullptr);
+	objective_lbl = (Label*)App->gui->CreateLabel("Objectives", x - App->render->camera.x - 300, y / 2 - App->render->camera.y, App->font->fonts[SIXTEEN]);
 	objective_lbl->SetColor({ 255, 255 ,255 ,255 });
-	objective_lbl->SetSize(16);
 
 	desc_lbl = (Label*)App->gui->CreateLabel("Destroy Sauron's tower to win.", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 22, nullptr);
 	desc_lbl->SetColor({ 255, 255 ,255 ,255 });
 
 	questx = x - App->render->camera.x - 300;
 
-	quest_lbl = (Label*)App->gui->CreateLabel("Side Quests", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 40, nullptr);
+	quest_lbl = (Label*)App->gui->CreateLabel("Side Quests", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 40, App->font->fonts[SIXTEEN]);
 	quest_lbl->SetColor({ 255, 255 ,255 ,255 });
-	quest_lbl->SetSize(16);
 
 	questy = y / 2 - App->render->camera.y + 58;
 }
@@ -48,11 +46,9 @@ void QuestHUD::Update()
 	else if (vec_quest.size() > 0) {
 		if (vec_quest.front()->name_lbl == nullptr) {
 			vec_quest.front()->name += ":";
-			vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name , questx, questy, nullptr);
+			vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name , questx, questy, App->font->fonts[FOURTEEN]);
 			vec_quest.front()->name_lbl->SetColor({255, 255, 255, 255});
-			int size = 14;
-			vec_quest.front()->name_lbl->SetSize(size);
-			vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + size, nullptr);
+			vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14, nullptr);
 			vec_quest.front()->desc_lbl->SetColor({ 255, 255, 255, 255 });
 		}
 	}

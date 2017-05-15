@@ -362,7 +362,7 @@ void GatherOrder::Start(Entity* entity) {
 		if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
 
 
-			StoredResources* resources;
+			StoredResources* resources = nullptr;
 			if (App->entityManager->player != nullptr) {
 				if (villager->faction == App->entityManager->player->faction)
 					resources = &App->entityManager->player->resources;

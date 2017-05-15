@@ -7,6 +7,7 @@
 #include "Audio.h"
 #include "CutSceneManager.h"
 #include "Video.h"
+#include "Fonts.h"
 
 MenuScene::MenuScene() : SceneElement("menu")
 {
@@ -83,17 +84,14 @@ bool MenuScene::Start()
 		}
 	}
 
-	new_game_lbl = (Label*)App->gui->CreateLabel("New Game", buttons[NEWGAME]->pos.first + x / 20, buttons[NEWGAME]->pos.second, nullptr);
+	new_game_lbl = (Label*)App->gui->CreateLabel("New Game", buttons[NEWGAME]->pos.first + x / 20, buttons[NEWGAME]->pos.second, App->font->fonts[EIGHTEEN]);
 
-	load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 20, buttons[LOADGAME]->pos.second, nullptr);
+	load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 20, buttons[LOADGAME]->pos.second, App->font->fonts[EIGHTEEN]);
 
-	freepeople_lbl = (Label*)App->gui->CreateLabel("FREE PEOPLE", images[FREEPEOPLE]->pos.first + x / 40, images[FREEPEOPLE]->pos.second + images[FREEPEOPLE]->section.h + y / 500, nullptr);
-	sauronarmy_lbl = (Label*)App->gui->CreateLabel("SAURON ARMY", images[SAURONARMY]->pos.first + x / 40, images[SAURONARMY]->pos.second + images[SAURONARMY]->section.h + y / 500, nullptr);
-	map_lbl = (Label*)App->gui->CreateLabel("Map: Riverdale", images[BACKGROUND_SKIRMISH]->pos.first + x / 15, images[BACKGROUND_SKIRMISH]->pos.second + y / 500, nullptr);
-	new_game_lbl->SetSize(18);
-	load_game_lbl->SetSize(18);
-	map_lbl->SetSize(14);
-
+	freepeople_lbl = (Label*)App->gui->CreateLabel("FREE PEOPLE", images[FREEPEOPLE]->pos.first + x / 40, images[FREEPEOPLE]->pos.second + images[FREEPEOPLE]->section.h + y / 500, App->font->fonts[EIGHTEEN]);
+	sauronarmy_lbl = (Label*)App->gui->CreateLabel("SAURON ARMY", images[SAURONARMY]->pos.first + x / 40, images[SAURONARMY]->pos.second + images[SAURONARMY]->section.h + y / 500, App->font->fonts[EIGHTEEN]);
+	map_lbl = (Label*)App->gui->CreateLabel("Map: Riverdale", images[BACKGROUND_SKIRMISH]->pos.first + x / 15, images[BACKGROUND_SKIRMISH]->pos.second + y / 500, App->font->fonts[FOURTEEN]);
+	
 	skirmish_menu.in_window.push_back(images[BACKGROUND_SKIRMISH]);
 	skirmish_menu.in_window.push_back(images[FREEPEOPLE]);
 	skirmish_menu.in_window.push_back(images[SAURONARMY]);
@@ -108,21 +106,18 @@ bool MenuScene::Start()
 	skirmish_menu.WindowOff();
 	skirmish_menu.SetFocus(images[BACKGROUND_SKIRMISH]->pos.first, images[BACKGROUND_SKIRMISH]->pos.second, x, y);
 
-	settings_lbl = (Label*)App->gui->CreateLabel("Settings", images[SETTINGS]->pos.first + x / 100, images[SETTINGS]->pos.second, nullptr);
+	settings_lbl = (Label*)App->gui->CreateLabel("Settings", images[SETTINGS]->pos.first + x / 100, images[SETTINGS]->pos.second, App->font->fonts[TWENTYSIX]);
 
 	if (App->audio->active == true) {
-		mute_lbl = (Label*)App->gui->CreateLabel("MUTE", buttons[MUTE]->pos.first + x / 50, buttons[MUTE]->pos.second + y / 150, nullptr);
+		mute_lbl = (Label*)App->gui->CreateLabel("MUTE", buttons[MUTE]->pos.first + x / 50, buttons[MUTE]->pos.second + y / 150, App->font->fonts[FOURTEEN]);
 	}
-	else mute_lbl = (Label*)App->gui->CreateLabel("UNMUTE", buttons[MUTE]->pos.first + x / 50, buttons[MUTE]->pos.second + y / 150, nullptr);
+	else mute_lbl = (Label*)App->gui->CreateLabel("UNMUTE", buttons[MUTE]->pos.first + x / 50, buttons[MUTE]->pos.second + y / 150, App->font->fonts[FOURTEEN]);
 
 	if (!App->win->IsFullScreen()) {
-		window_lbl = (Label*)App->gui->CreateLabel("FULLSCREEN", buttons[SCREEN]->pos.first + x / 100, buttons[SCREEN]->pos.second + y / 150, nullptr);
+		window_lbl = (Label*)App->gui->CreateLabel("FULLSCREEN", buttons[SCREEN]->pos.first + x / 100, buttons[SCREEN]->pos.second + y / 150, App->font->fonts[FOURTEEN]);
 	}
-	else window_lbl = (Label*)App->gui->CreateLabel("WINDOWED", buttons[SCREEN]->pos.first + x / 100, buttons[SCREEN]->pos.second + y / 150, nullptr);
+	else window_lbl = (Label*)App->gui->CreateLabel("WINDOWED", buttons[SCREEN]->pos.first + x / 100, buttons[SCREEN]->pos.second + y / 150, App->font->fonts[FOURTEEN]);
 
-	settings_lbl->SetSize(24);
-	mute_lbl->SetSize(14);
-	window_lbl->SetSize(14);
 
 	ui_menu.in_window.push_back(images[SETTINGS]);
 	ui_menu.in_window.push_back(buttons[MUTE]);

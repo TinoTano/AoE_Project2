@@ -23,7 +23,7 @@ bool Fonts::Awake(pugi::xml_node& conf)
 	LOG("Init True Type Font library");
 	bool ret = true;
 
-	if(TTF_Init() == -1)
+	if (TTF_Init() == -1)
 	{
 		LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
 		ret = false;
@@ -38,13 +38,24 @@ bool Fonts::Awake(pugi::xml_node& conf)
 	return ret;
 }
 
+bool Fonts::Start()
+{
+	Load(nullptr, 16);
+	Load(nullptr, 20);
+	Load(nullptr, 14);
+	Load(nullptr, 18);
+	Load(nullptr, 26);
+	return true;
+}
+
 // Called before quitting
 bool Fonts::CleanUp()
 {
 	LOG("Freeing True Type fonts and library");
-	for (list<TTF_Font*>::iterator it = fonts.begin(); it != fonts.end(); it++)
+
+	for (vector<TTF_Font*>::iterator it = fonts.begin(); it != fonts.end(); ++it)
 	{
-		TTF_CloseFont(*it);
+		TTF_CloseFont((*it));
 	}
 
 	fonts.clear();
@@ -61,7 +72,7 @@ TTF_Font* const Fonts::Load(const char* path, int size)
 	else {
 		font = TTF_OpenFontRW(App->fs->Load(default_path), 1, size);
 	}
-	if(font == NULL)
+	if (font == NULL)
 	{
 		LOG("Could not load TTF font with path: %s. TTF_OpenFont: %s", path, TTF_GetError());
 	}
@@ -80,7 +91,7 @@ SDL_Texture* Fonts::Print(const char* text, SDL_Color color, _TTF_Font* font)
 	SDL_Texture* ret = NULL;
 	SDL_Surface* surface = TTF_RenderText_Blended((font) ? font : default, text, color);
 
-	if(surface == NULL)
+	if (surface == NULL)
 	{
 		LOG("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
 	}
@@ -98,7 +109,7 @@ bool Fonts::CalcSize(const char* text, int& width, int& height, _TTF_Font* font)
 {
 	bool ret = false;
 
-	if(TTF_SizeText((font) ? font : default, text, &width, &height) != 0)
+	if (TTF_SizeText((font) ? font : default, text, &width, &height) != 0)
 		LOG("Unable to calc size of text surface! SDL_ttf Error: %s\n", TTF_GetError());
 	else
 		ret = true;
@@ -111,10 +122,12 @@ bool Fonts::DeleteFont(_TTF_Font * font)
 	bool ret = true;
 	if (font != nullptr) {
 		if (font != default) {
-			for (list<_TTF_Font*>::iterator it = fonts.begin(); it != fonts.end(); ++it)
-			{
-				if (*it == font) {
-					TTF_CloseFont(*it);
+			for (vector<_TTF_Font*>::iterator it = fonts.begin(); it != fonts.end(); ++it) {
+
+				if ((*it) == font)
+				{
+					TTF_CloseFont(font);
+					fonts.erase(it);
 				}
 			}
 		}
@@ -129,3 +142,4 @@ bool Fonts::DeleteFont(_TTF_Font * font)
 	}
 	return ret;
 }
+
