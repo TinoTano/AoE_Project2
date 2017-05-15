@@ -686,7 +686,7 @@ void EntityManager::DeleteEntity(Entity* entity)
 
 								GatherOrder* gth_order = (GatherOrder*)(*it2);
 								if (gth_order->resource == (Resource*)entity)
-									gth_order->state = COMPLETED;
+									gth_order->resource = nullptr;
 							}
 
 							if ((*it2)->order_type == REACH) {
@@ -707,7 +707,7 @@ void EntityManager::DeleteEntity(Entity* entity)
 							if ((*it2)->order_type == GATHER) {
 								GatherOrder* gth_order = (GatherOrder*)(*it2);
 								if (gth_order->resource = (Resource*)entity)
-									gth_order->state = COMPLETED;
+									gth_order->resource = nullptr;
 							}
 
 							if ((*it2)->order_type == REACH) {

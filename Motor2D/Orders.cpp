@@ -338,7 +338,8 @@ void GatherOrder::Start(Entity* entity) {
 	villager = (Villager*)entity;
 	villager->state = GATHERING;
 
-	if (resource == nullptr || resource->collider == nullptr) {
+
+	if (resource == nullptr) {
 		if (villager->resource_carried != NONE)
 			resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition);
 		else {
@@ -346,11 +347,14 @@ void GatherOrder::Start(Entity* entity) {
 			return;
 		}
 	}
-
-	if (resource == nullptr || resource->collider == nullptr) {
-		state = COMPLETED;
-		return;
+	else {
+		if (resource->collider == nullptr) {
+			resource = nullptr;
+			state = NEEDS_START;
+			return;
+		}
 	}
+
 
 	if (resource != nullptr && villager->collider != nullptr && villager->resourcesWareHouse != nullptr && villager->resourcesWareHouse->collider != nullptr) {
 		villager->resource_carried = resource->type;
@@ -397,45 +401,40 @@ void GatherOrder::Start(Entity* entity) {
 }
 
 void GatherOrder::Execute() {
-	if (resource != nullptr) {
-		if (!CheckCompletion()) {
-			if (villager->currentAnim->Finished()) {
-				/*if (resource->type == WOOD && resource->isActive == true)
-				App->audio->PlayFx(App->sceneManager->level1_scene->soundWood);
 
-				else if (resource->type == STONE || resource->type == GOLD && resource->isActive == true)
-				App->audio->PlayFx(App->sceneManager->level1_scene->soundStone);
+	if (!CheckCompletion()) {
+		if (villager->currentAnim->Finished()) {
+			/*if (resource->type == WOOD && resource->isActive == true)
+			App->audio->PlayFx(App->sceneManager->level1_scene->soundWood);
 
-				else if (resource->type == FOOD && resource->isActive == true)
-				App->audio->PlayFx(App->sceneManager->level1_scene->soundFruit);*/
+			else if (resource->type == STONE || resource->type == GOLD && resource->isActive == true)
+			App->audio->PlayFx(App->sceneManager->level1_scene->soundStone);
 
-				villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
-				resource->Life -= MIN(resource->Life, villager->gathering_speed);
-				if (resource->Life <= 0) {
-					state = NEEDS_START;
-					villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
-					resource->Destroy();
-				}
+			else if (resource->type == FOOD && resource->isActive == true)
+			App->audio->PlayFx(App->sceneManager->level1_scene->soundFruit);*/
+
+			villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
+			resource->Life -= MIN(resource->Life, villager->gathering_speed);
+			if (resource->Life <= 0) {
+				state = NEEDS_START;
+				villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
+				resource->Destroy();
 			}
 		}
-		else {
-			state = NEEDS_START;
-			villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
-		}
 	}
+	else {
+		state = NEEDS_START;
+		villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
+	}
+
+	
 }
 
 bool GatherOrder::CheckCompletion() {
 
 	if (resource != nullptr) {
-		if (villager->curr_capacity >= villager->max_capacity || resource->Life <= 0) {
-
-			if (resource->Life <= 0)
-				resource->Destroy();
-
-			return true;
-		}
-		return false;
+		if (villager->curr_capacity < villager->max_capacity && resource->Life > 0) 
+			return false;
 	}
 	return true;
 }
@@ -532,12 +531,13 @@ void SquadFollowPathOrder::Start(Entity* entity)
 	Unit* unit = (Unit*)entity;
 	squad = unit->squad;
 
-	iPoint targetWorld = App->map->MapToWorld(target.x, target.y);
+	iPoint targetMap = App->map->WorldToMap(target.x, target.y);
+	iPoint origin = App->map->WorldToMap(squad->commander->entityPosition.x, squad->commander->entityPosition.y);
 
 	list<iPoint>* ret = new list<iPoint>;
 
-	if (!App->pathfinding->IsWalkable(target) || App->collision->IsOccupied(targetWorld))
-		target = App->pathfinding->FindNearestAvailable(target, 5);
+	if (!App->pathfinding->IsWalkable(targetMap) || App->collision->IsOccupied(target))
+		target = App->pathfinding->FindNearestAvailable(targetMap, 5);
 
 	if (target.x == -1 || target == squad->commander->entityPosition) {
 		state = COMPLETED;
@@ -545,9 +545,9 @@ void SquadFollowPathOrder::Start(Entity* entity)
 	}
 
 	Path pth;
-	pth.open.pathNodeList.push_back(PathNode(0, 0, squad->commander->entityPosition, NULL));
-	pth.origin = squad->commander->entityPosition;
-	pth.destination = target;
+	pth.open.pathNodeList.push_back(PathNode(0, 0, origin, NULL));
+	pth.origin = origin;
+	pth.destination = targetMap;
 
 	App->pathfinding->CalculatePath(&pth);
 

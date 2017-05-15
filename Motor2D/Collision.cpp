@@ -94,6 +94,7 @@ bool Collision::PreUpdate()
 			quadTree->Remove(*it);
 			colliders.erase(it);
 			RELEASE(*it);
+			(*it) = nullptr;
 
 			for (list<Collision_data*>::iterator it2 = collision_list.begin(); it2 != collision_list.end(); it2++) {
 				if ((*it2)->c1 != nullptr || (*it2)->c2 != nullptr) {

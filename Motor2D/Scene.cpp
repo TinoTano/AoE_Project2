@@ -220,6 +220,7 @@ bool Scene::Start()
 	App->ai->LoadExplorationMap();
 	App->collision->quadTree;
 
+
 	// ================================================================================================================
 
 	timer.Start();
@@ -230,7 +231,12 @@ bool Scene::Start()
 
 	game_finished = false;
 
+	App->entityManager->player->resources.food += 100;
+	App->entityManager->player->resources.stone += 100;
+	App->entityManager->player->resources.gold += 100;
+	App->entityManager->player->resources.wood += 100;
 	UpdateResources();
+
 	villagers_curr = villagers_total = 1;
 	UpdateVillagers(villagers_curr, villagers_total);
 
