@@ -15,6 +15,7 @@
 #include "GameFaction.h"
 #include "Gui.h"
 #include <sstream>
+#include "StaticQuadtree.h"
 #include "FileSystem.h"
 #include "SceneManager.h"
 #include "QuadTree.h"
@@ -44,6 +45,7 @@ bool Scene::Awake(pugi::xml_node & config)
 bool Scene::Start()
 {
 	active = true;
+	App->collision->quadTree->ClearTree();
 
 	// Loading sounds ================================================
 

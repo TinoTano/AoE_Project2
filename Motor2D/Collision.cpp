@@ -15,7 +15,7 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_UNIT][COLLIDER_BUILDING] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_RESOURCE] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_RANGE] = false;
-	matrix[COLLIDER_UNIT][COLLIDER_LOS] = false;
+	matrix[COLLIDER_UNIT][COLLIDER_LOS] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_CREATING_BUILDING] = true;
 	matrix[COLLIDER_UNIT][COLLIDER_AOE_SKILL] = true;
 
@@ -43,7 +43,7 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_RANGE][COLLIDER_CREATING_BUILDING] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_AOE_SKILL] = false;
 
-	matrix[COLLIDER_LOS][COLLIDER_UNIT] = false;
+	matrix[COLLIDER_LOS][COLLIDER_UNIT] = true;
 	matrix[COLLIDER_LOS][COLLIDER_BUILDING] = false;
 	matrix[COLLIDER_LOS][COLLIDER_RESOURCE] = false;
 	matrix[COLLIDER_LOS][COLLIDER_RANGE] = false;
@@ -110,7 +110,7 @@ bool Collision::PreUpdate()
 	Collider *c2 =	nullptr;
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
-		if ((*col1) != nullptr && !(*col1)->isDeleting() && ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING)) {// || (*col1)->type == COLLIDER_RANGE) {
+		if ((*col1) != nullptr && ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING)) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
@@ -203,8 +203,8 @@ void Collision::DeleteCollider(Collider * collider)
 
 bool Collider::CheckCollision(Collider* c2) const
 {
-	if (c2 == nullptr || c2->isDeleting())return false;
-	if (this == nullptr || this->isDeleting())return false;
+	if (c2 == nullptr)
+		return false;
 
 	int radius = r + c2->r + 3;
 	int deltaX = pos.x - c2->pos.x;
@@ -246,11 +246,6 @@ Resource* Collider::GetResource() {
 		resource = (Resource*)entity;
 
 	return resource;
-}
-
-bool Collider::isDeleting() const
-{
-	return to_delete;
 }
 
 

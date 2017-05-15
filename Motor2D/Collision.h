@@ -64,7 +64,6 @@ struct Collider
 	Unit* GetUnit();
 	Building* GetBuilding();
 	Resource* GetResource();
-	bool isDeleting() const;
 };
 
 struct Collision_data {
