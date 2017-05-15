@@ -302,8 +302,6 @@ bool EntityManager::CleanUp()
 	mouseY = 0;
 	nextID = 0;
 	selectedListType = COLLIDER_NONE;
-	player = nullptr;
-	AI_faction = nullptr;
 	placingBuilding = false;
 	dt = 0;
 	buildingToCreate = nullptr;

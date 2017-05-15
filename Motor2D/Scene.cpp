@@ -21,7 +21,6 @@
 #include "Building.h"
 #include "FogOfWar.h"
 #include "Minimap.h"
-#include "Fonts.h"
 
 Scene::Scene() : SceneElement("scene")
 {
@@ -145,11 +144,16 @@ bool Scene::Start()
 		}
 	}
 
-	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", buttons[BACKTOMENU]->pos.first + x / 30, buttons[BACKTOMENU]->pos.second , App->font->fonts[SIXTEEN]);
-	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", buttons[QUITGAME]->pos.first + x / 20, buttons[QUITGAME]->pos.second, App->font->fonts[SIXTEEN]);
-	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", buttons[SAVEGAME]->pos.first + x / 20, buttons[SAVEGAME]->pos.second, App->font->fonts[SIXTEEN]);
-	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", buttons[CANCEL]->pos.first + x / 15, buttons[CANCEL]->pos.second, App->font->fonts[SIXTEEN]);
-	Label* load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 35, buttons[LOADGAME]->pos.second, App->font->fonts[SIXTEEN]);
+	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", buttons[BACKTOMENU]->pos.first + x / 30, buttons[BACKTOMENU]->pos.second, nullptr);
+	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", buttons[QUITGAME]->pos.first + x / 20, buttons[QUITGAME]->pos.second, nullptr);
+	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", buttons[SAVEGAME]->pos.first + x / 20, buttons[SAVEGAME]->pos.second, nullptr);
+	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", buttons[CANCEL]->pos.first + x / 15, buttons[CANCEL]->pos.second, nullptr);
+	Label* load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 35, buttons[LOADGAME]->pos.second, nullptr);
+	back_to_menu_lbl->SetSize(16);
+	quit_game_lbl->SetSize(16);
+	save_game_lbl->SetSize(16);
+	cancel_lbl->SetSize(16);
+	load_game_lbl->SetSize(16);
 
 	ui_menu.in_window.push_back(images[WINDOW]);
 	ui_menu.in_window.push_back(buttons[BACKTOMENU]);
@@ -221,8 +225,9 @@ bool Scene::Start()
 
 	timer.Start();
 
-	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, App->font->fonts[TWENTYSIX]);
+	Timer_lbl = (Label*)App->gui->CreateLabel("00:00", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, nullptr);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
+	Timer_lbl->SetSize(26);
 
 	game_finished = false;
 
