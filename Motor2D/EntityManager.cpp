@@ -61,18 +61,20 @@ bool EntityManager::Update(float arg_dt)
 	mouseY -= App->render->camera.y;
 
 	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
-		(*it)->Update(dt);
-		if (App->render->CullingCam((*it)->entityPosition))
-		{
-			(*it)->Draw();
-		/*	if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
-			else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();
-			else if ((*it)->faction == FREE_MEN) (*it)->Draw();*/
+		if ((*it) != nullptr) {
+			(*it)->Update(dt);
+			if (App->render->CullingCam((*it)->entityPosition))
+			{
+				(*it)->Draw();
+				/*	if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
+				else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();
+				else if ((*it)->faction == FREE_MEN) (*it)->Draw();*/
+			}
 		}
 	}
 
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-		if ((*it)->state == DESTROYED)
+		if ((*it) != nullptr && (*it)->state == DESTROYED)
 			selectedEntityList.erase(it);
 	}
 
@@ -86,10 +88,12 @@ bool EntityManager::Update(float arg_dt)
 
 		for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 			Unit* unit = (Unit*)(*it);
-			for (list<Order*>::iterator it2 = unit->order_list.begin(); it2 != unit->order_list.end(); it2++) {
-				RELEASE(*it2);
+			if (unit != nullptr && unit->faction == FREE_MEN) {
+				for (list<Order*>::iterator it2 = unit->order_list.begin(); it2 != unit->order_list.end(); it2++) {
+					RELEASE(*it2);
 
-				unit->order_list.clear();
+					unit->order_list.clear();
+				}
 			}
 		}
 
@@ -104,8 +108,10 @@ bool EntityManager::Update(float arg_dt)
 			if (clicked_on->entity->state != DESTROYED) {
 				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 					unit = (Unit*)(*it);
-					unit->order_list.push_front(new UnitAttackOrder(clicked_on->entity));
-					unit->state = ATTACKING;
+					if (unit != nullptr && unit->faction == FREE_MEN) {
+						unit->order_list.push_front(new UnitAttackOrder(clicked_on->entity));
+						unit->state = ATTACKING;
+					}
 				}
 			}
 			break;
@@ -114,11 +120,12 @@ bool EntityManager::Update(float arg_dt)
 
 			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 				unit = (Unit*)(*it);
-
-				if (unit->IsVillager)
-					unit->order_list.push_front(new GatherOrder((Resource*)clicked_on->entity));
-				else
-					aux_list.push_back((*it));
+				if (unit != nullptr && unit->faction == FREE_MEN) {
+					if (unit->IsVillager)
+						unit->order_list.push_front(new GatherOrder((Resource*)clicked_on->entity));
+					else
+						aux_list.push_back((*it));
+				}
 			}
 			break;
 
@@ -128,17 +135,20 @@ bool EntityManager::Update(float arg_dt)
 
 				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 					unit = (Unit*)(*it);
-
-					if (unit->IsVillager)
-						unit->order_list.push_front(new BuildOrder((Building*)clicked_on->entity));
+					if (unit != nullptr && unit->faction == FREE_MEN) {
+						if (unit->IsVillager)
+							unit->order_list.push_front(new BuildOrder((Building*)clicked_on->entity));
+					}
 				}
 			}
 
 		default:
 
-			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++)
-				aux_list.push_back((*it));
-
+			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+				if ((*it) != nullptr && (*it)->faction == FREE_MEN) {
+					aux_list.push_back((*it));
+				}
+			}
 			break;
 		}
 

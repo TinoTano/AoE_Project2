@@ -203,7 +203,7 @@ void ReachOrder::Execute() {
 
 bool ReachOrder::CheckCompletion()
 {
-	if (entity->collider != nullptr && unit->collider != nullptr) {
+	if (entity != nullptr && entity->collider != nullptr && unit != nullptr && unit->collider != nullptr) {
 		return (entity->collider->CheckCollision(unit->collider));
 	}
 }
@@ -211,7 +211,7 @@ bool ReachOrder::CheckCompletion()
 
 void UnitAttackOrder::Start(Entity* entity)
 {
-	if (entity->collider == nullptr && target->collider == nullptr) return;
+	if (entity == nullptr && entity->collider == nullptr && target == nullptr && target->collider == nullptr) return;
 	if (unit = entity->collider->GetUnit()) {
 		unit->state = ATTACKING;
 		App->entityManager->RallyCall(unit);
@@ -238,7 +238,7 @@ void UnitAttackOrder::Start(Entity* entity)
 void UnitAttackOrder::Execute() {
 
 	if (!CheckCompletion()) {
-		if (unit->collider == nullptr && target->collider == nullptr) return;
+		if (unit == nullptr && unit->collider == nullptr && target == nullptr && target->collider == nullptr) return;
 		if (!unit->collider->CheckCollision(target->collider)) {
 			unit->order_list.push_front(new ReachOrder(target));
 			state = NEEDS_START;
@@ -275,7 +275,7 @@ bool UnitAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-			if (unit->collider != nullptr && target->collider != nullptr) {
+			if (unit != nullptr && unit->collider != nullptr && target->collider != nullptr) {
 				if (unit->collider->CheckCollision(target->collider));
 				return false;
 			}
@@ -322,7 +322,7 @@ bool BuildingAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
 		if (target->Life > 0) {
-			if (building->collider != nullptr && target->collider != nullptr) {
+			if (building != nullptr && building->collider != nullptr && target->collider != nullptr) {
 				if (building->collider->CheckCollision(target->collider))
 					return false;
 			}
@@ -451,12 +451,14 @@ void BuildOrder::Start(Entity* entity) {
 	villager = (Villager*)entity;
 	villager->state = CONSTRUCTING;
 
-	if (!villager->collider->CheckCollision(building->collider)) {
-		villager->order_list.push_front(new ReachOrder(building));
-		state = NEEDS_START;
+	if (villager != nullptr && villager->collider != nullptr && building != nullptr && building->collider != nullptr) {
+		if (!villager->collider->CheckCollision(building->collider)) {
+			villager->order_list.push_front(new ReachOrder(building));
+			state = NEEDS_START;
+		}
+		else
+			villager->SetTexture(CONSTRUCTING);
 	}
-	else
-		villager->SetTexture(CONSTRUCTING);
 }
 
 void BuildOrder::Execute()

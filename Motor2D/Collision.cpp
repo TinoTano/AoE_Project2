@@ -97,7 +97,7 @@ bool Collision::PreUpdate()
 			(*it) = nullptr;
 
 			for (list<Collision_data*>::iterator it2 = collision_list.begin(); it2 != collision_list.end(); it2++) {
-				if ((*it2)->c1 != nullptr || (*it2)->c2 != nullptr) {
+				if ((*it2)->c1 != nullptr && (*it2)->c2 != nullptr) {
 					if ((*it) == (*it2)->c1 || (*it) == (*it2)->c2)
 						(*it2)->state = SOLVED;
 				}
@@ -133,22 +133,23 @@ bool Collision::PreUpdate()
 	}
 
 	for (list<Collision_data*>::iterator collisions = collision_list.begin(); collisions != collision_list.end(); collisions++) {
-	
-		if ((*collisions)->state == UNSOLVED) {
-			(*collisions)->c1->callback->OnCollision(*(*collisions));
-			continue;
-		}
+		if ((*collisions) != nullptr && (*collisions)->c1 != nullptr && (*collisions)->c2 != nullptr) {
+			if ((*collisions)->state == UNSOLVED) {
+				(*collisions)->c1->callback->OnCollision(*(*collisions));
+				continue;
+			}
 
-		if ((*collisions)->state == SOLVING) {
-			if ((*collisions)->c1->CheckCollision((*collisions)->c2) == false)
-				(*collisions)->state = SOLVED;
-		}
+			if ((*collisions)->state == SOLVING) {
+				if ((*collisions)->c1->CheckCollision((*collisions)->c2) == false)
+					(*collisions)->state = SOLVED;
+			}
 
-		if ((*collisions)->state == SOLVED) {
-			(*collisions)->c1->colliding = false;
-			(*collisions)->c2->colliding = false;
-			RELEASE(*collisions);
-			collisions = collision_list.erase(collisions);
+			if ((*collisions)->state == SOLVED) {
+				(*collisions)->c1->colliding = false;
+				(*collisions)->c2->colliding = false;
+				RELEASE(*collisions);
+				collisions = collision_list.erase(collisions);
+			}
 		}
 	}
 
@@ -267,7 +268,7 @@ void Collision::DebugDraw()
 bool Collision::FindCollision(Collider* col1, Collider* col2) {
 
 	for (list<Collision_data*>::iterator it = collision_list.begin(); it != collision_list.end(); it++) {
-		if ((*it)->c1 != nullptr && (*it)->c2 != nullptr) {
+		if ((*it) != nullptr && (*it)->c1 != nullptr && (*it)->c2 != nullptr) {
 			if (((*it)->c1 == col1 && (*it)->c2 == col2) || ((*it)->c2 == col1 && (*it)->c1 == col2))
 				return true;
 		}
