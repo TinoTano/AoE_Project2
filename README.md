@@ -2,53 +2,36 @@
 
 ##Version changelist
 
-Version: 0.45
+Version: 0.9 (Alpha)
 
 ##New features:
+- Game polish & Bug fixing
 
-- Player base and enemy base with basic buildings/units to recreate real game level.
-- Basic enemy IA (resources gathering and units creation).
-- Display units/buildings images and stats in HUD.
-- Game win/lose condition (Base destroyed).
-- Different scenes with transitions (menu -> level -> level ended -> menu).
-
-##The game:
-
-Age of the Ring is a PC strategy game featuring an Age of Empires 2 based gameplay inside the Lord of the Rings environment, with lots of new content to provide players an amazing
-experience like never before. Feel the fierce battles of the trilogy between the Free people and the Sauron army during the game campaign and play with the heroes of the middle
-earth.
 
 ##Controls:
 
 - Left click on unit to select.
-- Double left click on unit to select all same type units.
 - Left click + drag to create an area to selec all units inside this area. 
 - Right click to move selected unit to destination. The destination can be a resource, enemy or a building.
-- SPACE BAR activates the hero skill.
+- All the actions are accesed by the game HUD. Villagers have a button to build and heroes have a button to activate the hero skill.
+
 
 ##How to play?
 
-- To win you have to defeat the enemy, destroying the Sauron Tower.
-- If your Town Center is destroyed you will lose.
+To win you have to defeat the enemy, destroying the Sauron Tower. If your Town Center is destroyed you will lose. Orcs are like rats, they are a plague! Every minute more and more units will appear by minute, so be fast 
+or they will kill you.
 
-- Around the minute 3' orcs will arrive to your base. Be ready to defend it!
-- Orcs are like rats, they are a plague! Every minute more and more units will appear by minute, so be fast or they will kill you.
+In order to defeat the orcs you will have to build your own army and battle against them. In order to do this, you have several actions you can do:
 
-- Villagers are the only unit that are able to gather resources. Select a villager and select a tree after that to start recollecting wood.
-- Archers, longblades and the cavalrier are war units. If you select an enemy unit or an enemy building they will go and attack them.
-- The cavalrier is a HERO UNIT. Heroes have special skills. To activate his skill, select him and press SPACE BAR. He will become stronger 
-  for a short period of time. Be careful, this skill has cooldown.
+- With villagers you can gather resources. There are 4 resources in the world (gold, stone, wood and food). Each resource is for something different. Remember you can create more villagers in the town center.
+- Create your city. Each villager has the ability to create buildings. Each building need some resources to be created, and villagers will need some time to build them. In this buildings you will be able to create
+  new units and discover new technologies.
+- You can create units to build your army. Every unit is different in some way. In order to build an unit you have to have enough resources to train it and the the corresponding building where this unit can be trained.
+- Discovering technologies will give you the possibility of create new powerful units. These technologies cost resources aswell, and they can be discovered in the several buildings you can create in the game.
+- Heroes are the most powerful units in the game. They have very high stats plus they have powerful and personal skills to destroy the enemies. Use the skill with the button placed on the left-bottom corner.
+- During the game you will have quests. These quests will give you a reward that will give you some advantadge. The quests are displayed in the screen.
+	
 
-- Wood allows you to build units. The units are created in the Town Center. To create a unit select the Town Center, and then click in one of 
-  the buttons:
-    *(50 wood) Villager
-	
-	War Units:
-    *(70 wood) Elven Archer
-	*(70 wood) Elven Longblade
-	*(350 wood) Elven Cavalrier
-	
-	
 ##The team
 
 Marc: https://github.com/marcdp1997
@@ -57,6 +40,7 @@ Rodrigo: https://github.com/rodrigodpl
 Josep: https://github.com/JosepUPC
 Pau: https://github.com/Paui8
 David: https://github.com/dafral
+
 
 ##Contact us & give us some feedback!
 
