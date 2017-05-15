@@ -125,7 +125,7 @@ bool AI::Update(float dt) {
 			ManageAttack();
 			ManageUnitRequests();
 
-			if (AI_timer.ReadSec() > (90 + (10 * expansion_level))) {
+			if (AI_timer.ReadSec() > (20 + (20 * expansion_level))) {
 				if (expansion_level < 10)
 					IncreaseExpansionLevel();
 				else
@@ -161,9 +161,8 @@ void AI::ManageAttack() {
 
 	for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
 
-		if ((*it)->state == IDLE && (*it)->IsRestored()) {
-
-			if (targets.empty()) {
+		if ((*it)->squad_orderlist.empty() && (*it)->IsRestored()) {
+			if (!targets.empty()) {
 				for (list<Squad*>::iterator it = offensive_squads.begin(); it != offensive_squads.end(); it++) {
 					iPoint target = targets.front();
 					(*it)->squad_orderlist.push_back(new SquadFollowPathOrder(target));

@@ -89,7 +89,7 @@ public:
 	vector<int> villager_expansion_table;
 
 	//army management
-	int squad_size = 7;
+	int squad_size = 5;
 	list<Squad*> defensive_squads;
 	list<Squad*> offensive_squads;
 	list<iPoint> targets;

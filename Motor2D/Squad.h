@@ -11,7 +11,6 @@ public:
 	list<Unit*> units;
 	Unit* commander = nullptr;
 	unitType type = ORC_SOLDIER;
-	EntityState state = IDLE;
 	list<Order*> squad_orderlist;
 
 public:

@@ -22,7 +22,6 @@ void Squad::Start() {
 	int random = rand() % available_types.size();
 
 	type = available_types.at(random);
-	state = IDLE;
 	commander = nullptr;
 }
 

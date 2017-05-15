@@ -338,13 +338,18 @@ void GatherOrder::Start(Entity* entity) {
 	villager = (Villager*)entity;
 	villager->state = GATHERING;
 
-	if (resource == nullptr) {
+	if (resource == nullptr || resource->collider == nullptr) {
 		if (villager->resource_carried != NONE)
 			resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition);
 		else {
 			state = COMPLETED;
 			return;
 		}
+	}
+
+	if (resource == nullptr || resource->collider == nullptr) {
+		state = COMPLETED;
+		return;
 	}
 
 	if (resource != nullptr && villager->collider != nullptr && villager->resourcesWareHouse != nullptr && villager->resourcesWareHouse->collider != nullptr) {
@@ -406,8 +411,11 @@ void GatherOrder::Execute() {
 
 				villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
 				resource->Life -= MIN(resource->Life, villager->gathering_speed);
-				if (resource->Life <= 0)
+				if (resource->Life <= 0) {
+					state = NEEDS_START;
+					villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
 					resource->Destroy();
+				}
 			}
 		}
 		else {
@@ -502,8 +510,10 @@ void CreateUnitOrder::Execute()
 		if (type == VILLAGER)
 			App->ai->requested_villagers--;
 
-		if (belongs_to)
-			belongs_to->units.push_back(unit);
+		if (belongs_to) {
+			belongs_to->Assign(unit);
+			unit->squad = belongs_to;
+		}
 
 		state = COMPLETED;
 	}
