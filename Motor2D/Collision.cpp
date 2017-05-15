@@ -91,17 +91,18 @@ bool Collision::PreUpdate()
 	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
 		if ((*it) != nullptr && (*it)->to_delete == true)
 		{
-			quadTree->Remove(*it);
-			colliders.erase(it);
-			RELEASE(*it);
-			(*it) = nullptr;
-
 			for (list<Collision_data*>::iterator it2 = collision_list.begin(); it2 != collision_list.end(); it2++) {
 				if ((*it2)->c1 != nullptr && (*it2)->c2 != nullptr) {
 					if ((*it) == (*it2)->c1 || (*it) == (*it2)->c2)
 						(*it2)->state = SOLVED;
 				}
 			}
+
+			quadTree->Remove(*it);
+			colliders.erase(it);
+			RELEASE(*it);
+			(*it) = nullptr;
+
 		}
 	}
 
@@ -109,8 +110,7 @@ bool Collision::PreUpdate()
 	Collider *c2 =	nullptr;
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
-
-		if ((*col1) != nullptr && ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING)) {// || (*col1)->type == COLLIDER_RANGE) {
+		if ((*col1) != nullptr && !(*col1)->isDeleting() && ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_CREATING_BUILDING)) {// || (*col1)->type == COLLIDER_RANGE) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
@@ -203,8 +203,8 @@ void Collision::DeleteCollider(Collider * collider)
 
 bool Collider::CheckCollision(Collider* c2) const
 {
-	if (c2 == nullptr)return false;
-	if (this == nullptr)return false;
+	if (c2 == nullptr || c2->isDeleting())return false;
+	if (this == nullptr || this->isDeleting())return false;
 
 	int radius = r + c2->r + 3;
 	int deltaX = pos.x - c2->pos.x;
@@ -246,6 +246,11 @@ Resource* Collider::GetResource() {
 		resource = (Resource*)entity;
 
 	return resource;
+}
+
+bool Collider::isDeleting() const
+{
+	return to_delete;
 }
 
 
