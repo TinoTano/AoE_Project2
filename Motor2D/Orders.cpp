@@ -416,7 +416,12 @@ void GatherOrder::Execute() {
 			villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
 			resource->Life -= MIN(resource->Life, villager->gathering_speed);
 			if (resource->Life <= 0) {
-				state = NEEDS_START;
+
+				if (villager->faction == App->entityManager->player->faction)
+					state = NEEDS_START;
+				else
+					state = COMPLETED;
+
 				villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
 				resource->Destroy();
 			}
