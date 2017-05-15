@@ -655,11 +655,11 @@ void EntityManager::DeleteEntity(Entity* entity)
 				}
 
 				App->collision->DeleteCollider(unit->collider);
-				unit->collider = nullptr;
+				//unit->collider = nullptr;
 				App->collision->DeleteCollider(unit->range);
-				unit->range = nullptr;
+				//unit->range = nullptr;
 				App->collision->DeleteCollider(unit->los);
-				unit->los = nullptr;
+				//unit->los = nullptr;
 
 
 
@@ -675,11 +675,11 @@ void EntityManager::DeleteEntity(Entity* entity)
 
 				building = (Building*)entity;
 				App->collision->DeleteCollider(building->collider);
-				building->collider = nullptr;
+				//building->collider = nullptr;
 				App->collision->DeleteCollider(building->range);
-				building->range = nullptr;
+				//building->range = nullptr;
 				App->collision->DeleteCollider(building->los);
-				building->los = nullptr;
+				//building->los = nullptr;
 
 				break;
 
@@ -729,7 +729,7 @@ void EntityManager::DeleteEntity(Entity* entity)
 				
 
 				App->collision->DeleteCollider(entity->collider);
-				entity->collider = nullptr;
+				//entity->collider = nullptr;
 
 				break;
 			}
