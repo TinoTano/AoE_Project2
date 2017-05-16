@@ -9,7 +9,7 @@
 #include "Module.h"
 #include "Unit.h"
 
-#define FOW_RADIUM 4
+#define FOW_RADIUM 6
 
 enum fow_id
 {
