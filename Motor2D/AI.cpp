@@ -223,6 +223,7 @@ void AI::ManageBuildRequests() {
 			Building* building = App->entityManager->CreateBuilding(placing_point.x, placing_point.y, (*it));
 			building->Life = 1;
 			building->entityTexture = building->constructingPhase1;
+			building->GetBuildingBoundaries();
 			building->state = BEING_BUILT;
 
 			for (int i = 0; i < building->MaxLife; i += 500)
