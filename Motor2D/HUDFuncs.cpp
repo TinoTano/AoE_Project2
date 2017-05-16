@@ -143,8 +143,8 @@ void HUD::HUDBuildingMenu()
 
 	if (name->str == "TOWN CENTER") {
 
-		blit_sections.push_back({ 210, 24, 39, 40 });
-		blit_sections.push_back({ 249, 24, 39, 40 });
+		blit_sections.push_back({ 209, 24, 39, 40 });
+		blit_sections.push_back({ 247, 24, 39, 40 });
 
 		create_hero_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
 		all_bt.push_back(create_hero_bt);

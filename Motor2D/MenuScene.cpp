@@ -218,10 +218,16 @@ bool MenuScene::PostUpdate()
 	}
 	else if (buttons[SKIRMISH]->current == CLICKUP)
 	{
-		if (!skirmish_menu.IsEnabled()) {
+		
+		/*if (!skirmish_menu.IsEnabled()) {
 			skirmish_menu.WindowOn();
 		}
-		else skirmish_menu.WindowOff();
+		else skirmish_menu.WindowOff();*/
+
+		/*App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);*/
+		App->cutscene->Start();
+		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
+
 		team = -1;
 	}
 	else if (buttons[2]->current == CLICKUP)
@@ -230,9 +236,6 @@ bool MenuScene::PostUpdate()
 	}
 	else if (buttons[NEWGAME]->current == CLICKUP)
 	{
-		/*App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);*/
-		App->cutscene->Start();
-		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
 	}
 	if (final_team != team)
 	{

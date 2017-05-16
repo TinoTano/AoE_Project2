@@ -62,7 +62,6 @@ bool Gui::Start()
 	hud->Start();
 	App->gui->cursor = (Cursor*)CreateCursor("gui/cursor.png", sprites_cursor);
 
-
 	LoadHUDData();
 
 	for (uint i = 0; i < info.size(); ++i)
@@ -87,14 +86,6 @@ bool Gui::Update(float dt)
 // Called after all Updates
 bool Gui::PostUpdate()
 {
-	//if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
-	//	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
-	//	{
-	//		if (!it._Ptr->_Myval->debug) it._Ptr->_Myval->debug = true;
-	//		else it._Ptr->_Myval->debug = false;
-	//	}
-	//}
-
 	if (Elements.empty() != true)
 	{
 		for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
@@ -104,7 +95,6 @@ bool Gui::PostUpdate()
 			else if (it._Ptr->_Myval->type == BUTTON && it._Ptr->_Myval->current != FREE) it._Ptr->_Myval->current = FREE;
 		}
 	}
-
 	if (App->sceneManager->current_scene->name == "scene")
 	{
 		hud->Update();
@@ -165,25 +155,25 @@ void Gui::ScreenMoves(pair<int, int> movement) {
 
 void Gui::SetPriority()
 {
-	list<UIElement*> Priority1;
-	list<UIElement*> Priority0;
-	int i = 0;
-	for (list<UIElement*>::iterator it = Elements.begin(); i < Elements.size(); ++it)
-	{
-		switch (it._Ptr->_Myval->priority) {
-		case 0:
-			Priority0.push_back(it._Ptr->_Myval);
-			break;
-		case 1:
-			Priority1.push_back(it._Ptr->_Myval);
-			break;
-		}
-		++i;
-	}
+	//list<UIElement*> Priority1;
+	//list<UIElement*> Priority0;
+	//int i = 0;
+	///*for (list<UIElement*>::iterator it = Elements.begin(); i < Elements.size(); ++it)
+	//{
+	//	switch (it._Ptr->_Myval->priority) {
+	//	case 0:
+	//		Priority0.push_back(it._Ptr->_Myval);
+	//		break;
+	//	case 1:
+	//		Priority1.push_back(it._Ptr->_Myval);
+	//		break;
+	//	}
+	//	++i;
+	//}*/
 
-	Priority1.merge(Priority0);
-	Priority1.unique();
-	Elements = Priority1;
+	//Priority1.merge(Priority0);
+	//Priority1.unique();
+	//Elements = Priority1;
 }
 
 void Gui::Focus(SDL_Rect rect)
