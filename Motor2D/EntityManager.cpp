@@ -65,7 +65,7 @@ bool EntityManager::Update(float arg_dt)
 			(*it)->Update(dt);
 			if (App->render->CullingCam((*it)->entityPosition))
 			{
-				/*(*it)->Draw();*/
+				(*it)->Draw();
 				if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
 				else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();
 				else if ((*it)->faction == FREE_MEN) (*it)->Draw();
@@ -847,9 +847,9 @@ Resource* EntityManager::FindNearestResource(resourceType type, iPoint pos) {
 
 	Resource* ret = aux_resource_list.front();
 
-	if (type != NONE && type != MOUNT_1 && type != MOUNT_2 && type != MOUNT_3 && type != MOUNT_4 && type != MOUNT_5 && type != MOUNT_6) {
+	if (type == WOOD || type == GOLD || type == FOOD || type == STONE) {
 		for (list<Resource*>::iterator it = aux_resource_list.begin(); it != aux_resource_list.end(); it++) {
-			if ((*it)->type == type) {
+			if ((*it) != nullptr && (*it)->state != DESTROYED && (*it)->type == type && (*it)->collider != nullptr && (*it)->collider->to_delete == false) {
 				if (pos.DistanceTo((*it)->entityPosition) < pos.DistanceTo(ret->entityPosition))
 					ret = (*it);
 			}

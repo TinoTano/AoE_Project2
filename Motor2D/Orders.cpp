@@ -342,61 +342,67 @@ void GatherOrder::Start(Entity* entity) {
 	if (resource == nullptr) {
 		if (villager->resource_carried != NONE)
 			resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition);
-			
+
 		else {
 			state = COMPLETED;
 			return;
 		}
 	}
-	
+
 	if (resource->collider == nullptr) {
 		resource = nullptr;
 		state = NEEDS_START;
 		return;
 	}
 
+	if (resource->type == WOOD || resource->type == GOLD || resource->type == FOOD || resource->type == STONE) {
+		if (resource != nullptr && villager->collider != nullptr && villager->resourcesWareHouse != nullptr && villager->resourcesWareHouse->collider != nullptr) {
+			villager->resource_carried = resource->type;
 
-	if (resource != nullptr && villager->collider != nullptr && villager->resourcesWareHouse != nullptr && villager->resourcesWareHouse->collider != nullptr) {
-		villager->resource_carried = resource->type;
-
-		if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
+			if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
 
 
-			StoredResources* resources = nullptr;
-			if (App->entityManager->player != nullptr) {
-				if (villager->faction == App->entityManager->player->faction)
-					resources = &App->entityManager->player->resources;
-				else
-					resources = &App->entityManager->AI_faction->resources;
+				StoredResources* resources = nullptr;
+				if (App->entityManager->player != nullptr) {
+					if (villager->faction == App->entityManager->player->faction)
+						resources = &App->entityManager->player->resources;
+					else
+						resources = &App->entityManager->AI_faction->resources;
+				}
+
+				switch (villager->resource_carried) {
+				case WOOD:
+					resources->wood += villager->curr_capacity;
+					break;
+				case GOLD:
+					resources->gold += villager->curr_capacity;
+					break;
+				case FOOD:
+					resources->food += villager->curr_capacity;
+					break;
+				case STONE:
+					resources->stone += villager->curr_capacity;
+					break;
+				}
+
+				App->sceneManager->level1_scene->UpdateResources();
+				villager->curr_capacity = 0;
 			}
-
-			switch (villager->resource_carried) {
-			case WOOD:
-				resources->wood += villager->curr_capacity;
-				break;
-			case GOLD:
-				resources->gold += villager->curr_capacity;
-				break;
-			case FOOD:
-				resources->food += villager->curr_capacity;
-				break;
-			case STONE:
-				resources->stone += villager->curr_capacity;
-				break;
+			if (resource->type == WOOD || resource->type == GOLD || resource->type == FOOD || resource->type == STONE) { //re-check. No me fio un pelo
+				if (!villager->collider->CheckCollision(resource->collider)) {
+					villager->order_list.push_front(new ReachOrder(resource));
+					state = NEEDS_START;
+				}
+				else {
+					villager->SetTexture(GATHERING);
+					state = EXECUTING;
+				}
 			}
-
-			App->sceneManager->level1_scene->UpdateResources();
-			villager->curr_capacity = 0;
 		}
-
-		if (!villager->collider->CheckCollision(resource->collider)) {
-			villager->order_list.push_front(new ReachOrder(resource));
-			state = NEEDS_START;
-		}
-		else {
-			villager->SetTexture(GATHERING);
-			state = EXECUTING;
-		}
+	}
+	else {
+		resource = nullptr;
+		state = NEEDS_START;
 	}
 }
 
@@ -452,12 +458,18 @@ void BuildOrder::Start(Entity* entity) {
 	villager->state = CONSTRUCTING;
 
 	if (villager != nullptr && villager->collider != nullptr && building != nullptr && building->collider != nullptr) {
-		if (!villager->collider->CheckCollision(building->collider)) {
-			villager->order_list.push_front(new ReachOrder(building));
+		if(building->type > -1 && building->type < 20){
+			if (!villager->collider->CheckCollision(building->collider)) {
+				villager->order_list.push_front(new ReachOrder(building));
+				state = NEEDS_START;
+			}
+			else
+				villager->SetTexture(CONSTRUCTING);
+		}
+		else {
+			building = nullptr;
 			state = NEEDS_START;
 		}
-		else
-			villager->SetTexture(CONSTRUCTING);
 	}
 }
 

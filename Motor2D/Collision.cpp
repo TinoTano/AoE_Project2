@@ -120,15 +120,14 @@ bool Collision::PreUpdate()
 			for (list<Collider*>::iterator col2 = potential_collisions.begin(); col2 != potential_collisions.end(); col2++) {
 				if ((*col2) != nullptr) {
 					c2 = (*col2);
-
-					if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c2->enabled) {
-
-						if (!FindCollision(c1, c2)) {
-							Collision_data* collision = new Collision_data(c1, c2);   // c1 can only be unit or range
-							collision_list.push_back(collision);
+					if (c2->type > COLLIDER_NONE && c2->type < COLLIDER_MAX) {
+						if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c2->enabled) {
+							if (!FindCollision(c1, c2)) {
+								Collision_data* collision = new Collision_data(c1, c2);   // c1 can only be unit or range
+								collision_list.push_back(collision);
+							}
 						}
 					}
-
 				}
 			}
 		}
