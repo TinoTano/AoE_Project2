@@ -79,11 +79,17 @@ bool Render::PreUpdate()
 
 bool Render::PostUpdate()
 {
+
+	for (std::deque<Sprite>::iterator it = sprites_toDraw.begin(); it != sprites_toDraw.end(); it++) {
+		if ((*it).priority < 0) {
+			sprites_toDraw.erase(it);
+		}
+	}
 	std::sort(sprites_toDraw.begin(), sprites_toDraw.end(), [](const Sprite& lhs, const Sprite& rhs) { return lhs.priority < rhs.priority; });
 
 	for (int it = 0; it < sprites_toDraw.size(); it++)
 	{
-		if (sprites_toDraw[it].texture != nullptr)
+		if (sprites_toDraw[it].texture != nullptr && sprites_toDraw[it].flip >= 0 && sprites_toDraw[it].flip < 3)
 			Blit(sprites_toDraw[it].texture, sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, &sprites_toDraw[it].rect, sprites_toDraw[it].flip);
 		else
 		{
@@ -94,11 +100,16 @@ bool Render::PostUpdate()
 
 	sprites_toDraw.clear();
 
+	for (std::deque<Sprite>::iterator it = ui_toDraw.begin(); it != ui_toDraw.end(); it++) {
+		if ((*it).priority < 0) {
+			ui_toDraw.erase(it);
+		}
+	}
 	std::sort(ui_toDraw.begin(), ui_toDraw.end(), [](const Sprite& lhs, const Sprite& rhs) { return lhs.priority < rhs.priority; });
 
 	for (int it = 0; it < ui_toDraw.size(); it++)
 	{
-		if (ui_toDraw[it].texture != nullptr)
+		if (ui_toDraw[it].texture != nullptr && ui_toDraw[it].flip >= 0 && ui_toDraw[it].flip < 3)
 			Blit(ui_toDraw[it].texture, ui_toDraw[it].pos.x, ui_toDraw[it].pos.y, &ui_toDraw[it].rect, ui_toDraw[it].flip);
 		else
 		{

@@ -274,11 +274,13 @@ void FogOfWar::ManageEntities()
 {
 	for (list<Entity*>::iterator it = entities_not_in_fog.begin(); it != entities_not_in_fog.end(); it++)
 	{
-		if ((*it) != nullptr && (*it)->state != DESTROYED) {
-			if (IsVisible(App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y), (*it)->faction))
-				(*it)->isActive = true;
-			else
-				(*it)->isActive = false;
+		if ((*it) != nullptr) {
+			if ((*it)->state != DESTROYED) {
+				if (IsVisible(App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y), (*it)->faction))
+					(*it)->isActive = true;
+				else
+					(*it)->isActive = false;
+			}
 		}
 	}
 }

@@ -227,7 +227,7 @@ bool Scene::Start()
 
 	//timer.Start();
 
-	Timer_lbl = (Label*)App->gui->CreateLabel(" ", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, App->font->fonts[TWENTYSIX]);
+	Timer_lbl = (Label*)App->gui->CreateLabel("", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, App->font->fonts[TWENTYSIX]);
 	Timer_lbl->SetColor({ 255, 255, 255, 255 });
 
 	game_finished = false;

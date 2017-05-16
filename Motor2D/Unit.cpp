@@ -78,6 +78,7 @@ bool Unit::Update(float dt)
 
 	if(entityPosition.x > 2700 || entityPosition.x < -1660 || entityPosition.y < 1160 || entityPosition.y > 3820)
 	{
+		Destroy();
 		state = DESTROYED;
 	}
 

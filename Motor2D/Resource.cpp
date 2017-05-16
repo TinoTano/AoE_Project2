@@ -89,5 +89,5 @@ void Resource::Damaged() {
 void Resource::Destroy() {
 
 	App->entityManager->DeleteEntity(this);
-
+	state = DESTROYED;
 }

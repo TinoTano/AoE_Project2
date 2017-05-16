@@ -749,7 +749,7 @@ void EntityManager::OnCollision(Collision_data& col_data)
 	Building* building = nullptr;
 	Resource* resource = nullptr;
 
-	if (col_data.c1 == nullptr || col_data.c2 == nullptr)
+	if (col_data.c1 == nullptr || col_data.c2 == nullptr || col_data.c1->entity->state < 1 || col_data.c2->entity->state < 1 || col_data.c1->entity->state > 8 || col_data.c2->entity->state > 8)
 		return;
 
 	col_data.c1->colliding = true;

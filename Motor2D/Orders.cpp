@@ -274,7 +274,7 @@ void UnitAttackOrder::Execute() {
 bool UnitAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
-		if (target->Life > 0) {
+		if (target->Life > 0 || target->state != DESTROYED) {
 			if (unit != nullptr && unit->collider != nullptr && target->collider != nullptr) {
 				if (unit->los->CheckCollision(target->collider));
 					return false;
@@ -321,7 +321,7 @@ void BuildingAttackOrder::Execute() {
 bool BuildingAttackOrder::CheckCompletion() {
 
 	if (target != nullptr) {
-		if (target->Life > 0) {
+		if (target->Life > 0 || target->state != DESTROYED) {
 			if (building != nullptr && building->collider != nullptr && target->collider != nullptr) {
 				if (building->collider->CheckCollision(target->collider))
 					return false;
@@ -444,8 +444,10 @@ void GatherOrder::Execute() {
 bool GatherOrder::CheckCompletion() {
 
 	if (resource != nullptr) {
-		if (villager->curr_capacity < villager->max_capacity && resource->Life > 0) 
-			return false;
+		if (resource->state != DESTROYED) {
+			if (villager->curr_capacity < villager->max_capacity && resource->Life > 0)
+				return false;
+		}
 	}
 	return true;
 }
@@ -654,6 +656,7 @@ void SquadAttackOrder::Execute() {
 
 	if (!CheckCompletion()) {
 		for (list<Unit*>::iterator enemy = enemies_in_range.begin(); enemy != enemies_in_range.end(); enemy++) {
+			if ((*enemy)->state == DESTROYED) continue;
 			Unit* unit = squad->units.front();
 
 			for (list<Unit*>::iterator units = squad->units.begin(); units != squad->units.end(); units++) {
