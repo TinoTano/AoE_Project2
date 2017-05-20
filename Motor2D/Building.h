@@ -3,8 +3,10 @@
 
 #include "Entity.h"
 #include "Animation.h"
+#include "Unit.h"
 #include "Timer.h"
 #include <list>
+#include <deque>
 
 
 enum buildingType {
@@ -27,10 +29,8 @@ public:
 
 	bool Update(float dt);
 	bool Draw();
-	bool IsEnemy() const;
 	void Destroy();
 	void GetBuildingBoundaries();
-	pugi::xml_node LoadBuildingInfo(buildingType type);
 
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
@@ -40,28 +40,20 @@ private:
 public:
 	//STATS:
 	buildingType type = ORC_BARRACKS;
-	float buildingAttackSpeed = 0;
 	int buildingPiercingDamage = 0;
 	Cost cost;
-	int buildingBuildTime = 0;
 	bool canAttack = false;
-	bool waitingToPlace = false;
-	bool canBePlaced = false;
 	int selectionWidth = 0;
 
 	//Utilities
 	Timer attack_timer;
-	SDL_Texture* buildingIdleTexture = nullptr;
-	SDL_Texture* buildingDieTexture = nullptr;
-	SDL_Texture* constructingPhase1 = nullptr;
-	SDL_Texture* constructingPhase2 = nullptr;
-	SDL_Texture* constructingPhase3 = nullptr;
+	Timer creation_timer;
+	uint aux_timer = 0;
 	uint imageWidth = 0;
 	uint imageHeight = 0;
 	Collider* los = nullptr;
 	Collider* range = nullptr;
-	list<Order*> order_list;
-	list<Order*> target_of;
+	deque<unitType>  units_in_queue;
 
 };
 

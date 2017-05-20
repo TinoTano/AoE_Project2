@@ -9,9 +9,11 @@
 #include "Render.h"
 #include "Textures.h"
 #include "Resource.h"
+#include "Audio.h"
 #include "Collision.h"
 #include "SceneManager.h"
 #include "Hero.h"
+#include "AI.h"
 #include "Villager.h"
 #include "Orders.h"
 #include <algorithm>
@@ -59,157 +61,142 @@ bool EntityManager::Update(float arg_dt)
 	App->input->GetMousePosition(mouseX, mouseY);
 	mouseX -= App->render->camera.x;
 	mouseY -= App->render->camera.y;
+	iPoint mouse = { mouseX, mouseY };
 
 	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
-		if ((*it) != nullptr) {
-			(*it)->Update(dt);
-			if (App->render->CullingCam((*it)->entityPosition))
-			{
-				/*(*it)->Draw();*/
-				if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
-				else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true) (*it)->Draw();
-				else if ((*it)->faction == FREE_MEN) (*it)->Draw();
-			}
+
+		(*it)->Update(dt);
+
+		if (App->render->CullingCam((*it)->entityPosition))
+		{
+			//if ((*it)->isActive == true)
+				(*it)->Draw();
 		}
 	}
 
+	for (list<Resource*>::iterator it = resource_list.begin(); it != resource_list.end(); it++) {
+		if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive == true)
+			(*it)->Draw();
+	}
+
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-		if ((*it) != nullptr && (*it)->state == DESTROYED)
+		if ((*it)->state == DESTROYED)
 			selectedEntityList.erase(it);
 	}
 
 	player->tech_tree->Update();
 	AI_faction->tech_tree->Update();
 
-	// AI for enemies
 	Unit* unit = nullptr;
-
+	Villager* villager = nullptr;
+	Resource* resource = nullptr;
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
 
-		for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-			Unit* unit = (Unit*)(*it);
-			if (unit != nullptr && unit->faction == FREE_MEN) {
+		if (selectedEntityList.front()->faction == FREE_MEN) {
+
+			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+				Unit* unit = (Unit*)(*it);
+
 				for (list<Order*>::iterator it2 = unit->order_list.begin(); it2 != unit->order_list.end(); it2++) {
 					RELEASE(*it2);
-
 					unit->order_list.clear();
 				}
+				unit->order_list.push_front(new MoveToOrder(unit, mouse));
 			}
-		}
 
-		iPoint mouse = { mouseX, mouseY };
-		Collider* clicked_on = CheckCursorHover(mouse);
-		list<Entity*> aux_list;
+			Collider* clicked_on = CheckCursorHover(mouse);
 
-		switch (cursor_hover) {
+			switch (cursor_hover) {
 
-		case HOVERING_ENEMY:
+			case HOVERING_ENEMY:
 
-			if (clicked_on->entity->state != DESTROYED) {
-				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-					unit = (Unit*)(*it);
-					if (unit != nullptr && unit->faction == FREE_MEN) {
-						unit->order_list.push_front(new UnitAttackOrder(clicked_on->entity));
+				if (clicked_on->entity->state != DESTROYED) {
+					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+						unit = (Unit*)(*it);
+						unit->order_list.push_back(new UnitAttackOrder());
 						unit->state = ATTACKING;
 					}
 				}
-			}
-			break;
+				break;
 
-		case HOVERING_RESOURCE:
-
-			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-				unit = (Unit*)(*it);
-				if (unit != nullptr && unit->faction == FREE_MEN) {
-					if (unit->IsVillager)
-						unit->order_list.push_front(new GatherOrder((Resource*)clicked_on->entity));
-					else
-						aux_list.push_back((*it));
-				}
-			}
-			break;
-
-		case HOVERING_ALLY_BUILDING:
-
-			if (clicked_on->entity->state == BEING_BUILT) {
+			case HOVERING_RESOURCE:
 
 				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 					unit = (Unit*)(*it);
-					if (unit != nullptr && unit->faction == FREE_MEN) {
-						if (unit->IsVillager)
-							unit->order_list.push_front(new BuildOrder((Building*)clicked_on->entity));
+					if (unit->IsVillager) {
+						villager = (Villager*)unit;
+						resource = (Resource*)clicked_on->entity;
+						villager->resource_carried = resource->contains;
+						villager->order_list.push_back(new GatherOrder());
 					}
 				}
-			}
+				break;
 
-		default:
+			case HOVERING_ALLY_BUILDING:
 
-			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-				if ((*it) != nullptr && (*it)->faction == FREE_MEN) {
-					aux_list.push_back((*it));
-				}
-			}
-			break;
-		}
-
-		if (!aux_list.empty()) {
-
-			iPoint destination = App->map->WorldToMap(mouseX, mouseY);
-			Unit* commander = (Unit*)aux_list.front();
-
-			if (commander->SetDestination(destination)) {
-
-				if (aux_list.size() > 1) {
-
-					aux_list.pop_front();
-					App->pathfinding->SharePath(commander, aux_list);
-					aux_list.push_front(commander);
-
-				}
-
-				for (list<Entity*>::iterator it = aux_list.begin(); it != aux_list.end(); it++) {
-					unit = (Unit*)(*it);
-					unit->order_list.push_front(new FollowPathOrder());
-				}
-				
-			}
-
-		}
-
-		if (buildingToCreate != nullptr && buildingToCreate->waitingToPlace) {
-			placingBuilding = false;
-			buildingToCreate->Destroy();
-			buildingToCreate = nullptr;
-		}
-	}
-	
-	if (mouseY > NotHUD.y - CAMERA_OFFSET_Y && mouseY < NotHUD.h - CAMERA_OFFSET_Y) {
-
-		if (placingBuilding) {
-			if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP && buildingToCreate->canBePlaced) {
-				buildingToCreate->Life = 1;
-				buildingToCreate->state = BEING_BUILT;
-				buildingToCreate->entityTexture = buildingToCreate->constructingPhase1;
-				buildingToCreate->GetBuildingBoundaries();
-				if (buildingToCreate->collider != nullptr) {
-					buildingToCreate->collider->type = COLLIDER_BUILDING;
-				}
-				buildingToCreate->waitingToPlace = false;
-				App->fog->AddEntity(buildingToCreate);
-
-				if (!selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
+				if (clicked_on->entity->state == BEING_BUILT) {
 
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
-						if (unit->IsVillager) {
-							unit->order_list.push_front(new BuildOrder(buildingToCreate));
-							unit->buildingToCreate = buildingToCreate;
+						if (unit->IsVillager)
+							unit->order_list.push_back(new BuildOrder());
+					}
+				}
+
+			default: 
+				break;
+			}
+		}
+
+		if (placingBuilding) 
+			placingBuilding = false;
+	}
+
+	if (mouseY > NotHUD.y - CAMERA_OFFSET_Y && mouseY < NotHUD.h - CAMERA_OFFSET_Y) {
+
+		if (placingBuilding) {
+
+			Building* building = buildingsDB[placing_type];
+			Sprite aux;
+
+			aux.texture = building->entityTexture;
+			aux.pos.x = mouse.x - (building->imageWidth / 2);
+			aux.pos.y = mouse.y - (building->imageHeight / 2);
+			aux.priority = mouseY - (building->imageHeight / 2) + building->imageHeight;
+			aux.rect.w = building->imageWidth;
+			aux.rect.h = building->imageHeight;
+
+			App->render->sprites_toDraw.push_back(aux);
+
+
+			if (!App->collision->FindCollider(mouse, building->imageWidth / 2)) {
+				SDL_SetTextureColorMod(aux.texture, 255, 255, 255);
+
+				if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+
+					if (player->resources.Spend(building->cost)) {
+
+						building = CreateBuilding(mouse.x, mouse.y, placing_type);
+						placingBuilding = false;
+						App->fog->AddEntity(building);
+
+						if (!selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
+
+							for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+								unit = (Unit*)(*it);
+								if (unit->IsVillager)
+									unit->order_list.push_front(new BuildOrder());
+							}
 						}
 					}
 				}
-				placingBuilding = false;
 			}
+			else
+				SDL_SetTextureColorMod(aux.texture, 255, 0, 0);
+
+
 		}
+
 		else {
 			switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
 			{
@@ -246,17 +233,6 @@ bool EntityManager::Update(float arg_dt)
 		square.filled = false;
 		App->render->sprites_toDraw.push_back(square);
 	}
-
-	if (placingBuilding) {
-		buildingToCreate->entityPosition = { mouseX, mouseY };
-		if (buildingToCreate->collider != nullptr) {
-			buildingToCreate->collider->pos = { buildingToCreate->entityPosition.x,buildingToCreate->entityPosition.y };
-		}
-		if (buildingToCreate->range != nullptr) {
-			buildingToCreate->range->pos = { buildingToCreate->entityPosition.x,buildingToCreate->entityPosition.y };
-		}
-	}
-
 	return true;
 }
 
@@ -284,6 +260,9 @@ bool EntityManager::CleanUp()
 
 	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) 
 		RELEASE((*it));
+
+	for (list<Resource*>::iterator it2 = resource_list.begin(); it2 != resource_list.end(); it2++) 
+		RELEASE((*it2));
 	
 	WorldEntityList.clear();
 
@@ -294,7 +273,7 @@ bool EntityManager::CleanUp()
 
 	NotHUD = { 0,0,0,0 };
 
-	aux_resource_list.clear();
+	resource_list.clear();
 	selectedEntityList.clear();
 	removeEntityList.clear();
 	clicked_entity = nullptr;
@@ -304,7 +283,6 @@ bool EntityManager::CleanUp()
 	selectedListType = COLLIDER_NONE;
 	placingBuilding = false;
 	dt = 0;
-	buildingToCreate = nullptr;
 
 	return true;
 }
@@ -325,14 +303,15 @@ bool EntityManager::LoadGameData()
 	{
 		ret = true;
 
+
 		for (unitNodeInfo = gameData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit")) {
 
 			Unit* unitTemplate;
 			unitType type = (unitType)unitNodeInfo.child("Info").child("ID").attribute("value").as_int();
 
-			if (type == VILLAGER || type == ELF_VILLAGER)
+			if (type == SLAVE_VILLAGER || type == ELF_VILLAGER)
 				unitTemplate = (Unit*) new Villager();
-			else if (type == GONDOR_HERO || type == LEGOLAS || type == GANDALF || type == BALROG)
+			else if (type == LEGOLAS || type == GANDALF || type == BALROG)
 				unitTemplate = (Unit*) new Hero();
 			else
 				unitTemplate = new Unit();
@@ -349,7 +328,6 @@ bool EntityManager::LoadGameData()
 
 
 			unitTemplate->faction = (Faction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
-			unitTemplate->attackSpeed = 1 / unitNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
 			unitTemplate->Life = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			unitTemplate->MaxLife = unitTemplate->Life;
 			unitTemplate->Attack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
@@ -449,7 +427,7 @@ bool EntityManager::LoadGameData()
 			unitTemplate->unitAttackTexture = App->tex->Load(attackTexturePath.c_str());
 			unitTemplate->unitDieTexture = App->tex->Load(dieTexturePath.c_str());
 
-			if (unitTemplate->type == VILLAGER || unitTemplate->type == ELF_VILLAGER) {
+			if (unitTemplate->type == SLAVE_VILLAGER || unitTemplate->type == ELF_VILLAGER) {
 				//Villager
 				string chopTexturePath;
 				chopTexturePath = unitNodeInfo.child("Textures").child("Cut").attribute("value").as_string();
@@ -481,35 +459,29 @@ bool EntityManager::LoadGameData()
 
 			}
 
-			if (unitTemplate->type == GONDOR_HERO || unitTemplate->type == LEGOLAS || unitTemplate->type == GANDALF || unitTemplate->type == BALROG) {
+			if (unitTemplate->type == LEGOLAS || unitTemplate->type == GANDALF || unitTemplate->type == BALROG) {
 
 				Hero* heroTemplate = (Hero*)unitTemplate;
-				heroTemplate->skill->type = (Skill_type)unitNodeInfo.child("Stats").child("SkillType").attribute("value").as_int();;
+				heroTemplate->skill->type = (Skill_type)unitNodeInfo.child("Stats").child("SkillType").attribute("value").as_int(1);;
 			}
 
 			unitsDB.insert(pair<int, Unit*>(unitTemplate->type, unitTemplate));
 		}
+
+		constructingPhase1 = App->tex->Load(gameData.child("Buildings").child("ConstructingPhase1").attribute("value").as_string());
+		constructingPhase2 = App->tex->Load(gameData.child("Buildings").child("ConstructingPhase2").attribute("value").as_string());
+		constructingPhase3 = App->tex->Load(gameData.child("Buildings").child("ConstructingPhase3").attribute("value").as_string());
 
 		for (buildingNodeInfo = gameData.child("Buildings").child("Building"); buildingNodeInfo; buildingNodeInfo = buildingNodeInfo.next_sibling("Building")) {
 
 			Building* buildingTemplate = new Building();
 
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
-			string dieTexturePath = buildingNodeInfo.child("Textures").child("Die").attribute("value").as_string();
-			string constructingPhase1Path = buildingNodeInfo.child("Textures").child("ConstructingPhase1").attribute("value").as_string();
-			string constructingPhase2Path = buildingNodeInfo.child("Textures").child("ConstructingPhase2").attribute("value").as_string();
-			string constructingPhase3Path = buildingNodeInfo.child("Textures").child("ConstructingPhase3").attribute("value").as_string();
+			buildingTemplate->entityTexture = App->tex->Load(idleTexturePath.c_str());
 
 			buildingTemplate->faction = (Faction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-			buildingTemplate->buildingBuildTime = buildingNodeInfo.child("Stats").child("BuildTime").attribute("value").as_int();
 			buildingTemplate->canAttack = buildingNodeInfo.child("Stats").child("CanAttack").attribute("value").as_bool();
-
-			buildingTemplate->buildingIdleTexture = App->tex->Load(idleTexturePath.c_str());
-			buildingTemplate->buildingDieTexture = App->tex->Load(dieTexturePath.c_str());
-			buildingTemplate->constructingPhase1 = App->tex->Load(constructingPhase1Path.c_str());
-			buildingTemplate->constructingPhase2 = App->tex->Load(constructingPhase2Path.c_str());
-			buildingTemplate->constructingPhase3 = App->tex->Load(constructingPhase3Path.c_str());
 
 			buildingTemplate->cost.wood = buildingNodeInfo.child("Stats").child("Cost").child("woodCost").attribute("value").as_int();
 			buildingTemplate->cost.stone = buildingNodeInfo.child("Stats").child("Cost").child("stoneCost").attribute("value").as_int();
@@ -520,7 +492,6 @@ bool EntityManager::LoadGameData()
 			buildingTemplate->selectionWidth = buildingNodeInfo.child("Info").child("SelectionWidth").attribute("value").as_uint();
 			buildingTemplate->selectionAreaCenterPoint.x = buildingNodeInfo.child("Info").child("BasePoint").attribute("x").as_int();
 			buildingTemplate->selectionAreaCenterPoint.y = buildingNodeInfo.child("Info").child("BasePoint").attribute("y").as_int();
-			buildingTemplate->entityTexture = buildingTemplate->buildingIdleTexture;
 			buildingTemplate->GetBuildingBoundaries();
 
 			buildingsDB.insert(pair<int, Building*>(buildingTemplate->type, buildingTemplate));
@@ -533,24 +504,21 @@ bool EntityManager::LoadGameData()
 			Resource* resourceTemplate = new Resource();
 
 			string idleTexturePath = resourceNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
-			string gatheringTexturePath = resourceNodeInfo.child("Textures").child("Gathering").attribute("value").as_string();
+			resourceTemplate->entityTexture = App->tex->Load(idleTexturePath.c_str());
 
 			resourceTemplate->Life = resourceNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 
 			for (pugi::xml_node rectsNode = resourceNodeInfo.child("Rects").child("Rect"); rectsNode; rectsNode = rectsNode.next_sibling("Rect")) {
-				resourceTemplate->resourceRectVector.push_back({ rectsNode.attribute("x").as_int(), rectsNode.attribute("y").as_int(), rectsNode.attribute("w").as_int(), rectsNode.attribute("h").as_int() });
+				resourceTemplate->blit_rects.push_back({ rectsNode.attribute("x").as_int(), rectsNode.attribute("y").as_int(), rectsNode.attribute("w").as_int(), rectsNode.attribute("h").as_int() });
 			}
 
-			resourceTemplate->resourceIdleTexture = App->tex->Load(idleTexturePath.c_str());
-			resourceTemplate->resourceGatheringTexture = App->tex->Load(gatheringTexturePath.c_str());
-
-			resourceTemplate->visual = (resourceItem)resourceNodeInfo.child("Info").child("ID").attribute("value").as_int();
-			resourceTemplate->type = (resourceType)resourceNodeInfo.child("Info").child("Type").attribute("value").as_int();
+			resourceTemplate->res_type = (resourceItem)resourceNodeInfo.child("Info").child("ID").attribute("value").as_int();
+			resourceTemplate->contains = (resourceType)resourceNodeInfo.child("Info").child("Type").attribute("value").as_int();
 			resourceTemplate->selectionWidth = resourceNodeInfo.child("Info").child("SelectionWidth").attribute("value").as_uint();
 			resourceTemplate->selectionAreaCenterPoint.x = resourceNodeInfo.child("Info").child("BasePoint").attribute("x").as_int();
 			resourceTemplate->selectionAreaCenterPoint.y = resourceNodeInfo.child("Info").child("BasePoint").attribute("y").as_int();
 
-			resourcesDB.insert(pair<int, Resource*>(resourceTemplate->visual, resourceTemplate));
+			resourcesDB.insert(pair<int, Resource*>(resourceTemplate->res_type, resourceTemplate));
 		}
 
 		player->tech_tree->LoadTechTree(gameData.child("FPTechs"));
@@ -564,24 +532,24 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 {
 	Unit* unit;
 
-	if (type == VILLAGER || type == ELF_VILLAGER) {
+	if (type == SLAVE_VILLAGER || type == ELF_VILLAGER) {
 
+		App->audio->PlayFx(CREATE_VILLAGER_SOUND);
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
 
-		if (unit->faction == player->faction) {
+		if (unit->faction == player->faction) 
 			player->villagers.push_back((Villager*)unit);
-			unit->resourcesWareHouse = player->Town_center;
-		}
-		else {
+		else 
 			AI_faction->villagers.push_back((Villager*)unit);
-			unit->resourcesWareHouse = AI_faction->Town_center;
-		}
-	}
-	else if (type == GONDOR_HERO || type == LEGOLAS || type == GANDALF || type == BALROG) {
-		unit = (Unit*) new Hero(posX, posY, (Hero*)unitsDB[type]);
+		
 	}
 	else {
-		unit = new Unit(posX, posY, unitsDB[type]);
+		if (type == LEGOLAS || type == GANDALF || type == BALROG)
+			unit = (Unit*) new Hero(posX, posY, (Hero*)unitsDB[type]);
+		else
+			unit = new Unit(posX, posY, unitsDB[type]);
+
+		App->audio->PlayFx(CREATE_UNIT_SOUND);
 	}
 
 	unit->entityID = nextID;
@@ -592,8 +560,7 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	else
 		AI_faction->units.push_back(unit);
 
-
-	WorldEntityList.push_back((Entity*)unit);
+	WorldEntityList.push_back(unit);
 	App->fog->AddEntity(unit);
 
 	return unit;
@@ -610,7 +577,7 @@ Building* EntityManager::CreateBuilding(int posX, int posY,  buildingType type)
 	else
 		AI_faction->buildings.push_back(building);
 
-	WorldEntityList.push_back((Entity*)building);
+	WorldEntityList.push_back(building);
 	return building;
 }
 
@@ -622,8 +589,7 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceItem item)
 	Resource* resource = new Resource(ret.x, ret.y, resourcesDB[item]);
 	resource->entityID = nextID;
 	nextID++;
-	WorldEntityList.push_back((Entity*)resource);
-	aux_resource_list.push_back(resource);
+	resource_list.push_back(resource);
 
 	return resource;
 }
@@ -631,113 +597,11 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceItem item)
 
 void EntityManager::DeleteEntity(Entity* entity)
 {
-
-	if (entity != nullptr) {
-
-		removeEntityList.push_back(entity);
-		Unit* unit = nullptr; 
-		Building* building = nullptr;
-		if (entity->collider != nullptr) {
-			switch (entity->collider->type) {
-			case COLLIDER_UNIT:
-
-				unit = (Unit*)entity;
-
-				if (entity->faction == player->faction) {
-					player->units.remove(unit);
-					App->ai->RemoveThreats(entity);
-					if (unit->IsVillager)
-						player->villagers.remove((Villager*)unit);
-				}
-				else {
-					AI_faction->units.remove(unit);
-					if (unit->IsVillager)
-						AI_faction->villagers.remove((Villager*)unit);
-				}
-
-				App->collision->DeleteCollider(unit->collider);
-				unit->collider = nullptr;
-				App->collision->DeleteCollider(unit->range);
-				unit->range = nullptr;
-				App->collision->DeleteCollider(unit->los);
-				unit->los = nullptr;
-
-				if(unit->squad)
-					unit->squad->Deassign(unit);
-
-				break;
-			case COLLIDER_BUILDING:
-				if (entity->faction == player->faction) {
-					player->buildings.remove((Building*)entity);
-					App->ai->RemoveThreats(entity);
-				}
-				else
-					AI_faction->buildings.remove((Building*)entity);
-
-				building = (Building*)entity;
-				App->collision->DeleteCollider(building->collider);
-				building->collider = nullptr;
-				App->collision->DeleteCollider(building->range);
-				building->range = nullptr;
-				App->collision->DeleteCollider(building->los);
-				building->los = nullptr;
-
-				break;
-
-			case COLLIDER_RESOURCE:
-				aux_resource_list.remove((Resource*)entity);
-
-				for (list<Villager*>::iterator it = player->villagers.begin(); it != player->villagers.end(); it++) {
-
-					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
-
-						if ((*it2)->order_type == GATHER) {
-
-							GatherOrder* gth_order = (GatherOrder*)(*it2);
-							if (gth_order->resource == (Resource*)entity)
-								gth_order->resource = nullptr;
-						}
-
-						if ((*it2)->order_type == REACH) {
-
-							ReachOrder* rch_order = (ReachOrder*)(*it2);
-							if (rch_order->entity == entity)
-								rch_order->state = COMPLETED;
-						}
-					}
-
-				}
-			
-
-				for (list<Villager*>::iterator it = AI_faction->villagers.begin(); it != AI_faction->villagers.end(); it++) {
-
-					for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
-
-						if ((*it2)->order_type == GATHER) {
-							GatherOrder* gth_order = (GatherOrder*)(*it2);
-							if (gth_order->resource = (Resource*)entity)
-								gth_order->resource = nullptr;
-						}
-
-						if ((*it2)->order_type == REACH) {
-
-							ReachOrder* rch_order = (ReachOrder*)(*it2);
-							if (rch_order->entity == entity)
-								rch_order->state = COMPLETED;
-						}
-					}
-				}
-				
-
-				App->collision->DeleteCollider(entity->collider);
-				entity->collider = nullptr;
-
-				break;
-			}
-		}
-
+	removeEntityList.push_back(entity);
+	if(entity->collider->type == COLLIDER_RESOURCE)
+		resource_list.remove((Resource*)entity);
+	else
 		WorldEntityList.remove(entity);
-	}
 }
 
 
@@ -746,120 +610,149 @@ void EntityManager::OnCollision(Collision_data& col_data)
 
 	//possible colliding elements
 	Unit* unit = nullptr;
+	Unit* enemy = nullptr;
 	Building* building = nullptr;
 	Resource* resource = nullptr;
-
-	if (col_data.c1 == nullptr || col_data.c2 == nullptr || col_data.c1->entity->state < 1 || col_data.c2->entity->state < 1 || col_data.c1->entity->state > 8 || col_data.c2->entity->state > 8)
-		return;
+	Villager* villager = nullptr;
 
 	col_data.c1->colliding = true;
 	col_data.c2->colliding = true;
 	col_data.state = SOLVING;
 
-	if (col_data.c1->type == COLLIDER_RANGE) {
+	switch (col_data.c1->type) {
+
+	case COLLIDER_RANGE:
 
 		if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
-
-			if (building = col_data.c1->entity->collider->GetBuilding()) 
-				building->order_list.push_front(new BuildingAttackOrder(col_data.c2->entity));
+			if (unit = col_data.c1->GetUnit()){
+				if(unit->state == ATTACKING && unit->order_list.front()->order_type == MOVETO) 
+					unit->order_list.pop_front();
+			}
+			else
+				col_data.c1->entity->state = ATTACKING;  // is a building
 		}
-	}
-	if (col_data.c1->type == COLLIDER_LOS) {
+		break;
+
+	case COLLIDER_LOS:
 
 		if (col_data.c1->entity->faction == AI_faction->faction && col_data.c2->entity->faction == player->faction) {
-			if (col_data.c1->type == COLLIDER_UNIT) {
+			if (col_data.c1->type == COLLIDER_UNIT)
 				App->ai->UpdateTargets(col_data.c2->entity);
-				if (unit->squad) {
-					unit->squad->ClearOrders();
-					unit->squad->squad_orderlist.push_front(new SquadAttackOrder(col_data.c2->entity->entityPosition));
-				}
-			}
 			else
 				App->ai->UpdateThreats(col_data.c2->entity);
 
-			if (col_data.c1->CheckCollision(col_data.c2) == false)
-				col_data.state = SOLVED;
-			else
+
+			if (col_data.c1->CheckCollision(col_data.c2) == true)
 				col_data.state = UNSOLVED;
 		}
 		else
 			col_data.state = SOLVED;
-	}
-	else if (col_data.c1->type == COLLIDER_UNIT) {    // c1->type == COLLIDER_UNIT
+
+		break;
+
+	case COLLIDER_UNIT:
 
 		unit = col_data.c1->GetUnit();
-		Unit* unit2 = nullptr;
+		if (!unit->order_list.empty()) {
 
-		switch (col_data.c2->type) {
+			switch (unit->order_list.back()->order_type) {
 
-		case COLLIDER_UNIT:
+			case GATHER:
 
-			//if (col_data.c2->entity->faction == unit->faction) {
-			//	unit2 = col_data.c2->GetUnit();
-			//	col_data.state = App->pathfinding->SolveCollision(unit, unit2);// first parameter should be the higher priority unit!
-			//}
-			break;
-
-		case COLLIDER_BUILDING:
-
-			if (unit->path)
-				//App->pathfinding->Repath(unit->path, unit->entityPosition);
-
-			if (!unit->order_list.empty()) {
-				if (unit->order_list.front()->order_type == MOVING) {
-
-					unit->order_list.pop_front();
-					unit->SetDestination(unit->destinationTileWorld);
-					unit->order_list.push_front(new FollowPathOrder());
+				villager = (Villager*)unit;
+				if (villager->curr_capacity == 0) {
+					if (resource = col_data.c2->GetResource()) {
+						if (resource->contains == villager->resource_carried && villager->curr_capacity == 0) {
+							if (unit->order_list.front()->order_type == MOVETO)
+								unit->order_list.pop_front();
+						}
+					}
 				}
-				else if (unit->order_list.front()->order_type == REACH) {
-
-					ReachOrder* old_order = (ReachOrder*)unit->order_list.front();
-					Order* new_order = new ReachOrder(old_order->entity);
-
-					unit->order_list.pop_front();
-					unit->order_list.push_front(new_order);
+				else {
+					if (building = col_data.c2->GetBuilding()) {
+						if (building->type == TOWN_CENTER || building->type == SAURON_TOWER) {
+							if (unit->order_list.front()->order_type == MOVETO)
+								unit->order_list.pop_front();
+						}
+					}
 				}
+				break;
+
+			case BUILD:
+
+				if (building = col_data.c2->GetBuilding()) {
+					if (building->state == BEING_BUILT) {
+						if (unit->order_list.front()->order_type == MOVETO)
+							unit->order_list.pop_front();
+					}
+				}
+				break;
+
+			default:
+				break;
 			}
+		}
 		
-			break;
+		//	if (unit->order_list.front()->order_type == MOVETO) {
+		//		unit->order_list.pop_front();
+		//
+		//		if (!unit->path.empty()) {
+		//			unit->destinationTileWorld = App->map->MapToWorld(unit->path.back().x, unit->path.back().y);
+		//			unit->order_list.push_front(new MoveToOrder(unit, unit->destinationTileWorld));
+		//		}
+		//	}
+		//}
 
-		case COLLIDER_AOE_SKILL:
-			if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
-				Hero* hero = (Hero*)col_data.c2->GetUnit();
-				unit->Life -= hero->skill->damage;
-				hero->skill->Deactivate(hero);
-				if (unit->Life <= 0) {
-					unit->Destroy();
-				}
-			}
-			break;
-		default:
-			break;
-		}
+		break;
+
+	default: 
+		break;
 	}
-
 }
 
+void EntityManager::AddResources(Villager* villager) {
 
-
-Resource* EntityManager::FindNearestResource(resourceType type, iPoint pos) {
-
-	Resource* ret = aux_resource_list.front();
-
-	if (type == WOOD || type == GOLD || type == FOOD || type == STONE) {
-		for (list<Resource*>::iterator it = aux_resource_list.begin(); it != aux_resource_list.end(); it++) {
-			if ((*it) != nullptr && (*it)->state != DESTROYED && (*it)->type == type && (*it)->collider != nullptr && (*it)->collider->to_delete == false) {
-				if (pos.DistanceTo((*it)->entityPosition) < pos.DistanceTo(ret->entityPosition))
-					ret = (*it);
-			}
-		}
-	}
+	StoredResources* resources = nullptr;
+	if (villager->faction == player->faction)
+		resources = &player->resources;
 	else
-		ret = nullptr;
+		resources = &AI_faction->resources;
 
-	return ret;
+	switch (villager->resource_carried) {
+	case WOOD:
+		resources->wood += villager->curr_capacity; break;
+	case GOLD:
+		resources->gold += villager->curr_capacity; break;
+	case FOOD:
+		resources->food += villager->curr_capacity; break;
+	case STONE:
+		resources->stone += villager->curr_capacity; break;
+	}
+
+	if (villager->faction == player->faction)
+		App->sceneManager->level1_scene->UpdateResources();
+
+	villager->curr_capacity = 0;
+
 }
+
+Resource* EntityManager::FindNearestResource(resourceType contains, iPoint pos) {
+
+	Resource* resource = nullptr;
+
+	for (list<Resource*>::iterator it = resource_list.begin(); it != resource_list.end(); it++) {
+		if ((*it)->state != DESTROYED && (*it)->contains == contains) {
+
+			if (resource == nullptr)
+				resource = (*it);
+			else if (pos.DistanceTo((*it)->entityPosition) < pos.DistanceTo(resource->entityPosition))
+				resource = (*it);
+		}
+	}
+
+	return resource;
+}
+
 
 void EntityManager::RallyCall(Entity* entity) {
 
@@ -872,33 +765,47 @@ void EntityManager::RallyCall(Entity* entity) {
 		allied_units = &AI_faction->units;
 
 	for (list<Unit*>::iterator it = allied_units->begin(); it != allied_units->end(); it++) {
-		if ((*it) != nullptr) {
-			if (entity->entityPosition.DistanceTo((*it)->entityPosition) < (*it)->los->r && (*it)->state == IDLE) {
-				Entity* target = nullptr;
-				if (target = App->entityManager->FindTarget((*it)))
-					(*it)->order_list.push_back(new UnitAttackOrder(target));
-			}
-		}
+		if (entity->entityPosition.DistanceTo((*it)->entityPosition) < (*it)->los->r && (*it)->type != SLAVE_VILLAGER && (*it)->type != ELF_VILLAGER) 
+			(*it)->order_list.push_back(new UnitAttackOrder());
 	}
 	
 }
 
-Entity* EntityManager::FindTarget(Unit* unit) {
 
-	list<Unit*>* enemy_units = nullptr;
-	if (unit == nullptr || unit->collider == nullptr || unit->range == nullptr || unit->los == nullptr) return nullptr;
+Building* EntityManager::FindNearestBuilding(Unit* unit) {
+
+	list<Building*>* ally_buildings = nullptr;
+	Building* ret = nullptr;
 
 	if (unit->faction == player->faction)
+		ally_buildings = &player->buildings;
+	else
+		ally_buildings = &AI_faction->buildings;
+
+	iPoint aux{ -1,-1 };
+	for (list<Building*>::iterator it = ally_buildings->begin(); it != ally_buildings->end(); it++) {
+		if ((*it)->state == BEING_BUILT && unit->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
+			ret = (*it);
+			aux = (*it)->entityPosition;
+		}
+	}
+
+	return ret;
+}
+
+Entity* EntityManager::FindTarget(Entity* entity) {
+
+	list<Unit*>* enemy_units = nullptr;
+	Entity* ret = nullptr;
+
+	if (entity->faction == player->faction)
 		enemy_units = &AI_faction->units;
 	else
 		enemy_units = &player->units;
 
-
-	Entity* ret = nullptr;
 	iPoint aux{ -1,-1 };
 	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
-		if(unit->entityPosition.DistanceTo((*it)->entityPosition) < unit->los->r && (*it)->state != DESTROYED &&
-			unit->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
+		if((*it)->state != DESTROYED && entity->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
 			ret = (*it);
 			aux = (*it)->entityPosition;
 		}
@@ -908,15 +815,14 @@ Entity* EntityManager::FindTarget(Unit* unit) {
 
 		list<Building*>* enemy_buildings = nullptr;
 
-		if (unit->faction == player->faction)
+		if (entity->faction == player->faction)
 			enemy_buildings = &AI_faction->buildings;
 		else
 			enemy_buildings = &player->buildings;
 
 		aux.create(-1, -1);
 		for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
-			if (unit->entityPosition.DistanceTo((*it)->entityPosition) < unit->range->r && (*it)->state != DESTROYED &&
-				unit->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
+			if ((*it)->state != DESTROYED && entity->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
 				ret = (*it);
 				aux = (*it)->entityPosition;
 			}
@@ -926,64 +832,6 @@ Entity* EntityManager::FindTarget(Unit* unit) {
 	return ret;
 }
 
-void EntityManager::Untarget(Entity* destroyed_entity) {
-
-	list<Unit*>* enemy_units = nullptr;
-	list<Building*>* enemy_buildings = nullptr;
-
-
-	if (destroyed_entity->faction == player->faction) {
-		enemy_units = &AI_faction->units;
-		enemy_buildings = &AI_faction->buildings;
-	}
-	else {
-		enemy_units = &player->units;
-		enemy_buildings = &player->buildings;
-	}
-
-
-	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
-
-		for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); it2++) {
-
-			if ((*it2)->order_type == ATTACK) {
-				UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it);
-
-				if (atk_order->target == destroyed_entity)
-					atk_order->state = COMPLETED;
-			}
-
-			if ((*it2)->order_type == REACH) {
-
-				ReachOrder* rch_order = (ReachOrder*)(*it2);
-				if (rch_order->entity == destroyed_entity)
-					rch_order->state = COMPLETED;
-			}
-		}
-	}
-
-
-	for (list<Building*>::iterator it3 = enemy_buildings->begin(); it3 != enemy_buildings->end(); it3++) {
-
-		for (list<Order*>::iterator it4 = (*it3)->order_list.begin(); it4 != (*it3)->order_list.end(); it4++) {
-
-			if ((*it4)->order_type == ATTACK) {
-				UnitAttackOrder* atk_order = (UnitAttackOrder*)(*it4);
-
-				if (atk_order->target == destroyed_entity)
-					atk_order->state = COMPLETED;
-			}
-
-			if ((*it4)->order_type == REACH) {
-
-				ReachOrder* rch_order = (ReachOrder*)(*it4);
-				if (rch_order->entity == destroyed_entity)
-					rch_order->state = COMPLETED;
-			}
-		}
-	}
-
-}
 
 void EntityManager::DestroyEntity(Entity* entity)
 {
@@ -1005,11 +853,9 @@ void EntityManager::DestroyEntity(Entity* entity)
 
 Collider* EntityManager::CheckCursorHover(iPoint cursor_pos) {
 
-	Collider* nearest_col = App->collision->FindNearestCollider(cursor_pos);
+	Collider* nearest_col = nullptr;
 
-	if (nearest_col == nullptr) return nullptr;
-
-	if (cursor_pos.DistanceTo(nearest_col->pos) < nearest_col->r) {
+	if(nearest_col = App->collision->FindCollider(cursor_pos, 5)){
 
 		if (nearest_col->type == COLLIDER_RESOURCE)
 			cursor_hover = HOVERING_RESOURCE;
@@ -1035,9 +881,8 @@ void EntityManager::FillSelectedList() {
 	if (multiSelectionRect.w == 0 && multiSelectionRect.h == 0) {   // if there's no selection rect... (only clicked)
 
 		iPoint mouse = { mouseX, mouseY };
-		Collider* nearest_col = App->collision->FindNearestCollider(mouse);
 
-		if (nearest_col != nullptr && mouse.DistanceTo(nearest_col->pos) < nearest_col->r) {
+		if (Collider* nearest_col = App->collision->FindCollider(mouse, 5)) {
 			Unit* unit = nullptr;
 			switch (nearest_col->type) {
 
@@ -1112,32 +957,37 @@ void EntityManager::FillSelectedList() {
 
 	}
 
-	if (!selectedEntityList.empty())
-		if (selectedEntityList.front()->collider != nullptr) {
-			selectedListType = selectedEntityList.front()->collider->type;
-		}
+	if (!selectedEntityList.empty()) {
+		selectedListType = selectedEntityList.front()->collider->type;
+		if(selectedListType == COLLIDER_UNIT)
+			App->audio->PlaySelectSound((Unit*)selectedEntityList.front());
+	}
 
 	multiSelectionRect = { 0,0,0,0 };
 }
 
 void EntityManager::DrawSelectedList() {
 
+	Unit* unit = nullptr;
+	Building* building = nullptr;
+	Resource* resource = nullptr;
+
 	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 
-		if (selectedListType == COLLIDER_UNIT) {
-			Unit* unit = (Unit*)(*it);
-			unit->GetUnitBoundaries();
+		switch (selectedListType) {
+
+		case COLLIDER_UNIT:
+			unit = (Unit*)(*it);
 			App->render->DrawIsometricCircle(unit->entityPosition.x, unit->entityPosition.y + (*it)->selectionAreaCenterPoint.y, unit->selectionRadius, 255, 255, 255, 255);
-		}
-		else if (selectedListType == COLLIDER_BUILDING) {
-			Building* building = (Building*)(*it);
-			building->GetBuildingBoundaries();
+			break;
+		case COLLIDER_BUILDING:
+			building = (Building*)(*it);
 			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y + ((int)building->imageHeight - (*it)->selectionAreaCenterPoint.y) }, building->selectionWidth);
-		}
-		else if (selectedListType == COLLIDER_RESOURCE) {
-			Resource* resource = (Resource*)(*it);
-			resource->GetResourceBoundaries();
-			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y + ((int)resource->imageHeight - (*it)->selectionAreaCenterPoint.y) }, resource->selectionWidth);
+			break;
+		case COLLIDER_RESOURCE:
+			resource = (Resource*)(*it);
+			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y + ((int)resource->blit_rect.h - (*it)->selectionAreaCenterPoint.y) }, resource->selectionWidth);
+			break;
 		}
 	}
 }

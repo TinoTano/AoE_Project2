@@ -10,7 +10,6 @@ enum Skill_type {
 	DAMAGE_SKILL,
 	MOVE_SPEED_SKILL,
 	ATTACK_SPEED_SKILL,
-	AOE_SKILL
 
 };
 
@@ -25,7 +24,6 @@ public:
 	bool HeroUpdate();
 
 public:
-	Collider* aoeTargets = nullptr;
 	Timer skill_timer;
 	Skill* skill = nullptr;
 
@@ -148,33 +146,4 @@ public:
 	}
 
 };
-
-class AOESkill : public Skill {
-
-public:
-
-	AOESkill() {
-
-		cooldown = 20;
-		duration = 1;
-		type = AOE_SKILL;
-		damage = 50;
-		range = 100;
-	}
-
-	void Activate(Hero* hero)
-	{
-		active = true;
-		hero->aoeTargets->enabled = true;
-		hero->skill_timer.Start();
-	}
-
-	void Deactivate(Hero* hero)
-	{
-		active = false;
-		hero->aoeTargets->enabled = false;
-	}
-
-};
-
 #endif

@@ -1,21 +1,17 @@
 #ifndef _ORDERS_
 #define _ORDERS_
 
-#include "Unit.h"
-#include "Building.h"
-#include "Resource.h"
 #include "p2Point.h"
-#include "Collision.h"
-#include "AI.h"
-#include "Timer.h"
-#include "Pathfinding.h"
+
+class Unit;
+class Squad;
 
 enum Order_state {
 	NEEDS_START, EXECUTING, COMPLETED
 };
 
 enum OrderType {
-	MOVETO, ATTACK, FOLLOWPATH, GATHER, BUILD, CREATE, REACH, SQUADFOLLOWPATH, SQUADATTACK
+	MOVETO, ATTACK, FOLLOW, GATHER, BUILD, CREATE, REACH, SQUADMOVETO, SQUADATTACK
 };
 
 class Order {
@@ -26,9 +22,9 @@ public:
 
 public:
 
-	virtual void Start(Entity* entity) {};
-	virtual void Execute() {};
-	virtual bool CheckCompletion() { return true; };
+	virtual void Start(Unit* unit) {};   
+	virtual void Execute(Unit* unit) {};
+	virtual bool CheckCompletion(Unit* unit) { return true; };
 
 };
 
@@ -37,181 +33,73 @@ class MoveToOrder : public Order {
 
 public:
 
-	iPoint destinationMap = { -1, -1 };
-	Unit* unit = nullptr;
+	MoveToOrder(Unit* unit, iPoint destWorld);
 
-public:
-
-	MoveToOrder(iPoint destination) : destinationMap(destination) { order_type = MOVETO; }
-
-	void Start(Entity* entity);
-	void Execute();
-	bool CheckCompletion();
-
-};
-
-
-class FollowPathOrder : public Order {
-
-public:
-
-	Unit* unit = nullptr;
-
-public:
-
-	FollowPathOrder() { order_type = FOLLOWPATH; }
-
-	void Start(Entity* entity);
-	void Execute();
-	bool CheckCompletion();
-
-};
-
-
-class ReachOrder : public Order {
-
-public:
-
-	Entity* entity = nullptr;
-	Unit* unit = nullptr;
-
-public:
-
-	ReachOrder(Entity* argentity) : entity(argentity) { order_type = REACH; }
-
-	void Start(Entity* argunit);
-	void Execute();
-	bool CheckCompletion();
+	void Start(Unit* unit);
+	void Execute(Unit* unit);
+	bool CheckCompletion(Unit* unit);
 
 };
 
 class UnitAttackOrder : public Order {
-
 public:
 
-	Entity* target = nullptr;
-	Unit* unit = nullptr;
+	UnitAttackOrder() { order_type = ATTACK; }
 
-public:
-
-	UnitAttackOrder(Entity* argtarget) : target(argtarget) { order_type = ATTACK; }
-
-	void Start(Entity* unit);
-	void Execute();
-	bool CheckCompletion();
+	void Start(Unit* unit);
+	void Execute(Unit* unit);
+	bool CheckCompletion(Unit* unit);
 };
 
-class BuildingAttackOrder : public Order {
-
-public:
-
-	Entity* target = nullptr;
-	Building* building = nullptr;
-
-public:
-
-	BuildingAttackOrder(Entity* argtarget) : target(argtarget) { order_type = ATTACK; }
-
-	void Start(Entity* unit);
-	void Execute();
-	bool CheckCompletion();
-};
 
 
 class GatherOrder : public Order {
-
 public:
 
-	Villager* villager = nullptr;
-	Resource* resource = nullptr;
+	GatherOrder() { order_type = GATHER; }
 
-public:
-
-	GatherOrder(Resource* argresource = nullptr) : resource(argresource) { order_type = GATHER; }
-
-	void Start(Entity* entity);
-	void Execute();
-	bool CheckCompletion();
+	void Start(Unit* unit);
+	void Execute(Unit* unit);
+	bool CheckCompletion(Unit* unit);
 };
 
 
 class BuildOrder : public Order {
-
 public:
 
-	Villager* villager = nullptr;
-	Building* building = nullptr;
+	BuildOrder() { order_type = BUILD; }
 
-public:
-
-	BuildOrder(Building* argbuilding) : building(argbuilding) { order_type = BUILD; }
-
-	void Start(Entity* entity);
-	void Execute();
-	bool CheckCompletion();
-
-};
-
-class Squad;
-
-class CreateUnitOrder : public Order {
-
-public:
-
-	Building* building = nullptr;
-	unitType type = ELF_VILLAGER;
-	Squad* belongs_to = nullptr;
-	Timer timer;
-
-public:
-
-	CreateUnitOrder(unitType argtype, Squad* argsquad = nullptr) : type(argtype), belongs_to(argsquad) { order_type = CREATE; }
-
-	void Start(Entity* entity);
-	void Execute();
-	bool CheckCompletion();
+	void Start(Unit* unit);
+	void Execute(Unit* unit);
+	bool CheckCompletion(Unit* unit);
 
 };
 
 
-
-class SquadFollowPathOrder : public Order {
-
-public:
-
-	Squad* squad = nullptr;
-	list<iPoint>* path = nullptr;
-	iPoint target;
+class FollowOrder : public Order {
 
 public:
 
-	SquadFollowPathOrder(iPoint argtarget) : target(argtarget) { order_type = SQUADFOLLOWPATH; }
+	FollowOrder() { order_type = FOLLOW; }
 
-	void Start(Entity* entity);
-	void Execute();
-	bool CheckCompletion();
+	void Start(Unit* unit);
+	void Execute(Unit* unit);
+	bool CheckCompletion(Unit* unit);
 
 };
 
-
-
-class SquadAttackOrder : public Order {
+class SquadMoveToOrder : public Order {
 
 public:
 
-	Squad* squad = nullptr;
-	iPoint target;
-	list<Unit*> enemies_in_range;
+	SquadMoveToOrder(Unit* unit, iPoint dest);
 
-public:
-
-	SquadAttackOrder(iPoint argtarget) : target(argtarget) { order_type = SQUADATTACK; }
-
-	void Start(Entity* entity);
-	void Execute();
-	bool CheckCompletion();
+	void Start(Unit* unit);
+	void Execute(Unit* unit);
+	bool CheckCompletion(Unit* unit);
 
 };
+
 
 
 

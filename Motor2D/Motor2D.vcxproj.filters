@@ -88,9 +88,6 @@
     <ClCompile Include="Hero.cpp">
       <Filter>Project 2\Entities</Filter>
     </ClCompile>
-    <ClCompile Include="QuadTree.cpp">
-      <Filter>Project 2\Tools</Filter>
-    </ClCompile>
     <ClCompile Include="ParticleManager.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
@@ -235,9 +232,6 @@
     </ClInclude>
     <ClInclude Include="Hero.h">
       <Filter>Project 2\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="QuadTree.h">
-      <Filter>Project 2\Tools</Filter>
     </ClInclude>
     <ClInclude Include="ParticleManager.h">
       <Filter>Project 2\Modules</Filter>

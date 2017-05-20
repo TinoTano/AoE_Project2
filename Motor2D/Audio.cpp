@@ -2,6 +2,7 @@
 #include "FileSystem.h"
 #include "Audio.h"
 #include "p2Log.h"
+#include "Unit.h"
 #include <sstream>
 
 #include "SDL/include/SDL.h"
@@ -51,7 +52,70 @@ bool Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
+	App->audio->LoadFx("audio/fx/fx_button_click.wav");
+
+	App->audio->LoadFx("audio/fx/Creation_Unit.wav");
+	App->audio->LoadFx("audio/fx/Creation_Villager.wav");
+
+	App->audio->LoadFx("audio/fx/Dead_1.wav");
+	App->audio->LoadFx("audio/fx/Dead_2.wav");
+	App->audio->LoadFx("audio/fx/Dead_3.wav");
+	App->audio->LoadFx("audio/fx/Dead_4.wav");
+	App->audio->LoadFx("audio/fx/Dead_5.wav");
+	App->audio->LoadFx("audio/fx/Dead_6.wav");
+
+	App->audio->LoadFx("audio/fx/Dead_Horse_1.wav");
+	App->audio->LoadFx("audio/fx/Dead_Horse_2.wav");
+	App->audio->LoadFx("audio/fx/Dead_Horse_3.wav");
+
+	App->audio->LoadFx("audio/fx/Fight_1.wav");
+	App->audio->LoadFx("audio/fx/Fight_2.wav");
+	App->audio->LoadFx("audio/fx/Fight_3.wav");
+	App->audio->LoadFx("audio/fx/Fight_4.wav");
+	App->audio->LoadFx("audio/fx/Fight_5.wav");
+	App->audio->LoadFx("audio/fx/Fight_6.wav");
+	App->audio->LoadFx("audio/fx/Fight_7.wav");
+	App->audio->LoadFx("audio/fx/Fight_8.wav");
+
+	App->audio->LoadFx("audio/fx/bow.wav");
+
+	App->audio->LoadFx("audio/fx/Horse_Select_1.wav");
+	App->audio->LoadFx("audio/fx/Horse_Select_2.wav");
+	App->audio->LoadFx("audio/fx/Horse_Select_3.wav");
+
+	App->audio->LoadFx("audio/fx/Select_Unit_1.wav");
+	App->audio->LoadFx("audio/fx/Select_Unit_2.wav");
+	App->audio->LoadFx("audio/fx/Select_Unit_3.wav");
+	App->audio->LoadFx("audio/fx/Select_Unit_4.wav");
+
 	return ret;
+}
+
+void Audio::PlayDeadSound(Unit* unit) {
+
+	if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT, unit->type == ROHAN_KNIGHT, unit->type == MOUNTED_DUNEDAIN) 
+		App->audio->PlayFx(HORSE_DEAD_1 + (rand() % ((HORSE_DEAD_3 + 1) - HORSE_DEAD_1)));
+	else
+		App->audio->PlayFx(DEAD_SOUND_1 + (rand() % ((DEAD_SOUND_6 + 1) - DEAD_SOUND_1)));
+		
+}
+
+void Audio::PlayFightSound(Unit* unit) {
+
+	if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER, unit->type == ELVEN_CAVALRY, unit->type == DUNEDAIN_RANGE)
+		App->audio->PlayFx(BOW_ATTACK);
+	else
+		App->audio->PlayFx(SWORD_ATTACK_1 + (rand() % ((SWORD_ATTACK_8 + 1) - SWORD_ATTACK_1)));
+
+}
+
+void Audio::PlaySelectSound(Unit* unit) {
+
+	if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT, unit->type == ROHAN_KNIGHT, unit->type == MOUNTED_DUNEDAIN)
+		App->audio->PlayFx(SELECT_HORSE_1 + (rand() % ((SELECT_HORSE_3 + 1) - SELECT_HORSE_1)));
+	else
+		App->audio->PlayFx(SELECT_UNIT_1 + (rand() % ((SELECT_UNIT_4 + 1) - SELECT_UNIT_1)));
+
 }
 
 // Called before quitting
@@ -158,16 +222,16 @@ unsigned int Audio::LoadFx(const char* path)
 }
 
 // Play WAV
-bool Audio::PlayFx(unsigned int id, int repeat)
+bool Audio::PlayFx(int fx_id, int repeat)
 {
 	bool ret = false;
 
 	if(!active)
 		return false;
 
-	if(id > 0 && id <= fx.size())
+	if(fx_id > 0 && fx_id <= fx.size())
 	{
-		Mix_PlayChannel(-1, fx[id - 1], repeat);
+		Mix_PlayChannel(-1, fx[fx_id - 1], repeat);
 	}
 
 	return ret;

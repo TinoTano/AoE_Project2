@@ -18,8 +18,6 @@ enum COLLIDER_TYPE
 	COLLIDER_RESOURCE,
 	COLLIDER_LOS,
 	COLLIDER_RANGE,
-	COLLIDER_CREATING_BUILDING,
-	COLLIDER_AOE_SKILL,
 
 	COLLIDER_MAX
 };
@@ -39,9 +37,7 @@ struct Collider
 	iPoint pos = { 0,0 };
 	int r = 0;
 	int quadtree_node = 0;
-	bool to_delete = false;
 	bool colliding = false;
-	bool enabled = true;
 	COLLIDER_TYPE type = COLLIDER_NONE;
 	Entity* entity = nullptr;
 	Module* callback = nullptr;
@@ -103,13 +99,13 @@ public:
 	void DeleteCollider(Collider* collider);
 	bool FindCollision(Collider* col1, Collider* col2);
 
-	Collider* FindNearestCollider(iPoint point);
-	bool IsOccupied(iPoint worldPos);
+	Collider* FindCollider(iPoint point, int radius = 0);
 	void DebugDraw();
 
 private:
 
 	list<Collider*> colliders;
+	list<Collider*> colliders_to_delete;
 	bool debug = false;
 	
 	list<Collider*> potential_collisions;

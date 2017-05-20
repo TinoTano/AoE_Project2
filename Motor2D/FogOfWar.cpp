@@ -19,22 +19,17 @@ FogOfWar::~FogOfWar()
 
 bool FogOfWar::AddEntity(Entity* new_entity)
 {
-	if (new_entity == nullptr)
-		return false;
-
-	else if (new_entity->faction == FREE_MEN) 
+	if (new_entity->faction == FREE_MEN) 
 	{
 		in_fog_entity new_ally;
-		if (new_entity->collider != nullptr) {
-			new_ally.pos = App->map->WorldToMap(new_entity->collider->pos.x, new_entity->collider->pos.y);
-		}
+		new_ally.pos = App->map->WorldToMap(new_entity->collider->pos.x, new_entity->collider->pos.y);
+		
 		GetEntitiesCircleArea(new_ally);
 		new_ally.id = new_entity->entityID;
 		entities_on_fog.push_back(new_ally);
 
 		FillFrontier();
 	}
-
 	else
 		entities_not_in_fog.push_back(new_entity);
 
@@ -77,13 +72,11 @@ void FogOfWar::Update(iPoint prev_pos, iPoint next_pos, uint id)
 		{
 			if (prev_pos.x + 1 == next_pos.x)
 				MoveFrontier(prev_pos, "right", id);
-
 			else if (prev_pos.x - 1 == next_pos.x)
 				MoveFrontier(prev_pos, "left", id);
 
 			if (prev_pos.y + 1 == next_pos.y)
 				MoveFrontier(prev_pos, "down", id);
-
 			else if (prev_pos.y - 1 == next_pos.y)
 				MoveFrontier(prev_pos, "up", id);
 		}
@@ -274,15 +267,14 @@ void FogOfWar::ManageEntities()
 {
 	for (list<Entity*>::iterator it = entities_not_in_fog.begin(); it != entities_not_in_fog.end(); it++)
 	{
-		if ((*it) != nullptr) {
-			if ((*it)->state != DESTROYED) {
-				if (IsVisible(App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y), (*it)->faction))
-					(*it)->isActive = true;
-				else
-					(*it)->isActive = false;
-			}
+		if ((*it)->state != DESTROYED) {
+			if (IsVisible(App->map->WorldToMap((*it)->entityPosition.x, (*it)->entityPosition.y), (*it)->faction))
+				(*it)->isActive = true;
+			else
+				(*it)->isActive = false;
 		}
 	}
+	
 }
 
 

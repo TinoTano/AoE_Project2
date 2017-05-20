@@ -23,6 +23,7 @@ public:
 	void RestoreUnits();
 	void ClearOrders();
 	bool IsRestored();
+	void Update();
 
 };
 

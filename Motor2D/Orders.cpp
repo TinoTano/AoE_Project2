@@ -19,667 +19,392 @@
 #include "Hero.h"
 #include "Audio.h"
 
-#define SEARCH_ENEMIES_RANGE 75
-
 //Move to Order:
 
-void MoveToOrder::Start(Entity* entity) {
+MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 
-	unit = (Unit*)entity;
+	order_type = MOVETO; 
+	unit->path.clear();
+	iPoint origin = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+	iPoint destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
 
-	state = EXECUTING;
-	unit->SetTexture(MOVING);
-	unit->destinationTileWorld = destinationMap;
+	if (!App->pathfinding->IsWalkable(destMap))
+		destMap = App->pathfinding->FindNearestAvailable(destMap, 5);
 
-	unit->next_step = unit->entityPosition;
-	Execute();
+	if (!App->pathfinding->IsWalkable(origin))
+		origin = App->pathfinding->FindNearestAvailable(origin, 5);
+
+	if (origin.x == -1 || destMap.x == -1) {
+		state == COMPLETED;
+		return;
+	}
+
+	Path path;
+	path.open.pathNodeList.push_back(PathNode(0, 0, origin, NULL));
+	path.origin = origin;
+	path.destination = destMap;
+
+	App->pathfinding->CalculatePath(&path);
+
+	for (list<iPoint>::iterator it = path.finished_path.begin(); it != path.finished_path.end(); it++)
+		unit->path.push_back((*it));
+
+	destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
+		unit->path.push_back(destMap);
 }
 
-void MoveToOrder::Execute() {
+void MoveToOrder::Start(Unit* unit) {
 
-	if (!CheckCompletion()) {
-		unit->entityPosition = unit->next_step;
-		if (unit->collider != nullptr) {
-			unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
-		}
-		if (unit->range != nullptr) {
-			unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-		}
-		if (unit->los != nullptr) {
-			unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-		}
+	state = COMPLETED;
 
-		unit->CalculateVelocity();
+	if (!unit->path.empty()) {
 
-		fPoint vel = unit->velocity * unit->unitMovementSpeed * App->entityManager->dt;
-		roundf(vel.x);
-		roundf(vel.y);
+		unit->destinationTileWorld = App->map->MapToWorld(unit->path.front().x, unit->path.front().y);
+		unit->path.pop_front();
 
-		unit->next_step.x = unit->entityPosition.x + int(vel.x);
-		unit->next_step.y = unit->entityPosition.y + int(vel.y);
+		unit->next_pos = unit->entityPosition;
+		unit->state = MOVING;
 
-		// ===============================================================
-		// Moving fog of war
-		App->fog->Update(unit->prev_pos, unit->next_pos, unit->entityID);			        // This updates the FOW
-		unit->prev_pos = unit->next_pos;
-		if (unit->collider != nullptr) {
-			unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
-		}
-		// ===============================================================
+		unit->SetTexture(MOVING);
+		state = EXECUTING;
+	}
+}
 
+void MoveToOrder::Execute(Unit* unit) {
+
+	if (!CheckCompletion(unit)) {
+
+		iPoint prev_posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+		unit->entityPosition = unit->next_pos;
+		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+
+		fPoint velocity;
+		velocity.x = unit->destinationTileWorld.x - unit->entityPosition.x;
+		velocity.y = unit->destinationTileWorld.y - unit->entityPosition.y;
+
+		if (velocity.x != 0 || velocity.y != 0)
+			velocity.Normalize();
+
+		velocity = velocity * unit->unitMovementSpeed * App->entityManager->dt;
+		roundf(velocity.x);
+		roundf(velocity.y);
+
+		unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
+		unit->next_pos.y = unit->entityPosition.y + int(velocity.y);
+
+		unit->LookAt(velocity);
+
+		unit->collider->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+
+
+		App->fog->Update(prev_posMap, posMap, unit->entityID);
 		App->collision->quadTree->UpdateCol(unit->collider);
-		if (unit->IsHero) {
-			Hero* hero = (Hero*)unit;
-			if (hero->aoeTargets != nullptr) {
-				App->collision->quadTree->UpdateCol(hero->aoeTargets);
-				hero->aoeTargets->pos = hero->next_step;
-			}
-		}
+
 	}
 	else
 		state = COMPLETED;
 
 }
 
-bool MoveToOrder::CheckCompletion()
+bool MoveToOrder::CheckCompletion(Unit* unit)
 {
-	return (unit->entityPosition.DistanceTo(unit->destinationTileWorld) < 10);
-}
-
-//Follow path Order:
-
-void FollowPathOrder::Start(Entity* entity)
-{
-	state = EXECUTING;
-	unit = (Unit*)entity;
-	unit->state = MOVING;
-}
-
-
-void FollowPathOrder::Execute() {
-
-	if (!CheckCompletion()) {
-		if (unit->path) {
-			iPoint destinationWorld = App->map->MapToWorld(unit->path->front().x, unit->path->front().y);
-			unit->order_list.push_front(new MoveToOrder(destinationWorld));
-			unit->path->erase(unit->path->begin());
-		}
-	}
-	else {
-		App->pathfinding->DeletePath(unit->path);
-		state = COMPLETED;
-	}
-}
-
-bool FollowPathOrder::CheckCompletion() {
-
-	if (unit->path != nullptr) {
-		if (unit->path->size() == 0) {
-			App->pathfinding->DeletePath(unit->path);
+	if (unit->entityPosition.DistanceTo(unit->destinationTileWorld) < 10) {
+		if (unit->path.empty())
 			return true;
+		else {
+			unit->destinationTileWorld = App->map->MapToWorld(unit->path.front().x, unit->path.front().y);
+			unit->path.pop_front();
 		}
 	}
 	return false;
 }
 
-//Reach Order:
+void FollowOrder::Start(Unit* unit) {
 
-void ReachOrder::Start(Entity* argunit) {
+	unit->next_pos = unit->entityPosition;
+	unit->SetTexture(MOVING);
+	state = EXECUTING;
+}
 
-	unit = (Unit*)argunit;
-	if (entity->collider != nullptr) {
-		if (unit->SetDestination(entity->collider->pos)) {
-			if (unit->path) {
-				for (list<iPoint>::iterator it = unit->path->end(); it != unit->path->begin(); it--) {
+void FollowOrder::Execute(Unit* unit) {
 
-					if (entity->collider->pos.DistanceTo(*it) < entity->collider->r)
-						unit->path->pop_back();
+	if (!CheckCompletion(unit)) {
+
+		iPoint prev_posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.x);
+		unit->entityPosition = unit->next_pos;
+		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.x);
+
+		fPoint velocity;
+		velocity.x = unit->squad->commander->entityPosition.x - unit->entityPosition.x;
+		velocity.y = unit->squad->commander->entityPosition.y - unit->entityPosition.y;
+
+		if (velocity.x != 0 && velocity.y != 0)
+			velocity.Normalize();
+
+		velocity = velocity * unit->unitMovementSpeed * App->entityManager->dt;
+		roundf(velocity.x);
+		roundf(velocity.y);
+
+		unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
+		unit->next_pos.y = unit->entityPosition.y + int(velocity.y);
+
+		unit->LookAt(velocity);
+
+		unit->collider->pos = { unit->next_pos.x, unit->next_pos.y + unit->selectionAreaCenterPoint.y };
+		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+
+		App->fog->Update(prev_posMap, posMap, unit->entityID);
+		App->collision->quadTree->UpdateCol(unit->collider);
+
+	}
+	else
+		state = COMPLETED;
+
+}
+
+bool FollowOrder::CheckCompletion(Unit* unit)
+{
+	return (unit->squad->commander->path.empty());
+}
+
+void UnitAttackOrder::Start(Unit* unit)
+{
+	if (Entity* nearest_enemy = App->entityManager->FindTarget(unit)) {   
+		unit->state = ATTACKING;
+
+		if (unit->range->CheckCollision(nearest_enemy->collider)) {
+			state = EXECUTING;
+			unit->SetTexture(ATTACKING);
+		}
+		else if (unit->los->CheckCollision(nearest_enemy->collider))
+			unit->order_list.push_front(new MoveToOrder(unit, nearest_enemy->collider->pos));
+		else
+			state = COMPLETED;
+	}
+	else
+		state = COMPLETED;
+
+}
+
+//Attack order:
+
+void UnitAttackOrder::Execute(Unit* unit) {
+
+	if (CheckCompletion(unit)) {
+		if (Entity* nearest_enemy = App->entityManager->FindTarget(unit)) {  // not DESTROYED
+
+			if (unit->range->CheckCollision(nearest_enemy->collider)) {
+
+				App->audio->PlayFightSound(unit);
+				nearest_enemy->Life -= MAX(unit->Attack - nearest_enemy->Defense, unit->unitPiercingDamage);
+				if (nearest_enemy->state != ATTACKING)
+					App->entityManager->RallyCall(nearest_enemy);
+
+				if (nearest_enemy->Life <= 0) {
+					nearest_enemy->Destroy();
+					state = NEEDS_START;
+				}
+				else if (nearest_enemy->collider->type == COLLIDER_UNIT && nearest_enemy->state != ATTACKING) {
+					Unit* enemy = (Unit*)nearest_enemy;
+					enemy->order_list.push_front(new UnitAttackOrder());
+					enemy->state = ATTACKING;
 				}
 			}
-		}
-	}
-
-	if (unit->path && !unit->path->empty())
-		unit->order_list.push_front(new FollowPathOrder());
-
-	state = EXECUTING;
-	unit->next_step = unit->entityPosition;
-}
-
-void ReachOrder::Execute() {
-
-	if (!CheckCompletion()) {
-
-		if (unit->destinationTileWorld != entity->entityPosition) {
-			if (entity->collider != nullptr) {
-				unit->destinationTileWorld = entity->collider->pos;
-			}
-			unit->SetTexture(MOVING);
-		}
-
-		unit->entityPosition = unit->next_step;
-		if (unit->collider != nullptr) {
-			unit->collider->pos = { unit->next_step.x, unit->next_step.y + unit->selectionAreaCenterPoint.y };
-		}
-		if (unit->range != nullptr) {
-			unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-		}
-		if (unit->los != nullptr) {
-			unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-		}
-
-		unit->CalculateVelocity();
-
-		fPoint vel = unit->velocity * unit->unitMovementSpeed * App->entityManager->dt;
-		roundf(vel.x);
-		roundf(vel.y);
-
-		unit->next_step.x = unit->entityPosition.x + int(vel.x);
-		unit->next_step.y = unit->entityPosition.y + int(vel.y);
-
-		// ===============================================================
-		// Moving fog of war
-		App->fog->Update(unit->prev_pos, unit->next_pos, unit->entityID);			        // This updates the FOW
-		unit->prev_pos = unit->next_pos;
-		if (unit->collider != nullptr) {
-			unit->next_pos = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
-		}
-		// ===============================================================
-
-		App->collision->quadTree->UpdateCol(unit->collider);
-		if (unit->IsHero) {
-			Hero* hero = (Hero*)unit;
-			if (hero->aoeTargets != nullptr) {
-				App->collision->quadTree->UpdateCol(hero->aoeTargets);
-				hero->aoeTargets->pos = hero->next_step;
-			}
-		}
-	}
-	else
-		state = COMPLETED;
-
-}
-
-
-bool ReachOrder::CheckCompletion()
-{
-	if (entity != nullptr && entity->collider != nullptr && unit != nullptr && unit->collider != nullptr) {
-		return (entity->collider->CheckCollision(unit->collider));
-	}
-}
-
-
-void UnitAttackOrder::Start(Entity* entity)
-{
-	if (entity == nullptr && entity->collider == nullptr && target == nullptr && target->collider == nullptr) return;
-	if (unit = entity->collider->GetUnit()) {
-		unit->state = ATTACKING;
-		App->entityManager->RallyCall(unit);
-
-		if (!unit->collider->CheckCollision(target->collider))
-			unit->order_list.push_front(new ReachOrder(target));
-		else {
-			unit->SetTexture(ATTACKING);
-			state = EXECUTING;
-		}
-	}
-
-	Unit* enemy_unit = nullptr;
-	if (enemy_unit = target->collider->GetUnit()) {
-		if (enemy_unit->state != ATTACKING) {
-			enemy_unit->order_list.push_front(new UnitAttackOrder(entity));
-			enemy_unit->state = ATTACKING;
-		}
-	}
-}
-
-//Attack order:
-
-void UnitAttackOrder::Execute() {
-
-	if (!CheckCompletion()) {
-		if (unit == nullptr && unit->collider == nullptr && target == nullptr && target->collider == nullptr) return;
-		if (!unit->range->CheckCollision(target->collider)) {
-			unit->order_list.push_front(new ReachOrder(target));
-			state = NEEDS_START;
-		}
-		else if (unit->currentAnim->Finished())
-		{
-			if (unit->type == VENOMOUS_SPIDER)
-				App->audio->PlayFx(App->sceneManager->level1_scene->soundSpiderAttack);
-
-			else if (unit->type == GONDOR_KNIGHT || unit->type == ELVEN_CAVALRY)
-				App->audio->PlayFx(App->sceneManager->level1_scene->soundHorseAttack);
-
-			else if (unit->type == ELVEN_ARCHER || unit->type == LEGOLAS)
-				App->audio->PlayFx(App->sceneManager->level1_scene->soundArcherAttack);
-
 			else
-				App->audio->PlayFx(App->sceneManager->level1_scene->soundAttack);
-
-			target->Life -= unit->Attack - target->Defense;
+				state = NEEDS_START;
 		}
-
-		if (target->Life <= 0)
-			target->Destroy();
+		else
+			state = COMPLETED;
 	}
-	else {
-		state = COMPLETED;
-		if (target = App->entityManager->FindTarget(unit))
-			unit->order_list.push_back(new UnitAttackOrder(target));
-	}
-
 }
 
-bool UnitAttackOrder::CheckCompletion() {
-
-	if (target != nullptr) {
-		if (target->Life > 0 || target->state != DESTROYED) {
-			if (unit != nullptr && unit->collider != nullptr && target->collider != nullptr) {
-				if (unit->los->CheckCollision(target->collider));
-					return false;
-			}
-		}
-	}
-	return true;
-}
-
-
-void BuildingAttackOrder::Start(Entity* entity)
+bool UnitAttackOrder::CheckCompletion(Unit* unit) 
 {
-	if (entity->collider == nullptr) return;
-	if (building = entity->collider->GetBuilding()) {
-		App->entityManager->RallyCall(building);
-		building->attack_timer.Start();
-		building->state = ATTACKING;
-	}
-	else
-		state = COMPLETED;
-
+	return (unit->currentAnim->Finished());
 }
 
-//Attack order:
+void GatherOrder::Start(Unit* unit) {
 
-void BuildingAttackOrder::Execute() {
-
-	if (!CheckCompletion()) {
-
-		if (building->attack_timer.ReadSec() > 0.5) {
-			target->Life -= building->Attack - target->Defense;
-			building->attack_timer.Start();
-		}
-		
-
-		if (target->Life <= 0)
-			target->Destroy();
-	}
-	else
-		state = COMPLETED;
-
-}
-
-bool BuildingAttackOrder::CheckCompletion() {
-
-	if (target != nullptr) {
-		if (target->Life > 0 || target->state != DESTROYED) {
-			if (building != nullptr && building->collider != nullptr && target->collider != nullptr) {
-				if (building->collider->CheckCollision(target->collider))
-					return false;
-			}
-		}
-	}
-	return true;
-}
-
-//Gather order:
-
-void GatherOrder::Start(Entity* entity) {
-	state = EXECUTING;
-	villager = (Villager*)entity;
+	Villager* villager = (Villager*)unit;
 	villager->state = GATHERING;
 
+	if (villager->curr_capacity > 0) {
 
-	if (resource == nullptr) {
-		if (villager->resource_carried != NONE)
-			resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition);
+		if (unit->faction == App->entityManager->player->faction) {
+			if (villager->collider->CheckCollision(App->entityManager->player->Town_center->collider))
+				App->entityManager->AddResources(villager);
+			else
+				unit->order_list.push_front(new MoveToOrder(unit, App->entityManager->player->Town_center->collider->pos));
+		}
+		else{
+			if (villager->collider->CheckCollision(App->entityManager->AI_faction->Town_center->collider)) {
+				App->entityManager->AddResources(villager);
+				state = COMPLETED;
+				return;
+			}
+			else
+				unit->order_list.push_front(new MoveToOrder(unit, App->entityManager->AI_faction->Town_center->collider->pos));
+		}
+	}
 
-		else {
+
+	if (villager->resource_carried != NONE) {
+		if (Resource* resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition)) {
+
+			if (!villager->collider->CheckCollision(resource->collider))
+				unit->order_list.push_front(new MoveToOrder(unit, resource->collider->pos));
+			else {
+				state = EXECUTING;
+				unit->SetTexture(GATHERING);
+				return;
+			}
+		}
+		else
 			state = COMPLETED;
-			return;
-		}
 	}
 
-	if (resource->collider == nullptr) {
-		resource = nullptr;
-		state = NEEDS_START;
-		return;
-	}
-
-	if (resource->type == WOOD || resource->type == GOLD || resource->type == FOOD || resource->type == STONE) {
-		if (resource != nullptr && villager->collider != nullptr && villager->resourcesWareHouse != nullptr && villager->resourcesWareHouse->collider != nullptr) {
-			villager->resource_carried = resource->type;
-
-			if (!villager->collider->CheckCollision(villager->resourcesWareHouse->collider) && villager->curr_capacity > 0) {
-
-
-				StoredResources* resources = nullptr;
-				if (App->entityManager->player != nullptr) {
-					if (villager->faction == App->entityManager->player->faction)
-						resources = &App->entityManager->player->resources;
-					else
-						resources = &App->entityManager->AI_faction->resources;
-				}
-
-				switch (villager->resource_carried) {
-				case WOOD:
-					resources->wood += villager->curr_capacity;
-					break;
-				case GOLD:
-					resources->gold += villager->curr_capacity;
-					break;
-				case FOOD:
-					resources->food += villager->curr_capacity;
-					break;
-				case STONE:
-					resources->stone += villager->curr_capacity;
-					break;
-				}
-
-				App->sceneManager->level1_scene->UpdateResources();
-				villager->curr_capacity = 0;
-			}
-			if (resource->type == WOOD || resource->type == GOLD || resource->type == FOOD || resource->type == STONE) { //re-check. No me fio un pelo
-				if (!villager->collider->CheckCollision(resource->collider)) {
-					villager->order_list.push_front(new ReachOrder(resource));
-					state = NEEDS_START;
-				}
-				else {
-					villager->SetTexture(GATHERING);
-					state = EXECUTING;
-				}
-			}
-		}
-	}
-	else {
-		resource = nullptr;
-		state = NEEDS_START;
-	}
 }
 
-void GatherOrder::Execute() {
+void GatherOrder::Execute(Unit* unit) {
 
-	if (!CheckCompletion()) {
-		if (villager->currentAnim->Finished()) {
-			/*if (resource->type == WOOD && resource->isActive == true)
-			App->audio->PlayFx(App->sceneManager->level1_scene->soundWood);
+	if (CheckCompletion(unit)) {
 
-			else if (resource->type == STONE || resource->type == GOLD && resource->isActive == true)
-			App->audio->PlayFx(App->sceneManager->level1_scene->soundStone);
+		Villager* villager = (Villager*)unit;
 
-			else if (resource->type == FOOD && resource->isActive == true)
-			App->audio->PlayFx(App->sceneManager->level1_scene->soundFruit);*/
+		if (Resource* resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition)) {   // not DESTROYED
 
-			villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
-			resource->Life -= MIN(resource->Life, villager->gathering_speed);
-			if (resource->Life <= 0) {
+			if (villager->collider->CheckCollision(resource->collider)) {
 
-				if (villager->faction == App->entityManager->player->faction)
+				villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
+				resource->Life -= MIN(resource->Life, villager->gathering_speed);
+
+				if (resource->Life <= 0 || villager->curr_capacity >= villager->max_capacity) {
+					if (resource->Life <= 0)
+						resource->Destroy();
+
 					state = NEEDS_START;
-				else
-					state = COMPLETED;
-
-				villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
-				resource->Destroy();
+				}
 			}
+			else
+				state = NEEDS_START;
 		}
-	}
-	else {
-		state = NEEDS_START;
-		villager->order_list.push_front(new ReachOrder(villager->resourcesWareHouse));
+		else
+			state = COMPLETED;
 	}
 
-	
 }
 
-bool GatherOrder::CheckCompletion() {
-
-	if (resource != nullptr) {
-		if (resource->state != DESTROYED) {
-			if (villager->curr_capacity < villager->max_capacity && resource->Life > 0)
-				return false;
-		}
-	}
-	return true;
+bool GatherOrder::CheckCompletion(Unit* unit) 
+{
+	return (unit->currentAnim->Finished());
 }
 
 //Build order:
 
-void BuildOrder::Start(Entity* entity) {
-	state = EXECUTING;
-	villager = (Villager*)entity;
-	villager->state = CONSTRUCTING;
-
-	if (villager != nullptr && villager->collider != nullptr && building != nullptr && building->collider != nullptr) {
-		if(building->type > -1 && building->type < 20){
-			if (!villager->collider->CheckCollision(building->collider)) {
-				villager->order_list.push_front(new ReachOrder(building));
-				state = NEEDS_START;
-			}
-			else
-				villager->SetTexture(CONSTRUCTING);
-		}
-		else {
-			building = nullptr;
-			state = NEEDS_START;
-		}
-	}
-}
-
-void BuildOrder::Execute()
-{
-	if (!CheckCompletion()) {
-		if (villager->currentAnim->Finished()) {
-			/*if(building->isActive == true)
-			App->audio->PlayFx(App->sceneManager->level1_scene->soundBuilding); */
-			//building->Life += MIN(building->MaxLife - building->Life, villager->buildingSpeed);
-			building->Life += 200;
-		}
-	}
-	else
-		state = COMPLETED;
-}
-
-bool BuildOrder::CheckCompletion() {
-
-	if (building != nullptr) {
-		if (building->Life >= building->MaxLife) {
-			building->Life = building->MaxLife;
-			building->entityTexture = building->buildingIdleTexture;
-			building->GetBuildingBoundaries();
-			if (building->collider != nullptr) {
-				building->collider->type = COLLIDER_BUILDING;
-			}
-			building->state = IDLE;
-
-			if (building->type == MILL) 
-				villager->resourcesWareHouse = building;
-			
-			return true;
-		}
-	}
-	return false;
-}
-
-//Create unit:
-
-void CreateUnitOrder::Start(Entity* entity) {
-	state = EXECUTING;
-	building = (Building*)entity;
-	building->state = CREATING;
-	timer.Start();
-}
-
-void CreateUnitOrder::Execute()
-{
-	if (CheckCompletion()) {
-		iPoint creation_place = App->map->WorldToMap(building->entityPosition.x, building->entityPosition.y + 150);
-		creation_place = App->pathfinding->FindNearestAvailable(creation_place, 10);
-		creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
-		Unit* unit = App->entityManager->CreateUnit(creation_place.x, creation_place.y, type);
-
-		if (type == VILLAGER)
-			App->ai->requested_villagers--;
-
-		if (belongs_to) {
-			belongs_to->Assign(unit);
-			unit->squad = belongs_to;
-		}
-
-		state = COMPLETED;
-	}
-}
-
-bool CreateUnitOrder::CheckCompletion()
-{
-	return (timer.ReadSec() > 3); //  3: unit creation time (temporal)
-}
-
-
-
-void SquadFollowPathOrder::Start(Entity* entity)
-{
-	state = EXECUTING;
-	Unit* unit = (Unit*)entity;
-	squad = unit->squad;
-
-	iPoint targetWorld = App->map->MapToWorld(target.x, target.y);
-	iPoint origin = App->map->WorldToMap(squad->commander->entityPosition.x, squad->commander->entityPosition.y);
-
-	list<iPoint>* ret = new list<iPoint>;
-
-	if (!App->pathfinding->IsWalkable(target) || App->collision->IsOccupied(targetWorld))
-		target = App->pathfinding->FindNearestAvailable(target, 5);
-
-	if (target.x == -1 || target == squad->commander->entityPosition) {
-		state = COMPLETED;
-		return;
-	}
-
-	Path pth;
-	pth.open.pathNodeList.push_back(PathNode(0, 0, origin, NULL));
-	pth.origin = origin;
-	pth.destination = target;
-
-	App->pathfinding->CalculatePath(&pth);
-
-	for (list<iPoint>::iterator it = pth.finished_path.begin(); it != pth.finished_path.end(); it++)
-		ret->push_back((*it));
-
-	App->pathfinding->paths.push_back(ret);
-
-	path = ret;
-}
-
-
-void SquadFollowPathOrder::Execute() {
-
-	if (!CheckCompletion()) {
-
-		int level = 1;
-		int i = path->front().x -level, j = path->front().y - level;
-
-		list<Unit*>::iterator it = squad->units.begin();
-
-		while (it != squad->units.end()) {
-			iPoint Map_p = { i, j };
-			iPoint World_p = App->map->MapToWorld(i, j);
-
-			if (App->pathfinding->IsWalkable(Map_p) && !App->collision->IsOccupied(World_p)) {
-				(*it)->order_list.push_back(new MoveToOrder(World_p));
-				it++;
-			}
-
-			j++;
-			if (j == (path->front().y + level)) {
-				i++; j = path->front().y - level;
-			}
-			if (j == (path->front().y + level) && i == path->front().x + level) {
-				level++; i = path->front().x - level;  j = path->front().y - level;
-			}
-		}
-
-		path->erase(path->begin());
-
-	}
-	else 
-		state = COMPLETED;
-
-}
-
-bool SquadFollowPathOrder::CheckCompletion() {
-
-	if (path != nullptr && !squad->units.empty()) {
-		if (path->size() > 0)
-			return false;
-		else
-			App->pathfinding->DeletePath(path);
-	}
-	return true;
-}
-
-
-void SquadAttackOrder::Start(Entity* entity)
-{
-	Unit* unit = (Unit*)entity;
-	squad = unit->squad;
-
-	list<Unit*>* enemies = &App->entityManager->player->units;
-
-	for (list<Unit*>::iterator it = enemies->begin(); it != enemies->end(); it++) {
-		if (target.DistanceTo((*it)->entityPosition) < SEARCH_ENEMIES_RANGE)
-			enemies_in_range.push_back(*it);
-	}
-
-	for (list<Unit*>::iterator it2 = squad->units.begin(); it2 != squad->units.end(); it2++) 
-		(*it2)->order_list.clear();
+void BuildOrder::Start(Unit* unit) {
 	
 
-	if (enemies_in_range.empty())
-		state = COMPLETED;
+	if (Building* to_build = App->entityManager->FindNearestBuilding(unit)) {
+		unit->state = CONSTRUCTING;
+
+		if (!unit->collider->CheckCollision(to_build->collider))
+			unit->order_list.push_front(new MoveToOrder(unit, to_build->collider->pos));
+		else {
+			unit->SetTexture(CONSTRUCTING);
+			state = EXECUTING;
+		}
+	}
 	else
-		state = EXECUTING;
+		state = COMPLETED;
 }
 
-//Attack order:
+void BuildOrder::Execute(Unit* unit)
+{
+	if (CheckCompletion(unit)) {
 
-void SquadAttackOrder::Execute() {
+		if (Building* to_build = App->entityManager->FindNearestBuilding(unit)) {
 
-	if (!CheckCompletion()) {
-		for (list<Unit*>::iterator enemy = enemies_in_range.begin(); enemy != enemies_in_range.end(); enemy++) {
-			if ((*enemy)->state == DESTROYED) continue;
-			Unit* unit = squad->units.front();
+			if (to_build->collider->CheckCollision(unit->collider)) {
 
-			for (list<Unit*>::iterator units = squad->units.begin(); units != squad->units.end(); units++) {
+				Villager* villager = (Villager*)unit;
+				to_build->Life += MIN(to_build->MaxLife - to_build->Life, villager->buildingSpeed);
 
-				if ((*units)->entityPosition.DistanceTo((*enemy)->entityPosition) < unit->entityPosition.DistanceTo((*enemy)->entityPosition)
-					&& (*units)->order_list.empty())
-					unit = (*units);
+				if (to_build->Life >= to_build->MaxLife) {
+					to_build->Life = to_build->MaxLife;
+					to_build->entityTexture = App->entityManager->buildingsDB[to_build->type]->entityTexture;
+					to_build->GetBuildingBoundaries();
+					to_build->state = IDLE;
+					state = COMPLETED;
+				}
+				else if (to_build->Life > to_build->MaxLife / 1.5f) {
+					to_build->entityTexture = App->entityManager->constructingPhase3;
+					to_build->GetBuildingBoundaries();
+				}
+				else if (to_build->Life > to_build->MaxLife / 3) {
+					to_build->entityTexture = App->entityManager->constructingPhase2;
+					to_build->GetBuildingBoundaries();
+				}
 			}
+			else
+				unit->order_list.push_front(new MoveToOrder(unit, to_build->collider->pos));
+		}
+		else
+			state = COMPLETED;
+	}
+}
 
-			if (unit->entityPosition.DistanceTo((*enemy)->entityPosition) > unit->los->r)
-				unit->order_list.push_back(new ReachOrder(*enemy));
-			else {
-				unit->order_list.push_back(new UnitAttackOrder(*enemy));
-				enemies_in_range.remove(*enemy);
+bool BuildOrder::CheckCompletion(Unit* unit) 
+{
+	return (unit->currentAnim->Finished());
+}
+
+SquadMoveToOrder::SquadMoveToOrder(Unit* commander, iPoint dest) {
+
+	order_type = SQUADMOVETO;
+
+	commander->squad->ClearOrders();
+	commander->order_list.push_front(new MoveToOrder(commander, dest));
+
+	if (commander->path.empty()) 
+		state = COMPLETED;
+
+}
+
+void SquadMoveToOrder::Start(Unit* commander) {
+
+	state = EXECUTING;
+
+	for (list<Unit*>::iterator it = commander->squad->units.begin(); it != commander->squad->units.end(); it++) {
+		if ((*it)->entityPosition.DistanceTo(commander->entityPosition) > 200) {
+			commander->next_pos = commander->entityPosition;
+			state = NEEDS_START;
+			return;
+		}
+	}
+
+}
+
+void SquadMoveToOrder::Execute(Unit* commander) {
+
+	if (!CheckCompletion(commander)) {
+
+		for (list<Unit*>::iterator it = commander->squad->units.begin(); it != commander->squad->units.end(); it++) {
+			if((*it)->order_list.empty())
+				(*it)->order_list.push_back(new FollowOrder());
+
+			if ((*it)->entityPosition.DistanceTo(commander->entityPosition) > 200) {
+				commander->next_pos = commander->entityPosition;
+				state = NEEDS_START;
+				return;
 			}
 		}
 	}
-	else 
-		state = COMPLETED;
-
 }
 
-bool SquadAttackOrder::CheckCompletion() 
+bool SquadMoveToOrder::CheckCompletion(Unit* commander)
 {
-	return (squad->units.empty() || enemies_in_range.empty());
+	return (commander->path.empty());
 }

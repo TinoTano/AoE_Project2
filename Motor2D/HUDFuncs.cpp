@@ -369,9 +369,9 @@ void HUD::StartResourceInfo()
 
 	for (list<UnitSprite>::iterator it = App->gui->SpriteResources.begin(); it != App->gui->SpriteResources.end(); ++it)
 	{
-		if (it._Ptr->_Myval.GetID() == resource->type)
+		if (it._Ptr->_Myval.GetID() == resource->contains)
 		{
-			id = resource->type;
+			id = resource->contains;
 			single = (Image*)App->gui->CreateImage("gui/ResourcesMiniatures.png", posx - App->render->camera.x, posy - App->render->camera.y, it._Ptr->_Myval.GetRect());
 			name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), posx - App->render->camera.x, posy - 20 - App->render->camera.y, nullptr);
 		}
@@ -424,9 +424,9 @@ void HUD::GetSelection() {
 
 		for (list<UnitSprite>::iterator it = App->gui->SpriteUnits.begin(); it != App->gui->SpriteUnits.end(); ++it)
 		{
-			if (it._Ptr->_Myval.GetID() == unit->GetType())
+			if (it._Ptr->_Myval.GetID() == unit->type)
 			{
-				id = unit->GetType();
+				id = unit->type;
 				single = (Image*)App->gui->CreateImage("gui/UnitMiniatures.png", posx - App->render->camera.x, posy - App->render->camera.y, it._Ptr->_Myval.GetRect());
 				name = (Label*)App->gui->CreateLabel(it._Ptr->_Myval.GetName(), posx - App->render->camera.x, posy - 25 - App->render->camera.y, nullptr);
 			}
@@ -467,7 +467,7 @@ void HUD::GetSelection() {
 					x = 0;
 					y += App->gui->SpriteUnits.front().GetRect().h + 5;
 				}
-				if (it_sprite._Ptr->_Myval.GetID() == unit->GetType())
+				if (it_sprite._Ptr->_Myval.GetID() == unit->type)
 				{
 					Image* unit = (Image*)App->gui->CreateImage("gui/UnitMiniatures.png", posx - App->render->camera.x + x, posy - 30 - App->render->camera.y + y, it_sprite._Ptr->_Myval.GetRect());
 					x += App->gui->SpriteUnits.front().GetRect().w;

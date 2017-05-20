@@ -558,8 +558,7 @@ void CutSceneManager::PerformMove(CutsceneElement * ele, CutsceneMove * move)
 		CutsceneUnit* unit = static_cast<CutsceneUnit*>(ele);
 
 		// Here put only move if the entity is a unit
-		unit->GetUnit()->SetDestination(App->map->WorldToMap(move->dest.x, move->dest.y));
-		unit->GetUnit()->order_list.push_front(new FollowPathOrder());
+		unit->GetUnit()->order_list.push_front(new MoveToOrder(unit->GetUnit(), move->dest));
 	}
 	case e_g_text:
 		break;

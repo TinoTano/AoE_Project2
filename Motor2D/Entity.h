@@ -15,7 +15,7 @@ enum Faction {
 };
 
 enum EntityState {
-	DESTROYED, CONSTRUCTING, CREATING, MOVING, ATTACKING, PATROLLING, GATHERING, IDLE, BEING_BUILT
+	DESTROYED, CONSTRUCTING, ATTACKING, GATHERING, MOVING, IDLE, BEING_BUILT
 };
 
 struct Cost {
@@ -25,24 +25,8 @@ struct Cost {
 	int food = 0;
 	int gold = 0;
 
-	int Total() {
-		return wood + stone + food + gold;
-	}
-
-	bool Spend(Cost cost) {
-
-		if (wood - cost.wood < 0 || food - cost.food < 0 || gold - cost.gold < 0 || stone - cost.stone < 0)
-			return false;
-
-		wood -= cost.wood; food -= cost.food; gold -= cost.gold; stone -= cost.stone;
-
-		return true;
-	}
-
-	void SetToZero() 
-	{
-		wood = stone = gold = food = 0;
-	}
+	bool Spend(Cost cost);
+	void SetToZero();
 
 };
 
@@ -53,11 +37,9 @@ public:
 	~Entity();
 	iPoint GetPosition() const;
 	int GetEntityID() const;
-	void SetActive(bool active);
 
 	virtual bool Update(float dt);
 	virtual bool Draw();
-	virtual bool HandleInput();
 	virtual void Destroy();
 	 
 	virtual bool Load(pugi::xml_node&);
@@ -82,8 +64,6 @@ public:
 	int last_life = 0;
 	Timer lifebar_timer;
 
-	uint imageWidth = 0;
-	uint imageHeight = 0;
 	iPoint selectionAreaCenterPoint = { 0,0 };
 
 };

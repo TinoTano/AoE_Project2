@@ -41,7 +41,6 @@ public:
 	vector<Info> elements;
 	vector<Image*> images;
 	vector<Button*> buttons;
-	uint fx_button_click;
 
 	// UI ELEMENTS
 	WindowUI ui_menu;

@@ -21,17 +21,12 @@ bool SceneManager::Awake(pugi::xml_node &)
 
 bool SceneManager::Start()
 {
-
-	bool ret = true;
-
-
 	current_scene = menu_scene;
-
 
 	if (current_scene != nullptr && current_scene != level1_scene)
 		current_scene->Start();
 
-	return ret;
+	return true;
 }
 
 bool SceneManager::PreUpdate()

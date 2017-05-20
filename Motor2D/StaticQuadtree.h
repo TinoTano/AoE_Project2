@@ -5,7 +5,7 @@
 #include <vector>
 #include "Collision.h"
 
-#define NODES_FOR_ROW 8
+#define NODES_FOR_ROW 10
 
 class StaticQuadTree
 {
@@ -21,8 +21,6 @@ public:
 
 public:
 	vector<list<Collider*>> nodes;
-	int map_width = 0;
-	int map_height = 0;
 };
 
 #endif // !_QUAD_TREE_H_

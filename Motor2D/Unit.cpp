@@ -14,9 +14,11 @@
 #include "Gui.h"
 #include "SceneManager.h"
 #include "Hero.h"
-#include "QuadTree.h"
 #include "Orders.h"
 #include "Villager.h"
+#include "Squad.h"
+#include "Audio.h"
+#include "AI.h"
 #include "QuestManager.h"
 
 Unit::Unit()
@@ -30,10 +32,8 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	entityPosition.y = posY;
 	type = unit->type;
 	faction = unit->faction;
-	unitAttackSpeed = unit->attackSpeed;
 	unitPiercingDamage = unit->unitPiercingDamage;
 	unitMovementSpeed = unit->unitMovementSpeed;
-	attackSpeed = unit->unitAttackSpeed;
 	currentDirection = unit->currentDirection;
 	unitIdleTexture = unit->unitIdleTexture;
 	unitMoveTexture = unit->unitMoveTexture;
@@ -58,12 +58,12 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	SetAnim(state);
 
-	if (currentAnim != nullptr) {
-		SDL_Rect r = currentAnim->GetCurrentFrame();
-		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
-		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w, COLLIDER_RANGE, App->entityManager, (Entity*)this);
-		los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w * 4, COLLIDER_LOS, App->entityManager, (Entity*)this);
-	}
+	SDL_Rect r = currentAnim->GetCurrentFrame();
+	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
+	range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w, COLLIDER_RANGE, App->entityManager, (Entity*)this);
+	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w * 4, COLLIDER_LOS, App->entityManager, (Entity*)this);
+	
+	destinationTileWorld = entityPosition;
 }
 
 Unit::~Unit()
@@ -76,12 +76,6 @@ bool Unit::Update(float dt)
 {
 	r = currentAnim->GetCurrentFrame();
 
-	if(entityPosition.x > 2700 || entityPosition.x < -1660 || entityPosition.y < 1160 || entityPosition.y > 3820)
-	{
-		Destroy();
-		state = DESTROYED;
-	}
-
 	if (state != DESTROYED) {
 
 		if (IsHero) {
@@ -89,26 +83,16 @@ bool Unit::Update(float dt)
 			hero->HeroUpdate();
 		}
 
-		list<Order*>* current_orders = nullptr;
-		if (order_list.empty()) {
-			if (squad)
-				if (!squad->squad_orderlist.empty())
-					current_orders = &squad->squad_orderlist;
-		}
-		else
-			current_orders = &order_list;
+		if (!order_list.empty()) {
 
-
-		if (current_orders != nullptr && !current_orders->empty()) {
-
-			if (current_orders->front()->state == NEEDS_START)
-				current_orders->front()->Start((Entity*)this);
-
-			if (current_orders->front()->state == EXECUTING)
-				current_orders->front()->Execute();
-
-			if (current_orders->front()->state == COMPLETED)
-				current_orders->pop_front();
+			if (order_list.front()->state == NEEDS_START)
+				order_list.front()->Start(this);
+						  
+			if (order_list.front()->state == EXECUTING)
+				order_list.front()->Execute(this);
+						  
+			if (order_list.front()->state == COMPLETED)
+				order_list.pop_front();
 		}
 		else {
 			if (state != IDLE) {
@@ -116,15 +100,13 @@ bool Unit::Update(float dt)
 				state = IDLE;
 			}
 
-			if (IsVillager && faction == App->entityManager->AI_faction->faction)
+			if (type == SLAVE_VILLAGER)
 				App->ai->Fetch_AICommand((Villager*)this);
 		}
 	}
 	else {
-		if (currentAnim->Finished()) {
+		if (currentAnim->Finished()) 
 			Destroy();
-			App->entityManager->DeleteEntity(this);
-		}
 	}
 
 
@@ -133,13 +115,31 @@ bool Unit::Update(float dt)
 
 void Unit::Destroy() {
 
-	App->entityManager->Untarget(this);
+	if (App->quest->TriggerKillCallback(type) == false)
+		App->quest->StepKillCallback(type);
 
-	if (App->quest->TriggerKillCallback(this->type) == false)
-		App->quest->StepKillCallback(this->type);
+	if (faction == App->entityManager->player->faction) {
+		App->entityManager->player->units.remove(this);
+		App->ai->RemoveThreats(this);
+		if (IsVillager)
+			App->entityManager->player->villagers.remove((Villager*)this);
+	}
+	else {
+		App->entityManager->AI_faction->units.remove(this);
+		if (IsVillager)
+			App->entityManager->AI_faction->villagers.remove((Villager*)this);
+	}
+
+	App->collision->DeleteCollider(collider);
+	App->collision->DeleteCollider(range);
+	App->collision->DeleteCollider(los);
+
+	if (squad)
+		squad->Deassign(this);
 
 	SetTexture(DESTROYED);
 	state = DESTROYED;
+	App->audio->PlayDeadSound(this);
 
 	App->entityManager->DeleteEntity(this);
 }
@@ -168,67 +168,11 @@ bool Unit::Draw()
 	return true;
 }
 
-void Unit::GetUnitBoundaries()
-{
-	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
-}
-
-unitType Unit::GetType() const
-{
-	return type;
-}
-
-int Unit::GetLife() const
-{
-	return Life;
-}
-
-void Unit::SetPos(int posX, int posY)
-{
-	entityPosition.x = posX;
-	entityPosition.y = posY;
-}
-
-void Unit::SetSpeed(int amount)
-{
-	unitMovementSpeed = amount;
-}
-
-bool Unit::SetDestination(iPoint destination)
-{
-
-	if (path != nullptr) {
-		App->pathfinding->DeletePath(path);
-		path = nullptr;
-	}
-	if (collider == nullptr) return false;
-	iPoint origin = App->map->WorldToMap(collider->pos.x, collider->pos.y);
-	path = App->pathfinding->CreatePath(origin, destination);
-	for (list<iPoint>::iterator it = path->begin(); it != path->end(); it++) {
-		iPoint destWorld = App->map->MapToWorld(path->back().x, path->back().y);
-		if (destWorld.DistanceTo(App->map->MapToWorld((*it).x, (*it).y)) > destWorld.DistanceTo(entityPosition)) {
-			path->remove(*it);
-		}
-	}
-	return (!path->empty());
-}
-
-void Unit::CalculateVelocity()
-{
-	velocity.x = destinationTileWorld.x - entityPosition.x;
-	velocity.y = destinationTileWorld.y - entityPosition.y;
-
-	if(velocity.x != 0 || velocity.y != 0)
-		velocity.Normalize();
-	
-	LookAt();
-}
-
-void Unit::LookAt()
+void Unit::LookAt(fPoint dest)
 {
 	unitDirection direction;
 
-	float angle = atan2f(velocity.y, velocity.x) * RADTODEG;
+	float angle = atan2f(dest.y, dest.x) * RADTODEG;
 
 	if (angle < 22.5 && angle > -22.5)
 		direction = RIGHT;
@@ -251,7 +195,6 @@ void Unit::LookAt()
 		currentDirection = direction;
 		SetAnim(state);
 	}
-	
 }
 
 

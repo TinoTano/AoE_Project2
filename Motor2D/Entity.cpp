@@ -24,11 +24,6 @@ int Entity::GetEntityID() const
 	return entityID;
 }
 
-void Entity::SetActive(bool active)
-{
-	isActive = active;
-}
-
 void Entity::drawLife(iPoint barPos) {
 
 	Sprite bar;
@@ -67,11 +62,6 @@ bool Entity::Draw()
 	return true;
 }
 
-bool Entity::HandleInput()
-{
-	return true;
-}
-
 void Entity::Destroy()
 {}
 
@@ -83,6 +73,21 @@ bool Entity::Load(pugi::xml_node &)
 
 bool Entity::Save(pugi::xml_node &) const
 {
+	return true;
+}
+
+void Cost::SetToZero() {
+
+	wood = stone = gold = food = 0;
+}
+
+bool Cost::Spend(Cost cost) {
+
+	if (wood - cost.wood < 0 || food - cost.food < 0 || gold - cost.gold < 0 || stone - cost.stone < 0)
+		return false;
+
+	wood -= cost.wood; food -= cost.food; gold -= cost.gold; stone -= cost.stone;
+
 	return true;
 }
 

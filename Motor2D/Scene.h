@@ -15,7 +15,6 @@
 #define STARTING_CAMERA_X 1650
 #define STARTING_CAMERA_Y -1900
 
-struct SDL_Texture;
 class Unit;
 class Building;
 class Resource;
@@ -49,12 +48,10 @@ public:
 	void LoadScene();
 	void SaveScene();
 
-	uint villagers_curr = 0, villagers_total = 0;
+	uint villagers_curr = 0, villagers_max = 0;
 	bool game_finished;
+
 private:
-	SDL_Texture* debug_tex = nullptr;
-	bool debug = false;
-	Resource* tree = nullptr;
 	bool start = false;
 	// TIMER
 
@@ -72,38 +69,16 @@ public:
 private:
 	// TIMER
 	Timer timer;
-	int quadtree_flag = 0;
 	Label* Timer_lbl = nullptr;
 	void UpdateTime(float time);
-	void TimeEvents();
 public:
 	QuestHUD questHUD;
-	///////
-	Unit* hero = nullptr;
 	// RESOURCES 
 	Label* wood = nullptr, *food = nullptr, *gold = nullptr, *stone = nullptr, *villagers = nullptr;
-	Unit* guard1= nullptr;
-	Unit* guard2= nullptr;
 
 	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL, LOADGAME };
 	enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
 
-	//Sounds
-	uint soundAttack;
-	uint soundSpiderAttack;
-	uint soundTrollAttack;
-	uint soundBalrogAttack;
-	uint soundArcherAttack;
-	uint soundHorseAttack;
-
-	uint soundWood;
-	uint soundStone;
-	uint soundFruit;
-	uint soundBuilding;
-
-	uint soundCreateVillager;
-	uint soundCreateUnit;
-	uint soundCreateLegolas;
 };
 
 #endif // __SCENE_H__

@@ -36,15 +36,6 @@ public:
 	// Sets up the walkability map
 	void SetMap(uint width, uint height, uchar* data);
 
-	// Main function to request a path from A to B
-	list<iPoint>* CreatePath(const iPoint& origin, const iPoint& destination);
-
-	// To request all tiles involved in the last generated path
-	const list<iPoint>* GetLastPath() const;
-
-	list<iPoint>* GetPath() const;
-	list<list<iPoint>*>* GetPaths();
-
 	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries(const iPoint& pos) const;
 
@@ -56,13 +47,9 @@ public:
 
 	bool Jump(int current_x, int current_y, int dx, int dy, iPoint start, iPoint end, PathNode& new_node);
 
-	iPoint FindNearestAvailable(const iPoint& tile, int max_radius = 1, const iPoint& target = { -1, -1 }, list<iPoint>* cells_to_ignore = nullptr) const;
+	iPoint FindNearestAvailable(iPoint origin, int range = 1, iPoint target = { -1,-1 });
 	void CalculatePath(Path* path);
-	void Repath(list<iPoint>* path, iPoint starting_pos);
-	void SharePath(Unit* commander, list<Entity*> followers);
-	bool DeletePath(list<iPoint>* path_to_delete);
-	Collision_state SolveCollision(Unit* unit1, Unit* unit2);
-	bool PushUnit(Unit* pushing_unit, Unit* pushed_unit);
+	void Repath(Unit* unit);
 
 private:
 
@@ -71,10 +58,7 @@ private:
 	uint height;
 	// all map walkability values [0..255]
 	uchar* map;
-	// we store the created path here
-	list<iPoint> lastPath;
 public:
-	list<list<iPoint>*> paths;
 };
 
 // forward declaration
@@ -91,7 +75,7 @@ struct PathNode
 	PathNode(const PathNode& node);
 
 	// Fills a list (PathList) of all valid adjacent pathnodes
-	uint FindWalkableAdjacents(PathList& list_to_fill) const;
+	uint FindWalkableAdjacents(PathList& list_to_fill, int range = 1) const;
 	// Calculates this tile score
 	int Score() const;
 	// Calculate the F for a specific destination tile

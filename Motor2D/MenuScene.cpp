@@ -132,7 +132,6 @@ bool MenuScene::Start()
 	App->gui->SetPriority();
 
 	//LOAD FX
-	fx_button_click = App->audio->LoadFx("audio/fx/fx_button_click.wav");
 	App->audio->PlayMusic("audio/music/m_menu.ogg", 0.0f);
 
 	return ret;
@@ -214,7 +213,7 @@ bool MenuScene::PostUpdate()
 {
 	if (buttons[0]->current == CLICKIN)
 	{
-		App->audio->PlayFx(fx_button_click);
+		App->audio->PlayFx(BUTTON_SOUND);
 	}
 	else if (buttons[SKIRMISH]->current == CLICKUP)
 	{

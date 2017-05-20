@@ -13,6 +13,8 @@ void TechTree::Reset(Faction faction){
 	available_techs.clear();
 	available_units.clear();
 
+	pair<unitType, buildingType> p;
+
 	if (faction == FREE_MEN) {
 		available_buildings.push_back(HOUSE);
 		available_buildings.push_back(BARRACKS);
@@ -23,8 +25,6 @@ void TechTree::Reset(Faction faction){
 		available_techs.push_back(HORSE_TRAINING);
 		available_techs.push_back(TOWN_MILITIA);
 
-		pair<unitType, buildingType> p;
-
 		p = { GONDOR_SPEARMAN, BARRACKS };
 		available_units.push_back(p);
 
@@ -32,9 +32,6 @@ void TechTree::Reset(Faction faction){
 		available_units.push_back(p);
 
 		p = { GONDOR_KNIGHT, STABLES };
-		available_units.push_back(p);
-
-		p = { LIGHT_CATAPULT, SIEGE_WORKSHOP };
 		available_units.push_back(p);
 	}
 	else if (faction == SAURON_ARMY) {
@@ -45,13 +42,9 @@ void TechTree::Reset(Faction faction){
 
 		available_techs.push_back(ORC_MINES);
 
-		pair<unitType, buildingType> p;
-
 		p = { GOBLIN_SOLDIER, ORC_BARRACKS };
 		available_units.push_back(p);
-
 	}
-
 }
 
 
@@ -101,13 +94,10 @@ void TechTree::Researched(TechType tech_id) {
 void TechTree::LoadTechTree(pugi::xml_node Techs) {
 
 	pugi::xml_node TechData;
-	int id_count = 1;
+	int id_count = 0;
 
 	if (Techs.empty() == false)
 	{
-		Tech* tech_0 = new Tech();
-		all_techs.push_back(tech_0);
-
 		for (TechData = Techs.child("Tech"); TechData; TechData = TechData.next_sibling("Tech")) {
 
 			Tech* new_Tech = new Tech();

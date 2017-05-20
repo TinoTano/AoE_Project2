@@ -177,7 +177,7 @@ void HUD::Update() {
 									y += App->gui->SpriteUnits.front().GetRect().h + 5;
 								}
 								Unit* unit = (Unit*)(*it_unit);
-								if (it_sprite._Ptr->_Myval.GetID() == unit->GetType() && it_unit._Ptr->_Myval->Life > 0) {
+								if (it_sprite._Ptr->_Myval.GetID() == unit->type && it_unit._Ptr->_Myval->Life > 0) {
 									if (it_unit._Ptr->_Myval->MaxLife == 0) it_unit._Ptr->_Myval->MaxLife = it_unit._Ptr->_Myval->Life;
 									percent = ((it_unit._Ptr->_Myval->MaxLife - it_unit._Ptr->_Myval->Life) * 100) / it_unit._Ptr->_Myval->MaxLife;
 									barPercent = (percent * App->gui->SpriteUnits.front().GetRect().w) / 100;
@@ -215,7 +215,7 @@ void HUD::Update() {
 					}
 					else {
 						Unit* unit = (Unit*)App->entityManager->selectedEntityList.front();
-						if (unit->GetType() != id) {
+						if (unit->type != id) {
 							ClearSingle();
 							GetSelection();
 						}
@@ -282,17 +282,9 @@ void HUD::Update() {
 											{
 												if (App->gui->building_bt[i].button != nullptr) {
 													if (!App->entityManager->placingBuilding && App->gui->building_bt[i].button->current == CLICKUP) {
-														if (App->entityManager->player->resources.Spend(App->entityManager->buildingsDB[App->gui->building_bt[i].type]->cost)) {
-															int x, y;
-															App->input->GetMousePosition(x, y);
-															App->entityManager->buildingToCreate = App->entityManager->CreateBuilding(x - App->render->camera.x, y - App->render->camera.y, App->gui->building_bt[i].type);
-															if (App->entityManager->buildingToCreate->collider != nullptr) {
-																App->entityManager->buildingToCreate->collider->type = COLLIDER_CREATING_BUILDING;
-															}
-															App->entityManager->placingBuilding = true;
-															App->entityManager->buildingToCreate->waitingToPlace = true;
-															App->entityManager->buildingToCreate->faction = FREE_MEN; //temporal for testing
-														}
+
+														App->entityManager->placingBuilding = true;
+														App->entityManager->placing_type = App->gui->building_bt[i].type;
 													}
 												}
 											}
@@ -397,8 +389,8 @@ void HUD::Update() {
 							if (create_villager_bt != nullptr && id == TOWN_CENTER) {
 								if (create_villager_bt->current == CLICKUP) {
 									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) {
-										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_total);
-										building->order_list.push_back(new CreateUnitOrder(ELF_VILLAGER));
+										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_max);
+										building->units_in_queue.push_back(ELF_VILLAGER); 
 										App->sceneManager->level1_scene->UpdateResources();
 									}
 								}
@@ -411,7 +403,7 @@ void HUD::Update() {
 							for (uint i = 0; i < App->gui->tech_bt.size(); ++i) {
 								if (App->gui->tech_bt[i].button != nullptr) {
 									if (App->gui->tech_bt[i].button->current == CLICKUP) {
-										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) {
+										if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost)) 
 										App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
 									}
 								}
@@ -431,7 +423,8 @@ void HUD::Update() {
 								{
 									if (App->gui->unit_bt[i].button != nullptr) {
 										if (App->gui->unit_bt[i].button->current == CLICKUP) {
-												building->order_list.push_back(new CreateUnitOrder(App->gui->unit_bt[i].type));
+											if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost)) {
+												building->units_in_queue.push_back(App->gui->unit_bt[i].type);
 												App->sceneManager->level1_scene->UpdateResources();
 											}
 										}
@@ -452,7 +445,7 @@ void HUD::Update() {
 							if (App->gui->unit_bt[i].button != nullptr) {
 								if (App->gui->unit_bt[i].button->current == CLICKUP) {
 									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost)) {
-										building->order_list.push_back(new CreateUnitOrder(App->gui->unit_bt[i].type));
+										building->units_in_queue.push_back(App->gui->unit_bt[i].type);
 										App->sceneManager->level1_scene->UpdateResources();
 									}
 								}
@@ -473,13 +466,13 @@ void HUD::Update() {
 				}
 				else {
 					Resource* resource = (Resource*)App->entityManager->selectedEntityList.front();
-					if (resource->type != id) {
+					if (resource->contains != id) {
 						ClearResource();
 						StartResourceInfo();
 					}
 					for (list<UnitSprite>::iterator it = App->gui->SpriteResources.begin(); it != App->gui->SpriteResources.end(); ++it)
 					{
-						if (it._Ptr->_Myval.GetID() == resource->type)
+						if (it._Ptr->_Myval.GetID() == resource->contains)
 						{
 							name->SetString(it._Ptr->_Myval.GetName());
 						}

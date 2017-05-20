@@ -9,6 +9,7 @@
 #include "p2Log.h"
 #include "Orders.h"
 #include "math.h"
+#include "AI.h"
 
 
 Building::Building()
@@ -22,16 +23,10 @@ Building::Building(int posX, int posY, Building* building)
 
 	type = building->type;
 	faction = building->faction;
-	buildingAttackSpeed = building->buildingAttackSpeed;
 	buildingPiercingDamage = building->buildingPiercingDamage;
 	cost = building->cost;
-	buildingBuildTime = building->buildingBuildTime;
-	entityTexture = buildingIdleTexture = building->buildingIdleTexture;
-	buildingDieTexture = building->buildingDieTexture;
-	constructingPhase1 = building->constructingPhase1;
-	constructingPhase2 = building->constructingPhase2;
-	constructingPhase3 = building->constructingPhase3;
-	Life = building->Life;
+	
+
 	MaxLife = building->MaxLife;
 	Attack = building->Attack;
 	Defense = building->Defense;
@@ -39,9 +34,19 @@ Building::Building(int posX, int posY, Building* building)
 	selectionWidth = building->selectionWidth;
 	selectionAreaCenterPoint = building->selectionAreaCenterPoint;
 
+	if (type == TOWN_CENTER || type == SAURON_TOWER) {
+		Life = MaxLife;
+		entityTexture = building->entityTexture;
+	}
+	else {
+		Life = 1;
+		state = BEING_BUILT;
+		entityTexture = App->entityManager->constructingPhase1;
+	}
+
 	GetBuildingBoundaries();
 
-	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
+	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y }, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth * 1.5, COLLIDER_LOS, App->entityManager, (Entity*)this);
 
@@ -51,11 +56,6 @@ Building::Building(int posX, int posY, Building* building)
 Building::~Building()
 {}
 
-bool Building::IsEnemy() const
-{
-	return (bool)faction;
-}
-
 void Building::GetBuildingBoundaries()
 {
 	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
@@ -64,53 +64,44 @@ void Building::GetBuildingBoundaries()
 bool Building::Update(float dt)
 {
 
-	if (state != BEING_BUILT && state != DESTROYED) {
+	if (state != DESTROYED && state != BEING_BUILT) {
 
-		if (!order_list.empty()) {
-			Order* current_order = order_list.front();
+		if (!units_in_queue.empty()) {
 
-			if (current_order->state == NEEDS_START)
-				current_order->Start((Entity*)this);
+			if (creation_timer.Read() - aux_timer > App->entityManager->unitsDB[units_in_queue.front()]->cooldown_time * 1000) {
 
-			if (current_order->state == EXECUTING)
-				current_order->Execute();
+				iPoint creation_place = App->map->WorldToMap(entityPosition.x, entityPosition.y + 250);
+				creation_place = App->pathfinding->FindNearestAvailable(creation_place, 5);
+				creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
 
-			if (current_order->state == COMPLETED)
-				order_list.pop_front();
+				Unit* unit = App->entityManager->CreateUnit(creation_place.x, creation_place.y, units_in_queue.front());
+
+				if (unit->type == SLAVE_VILLAGER)
+					App->ai->requested_villagers--;
+
+				if (unit->faction == SAURON_ARMY)
+					unit->squad = App->ai->AssignUnit(unit);
+
+				units_in_queue.pop_front();
+				aux_timer = creation_timer.Read();
+			}
 		}
-		else {
-			if (state != IDLE)
-				state = IDLE;
-		}
-
-		if (Life < MaxLife / 2) {
-			//blit fire animation
-		}
-	}
+		else 
+			aux_timer = creation_timer.Read();
 
 
-	if (state == BEING_BUILT) {
-		if (Life > MaxLife / 1.5f) {
-			entityTexture = constructingPhase3;
-			GetBuildingBoundaries();
-		}
-		else if (Life > MaxLife / 3) {
-			entityTexture = constructingPhase2;
-			GetBuildingBoundaries();
-		}
-	}
+		if (state == ATTACKING && attack_timer.ReadSec() > 3) {    //  3: building atatack speed (provisional)
 
-	if (waitingToPlace) {
-		if (collider != nullptr && collider->colliding) {
-			SDL_SetTextureColorMod(entityTexture, 255, 0, 0);
-			canBePlaced = false;
-		}
-		else {
-			SDL_SetTextureColorMod(entityTexture, 255, 255, 255);
-			canBePlaced = true;
+			if (Entity* enemy = App->entityManager->FindTarget(this)) {
+				if (range->CheckCollision(enemy->collider)) 
+					enemy->Life -= MAX(Attack - enemy->Defense, buildingPiercingDamage);  // this should cast an arrow particle
+				else
+					state = IDLE;
+			}
+			else state = IDLE;
 		}
 	}
-
+	
 	return true;
 }
 
@@ -142,20 +133,24 @@ bool Building::Draw()
 
 void Building::Destroy() {
 
-	App->entityManager->Untarget(this);
+	if (faction == App->entityManager->player->faction) {
+		App->entityManager->player->buildings.remove(this);
+		App->ai->RemoveThreats(this);
+	}
+	else {
+		App->entityManager->AI_faction->buildings.remove(this);
+		App->ai->build_requests.push_back(type);
+	}
 
-	if (faction == SAURON_ARMY)
-		App->ai->buildings_to_build.push_back(type);
+	App->collision->DeleteCollider(collider);
+	App->collision->DeleteCollider(range);
+	App->collision->DeleteCollider(los);
 
 	state = DESTROYED;
 	App->entityManager->DeleteEntity(this);
 
 }
 
-pugi::xml_node Building::LoadBuildingInfo(buildingType type)
-{
-	return pugi::xml_node();
-}
 
 bool Building::Load(pugi::xml_node &)
 {

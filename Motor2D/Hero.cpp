@@ -24,13 +24,6 @@ Hero::Hero(int posx, int posy, Hero* unit) : Unit(posx, posy, (Unit*)unit) {
 	case ATTACK_SPEED_SKILL:
 		skill = (Skill*) new AttackSpeedSkill();
 		break;
-	case AOE_SKILL:
-		skill = (Skill*) new AOESkill();
-		aoeTargets = App->collision->AddCollider(entityPosition, skill->range, COLLIDER_AOE_SKILL, App->entityManager, (Entity*)this);
-		if (aoeTargets != nullptr) {
-			aoeTargets->enabled = false;
-		}
-		break;
 	default:
 		break;
 	}
@@ -43,7 +36,6 @@ Hero::~Hero()
 }
 
 bool Hero::HeroUpdate() {
-
 
 	if (skill->active) {
 		if (skill_timer.ReadSec() > skill->duration)
@@ -60,18 +52,6 @@ bool Hero::HeroUpdate() {
 
 		App->render->sprites_toDraw.push_back(aux);
 
-		if (skill->type == AOE_SKILL) {
-			Sprite areaCircle;
-
-			areaCircle.pos = { entityPosition.x, entityPosition.y };
-			areaCircle.priority = entityPosition.y - (r.h / 2) + r.h - 1;
-			areaCircle.radius = skill->range;
-			areaCircle.r = 255;
-			areaCircle.g = 0;
-			areaCircle.b = 0;
-
-			App->render->sprites_toDraw.push_back(areaCircle);
-		}
 	}
 	if (skill_timer.ReadSec() > skill->cooldown)
 		skill->ready = true;

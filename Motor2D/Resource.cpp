@@ -16,37 +16,24 @@ Resource::Resource(int posX, int posY, Resource* resource)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
-	type = resource->type;
-	visual = resource->visual;
+
+	res_type = resource->res_type;
+	contains = resource->contains;
 	MaxLife = resource->Life;
 	Life = resource->Life;
-	resourceIdleTexture = resource->resourceIdleTexture;
-	resourceGatheringTexture = resource->resourceGatheringTexture;
+	entityTexture = resource->entityTexture;
 	selectionWidth = resource->selectionWidth;
 	selectionAreaCenterPoint = resource->selectionAreaCenterPoint;
 	
+	
+	int rectID = rand() % resource->blit_rects.size();
+	blit_rect = resource->blit_rects.at(rectID);
 
-	if (resource->resourceRectVector.size() > 0) {
-		int rectID = (rand() % resource->resourceRectVector.size()) - 1;
-		
-		if (rectID < 0)
-			rectID = 0;
-
-		resourceRect = resource->resourceRectVector.at(rectID);
-	}
-	else {
-		uint w = 0, h = 0;
-		App->tex->GetSize(resourceIdleTexture, w, h);
-		resourceRect.x = 0, resourceRect.y = 0, resourceRect.w = w, resourceRect.h = h;
-	}
-
-
-	if (type == GOLD_MINE || type == STONE_MINE || type == BLACK_TREE || type == GREEN_TREE || type == BUSH) {
-		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - (selectionAreaCenterPoint.y / 4)) }, resourceRect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
-	}
-	entityTexture = resourceIdleTexture;
+	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y  /* - (selectionAreaCenterPoint.y / 4))*/ }, blit_rect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+	
 	faction = NATURE;
 	App->fog->AddEntity(this);
+
 }
 
 
@@ -54,40 +41,25 @@ Resource::~Resource()
 {
 }
 
-void Resource::GetResourceBoundaries()
-{
-	App->tex->GetSize(entityTexture, imageWidth, imageHeight);
-}
-
-bool Resource::Update(float dt)
-{
-	return true;
-}
 
 bool Resource::Draw()
 {
 	Sprite resource;
-	resource.pos.x = entityPosition.x - (resourceRect.w / 2);
-	resource.pos.y = entityPosition.y - resourceRect.h;
+	resource.pos.x = entityPosition.x - (blit_rect.w / 2);
+	resource.pos.y = entityPosition.y - blit_rect.h;
 	resource.texture = entityTexture;
 	resource.priority = entityPosition.y;
-	resource.rect = resourceRect;
+	resource.rect = blit_rect;
 
 	App->render->sprites_toDraw.push_back(resource);
 	return true;
 }
 
-void Resource::Damaged() {
-
-	entityTexture = resourceGatheringTexture;
-	uint w = 0, h = 0;
-	App->tex->GetSize(resourceGatheringTexture, w, h);
-	resourceRect.x = 0, resourceRect.y = 0, resourceRect.w = w, resourceRect.h = h;
-	isDamaged = true;
-}
 
 void Resource::Destroy() {
 
-	App->entityManager->DeleteEntity(this);
 	state = DESTROYED;
+
+	App->collision->DeleteCollider(collider);
+	App->entityManager->DeleteEntity(this);
 }

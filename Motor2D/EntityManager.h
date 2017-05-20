@@ -60,8 +60,10 @@ public:
 	Collider* CheckCursorHover(iPoint cursor_pos);
 
 	Resource* FindNearestResource(resourceType type, iPoint pos);
-	Entity* FindTarget(Unit* unit);
-	void Untarget(Entity* destroyed_entity);
+	Building* FindNearestBuilding(Unit* unit);
+	Entity* FindTarget(Entity* entity);
+
+	void AddResources(Villager* villager);
 
 	void RallyCall(Entity* entity);
 
@@ -85,17 +87,20 @@ public:
 	COLLIDER_TYPE selectedListType = COLLIDER_NONE;
 
 	list<Entity*> WorldEntityList;
-	list<Resource*> aux_resource_list;
+	list<Resource*> resource_list;
 
 	GameFaction* player = nullptr;
 	GameFaction* AI_faction = nullptr;
 
 	CursorHovering cursor_hover = HOVERING_TERRAIN;
 	bool placingBuilding = false;
+	buildingType placing_type = ORC_BARRACKS;
 	float dt = 0;
-	buildingType creatingBuildingType = ORC_BARRACKS;
 	SDL_Rect NotHUD = { 0,0,0,0 };
-	Building* buildingToCreate = nullptr;
+
+	SDL_Texture* constructingPhase1;
+	SDL_Texture* constructingPhase2;
+	SDL_Texture* constructingPhase3;
 
 	map<int, Unit*> unitsDB;
 	map<int, Building*> buildingsDB;

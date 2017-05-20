@@ -16,13 +16,11 @@ class Squad;
 
 enum unitType {
 	ELVEN_LONGBLADE, DWARVEN_MAULER, GONDOR_SPEARMAN, ELVEN_ARCHER, DUNEDAIN_RANGE, ELVEN_CAVALRY, GONDOR_KNIGHT,
-	ROHAN_KNIGHT, MOUNTED_DUNEDAIN, SIEGE_TOWER, LIGHT_CATAPULT,
+	ROHAN_KNIGHT, MOUNTED_DUNEDAIN,
 
 	GOBLIN_SOLDIER, ORC_SOLDIER, URUK_HAI_SOLDIER, ORC_ARCHER, VENOMOUS_SPIDER, HARADRIM_OLIFANT, NAZGUL, TROLL_MAULER,
 
-	VILLAGER, ELF_VILLAGER,
-
-	GONDOR_HERO,
+	SLAVE_VILLAGER, ELF_VILLAGER,
 
 	LEGOLAS, GANDALF, BALROG
 };
@@ -42,44 +40,28 @@ public:
 	bool Draw();
 	void Destroy();
 
-	unitType GetType()const;
-	int GetLife() const;
-	void SetPos(int posX, int posY);
-	void SetSpeed(int amount);
-	bool SetDestination(iPoint destination);
-	void CalculateVelocity();
-	void LookAt();
+	void LookAt(fPoint dest);
 	void SetAnim(EntityState state);
 	void SetTexture(EntityState state);
-	void GetUnitBoundaries();
-
-private:
 
 public:
 	// STATS
 	unitType type = ELVEN_ARCHER;
-	float unitAttackSpeed = 0;
 	int unitPiercingDamage = 0;
 	float unitMovementSpeed = 0;
-	float attackSpeed = 0;
+	int cooldown_time = 0;
 	bool IsVillager = false;
 	bool IsHero = false;
-	bool isGuard = false;
 	Cost cost;
 	
 	// Utilities
-	EntityState state = IDLE;
 	SDL_Rect r = { 0,0,0,0 };
-	iPoint next_step = { 0,0 };
 	unitDirection currentDirection = RIGHT;
-	list<iPoint>* path = nullptr;
-	fPoint velocity = { 0,0 };
+	list<iPoint> path;
 	iPoint destinationTileWorld = { 0,0 };
 	Collider* los = nullptr;
 	Collider* range = nullptr;
 	list<Order*> order_list;
-	Building* buildingToCreate = nullptr;
-	Building* resourcesWareHouse = nullptr;
 	int selectionRadius = 0;
 	Squad* squad = nullptr;
 
@@ -96,7 +78,6 @@ public:
 
 	Animation* currentAnim = nullptr;
 
-	iPoint prev_pos = { 0,0 };
 	iPoint next_pos = { 0,0 };
 
 };

@@ -49,13 +49,28 @@ void Squad::Deassign(Unit* unit) {
 
 }
 
+void Squad::Update() {
+
+	if (!units.empty()) {
+
+		if (!squad_orderlist.empty()) {
+
+			if (squad_orderlist.front()->state == NEEDS_START)
+				squad_orderlist.front()->Start(commander);
+
+			if (squad_orderlist.front()->state == EXECUTING)
+				squad_orderlist.front()->Execute(commander);
+
+			if (squad_orderlist.front()->state == COMPLETED)
+				squad_orderlist.pop_front();
+		}
+	}
+}
 
 void Squad::RestoreUnits() {
 
-	for (int i = units.size(); i <= App->ai->squad_size; i++) {
-		pair<unitType, Squad*> unit_data{ type, this };
-		App->ai->unit_requests.push_front(unit_data);
-	}
+	for (int i = units.size(); i <= App->ai->squad_size; i++) 
+		App->ai->unit_requests.push_front(type);
 }
 
 void Squad::ClearOrders() {

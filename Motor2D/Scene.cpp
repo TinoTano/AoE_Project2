@@ -16,9 +16,9 @@
 #include "Gui.h"
 #include <sstream>
 #include "StaticQuadtree.h"
+#include "AI.h"
 #include "FileSystem.h"
 #include "SceneManager.h"
-#include "QuadTree.h"
 #include "Building.h"
 #include "FogOfWar.h"
 #include "Minimap.h"
@@ -46,24 +46,6 @@ bool Scene::Start()
 {
 	active = true;
 
-	// Loading sounds ================================================
-
-	soundAttack = App->audio->LoadFx("audio/fx/Swords.wav");
-	soundSpiderAttack = App->audio->LoadFx("audio/fx/AmbientSounds/Spiders.wav");
-	//soundTrollAttack = App->audio->LoadFx("audio/fx/"); //no hay
-	//soundBalrogAttack = App->audio->LoadFx("audio/fx/"); //no hay
-	soundArcherAttack = App->audio->LoadFx("audio/fx/bow.wav");
-	soundHorseAttack = App->audio->LoadFx("audio/fx/Dead_Horse_1.wav");
-
-	//soundWood = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
-	//soundStone = App->audio->LoadFx("audio/fx/Fight_2.wav");
-	//soundFruit = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
-	//soundBuilding = App->audio->LoadFx("audio/fx/Fight_2.wav"); //no hay
-	
-	soundCreateVillager = App->audio->LoadFx("audio/fx/Swords.wav");
-	soundCreateUnit = App->audio->LoadFx("audio/fx/Swords.wav");
-	soundCreateLegolas = App->audio->LoadFx("audio/fx/Swords.wav");
-
 	// Creating map ==================================================
 
 	if (start == false)
@@ -78,7 +60,6 @@ bool Scene::Start()
 			RELEASE_ARRAY(data);
 		}
 
-		debug_tex = App->tex->Load("maps/path2.png");
 		start = true;
 	}
 
@@ -196,7 +177,7 @@ bool Scene::Start()
 	App->map->LoadResources(App->map->map_file.child("map"));
 
 	// Units
-	hero = App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y, ELVEN_CAVALRY);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y, ELVEN_CAVALRY);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 500, TOWN_HALL_POS_Y + 1100, VENOMOUS_SPIDER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 380, TOWN_HALL_POS_Y + 1070, TROLL_MAULER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 400, TOWN_HALL_POS_Y + 1200, VENOMOUS_SPIDER);
@@ -213,8 +194,8 @@ bool Scene::Start()
 	// Villager
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y + 50, ELF_VILLAGER);
 
-	App->entityManager->CreateUnit(enemyTownCenterPos.x - 250, enemyTownCenterPos.y + 200, VILLAGER);
-	App->entityManager->CreateUnit(enemyTownCenterPos.x - 280, enemyTownCenterPos.y + 200, VILLAGER);
+	App->entityManager->CreateUnit(enemyTownCenterPos.x - 250, enemyTownCenterPos.y + 200, SLAVE_VILLAGER);
+	App->entityManager->CreateUnit(enemyTownCenterPos.x - 280, enemyTownCenterPos.y + 200, SLAVE_VILLAGER);
 
 	// Enable AI
 
@@ -238,8 +219,8 @@ bool Scene::Start()
 	App->entityManager->player->resources.wood += 100;
 	UpdateResources();
 
-	villagers_curr = villagers_total = 1;
-	UpdateVillagers(villagers_curr, villagers_total);
+	villagers_curr = villagers_max = 1;
+	UpdateVillagers(villagers_curr, villagers_max);
 
 	questHUD.Start();
 
@@ -275,14 +256,6 @@ bool Scene::Update(float dt)
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
 
-	if (debug) {
-		const list<iPoint>* path = App->pathfinding->GetLastPath();
-
-		for (list<iPoint>::const_iterator it = path->begin(); it != path->end(); it++) {
-			iPoint pos = App->map->MapToWorld((*it).x, (*it).y);
-			App->render->Blit(debug_tex, pos.x, pos.y);
-		}
-	}
 
 	// --------------------------------------------
 	//						UI
@@ -337,7 +310,7 @@ bool Scene::PostUpdate()
 		game_finished = true;
 	}
 	if (buttons[BACKTOMENU]->current == CLICKIN) {
-		App->audio->PlayFx(App->sceneManager->menu_scene->fx_button_click);
+		App->audio->PlayFx(BUTTON_SOUND);
 	}
 	else if (buttons[BACKTOMENU]->current == CLICKUP) {
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
@@ -365,8 +338,6 @@ bool Scene::CleanUp()
 	return true;
 }
 
-void Scene::TimeEvents() {
-}
 void Scene::UpdateTime(float time)
 {
 	Timer_lbl->SetString(to_string((int)time / 60 / 10) + to_string((int)time / 60 % 10) + ':' + to_string((int)time % 60 / 10) + to_string((int)time % 60 % 10));
@@ -404,10 +375,6 @@ void Scene::SaveScene()
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			if ((*it)->path != nullptr) {
-				destTileNode.append_attribute("x") = (*it)->path->back().x;
-				destTileNode.append_attribute("y") = (*it)->path->back().y;
-			}
 		}
 	}
 
@@ -422,10 +389,6 @@ void Scene::SaveScene()
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
-			if ((*it)->path != nullptr) {
-				destTileNode.append_attribute("x") = (*it)->path->back().x;
-				destTileNode.append_attribute("y") = (*it)->path->back().y;
-			}
 		}
 	}
 
@@ -455,14 +418,13 @@ void Scene::SaveScene()
 	}
 
 	pugi::xml_node resourcesNode = rootNode.append_child("Resources");
-	for (list<Resource*>::iterator it = App->entityManager->aux_resource_list.begin(); it != App->entityManager->aux_resource_list.end(); it++) {
+	for (list<Resource*>::iterator it = App->entityManager->resource_list.begin(); it != App->entityManager->resource_list.end(); it++) {
 			pugi::xml_node resourceNodeInfo = resourcesNode.append_child("Resource");
-			resourceNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			resourceNodeInfo.append_child("Type").append_attribute("value") = (*it)->contains;
 			pugi::xml_node positionNode = resourceNodeInfo.append_child("Position");
 			positionNode.append_attribute("x") = (*it)->entityPosition.x;
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
 			resourceNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
-			resourceNodeInfo.append_child("State").append_attribute("value") = (*it)->isDamaged;
 	}
 
 	stringstream stream;
@@ -499,10 +461,6 @@ void Scene::LoadScene() {
 
 			unitTemplate->currentDirection = (unitDirection)unitNodeInfo.child("Direction").attribute("value").as_int();
 			unitTemplate->Life = unitNodeInfo.child("Life").attribute("value").as_int();
-			if (unitNodeInfo.child("State").attribute("value").as_int() == MOVING) {
-				Order* moveOrder = new MoveToOrder({ unitNodeInfo.child("DestinationTile").attribute("x").as_int(), unitNodeInfo.child("DestinationTile").attribute("y").as_int() });
-				unitTemplate->order_list.push_back(moveOrder);
-			}
 			/*else if (unitNodeInfo.child("State").attribute("value").as_int() == ATTACKING) {
 			Order* attackOrder = new UnitAttackOrder()
 			}*/
@@ -525,9 +483,6 @@ void Scene::LoadScene() {
 				(resourceItem)resourceNodeInfo.child("Type").attribute("value").as_int());
 
 			resourceTemplate->Life = resourceNodeInfo.child("Life").attribute("value").as_int();
-			if (resourceNodeInfo.child("State").attribute("value").as_bool()) {
-				resourceTemplate->Damaged();
-			}
 		}
 	}
 

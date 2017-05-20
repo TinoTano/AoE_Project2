@@ -20,25 +20,18 @@ public:
 	Resource();
 	Resource(int posX, int posY, Resource* resource);
 	~Resource();
-
-	bool Update(float dt);
 	
 	bool Draw();
 	void Destroy();
-	void Damaged();
-	void GetResourceBoundaries();
-
-private:
 
 public:
-	resourceItem visual = BLACK_TREE;
-	resourceType type = WOOD;
-	SDL_Texture* resourceIdleTexture = nullptr;
-	SDL_Texture* resourceGatheringTexture = nullptr;
-	vector<SDL_Rect> resourceRectVector;
-	SDL_Rect resourceRect = { 0,0 };
-	bool isDamaged = false; // just for save/load
+	resourceItem res_type = BLACK_TREE;
+	resourceType contains = WOOD;
+	SDL_Rect blit_rect = { 0,0,0,0 };
 	int selectionWidth = 0;
+
+	//only for templates
+	vector<SDL_Rect> blit_rects;
 };
 
 #endif

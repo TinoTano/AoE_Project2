@@ -18,7 +18,7 @@ public:
 	int max_capacity = 0;
 	int curr_capacity = 0;
 	resourceType resource_carried = NONE;
-	int buildingSpeed = 20;
+	int buildingSpeed = 200;
 
 	//ANIMATIONS
 	SDL_Texture* unitChoppingTexture = nullptr;
