@@ -255,10 +255,10 @@ Collider* Collision::FindCollider(iPoint worldPos, int radius) {
 			if ((*it)->pos.DistanceTo(worldPos) < col->pos.DistanceTo(worldPos))
 				col = (*it);
 		}
-	}
 
-	if (col->pos.DistanceTo(worldPos) > (col->r + radius) || col->entity->state == DESTROYED)
-		col = nullptr;
+		if (col->pos.DistanceTo(worldPos) > (col->r + radius) || col->entity->state == DESTROYED)
+			col = nullptr;
+	}
 
 	return col;
 }

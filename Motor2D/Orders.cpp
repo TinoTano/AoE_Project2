@@ -25,7 +25,7 @@ MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 
 	order_type = MOVETO; 
 	unit->path.clear();
-	iPoint origin = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+	iPoint origin = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
 	iPoint destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
 
 	if (!App->pathfinding->IsWalkable(destMap))
@@ -79,8 +79,8 @@ void MoveToOrder::Execute(Unit* unit) {
 		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
 
 		fPoint velocity;
-		velocity.x = unit->destinationTileWorld.x - unit->entityPosition.x;
-		velocity.y = unit->destinationTileWorld.y - unit->entityPosition.y;
+		velocity.x = unit->destinationTileWorld.x - unit->collider->pos.x;
+		velocity.y = unit->destinationTileWorld.y - unit->collider->pos.y;
 
 		if (velocity.x != 0 || velocity.y != 0)
 			velocity.Normalize();
@@ -110,7 +110,7 @@ void MoveToOrder::Execute(Unit* unit) {
 
 bool MoveToOrder::CheckCompletion(Unit* unit)
 {
-	if (unit->entityPosition.DistanceTo(unit->destinationTileWorld) < 10) {
+	if (unit->collider->pos.DistanceTo(unit->destinationTileWorld) < 10) {
 		if (unit->path.empty())
 			return true;
 		else {
@@ -132,33 +132,34 @@ void FollowOrder::Execute(Unit* unit) {
 
 	if (!CheckCompletion(unit)) {
 
-		iPoint prev_posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.x);
-		unit->entityPosition = unit->next_pos;
-		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.x);
+		if (!unit->collider->CheckCollision(unit->squad->commander->collider)) {
+			iPoint prev_posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.x);
+			unit->entityPosition = unit->next_pos;
+			iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.x);
 
-		fPoint velocity;
-		velocity.x = unit->squad->commander->entityPosition.x - unit->entityPosition.x;
-		velocity.y = unit->squad->commander->entityPosition.y - unit->entityPosition.y;
+			fPoint velocity;
+			velocity.x = unit->squad->commander->entityPosition.x - unit->entityPosition.x;
+			velocity.y = unit->squad->commander->entityPosition.y - unit->entityPosition.y;
 
-		if (velocity.x != 0 && velocity.y != 0)
-			velocity.Normalize();
+			if (velocity.x != 0 && velocity.y != 0)
+				velocity.Normalize();
 
-		velocity = velocity * unit->unitMovementSpeed * App->entityManager->dt;
-		roundf(velocity.x);
-		roundf(velocity.y);
+			velocity = velocity * unit->unitMovementSpeed * App->entityManager->dt;
+			roundf(velocity.x);
+			roundf(velocity.y);
 
-		unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
-		unit->next_pos.y = unit->entityPosition.y + int(velocity.y);
+			unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
+			unit->next_pos.y = unit->entityPosition.y + int(velocity.y);
 
-		unit->LookAt(velocity);
+			unit->LookAt(velocity);
 
-		unit->collider->pos = { unit->next_pos.x, unit->next_pos.y + unit->selectionAreaCenterPoint.y };
-		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+			unit->collider->pos = { unit->next_pos.x, unit->next_pos.y + unit->selectionAreaCenterPoint.y };
+			unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+			unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 
-		App->fog->Update(prev_posMap, posMap, unit->entityID);
-		App->collision->quadTree->UpdateCol(unit->collider);
-
+			App->fog->Update(prev_posMap, posMap, unit->entityID);
+			App->collision->quadTree->UpdateCol(unit->collider);
+		}
 	}
 	else
 		state = COMPLETED;
@@ -395,7 +396,7 @@ void SquadMoveToOrder::Execute(Unit* commander) {
 			if((*it)->order_list.empty())
 				(*it)->order_list.push_back(new FollowOrder());
 
-			if ((*it)->entityPosition.DistanceTo(commander->entityPosition) > 200) {
+			if ((*it)->entityPosition.DistanceTo(commander->entityPosition) > 500) {
 				commander->next_pos = commander->entityPosition;
 				state = NEEDS_START;
 				return;

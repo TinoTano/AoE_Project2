@@ -46,7 +46,7 @@ Building::Building(int posX, int posY, Building* building)
 
 	GetBuildingBoundaries();
 
-	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y }, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
+	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
 	range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth * 1.5, COLLIDER_LOS, App->entityManager, (Entity*)this);
 

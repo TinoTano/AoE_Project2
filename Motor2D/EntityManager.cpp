@@ -692,17 +692,6 @@ void EntityManager::OnCollision(Collision_data& col_data)
 				break;
 			}
 		}
-		
-		//	if (unit->order_list.front()->order_type == MOVETO) {
-		//		unit->order_list.pop_front();
-		//
-		//		if (!unit->path.empty()) {
-		//			unit->destinationTileWorld = App->map->MapToWorld(unit->path.back().x, unit->path.back().y);
-		//			unit->order_list.push_front(new MoveToOrder(unit, unit->destinationTileWorld));
-		//		}
-		//	}
-		//}
-
 		break;
 
 	default: 

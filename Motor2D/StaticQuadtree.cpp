@@ -25,7 +25,7 @@ void StaticQuadTree::ClearTree() {
 void StaticQuadTree::UpdateCol(Collider* col)
 {
 	int current_node = Locate(col);
-	if (current_node != col->quadtree_node) {
+	if (current_node != col->quadtree_node && current_node >= 0 && current_node < 100) {
 		nodes.at(col->quadtree_node).remove(col);
 		nodes.at(col->quadtree_node = current_node).push_back(col);
 	}
@@ -40,7 +40,7 @@ void StaticQuadTree::Insert(Collider* col)
 }
 
 int StaticQuadTree::Locate(Collider* col) {
-	iPoint MapPos = App->map->WorldToMap(col->pos.x, col->pos.y);   //
+	iPoint MapPos = App->map->WorldToMap(col->pos.x, col->pos.y);   
 	return ((trunc((float)(MapPos.y / NODES_FOR_ROW)) * NODES_FOR_ROW) + (trunc((float)(MapPos.x / NODES_FOR_ROW))));
 
 }
