@@ -8,7 +8,7 @@
 		<vsync value="true" />
 	</renderer>
 	<font>
-		<default_font file="fonts/open_sans/OpenSans-Regular.ttf" size="12" />
+		<default_font file="fonts/open_sans/times.ttf" size="14" />
 	</font>
 	<gui>
 		<atlas file="gui/atlas.png" />
