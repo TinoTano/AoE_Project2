@@ -734,7 +734,7 @@ Resource* EntityManager::FindNearestResource(resourceType contains, iPoint pos) 
 
 			if (resource == nullptr)
 				resource = (*it);
-			else if (pos.DistanceTo((*it)->entityPosition) < pos.DistanceTo(resource->entityPosition))
+			else if (pos.DistanceTo((*it)->collider->pos) < pos.DistanceTo(resource->collider->pos))
 				resource = (*it);
 		}
 	}
@@ -754,7 +754,7 @@ void EntityManager::RallyCall(Entity* entity) {
 		allied_units = &AI_faction->units;
 
 	for (list<Unit*>::iterator it = allied_units->begin(); it != allied_units->end(); it++) {
-		if (entity->entityPosition.DistanceTo((*it)->entityPosition) < (*it)->los->r && (*it)->type != SLAVE_VILLAGER && (*it)->type != ELF_VILLAGER) 
+		if (entity->collider->pos.DistanceTo((*it)->collider->pos) < (*it)->los->r && (*it)->type != SLAVE_VILLAGER && (*it)->type != ELF_VILLAGER)
 			(*it)->order_list.push_back(new UnitAttackOrder());
 	}
 	
@@ -773,9 +773,9 @@ Building* EntityManager::FindNearestBuilding(Unit* unit) {
 
 	iPoint aux{ -1,-1 };
 	for (list<Building*>::iterator it = ally_buildings->begin(); it != ally_buildings->end(); it++) {
-		if ((*it)->state == BEING_BUILT && unit->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
+		if ((*it)->state == BEING_BUILT && unit->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
 			ret = (*it);
-			aux = (*it)->entityPosition;
+			aux = (*it)->collider->pos;
 		}
 	}
 
@@ -794,7 +794,7 @@ Entity* EntityManager::FindTarget(Entity* entity) {
 
 	iPoint aux{ -1,-1 };
 	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
-		if((*it)->state != DESTROYED && entity->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
+		if((*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
 			ret = (*it);
 			aux = (*it)->entityPosition;
 		}
@@ -811,9 +811,9 @@ Entity* EntityManager::FindTarget(Entity* entity) {
 
 		aux.create(-1, -1);
 		for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
-			if ((*it)->state != DESTROYED && entity->entityPosition.DistanceTo((*it)->entityPosition) < aux.DistanceTo((*it)->entityPosition)) {
+			if ((*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
 				ret = (*it);
-				aux = (*it)->entityPosition;
+				aux = (*it)->collider->pos;
 			}
 		}
 	}

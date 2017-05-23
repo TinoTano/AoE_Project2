@@ -49,11 +49,11 @@ void AI::LoadExplorationMap() {
 	int width = App->map->data.height;
 	int height = App->map->data.width;
 
-	for (int i = width / 20; i < width - (width / 20); i += (width / 20)) {
-		for (int j = height / 20;  j < height - (height / 20); j += (height / 20)) {
+	for (int i = width / 40; i < width - (width / 40); i += (width / 40)) {
+		for (int j = height / 40;  j < height - (height / 40); j += (height / 40)) {
 
 			iPoint p{ i,j };
-			if (App->pathfinding->IsWalkable(p))
+			if (App->pathfinding->IsWalkable(p) && ( i + j > 21 && i + j < 39))   //second condition to fix map shape
 				exploration_points.push_back(p);
 		}
 	}

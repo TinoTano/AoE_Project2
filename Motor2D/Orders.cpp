@@ -379,7 +379,7 @@ void SquadMoveToOrder::Start(Unit* commander) {
 	state = EXECUTING;
 
 	for (list<Unit*>::iterator it = commander->squad->units.begin(); it != commander->squad->units.end(); it++) {
-		if ((*it)->entityPosition.DistanceTo(commander->entityPosition) > 200) {
+		if ((*it)->entityPosition.DistanceTo(commander->entityPosition) > 500) {
 			commander->next_pos = commander->entityPosition;
 			state = NEEDS_START;
 			return;
