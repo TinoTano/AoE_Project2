@@ -388,11 +388,14 @@ void HUD::Update() {
 							}
 							if (create_villager_bt != nullptr && id == TOWN_CENTER) {
 								if (create_villager_bt->current == CLICKUP) {
-									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) {
-										App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_max);
-										building->units_in_queue.push_back(ELF_VILLAGER); 
-										App->sceneManager->level1_scene->UpdateResources();
+									if (App->sceneManager->level1_scene->CheckUnitsRoom()) {
+										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) {
+											App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_max);
+											building->units_in_queue.push_back(ELF_VILLAGER);
+											App->sceneManager->level1_scene->UpdateResources();
+										}
 									}
+									else AlertText("NOT ENOUGH HOUSES", 5);
 								}
 							}
 							if (create_hero_bt != nullptr && id == TOWN_CENTER) {
@@ -403,8 +406,8 @@ void HUD::Update() {
 							for (uint i = 0; i < App->gui->tech_bt.size(); ++i) {
 								if (App->gui->tech_bt[i].button != nullptr) {
 									if (App->gui->tech_bt[i].button->current == CLICKUP) {
-										if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost)) 
-										App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
+										if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost))
+											App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
 									}
 								}
 							}
@@ -423,10 +426,14 @@ void HUD::Update() {
 								{
 									if (App->gui->unit_bt[i].button != nullptr) {
 										if (App->gui->unit_bt[i].button->current == CLICKUP) {
-											if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost)) {
-												building->units_in_queue.push_back(App->gui->unit_bt[i].type);
-												App->sceneManager->level1_scene->UpdateResources();
+											if (App->sceneManager->level1_scene->CheckUnitsRoom()) {
+												if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost))
+												{
+													building->units_in_queue.push_back(App->gui->unit_bt[i].type);
+													App->sceneManager->level1_scene->UpdateResources();
+												}
 											}
+											else AlertText("NOT ENOUGH HOUSES", 5);
 										}
 									}
 								}
@@ -444,10 +451,14 @@ void HUD::Update() {
 						{
 							if (App->gui->unit_bt[i].button != nullptr) {
 								if (App->gui->unit_bt[i].button->current == CLICKUP) {
-									if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost)) {
-										building->units_in_queue.push_back(App->gui->unit_bt[i].type);
-										App->sceneManager->level1_scene->UpdateResources();
+									if (App->sceneManager->level1_scene->CheckUnitsRoom()) {
+										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost))
+										{
+											building->units_in_queue.push_back(App->gui->unit_bt[i].type);
+											App->sceneManager->level1_scene->UpdateResources();
+										}
 									}
+									else AlertText("NOT ENOUGH HOUSES", 5);
 								}
 							}
 						}
@@ -542,6 +553,8 @@ void HUD::Update() {
 		App->gui->DestroyUIElement(cost_lbl);
 		cost_lbl = nullptr;
 	}
+
+	alert.Update();
 }
 
 
@@ -669,7 +682,7 @@ bool Gui::LoadHUDData()
 			bt.blit_sections.push_back(proportions);
 			bt.blit_sections.push_back(proportions);
 			bt.button = nullptr;
-			
+
 			string wood(unitNodeInfo.child("Cost").attribute("woodCost").as_string());
 			string food(unitNodeInfo.child("Cost").attribute("foodCost").as_string());
 			string gold(unitNodeInfo.child("Cost").attribute("goldCost").as_string());

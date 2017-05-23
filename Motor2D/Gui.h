@@ -22,6 +22,8 @@ using namespace std;
 #define CAMERA_OFFSET_Y App->render->camera.y
 #define NUM_UI_BUTTONS 12
 #define TECH_UI_BUTTON 6
+#define TEXTALERTPOS_X x/3 + x/15
+#define TEXTALERTPOS_Y y/5
 
 struct _TTF_Font;
 struct unit_button;
@@ -252,6 +254,19 @@ enum EntityType {
 	UNIT, BUILDING, RESOURCE
 };
 
+class TextAlert {
+public:
+	Timer text_duration, text_flicker;
+	Label* textalert_lbl = nullptr;
+	uint duration;
+	int color = 0;
+	void Start(string text, uint duration, uint x, uint y);
+	void Update();
+	void CleanUp();
+	bool active = false;
+};
+
+
 class HUD {
 public:
 
@@ -377,6 +392,12 @@ private:
 	void BlitInfoBuilding(building_button bt);
 	void BlitInfoTech(tech_button bt);
 	Label* info_lbl = nullptr, *desc_lbl = nullptr, *cost_lbl = nullptr;
+
+public:
+	// ------- OTHER USEFUL UTENSILS ------------
+	TextAlert alert;
+	void AlertText(string text, uint duration);
+
 };
 
 

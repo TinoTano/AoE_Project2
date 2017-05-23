@@ -265,6 +265,7 @@ bool Scene::Update(float dt)
 	if (buttons[MENU]->current == CLICKUP || App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
 		UpdateVillagers(5, 10);
 		ui_menu.WindowOn();
+		App->gui->hud->alert.CleanUp();
 	}
 	if (buttons[QUITGAME]->current == CLICKUP) App->quit = true;
 
@@ -354,6 +355,16 @@ void Scene::UpdateResources()
 void Scene::UpdateVillagers(uint available_villagers, uint total_villagers)
 {
 	villagers->SetString(to_string(available_villagers) + '/' + to_string(total_villagers));
+}
+
+bool Scene::CheckUnitsRoom()
+{
+	uint houses_count = 0;
+	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); ++it) {
+		if ((*it)->type == HOUSE) houses_count++;
+	}
+
+	return (App->entityManager->player->units.size() < (houses_count * 5) + 2);
 }
 
 void Scene::SaveScene()

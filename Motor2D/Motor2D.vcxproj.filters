@@ -129,6 +129,7 @@
     </ClCompile>
     <ClCompile Include="Video.cpp" />
     <ClCompile Include="theoraplay.cpp" />
+    <ClCompile Include="HUDTools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
