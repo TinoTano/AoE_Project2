@@ -61,11 +61,7 @@ void Map::Draw()
 						SDL_Rect r = tileset->GetTileRect(tile_id);
 						App->render->Blit(tileset->texture, tileWorld.x, tileWorld.y, &r);
 
-						if (visibility == fow_grey)
-						{
-							r = { 0, 0, 96, 51 };
-							App->render->Blit(App->fog->texture, tileWorld.x, tileWorld.y, &r);
-						}
+						DrawSoftEdges(tileWorld.x, tileWorld.y, visibility);
 					}
 				}
 			}
@@ -641,5 +637,117 @@ list<iPoint> Map::PropagateBFS(iPoint origin, int field_of_view)
 
 	return frontier;
 
+}
+
+
+void Map::DrawSoftEdges(int x, int y, int visibility)
+{
+	SDL_Rect r = {0, 0, 0, 0};
+
+	if (visibility == fow_grey)
+	{
+		r = { 0, 49, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	if (visibility == fow_grey_rdown)
+	{
+		r = { 96, 98, 96, 51 };
+		App->render->Blit(App->fog->texture_black, x, y, &r);
+	}
+	else if (visibility == fow_grey_rleft)
+	{
+		r = { 192, 98, 96, 51 };
+		App->render->Blit(App->fog->texture_black, x, y, &r);
+	}
+	else if (visibility == fow_grey_rright)
+	{
+		r = { 0, 49, 96, 51 };
+		App->render->Blit(App->fog->texture_black, x, y, &r);
+	}
+	else if (visibility == fow_grey_rup)
+	{
+		r = { 0, 98, 96, 51 };
+		App->render->Blit(App->fog->texture_black, x, y, &r);
+	}
+	else if (visibility == fow_clear_rright)
+	{
+		r = { 96, 0, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_rleft)
+	{
+		r = { 192, 0, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_rup)
+	{
+		r = { 192, 49, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_rdown)
+	{
+		r = { 96, 49, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_rectupleft)
+	{
+		r = { 0, 98, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_rectupright)
+	{
+		r = { 96, 98, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_rectdownleft)
+	{
+		r = { 192, 98, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_rectdownright)
+	{
+		r = { 0, 147, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_sup)
+	{
+		r = { 0, 196, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_sright)
+	{
+		r = { 96, 196, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y, &r);
+	}
+	else if (visibility == fow_clear_sleft)
+	{
+		r = { 192, 196, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x - 1, y, &r);
+	}
+	else if (visibility == fow_clear_sdown)
+	{
+		r = { 0, 249, 96, 51 };
+		App->render->Blit(App->fog->texture_grey, x, y + 3, &r);
+	}
+	else if (visibility == fow_black_rright)
+	{
+		r = { 96, 0, 96, 51 };
+		App->render->Blit(App->fog->texture_black, x, y, &r);
+	}
+	else if (visibility == fow_black_rleft)
+	{
+		r = { 192, 0, 96, 51 };
+		App->render->Blit(App->fog->texture_black, x, y, &r);
+	}
+	else if (visibility == fow_black_rup)
+	{
+		r = { 192, 49, 96, 51 };
+		App->render->Blit(App->fog->texture_black, x, y, &r);
+	}
+	else if (visibility == fow_black_rdown)
+	{
+		r = { 96, 49, 96, 51 };
+		App->render->Blit(App->fog->texture_black, x, y, &r);
+	}
 }
 

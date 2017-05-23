@@ -14,8 +14,16 @@
 enum fow_id
 {
 	fow_black,
+
 	fow_grey,
+	fow_grey_rup, fow_grey_rdown, fow_grey_rleft, fow_grey_rright,
+
+	// s = small, r = rounded.
 	fow_clear,
+	fow_clear_rup, fow_clear_rdown, fow_clear_rleft, fow_clear_rright,
+	fow_black_rup, fow_black_rdown, fow_black_rleft, fow_black_rright,
+	fow_clear_rectupright, fow_clear_rectupleft, fow_clear_rectdownright, fow_clear_rectdownleft,
+	fow_clear_sup, fow_clear_sdown, fow_clear_sleft, fow_clear_sright
 };
 
 struct in_fog_entity
@@ -51,6 +59,7 @@ public:
 	void GetEntitiesCircleArea(in_fog_entity& new_player);
 	void DeletePicks(in_fog_entity& frontier);
 	void GetCurrentPointsFromFrontier(in_fog_entity& player);
+	void SoftEdges();
 
 	// Characters
 
@@ -67,13 +76,15 @@ public:
 	vector<in_fog_entity>		entities_on_fog;
 	list<Entity*>	            entities_not_in_fog;
 
-	SDL_Texture*				texture = nullptr;
+	SDL_Texture*				texture_grey = nullptr;
+	SDL_Texture*				texture_black = nullptr;
 	iPoint				        prev_pos = { 0,0 };
 	iPoint				        next_pos = { 0,0 };
 	uint*						data = nullptr;
 
 private:
-	string                      path;
+	string                      path_texture1;
+	string                      path_texture2;
 };
 
 #endif

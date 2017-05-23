@@ -126,7 +126,9 @@ public:
 	bool CreateWalkabilityMap(int& width, int& height, uchar** buffer) const;
 	bool LoadResources(pugi::xml_node& node);
 
+	// FOW
 	list<iPoint> PropagateBFS(iPoint origin, int limit);
+	void DrawSoftEdges(int x, int y, int visibility);
 
 private:
 

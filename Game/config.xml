@@ -27,7 +27,7 @@
 		<folder>maps/</folder>
 	</map>
         <fog>
-               <texture file="maps/FOW.png" />
+               <texture file1="maps/FOW.png" file2="maps/FOW2.png"/>
         </fog>
         <quest>
                <data file="quests/questData.xml"/>
