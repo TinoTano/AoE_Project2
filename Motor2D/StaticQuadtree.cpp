@@ -11,14 +11,15 @@ StaticQuadTree::StaticQuadTree() {
 	}
 }
 
-StaticQuadTree::~StaticQuadTree(){
-
-	ClearTree();
+StaticQuadTree::~StaticQuadTree()
+{
+	for (int i = 0; i < (NODES_FOR_ROW * NODES_FOR_ROW); i++) {
+		delete &nodes.at(i);
+	}
 }
 void StaticQuadTree::ClearTree() {
 
 	for (int i = 0; i < (NODES_FOR_ROW * NODES_FOR_ROW); i++) {
-		delete &nodes.at(i);
 		nodes.at(i).clear();
 	}
 

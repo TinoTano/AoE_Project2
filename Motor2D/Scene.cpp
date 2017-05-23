@@ -178,8 +178,8 @@ bool Scene::Start()
 
 	// Units
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y, ELVEN_CAVALRY);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 500, TOWN_HALL_POS_Y + 1100, VENOMOUS_SPIDER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 380, TOWN_HALL_POS_Y + 1070, TROLL_MAULER);
+	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 500, TOWN_HALL_POS_Y + 1100, VENOMOUS_SPIDER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 400, TOWN_HALL_POS_Y + 1200, VENOMOUS_SPIDER);
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y + 1020, VENOMOUS_SPIDER);
 
