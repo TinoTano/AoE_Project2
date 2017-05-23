@@ -47,8 +47,9 @@ Building::Building(int posX, int posY, Building* building)
 	GetBuildingBoundaries();
 
 	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
-	range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
-	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth * 1.5, COLLIDER_LOS, App->entityManager, (Entity*)this);
+	
+	if(building->canAttack)
+		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 
 	attack_timer.Start();
 }
@@ -143,8 +144,9 @@ void Building::Destroy() {
 	}
 
 	App->collision->DeleteCollider(collider);
-	App->collision->DeleteCollider(range);
-	App->collision->DeleteCollider(los);
+
+	if(canAttack)
+		App->collision->DeleteCollider(range);
 
 	state = DESTROYED;
 	App->entityManager->DeleteEntity(this);

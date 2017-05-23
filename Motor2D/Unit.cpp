@@ -41,6 +41,7 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	unitDieTexture = unit->unitDieTexture;
 	selectionRadius = unit->selectionRadius;
 	selectionAreaCenterPoint = unit->selectionAreaCenterPoint;
+	cooldown_time = unit->cooldown_time;
 
 	Life = unit->Life;
 	MaxLife = unit->MaxLife;
@@ -60,8 +61,12 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	SDL_Rect r = currentAnim->GetCurrentFrame();
 	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
-	range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w, COLLIDER_RANGE, App->entityManager, (Entity*)this);
-	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w * 4, COLLIDER_LOS, App->entityManager, (Entity*)this);
+	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, unit->los_value / 2, COLLIDER_LOS, App->entityManager, (Entity*)this);
+
+	if(unit->range_value)
+		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, unit->range_value / 2, COLLIDER_RANGE, App->entityManager, (Entity*)this);
+	else
+		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, collider->r, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 	
 	destinationTileWorld = entityPosition;
 }

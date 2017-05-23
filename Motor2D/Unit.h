@@ -50,6 +50,8 @@ public:
 	int unitPiercingDamage = 0;
 	float unitMovementSpeed = 0;
 	int cooldown_time = 0;
+	int range_value = 0;
+	int los_value = 0;
 	bool IsVillager = false;
 	bool IsHero = false;
 	Cost cost;

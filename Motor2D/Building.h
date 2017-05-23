@@ -51,7 +51,6 @@ public:
 	uint aux_timer = 0;
 	uint imageWidth = 0;
 	uint imageHeight = 0;
-	Collider* los = nullptr;
 	Collider* range = nullptr;
 	deque<unitType>  units_in_queue;
 

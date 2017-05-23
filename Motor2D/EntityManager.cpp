@@ -328,12 +328,14 @@ bool EntityManager::LoadGameData()
 
 
 			unitTemplate->faction = (Faction)unitNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
-			unitTemplate->Life = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
-			unitTemplate->MaxLife = unitTemplate->Life;
+			unitTemplate->Life = unitTemplate->MaxLife = unitNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			unitTemplate->Attack = unitNodeInfo.child("Stats").child("Attack").attribute("value").as_int();
 			unitTemplate->Defense = unitNodeInfo.child("Stats").child("Defense").attribute("value").as_int();
 			unitTemplate->unitPiercingDamage = unitNodeInfo.child("Stats").child("PiercingDamage").attribute("value").as_int();
 			unitTemplate->unitMovementSpeed = unitNodeInfo.child("Stats").child("MovementSpeed").attribute("value").as_float();
+			unitTemplate->cooldown_time = unitNodeInfo.child("Stats").child("Cooldown").attribute("value").as_float();
+			unitTemplate->range_value = unitNodeInfo.child("Stats").child("Range").attribute("value").as_float();
+			unitTemplate->los_value = unitNodeInfo.child("Stats").child("LineOfSight").attribute("value").as_float();
 
 			unitTemplate->cost.wood = unitNodeInfo.child("Stats").child("Cost").child("woodCost").attribute("value").as_int();
 			unitTemplate->cost.stone = unitNodeInfo.child("Stats").child("Cost").child("stoneCost").attribute("value").as_int();
@@ -357,7 +359,7 @@ bool EntityManager::LoadGameData()
 				for (int j = 0; j < columns; j++) {
 					idle.PushBack({ width*j,height*i,width,height });
 				}
-				idle.speed = animationNode.child("Speed").attribute("value").as_float();
+				idle.speed = 0.2f;
 				unitTemplate->idleAnimations.push_back(idle);
 				if (i != 0 && i != rows - 1) {
 					idle.flip = SDL_FLIP_HORIZONTAL;
@@ -376,7 +378,7 @@ bool EntityManager::LoadGameData()
 				for (int j = 0; j < columns; j++) {
 					move.PushBack({ width*j,height*i,width,height });
 				}
-				move.speed = animationNode.child("Speed").attribute("value").as_float();
+				move.speed = 0.3f;
 				unitTemplate->movingAnimations.push_back(move);
 				if (i != 0 && i != rows - 1) {
 					move.flip = SDL_FLIP_HORIZONTAL;
@@ -395,7 +397,7 @@ bool EntityManager::LoadGameData()
 				for (int j = 0; j < columns; j++) {
 					attack.PushBack({ width*j,height*i,width,height });
 				}
-				attack.speed = animationNode.child("Speed").attribute("value").as_float();
+				attack.speed = unitNodeInfo.child("Stats").child("AttackSpeed").attribute("value").as_float();
 				unitTemplate->attackingAnimations.push_back(attack);
 				if (i != 0 && i != rows - 1) {
 					attack.flip = SDL_FLIP_HORIZONTAL;
@@ -414,7 +416,7 @@ bool EntityManager::LoadGameData()
 				for (int j = 0; j < columns; j++) {
 					die.PushBack({ width*j,height*i,width,height });
 				}
-				die.speed = animationNode.child("Speed").attribute("value").as_float();
+				die.speed = 0.3f;
 				unitTemplate->dyingAnimations.push_back(die);
 				if (i != 0 && i != rows - 1) {
 					die.flip = SDL_FLIP_HORIZONTAL;
@@ -445,7 +447,7 @@ bool EntityManager::LoadGameData()
 					for (int j = 0; j < columns; j++) {
 						chop.PushBack({ width*j,height*i,width,height });
 					}
-					chop.speed = animationNode.child("Speed").attribute("value").as_float();
+					chop.speed = 0.3f;
 					villagerTemplate->choppingAnimations.push_back(chop);
 					if (i != 0 && i != rows - 1) {
 						chop.flip = SDL_FLIP_HORIZONTAL;
