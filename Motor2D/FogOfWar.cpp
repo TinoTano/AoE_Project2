@@ -82,10 +82,11 @@ void FogOfWar::Update(iPoint prev_pos, iPoint next_pos, uint id)
 				MoveFrontier(prev_pos, "down", id);
 			else if (prev_pos.y - 1 == next_pos.y)
 				MoveFrontier(prev_pos, "up", id);
+
+			SoftEdges();
 		}
 	}
 
-	SoftEdges();
 	ManageEntities();
 }
 
@@ -160,7 +161,7 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 {
 	for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
 	{
-		/*SDL_Rect r = { 0, 0, 0, 0 };
+		SDL_Rect r = { 0, 0, 0, 0 };
 
 		if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
 		{
@@ -178,23 +179,17 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 		{
 			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rup;
 		}
-		else*/
-		
-		data[(*it).y * App->map->data.width + (*it).x] = fow_grey;
+		else
+			data[(*it).y * App->map->data.width + (*it).x] = fow_grey;
 	}
-
 
 	if (direction_str == "right")
 	{
 		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
 			(*it).x += 1;
 
-		// Optional improvements ----
-
 		for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
 			(*it).x += 1;
-
-		// ---
 
 		player_unity.pos.x += 1;
 	}
@@ -205,12 +200,8 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
 			(*it).x -= 1;
 
-		// Optional improvements ----
-
 		for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
 			(*it).x -= 1;
-
-		// ---
 
 		player_unity.pos.x -= 1;
 	}
@@ -221,12 +212,8 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
 			(*it).y -= 1;
 
-		// Optional improvements ----
-
 		for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
 			(*it).y -= 1;
-
-		// ---
 
 		player_unity.pos.y -= 1;
 	}
@@ -237,12 +224,8 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
 			(*it).y += 1;
 
-		// Optional improvements ----
-
 		for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
 			(*it).y += 1;
-
-		// ---
 
 		player_unity.pos.y += 1;
 	}
@@ -340,29 +323,27 @@ void FogOfWar::SoftEdges()
 	{
 		for (list<iPoint>::iterator it = (*curr_player).current_points.begin(); it != (*curr_player).current_points.end(); it++)
 		{
-
 			// Rect edges
 
 			if (Get((*it).x, (*it).y + 1) >= fow_clear && Get((*it).x, (*it).y + 1) <= fow_clear_sright &&
 				Get((*it).x, (*it).y - 1) >= fow_clear && Get((*it).x, (*it).y - 1) <= fow_clear_sright &&
-			   (Get((*it).x - 1, (*it).y) == fow_grey || Get((*it).x - 1, (*it).y) == fow_black))
+			   (Get((*it).x - 1, (*it).y) >= fow_black && Get((*it).x - 1, (*it).y) <= fow_grey_rright))
 				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rectupleft;
 
 			else if (Get((*it).x, (*it).y + 1) >= fow_clear && Get((*it).x, (*it).y + 1) <= fow_clear_sright &&
 					 Get((*it).x, (*it).y - 1) >= fow_clear && Get((*it).x, (*it).y - 1) <= fow_clear_sright &&
-					(Get((*it).x + 1, (*it).y) == fow_grey || Get((*it).x + 1, (*it).y) == fow_black))
+					(Get((*it).x + 1, (*it).y) >= fow_black && Get((*it).x + 1, (*it).y) <= fow_grey_rright))
 					 data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rectdownright;
 
 			else if (Get((*it).x - 1, (*it).y) >= fow_clear && Get((*it).x - 1, (*it).y) <= fow_clear_sright &&
 					 Get((*it).x + 1, (*it).y) >= fow_clear && Get((*it).x + 1, (*it).y) <= fow_clear_sright &&
-					(Get((*it).x, (*it).y + 1) == fow_grey || Get((*it).x, (*it).y + 1) == fow_black))
+					(Get((*it).x, (*it).y + 1) >= fow_black && Get((*it).x, (*it).y + 1) <= fow_grey_rright))
 					 data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rectdownleft;
 
 			else if (Get((*it).x - 1, (*it).y) >= fow_clear && Get((*it).x - 1, (*it).y) <= fow_clear_sright &&
 					 Get((*it).x + 1, (*it).y) >= fow_clear && Get((*it).x + 1, (*it).y) <= fow_clear_sright &&
-					(Get((*it).x, (*it).y - 1) == fow_grey || Get((*it).x, (*it).y - 1) == fow_black))
+					(Get((*it).x, (*it).y - 1) >= fow_black && Get((*it).x, (*it).y - 1) <= fow_grey_rright))
 					 data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rectupright;
-
 
 			// Rounded grey-black edges
 
@@ -378,32 +359,18 @@ void FogOfWar::SoftEdges()
 			else if (Get((*it).x, (*it).y - 1) == fow_black && Get((*it).x - 1, (*it).y) == fow_black)
 				data[(*it).y * App->map->data.width + (*it).x] = fow_black_rup;
 
-			// Rounded grey edges
-
-			else if (Get((*it).x, (*it).y + 1) == fow_grey && Get((*it).x + 1, (*it).y) == fow_grey)
-				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rdown;
-
-			else if (Get((*it).x, (*it).y + 1) == fow_grey && Get((*it).x - 1, (*it).y) == fow_grey)
-				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rleft;
-
-			else if (Get((*it).x, (*it).y - 1) == fow_grey && Get((*it).x + 1, (*it).y) == fow_grey)
-				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rright;
-
-			else if (Get((*it).x, (*it).y - 1) == fow_grey && Get((*it).x - 1, (*it).y) == fow_grey)
-				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rup;
-
 			// Rounded grey & black edges - These are always grey texture
 
-			else if ((Get((*it).x, (*it).y + 1) == fow_grey || Get((*it).x, (*it).y + 1) == fow_black) && (Get((*it).x + 1, (*it).y) == fow_grey || Get((*it).x + 1, (*it).y) == fow_black))
+			else if ((Get((*it).x, (*it).y + 1) >= fow_black && Get((*it).x, (*it).y + 1) <= fow_grey_rright) && (Get((*it).x + 1, (*it).y) >= fow_black && Get((*it).x + 1, (*it).y) <= fow_grey_rright))
 				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rdown;
 
-			else if ((Get((*it).x, (*it).y + 1) == fow_grey || Get((*it).x, (*it).y + 1) == fow_black) && (Get((*it).x - 1, (*it).y) == fow_grey || Get((*it).x - 1, (*it).y) == fow_black))
+			else if ((Get((*it).x, (*it).y + 1) >= fow_black && Get((*it).x, (*it).y + 1) <= fow_grey_rright) && (Get((*it).x - 1, (*it).y) >= fow_black && Get((*it).x - 1, (*it).y) <= fow_grey_rright))
 				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rleft;
 
-			else if ((Get((*it).x, (*it).y - 1) == fow_grey || Get((*it).x, (*it).y - 1) == fow_black) && (Get((*it).x + 1, (*it).y) == fow_grey || Get((*it).x + 1, (*it).y) == fow_black))
+			else if ((Get((*it).x, (*it).y - 1) >= fow_black && Get((*it).x, (*it).y - 1) <= fow_grey_rright) && (Get((*it).x + 1, (*it).y) >= fow_black && Get((*it).x + 1, (*it).y) <= fow_grey_rright))
 				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rright;
 
-			else if ((Get((*it).x - 1, (*it).y) == fow_grey || Get((*it).x - 1, (*it).y) == fow_black) && (Get((*it).x, (*it).y - 1) == fow_grey || Get((*it).x, (*it).y - 1) == fow_black))
+			else if ((Get((*it).x - 1, (*it).y) >= fow_black && Get((*it).x - 1, (*it).y) <= fow_grey_rright) && (Get((*it).x, (*it).y - 1) >= fow_black && Get((*it).x, (*it).y - 1) <= fow_grey_rright))
 				data[(*it).y * App->map->data.width + (*it).x] = fow_clear_rup;
 
 			// Small part to complete the rounded edge
