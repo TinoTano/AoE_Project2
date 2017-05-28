@@ -217,6 +217,14 @@ bool Scene::Start()
 	App->entityManager->player->resources.stone += 100;
 	App->entityManager->player->resources.gold += 100;
 	App->entityManager->player->resources.wood += 100;
+
+	// CHANGE THIS
+
+	App->entityManager->player->resources.food += 8100;
+	App->entityManager->player->resources.stone += 8100;
+	App->entityManager->player->resources.gold += 8100;
+	App->entityManager->player->resources.wood += 8100;
+
 	UpdateResources();
 
 	villagers_curr = villagers_max = 1;
@@ -298,9 +306,10 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
+
 	bool ret = true;
 
-	if (App->entityManager->player->Town_center->Life <= 0 && game_finished == false) {
+	if ((App->entityManager->player->Town_center->Life <= 0 && game_finished == false) || App->entityManager->player->units.size() <= 0) {
 		Timer_lbl->SetString("DEFEAT");
 		Timer_lbl->SetColor({255, 0,0,255});
 		game_finished = true;

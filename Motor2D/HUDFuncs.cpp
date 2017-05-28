@@ -485,7 +485,6 @@ void HUD::ClearMultiple()
 	{
 		if (it._Ptr->_Myval != nullptr)
 		{
-			App->tex->UnLoad(it._Ptr->_Myval->texture);
 			App->gui->DestroyUIElement(it._Ptr->_Myval);
 		}
 	}

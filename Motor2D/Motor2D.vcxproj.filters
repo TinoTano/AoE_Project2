@@ -127,9 +127,13 @@
     <ClCompile Include="StaticQuadtree.cpp">
       <Filter>Project 2\Tools</Filter>
     </ClCompile>
-    <ClCompile Include="Video.cpp" />
     <ClCompile Include="theoraplay.cpp" />
-    <ClCompile Include="HUDTools.cpp" />
+    <ClCompile Include="HUDTools.cpp">
+      <Filter>Project 2\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="Video.cpp">
+      <Filter>Project 2\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -273,8 +277,10 @@
     <ClInclude Include="StaticQuadtree.h">
       <Filter>Project 2\Tools</Filter>
     </ClInclude>
-    <ClInclude Include="Video.h" />
     <ClInclude Include="theoraplay.h" />
+    <ClInclude Include="Video.h">
+      <Filter>Project 2\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Project 2">
