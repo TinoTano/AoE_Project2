@@ -380,16 +380,21 @@ void HUD::Update() {
 							HUDBuildingMenu();
 						}
 						else {
-							if (create_unit_bt != nullptr && id != TOWN_CENTER) {
+							if (create_unit_bt != nullptr && id != TOWN_CENTER) 
+							{
 								if (create_unit_bt->current == CLICKUP)
 								{
 									HUDCreateUnits();
 								}
 							}
-							if (create_villager_bt != nullptr && id == TOWN_CENTER) {
-								if (create_villager_bt->current == CLICKUP) {
-									if (App->sceneManager->level1_scene->CheckUnitsRoom()) {
-										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) {
+							if (create_villager_bt != nullptr && id == TOWN_CENTER) 
+							{
+								if (create_villager_bt->current == CLICKUP) 
+								{
+									if (App->sceneManager->level1_scene->CheckUnitsRoom()) 
+									{
+										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) 
+										{
 											App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_max);
 											building->units_in_queue.push_back(ELF_VILLAGER);
 											App->sceneManager->level1_scene->UpdateResources();
@@ -398,19 +403,57 @@ void HUD::Update() {
 									else AlertText("NOT ENOUGH HOUSES", 5);
 								}
 							}
-							if (create_hero_bt != nullptr && id == TOWN_CENTER) {
-								if (create_hero_bt->current == CLICKUP) {
+							if (create_hero_bt != nullptr && id == TOWN_CENTER) 
+							{
+								if (create_hero_bt->current == CLICKUP)
+								{
 									HUDCreateHero();
 								}
 							}
-							for (uint i = 0; i < App->gui->tech_bt.size(); ++i) {
-								if (App->gui->tech_bt[i].button != nullptr) {
-									if (App->gui->tech_bt[i].button->current == CLICKUP) {
-										if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost))
-											App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
+							/*if (!studying_tech) {*/
+								for (uint i = 0; i < App->gui->tech_bt.size(); ++i)
+								{
+									if (App->gui->tech_bt[i].button != nullptr) {
+										if (App->gui->tech_bt[i].button->current == CLICKUP)
+										{
+											if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost))
+											{
+												App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
+												studying_tech = true;
+												tech_studied = App->gui->tech_bt[i].type;
+											}
+										}
 									}
 								}
-							}
+						/*	}*/
+							/*else if (studying_tech) {
+								
+								max_life = App->entityManager->player->tech_tree->all_techs[tech_studied]->aux_timer + (App->entityManager->player->tech_tree->all_techs[tech_studied]->research_time * 1000);
+								curr_life = (int)App->entityManager->player->tech_tree->all_techs[tech_studied]->research_timer.Read();
+								if (curr_life >= max_life) curr_life = max_life;
+								_itoa_s(curr_life, currlife, 65, 10);
+								life_str += "     ";
+								life_str += currlife;
+								life_str += "/";
+								_itoa_s(max_life, maxlife, 65, 10);
+								life_str += maxlife;
+								life_str += "(sec)";
+								life->SetString(life_str);
+								if (max_life == 0) max_life = curr_life;
+								percent = ((max_life - curr_life) * 100) / max_life;
+								barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
+								bar.rect.y = bar.rect.y + bar.rect.h;
+								bar.rect.h = 5;
+								bar.r = 200;
+								bar.g = 200;
+								bar.b = 200;
+								App->render->ui_toDraw.push_back(bar);
+								bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+								bar.r = 0;
+								bar.b = 255;
+								bar.g = 100;
+								App->render->ui_toDraw.push_back(bar);
+							}*/
 						}
 						break;
 					case BUILDINGCREATEUNITS:

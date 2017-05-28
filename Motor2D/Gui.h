@@ -362,12 +362,9 @@ private:
 	//        BUILDING
 	// -----------------------
 
-	enum HUDBuildingState {
-		BUILDINGNULL,
-		BUILDINGMENU,
-		BUILDINGCREATEUNITS,
-		BUILDINGCREATEHERO
-	};
+	enum HUDBuildingState { BUILDINGNULL, BUILDINGMENU, BUILDINGCREATEUNITS, BUILDINGCREATEHERO };
+	TechType tech_studied;
+	bool studying_tech = false;
 	HUDBuildingState building_state;
 	vector<vector<SDL_Rect> > units_rects;
 	void DrawBuildingBar();

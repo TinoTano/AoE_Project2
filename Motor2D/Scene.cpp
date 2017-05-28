@@ -171,7 +171,7 @@ bool Scene::Start()
 
 	// Fog of war, entities & resources ===============================================================================
 
-	/*App->fog->Start();*/
+	App->fog->Start();
 
 	//Resources
 	App->map->LoadResources(App->map->map_file.child("map"));
