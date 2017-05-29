@@ -69,13 +69,14 @@ bool EntityManager::Update(float arg_dt)
 
 		if (App->render->CullingCam((*it)->entityPosition))
 		{
-			//if ((*it)->isActive == true)
-				(*it)->Draw();
+			if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
+			else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true || App->map->godmode) (*it)->Draw();
+			else if ((*it)->faction == FREE_MEN) (*it)->Draw();
 		}
 	}
 
 	for (list<Resource*>::iterator it = resource_list.begin(); it != resource_list.end(); it++) {
-		if (App->render->CullingCam((*it)->entityPosition) && (*it)->isActive == true)
+		if (App->render->CullingCam((*it)->entityPosition) && ((*it)->isActive == true || App->map->godmode))
 			(*it)->Draw();
 	}
 

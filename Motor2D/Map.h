@@ -146,6 +146,8 @@ public:
 	MapData data;
 	pugi::xml_document	map_file;
 
+	bool godmode = false;
+
 private:
 
 	string				folder;
