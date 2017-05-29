@@ -13,7 +13,7 @@ enum fow_id
 {
 	fow_black,
 	fow_grey,
-	fow_grey_rup, fow_grey_rdown, fow_grey_rleft, fow_grey_rright, // Filled with black edge
+	fow_grey_rup, fow_grey_rdown, fow_grey_rleft, fow_grey_rright , // Filled with black edge
 
 	fow_clear,
 	fow_clear_rup, fow_clear_rdown, fow_clear_rleft, fow_clear_rright,

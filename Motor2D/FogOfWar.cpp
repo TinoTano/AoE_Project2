@@ -25,12 +25,14 @@ bool FogOfWar::AddEntity(Entity* new_entity )
 		new_ally.pos = App->map->WorldToMap(new_entity->collider->pos.x, new_entity->collider->pos.y);
 		
 		Unit* aux = (Unit*)new_entity;
+		Building* aux2 = (Building*)new_entity;
+
 		if (new_entity->collider->type == COLLIDER_UNIT)
-		{
 			new_ally.radium = aux->los->r / 98;
-		}
+		else if (new_entity->collider->type == COLLIDER_BUILDING && aux2->range != nullptr)
+			new_ally.radium = aux2->range->r / 49;	
 		else
-			new_ally.radium = 6;
+			new_ally.radium = 4;
 
 		GetEntitiesCircleArea(new_ally);
 		new_ally.id = new_entity->entityID;
@@ -283,7 +285,7 @@ void FogOfWar::ManageEntities()
 {
 	for (list<Entity*>::iterator it = entities_not_in_fog.begin(); it != entities_not_in_fog.end(); it++)
 	{
-		if ((*it)->state != DESTROYED) {
+		if ((*it)->state != DESTROYED && (*it)->collider != nullptr) {
 			if (IsVisible(App->map->WorldToMap((*it)->collider->pos.x, (*it)->collider->pos.y), (*it)->faction))
 				(*it)->isActive = true;
 			else
