@@ -1,7 +1,9 @@
 #include "Entity.h"
 #include "Render.h"
 #include "Collision.h"
+#include "EntityManager.h"
 #include "Application.h"
+#include "SceneManager.h"
 
 #define HPBAR_WIDTH 50
 
@@ -87,6 +89,9 @@ bool Cost::Spend(Cost cost) {
 		return false;
 
 	wood -= cost.wood; food -= cost.food; gold -= cost.gold; stone -= cost.stone;
+
+	if (this == &App->entityManager->player->resources)
+		App->sceneManager->level1_scene->UpdateResources();
 
 	return true;
 }

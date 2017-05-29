@@ -397,7 +397,6 @@ void HUD::Update() {
 										{
 											App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_max);
 											building->units_in_queue.push_back(ELF_VILLAGER);
-											App->sceneManager->level1_scene->UpdateResources();
 										}
 									}
 									else AlertText("NOT ENOUGH HOUSES", 5);
@@ -473,7 +472,6 @@ void HUD::Update() {
 												if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost))
 												{
 													building->units_in_queue.push_back(App->gui->unit_bt[i].type);
-													App->sceneManager->level1_scene->UpdateResources();
 												}
 											}
 											else AlertText("NOT ENOUGH HOUSES", 5);
@@ -498,7 +496,6 @@ void HUD::Update() {
 										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[App->gui->unit_bt[i].type]->cost))
 										{
 											building->units_in_queue.push_back(App->gui->unit_bt[i].type);
-											App->sceneManager->level1_scene->UpdateResources();
 										}
 									}
 									else AlertText("NOT ENOUGH HOUSES", 5);
