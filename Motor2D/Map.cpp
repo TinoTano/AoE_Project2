@@ -65,7 +65,7 @@ void Map::Draw()
 							DrawSoftEdges(tileWorld.x, tileWorld.y, visibility);
 					}
 				}
-			}
+ 			}
 		}
 	}
 }

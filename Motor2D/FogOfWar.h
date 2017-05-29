@@ -9,8 +9,6 @@
 #include "Module.h"
 #include "Unit.h"
 
-#define FOW_RADIUM 6
-
 enum fow_id
 {
 	fow_black,
@@ -30,6 +28,7 @@ struct in_fog_entity
 	list<iPoint>	current_points;
 	iPoint			pos = { 0,0 };
 	int				id = -1;
+	uint            radium = 0;
 };
 
 class FogOfWar : public Module
