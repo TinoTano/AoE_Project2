@@ -218,13 +218,6 @@ bool Scene::Start()
 	App->entityManager->player->resources.gold += 100;
 	App->entityManager->player->resources.wood += 100;
 
-	// CHANGE THIS
-
-	App->entityManager->player->resources.food += 8100;
-	App->entityManager->player->resources.stone += 8100;
-	App->entityManager->player->resources.gold += 8100;
-	App->entityManager->player->resources.wood += 8100;
-
 	UpdateResources();
 
 	villagers_curr = villagers_max = 1;
@@ -250,6 +243,27 @@ bool Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
 		App->map->godmode = !App->map->godmode;
+		
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
+		App->entityManager->player->resources.wood += 500;
+		App->sceneManager->level1_scene->UpdateResources();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN) {
+		App->entityManager->player->resources.food += 500;
+		App->sceneManager->level1_scene->UpdateResources();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_3) == KEY_DOWN) {
+		App->entityManager->player->resources.gold += 500;
+		App->sceneManager->level1_scene->UpdateResources();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_4) == KEY_DOWN) {
+		App->entityManager->player->resources.stone += 500;
+		App->sceneManager->level1_scene->UpdateResources();
 	}
 
 	//if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
