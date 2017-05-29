@@ -169,8 +169,8 @@ bool EntityManager::Update(float arg_dt)
 
 			App->render->sprites_toDraw.push_back(aux);
 
-
-			if (!App->collision->FindCollider(mouse, building->imageWidth / 2)) {
+			iPoint mouseMap = App->map->WorldToMap(mouseX, mouseY);
+			if (!App->collision->FindCollider(mouse, building->imageWidth / 2) && App->fog->Get(mouseMap.x, mouseMap.y) != 0) {
 				SDL_SetTextureColorMod(aux.texture, 255, 255, 255);
 
 				if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
