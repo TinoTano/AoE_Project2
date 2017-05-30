@@ -318,6 +318,12 @@ bool EntityManager::Load(pugi::xml_node & data)
 
 	// Creating all again
 
+	// -------------------------------------------
+	//               ENTITIES
+	// -------------------------------------------
+
+	// ------------------- UNITS ------------------
+
 	for (pugi::xml_node unitNode = data.child("Unit"); unitNode; unitNode = unitNode.next_sibling("Unit"))
 	{
 		Unit* unitTemplate = App->entityManager->CreateUnit(unitNode.child("Position").attribute("x").as_int(),
@@ -326,7 +332,18 @@ bool EntityManager::Load(pugi::xml_node & data)
 
 		unitTemplate->currentDirection = (unitDirection)unitNode.child("Direction").attribute("value").as_int();
 		unitTemplate->Life = unitNode.child("Life").attribute("value").as_int();
+
+		for (pugi::xml_node order = unitNode.child("Order"); order; order = order.next_sibling("Order"))
+		{
+			Order* unitOrder = new Order();
+			unitOrder->order_type = (OrderType)order.attribute("OrderType").as_int();
+			unitOrder->state = (Order_state)order.attribute("OrderState").as_int();
+			unitTemplate->order_list.push_back(unitOrder);
+		}
 	}
+
+	// -------------------------------------------
+	// ------------------- BUILDINGS ------------------
 
 	for (pugi::xml_node buildingNode = data.child("Building"); buildingNode; buildingNode = buildingNode.next_sibling("Building"))
 	{
@@ -353,6 +370,9 @@ bool EntityManager::Load(pugi::xml_node & data)
 			}
 		}
 	}
+
+	// -------------------------------------------
+	// ------------------- RESOURCES ------------------
 
 	for (pugi::xml_node resourceNode = data.child("Resource"); resourceNode; resourceNode = resourceNode.next_sibling("Resource")) {
 
@@ -432,11 +452,24 @@ bool EntityManager::Load(pugi::xml_node & data)
 	}
 
 	App->sceneManager->level1_scene->UpdateResources();
+
+	placingBuilding = data.child("BuildingCreation").attribute("PlacingBuilding").as_bool();
+	placing_type = (buildingType)data.child("BuildingCreation").attribute("BuildingType").as_int();
+
 	return true;
 }
 
 bool EntityManager::Save(pugi::xml_node & data) const
 {
+
+
+	// -------------------------------------------
+	//                    ENTITIES
+	// -------------------------------------------
+
+	// ------------------- UNITS -----------------
+
+	// -------------- FRIENDLY UNITS ------------
 
 	for (list<Unit*>::iterator it = App->entityManager->player->units.begin(); it != App->entityManager->player->units.end(); it++) {
 		if ((*it)->state != DESTROYED) {
@@ -450,9 +483,18 @@ bool EntityManager::Save(pugi::xml_node & data) const
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
+			// UNIT ORDERS MAMA ;)
+			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); ++it2)
+			{
+				pugi::xml_node order = unitNodeInfo.append_child("Order");
+
+				order.append_attribute("OrderType") = (*it2)->order_type;
+				order.append_attribute("OrderState") = (*it2)->state;
+			}
 		}
 	}
-
+	// -------------------------------------------
+	// -------------- ENEMY UNITS ------------
 	for (list<Unit*>::iterator it = App->entityManager->AI_faction->units.begin(); it != App->entityManager->AI_faction->units.end(); it++) {
 		if ((*it)->state != DESTROYED) {
 			pugi::xml_node unitNodeInfo = data.append_child("Unit");
@@ -464,9 +506,20 @@ bool EntityManager::Save(pugi::xml_node & data) const
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
+			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); ++it2)
+			{
+				pugi::xml_node order = unitNodeInfo.append_child("Order");
+
+				order.append_attribute("OrderType") = (*it2)->order_type;
+				order.append_attribute("OrderState") = (*it2)->state;
+			}
 		}
 	}
 
+	// -------------------------------------------
+	// -------------------- BUILDINGS ------------------
+
+	// ---------------- FRIENDLY BUILDINGS ------------
 	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); it++) {
 		if ((*it)->state != DESTROYED) {
 			pugi::xml_node buildingNodeInfo = data.append_child("Building");
@@ -478,7 +531,8 @@ bool EntityManager::Save(pugi::xml_node & data) const
 			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
 		}
 	}
-
+	// -------------------------------------------
+	// ---------------- ENEMY BUILDINGS ------------
 	for (list<Building*>::iterator it = App->entityManager->AI_faction->buildings.begin(); it != App->entityManager->AI_faction->buildings.end(); it++) {
 		if ((*it)->state != DESTROYED) {
 			pugi::xml_node buildingNodeInfo = data.append_child("Building");
@@ -492,6 +546,8 @@ bool EntityManager::Save(pugi::xml_node & data) const
 			App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
 		}
 	}
+	// -------------------------------------------
+	// ----------------- RESOURCES ------------------
 	for (list<Resource*>::iterator it = App->entityManager->resource_list.begin(); it != App->entityManager->resource_list.end(); it++) {
 		pugi::xml_node resourceNodeInfo = data.append_child("Resource");
 		resourceNodeInfo.append_child("Type").append_attribute("value") = (*it)->contains;
@@ -505,6 +561,14 @@ bool EntityManager::Save(pugi::xml_node & data) const
 		rect.append_attribute("w") = (*it)->blit_rect.w;
 		rect.append_attribute("h") = (*it)->blit_rect.h;
 	}
+
+
+	// -------------------------------------------
+	// ...........................................
+	//                 PLAYERS
+	// ...........................................
+	// -------------------FRIENDLY----------------
+
 
 	pugi::xml_node Player = data.append_child("Player");
 
@@ -538,6 +602,11 @@ bool EntityManager::Save(pugi::xml_node & data) const
 		multipliers.append_attribute("Multiplier") = (*it);
 	}
 
+
+	// ---------------------------------------
+	// ------------------- AI ----------------
+
+
 	pugi::xml_node Enemy = data.append_child("Enemy");
 	Enemy.append_attribute("wood") = AI_faction->resources.wood;
 	Enemy.append_attribute("food") = AI_faction->resources.food;
@@ -567,6 +636,14 @@ bool EntityManager::Save(pugi::xml_node & data) const
 	{
 		multipliers2.append_attribute("Multipliers") = (*it);
 	}
+
+	// ----------------------------------------------------
+
+	// -----------------CREATING BUILDINGS?----------------
+	pugi::xml_node create = data.append_child("BuildingCreation");
+
+	create.append_attribute("PlacingBuilding") = placingBuilding;
+	create.append_attribute("BuildingType") = placing_type;
 
 	return true;
 }
