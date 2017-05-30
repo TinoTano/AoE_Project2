@@ -114,7 +114,7 @@ bool EntityManager::Update(float arg_dt)
 				if (clicked_on->entity->state != DESTROYED) {
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
-						unit->order_list.push_back(new UnitAttackOrder());
+						unit->order_list.push_front(new UnitAttackOrder());
 						unit->state = ATTACKING;
 					}
 				}
@@ -890,18 +890,6 @@ void EntityManager::OnCollision(Collision_data& col_data)
 	col_data.state = SOLVING;
 
 	switch (col_data.c1->type) {
-
-	case COLLIDER_RANGE:
-
-		if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
-			if (unit = col_data.c1->GetUnit()){
-				if(unit->state == ATTACKING && unit->order_list.front()->order_type == MOVETO) 
-					unit->order_list.pop_front();
-			}
-			else
-				col_data.c1->entity->state = ATTACKING;  // is a building
-		}
-		break;
 
 	case COLLIDER_LOS:
 

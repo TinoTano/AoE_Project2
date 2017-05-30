@@ -30,8 +30,8 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_RESOURCE][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_RESOURCE][COLLIDER_LOS] = false;
 
-	matrix[COLLIDER_RANGE][COLLIDER_UNIT] = true;
-	matrix[COLLIDER_RANGE][COLLIDER_BUILDING] = true;
+	matrix[COLLIDER_RANGE][COLLIDER_UNIT] = false;
+	matrix[COLLIDER_RANGE][COLLIDER_BUILDING] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_RESOURCE] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_LOS] = false;
@@ -81,7 +81,7 @@ bool Collision::PreUpdate()
 	Collider *c2 =	nullptr;
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
-		if ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_RANGE || (*col1)->type == COLLIDER_LOS) {
+		if ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_LOS) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
@@ -255,7 +255,7 @@ Unit* Collider::GetUnit() {
 
 	Unit* unit = nullptr;
 
-	if (type == COLLIDER_UNIT) 
+	if (entity->collider->type == COLLIDER_UNIT)
 		unit = (Unit*)entity;
 
 	return unit;
@@ -265,7 +265,7 @@ Building* Collider::GetBuilding() {
 
 	Building* building = nullptr;
 
-	if (type == COLLIDER_BUILDING)
+	if (entity->collider->type == COLLIDER_BUILDING)
 		building = (Building*)entity;
 
 	return building;
@@ -275,7 +275,7 @@ Resource* Collider::GetResource() {
 
 	Resource* resource = nullptr;
 
-	if (type == COLLIDER_RESOURCE)
+	if (entity->collider->type == COLLIDER_RESOURCE)
 		resource = (Resource*)entity;
 
 	return resource;
