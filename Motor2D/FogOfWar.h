@@ -47,8 +47,8 @@ public:
 
 	// Update Methods
 
-	void MoveFrontier(iPoint prev_pos, const char* direction, uint id);
-	void MoveArea(in_fog_entity& player, string direction, uint id);
+	void MoveFrontier(iPoint prev_pos, const char* direction, uint id, int amount);
+	void MoveArea(in_fog_entity& player, string direction, uint id, int amount);
 
 	// Create Areas
 
