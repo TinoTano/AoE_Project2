@@ -288,12 +288,20 @@ bool EntityManager::CleanUp()
 
 bool EntityManager::Load(pugi::xml_node & data)
 {
-	App->fog->entities_not_in_fog.clear();
-	App->fog->entities_not_in_fog.push_back(AI_faction->Town_center);
-	App->fog->entities_on_fog.clear();
+	//App->fog->entities_not_in_fog.push_back(AI_faction->Town_center);
 	//App->fog->entities_on_fog.push_back(player->Town_center->)
 	//App->fog->entities_on_fog.push_back(player->Town_center);
-	App->entityManager->selectedEntityList.clear();
+
+	// Destroying all entities created before Save
+
+	for (list<Resource*>::iterator it = App->entityManager->resource_list.begin(); it != App->entityManager->resource_list.end(); ++it)
+	{
+		if (*it != nullptr) {
+			(*it)->Destroy();
+		}
+	}
+
+	App->entityManager->resource_list.clear();
 
 	for (list<Entity*>::iterator it = App->entityManager->WorldEntityList.begin(); it != App->entityManager->WorldEntityList.end(); ++it)
 	{
@@ -301,24 +309,14 @@ bool EntityManager::Load(pugi::xml_node & data)
 			if ((*it) != player->Town_center && (*it) != AI_faction->Town_center)
 			{
 				(*it)->Destroy();
-				App->entityManager->DeleteEntity((*it));
 			}
 		}
 	}
 
 	App->entityManager->WorldEntityList.clear();
-	App->entityManager->WorldEntityList.push_back(player->Town_center);
-	App->entityManager->WorldEntityList.push_back(AI_faction->Town_center);
+	App->entityManager->selectedEntityList.clear();
 
-	for (list<Resource*>::iterator it = App->entityManager->resource_list.begin(); it != App->entityManager->resource_list.end(); ++it)
-	{
-		if (*it != nullptr) {
-			(*it)->Destroy();
-			App->entityManager->DeleteEntity((*it));
-		}
-	}
-
-	App->entityManager->resource_list.clear();
+	// Creating all again
 
 	for (pugi::xml_node unitNode = data.child("Unit"); unitNode; unitNode = unitNode.next_sibling("Unit"))
 	{
@@ -346,10 +344,12 @@ bool EntityManager::Load(pugi::xml_node & data)
 			{
 				player->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
 				player->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+				App->entityManager->WorldEntityList.push_back(AI_faction->Town_center);
 			}
 			else {
 				AI_faction->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
 				AI_faction->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+				App->entityManager->WorldEntityList.push_back(player->Town_center);
 			}
 		}
 	}
@@ -364,7 +364,6 @@ bool EntityManager::Load(pugi::xml_node & data)
 			(resourceItem)resourceNode.child("Type").attribute("value").as_int(), rect);
 
 		resourceTemplate->Life = resourceNode.child("Life").attribute("value").as_int();
-		/*App->fog->AddEntity(resourceTemplate);*/
 	}
 
 	player->resources.wood = data.child("Player").attribute("wood").as_int();
