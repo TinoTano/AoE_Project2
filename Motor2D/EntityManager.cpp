@@ -602,7 +602,6 @@ bool EntityManager::Save(pugi::xml_node & data) const
 		multipliers.append_attribute("Multiplier") = (*it);
 	}
 
-
 	// ---------------------------------------
 	// ------------------- AI ----------------
 

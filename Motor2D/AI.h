@@ -53,6 +53,9 @@ public:
 	// Called before quitting
 	bool CleanUp() { return true; };
 
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
+
 	Squad* AssignUnit(Unit* unit);
 	void ManageAttack();
 	void StartAttack();

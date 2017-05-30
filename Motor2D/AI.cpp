@@ -400,6 +400,87 @@ void AI::RemoveThreats(Entity* entity) {
 }
 
 
+bool AI::Load(pugi::xml_node &)
+{
+	return true;
+}
+
+bool AI::Save(pugi::xml_node & data) const
+{
+	data.append_attribute("ExpansionLevel") = expansion_level;
+	data.append_attribute("ExpansionState") = state;
+	data.append_attribute("Enabled") = enabled;
+
+
+	pugi::xml_node expansionManagement = data.append_child("ExpansionManagement");
+
+	pugi::xml_node expansionBuildTable = expansionManagement.append_child("ExpansionBuildTables");
+	for (vector<list<buildingType>>::const_iterator it = expansion_build_table.begin(); it != expansion_build_table.end(); ++it)
+	{
+		pugi::xml_node expansionBuildTablelevel = expansionBuildTable.append_child("ExpansionBuildTable");
+		for (list<buildingType>::const_iterator it2 = (*it).begin(); it2 != (*it).end(); ++it2)
+		{
+			expansionBuildTablelevel.append_attribute("BuildingType") = (*it2);
+		}
+	}
+	pugi::xml_node expansionTechTable = expansionManagement.append_child("ExpansionTechTables");
+	for (vector<list<TechType>>::const_iterator it = expansion_tech_table.begin(); it != expansion_tech_table.end(); ++it)
+	{
+		pugi::xml_node expansionTechTablelevel = expansionTechTable.append_child("ExpansionTechTable");
+		for (list<TechType>::const_iterator it2 = (*it).begin(); it2 != (*it).end(); ++it2)
+		{
+			expansionTechTablelevel.append_attribute("TechType") = (*it2);
+		}
+	}
+	pugi::xml_node villagerexpansionTable = expansionManagement.append_child("VillagerExpansionTables");
+	for (vector<int>::const_iterator it = villager_expansion_table.begin(); it != villager_expansion_table.end(); ++it)
+	{
+		villagerexpansionTable.append_attribute("VillagerExpansionTable") = (*it);
+	}
+
+	pugi::xml_node armyManagement = data.append_child("ArmyManagement");
+
+	armyManagement.append_attribute("QuadSize") = squad_size;
+
+	// THINGS MISSING HERE 
+
+	pugi::xml_node requestsManagement = data.append_child("RequestsManagement");
+
+	pugi::xml_node resourceRequests = requestsManagement.append_child("ResourceRequests");
+
+	for (list<resourceType>::const_iterator it = resource_requests.begin(); it != resource_requests.end(); ++it)
+	{
+		resourceRequests.append_attribute("ResourceType") = (*it);
+	}
+
+	pugi::xml_node unitRequests = requestsManagement.append_child("UnitRequests");
+
+	for (list<unitType>::const_iterator it = unit_requests.begin(); it != unit_requests.end(); ++it)
+	{
+		unitRequests.append_attribute("UnitType") = (*it);
+	}
+
+	pugi::xml_node buildingRequests = requestsManagement.append_child("BuildingRequests");
+
+	for (list<buildingType>::const_iterator it = build_requests.begin(); it != build_requests.end(); ++it)
+	{
+		buildingRequests.append_attribute("BuildingType") = (*it);
+	}
+
+	pugi::xml_node techRequests = requestsManagement.append_child("TechRequests");
+
+	for (list<TechType>::const_iterator it = tech_requests.begin(); it != tech_requests.end(); ++it)
+	{
+		techRequests.append_attribute("TechType") = (*it);
+	}
+
+	pugi::xml_node villagersManagement = data.append_child("VillagersManagement");
+
+	villagersManagement.append_attribute("requestedVillagers") = requested_villagers;
+
+	return true;
+}
+
 Squad* AI::AssignUnit(Unit* unit) {
 
 	for (list<Squad*>::iterator it = defensive_squads.begin(); it != defensive_squads.end(); it++) {
