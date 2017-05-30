@@ -174,6 +174,11 @@ bool Render::Load(pugi::xml_node& data)
 	camera.x = data.child("camera").attribute("x").as_int();
 	camera.y = data.child("camera").attribute("y").as_int();
 
+
+	culling_cam.x = data.child("cull").attribute("x").as_int();
+	culling_cam.y = data.child("cull").attribute("y").as_int();
+
+	App->gui->LoadToScreen(data);
 	return true;
 }
 
@@ -185,6 +190,11 @@ bool Render::Save(pugi::xml_node& data) const
 	cam.append_attribute("x") = camera.x;
 	cam.append_attribute("y") = camera.y;
 
+	pugi::xml_node cull = data.append_child("cull");
+	cull.append_attribute("x") = culling_cam.x;
+	cull.append_attribute("y") = culling_cam.y;
+
+	App->gui->SaveToScreen(data);
 	return true;
 }
 

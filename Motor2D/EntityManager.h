@@ -46,6 +46,11 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
+	Resource* ReLoadResource(int posX, int posY, resourceItem type, SDL_Rect rect); // This is used instead of CreateResource when loading the game again.
+
+
 	bool LoadGameData();
 
 	Unit* CreateUnit(int posX, int posY, unitType type);

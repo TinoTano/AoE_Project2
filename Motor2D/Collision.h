@@ -95,6 +95,9 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
+
 	Collider* AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
 	void DeleteCollider(Collider* collider);
 	bool FindCollision(Collider* col1, Collider* col2);

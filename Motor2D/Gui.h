@@ -67,6 +67,7 @@ public:
 	void			Move(int x, int y);
 	bool			enabled, focused = true, debug = false, loaded_tex = false;
 
+	uint ID = 0;
 	UIElement* parent = nullptr;
 	pair<int, int> pos, parent_pos;
 	ElementType type = UNKNOWN;
@@ -309,6 +310,7 @@ public:
 	void Start();
 	void Update();
 	void CleanUp();
+	void ClearAll();
 private:
 	void GetSelection();
 	void StartBuildingInfo();
@@ -318,7 +320,6 @@ private:
 	void ClearSingle();
 	void ClearBuilding();
 	void ClearResource();
-	void ClearAll();
 	vector<Button*> all_bt;
 
 private:
@@ -426,8 +427,8 @@ public:
 	bool CleanUp();
 
 	// Load and save before
-	bool Save(pugi::xml_node&) const;
-	bool Load(pugi::xml_node&);
+	bool SaveToScreen(pugi::xml_node&) const;
+	bool LoadToScreen(pugi::xml_node&);
 
 	bool	LoadHUDData();
 
@@ -453,6 +454,7 @@ public:
 	void	Unfocus();
 
 private:
+	uint elements_counter = 0;
 	list<UIElement*> Elements;
 	vector<Info> info;
 public:

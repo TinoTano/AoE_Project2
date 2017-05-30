@@ -131,14 +131,37 @@ bool Gui::CleanUp()
 	return true;
 }
 
-
-bool Gui::Save(pugi::xml_node &) const
+bool Gui::SaveToScreen(pugi::xml_node & data) const
 {
+	for (list<UIElement*>::const_iterator it = Elements.begin(); it != Elements.end(); ++it)
+	{
+		pugi::xml_node UI = data.append_child("UIElement");
+
+		pugi::xml_node pos = UI.append_child("position");
+		pos.append_attribute("x") = (*it)->pos.first + App->render->camera.x;
+		pos.append_attribute("y") = (*it)->pos.second + App->render->camera.y;
+
+		UI.append_attribute("ID") = (*it)->ID;
+	}
+
 	return true;
 }
 
-bool Gui::Load(pugi::xml_node &)
+bool Gui::LoadToScreen(pugi::xml_node & data)
 {
+	App->gui->hud->ClearAll();
+	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it)
+	{
+		for (pugi::xml_node UI = data.child("UIElement"); UI; UI = UI.next_sibling("UIElement"))
+		{
+			if ((*it)->ID == UI.attribute("ID").as_uint())
+			{
+				(*it)->pos.first = UI.child("position").attribute("x").as_int() - data.child("camera").attribute("x").as_int();
+				(*it)->pos.second = UI.child("position").attribute("y").as_int() - data.child("camera").attribute("y").as_int();
+			}
+		}
+	}
+
 	return true;
 }
 
@@ -235,6 +258,8 @@ UIElement * Gui::CreateImage(char* path, int x, int y, SDL_Rect section)
 	tex = App->tex->Load(path);
 
 	ret = new Image(section, x, y, tex);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 
 	return ret;
@@ -247,6 +272,8 @@ UIElement * Gui::CreateImage(char* path, int x, int y)
 	tex = App->tex->Load(path);
 
 	ret = new Image(x, y, tex);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 
 	return ret;
@@ -256,6 +283,8 @@ UIElement * Gui::CreateImage(SDL_Texture * argtexture, int x, int y, SDL_Rect se
 {
 	UIElement* ret = nullptr;
 	ret = new Image(section, x, y, argtexture);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 	return ret;
 }
@@ -263,12 +292,16 @@ UIElement * Gui::CreateImage(SDL_Texture * argtexture, int x, int y, SDL_Rect se
 UIElement * Gui::CreateLabel(char * text, int x, int y, _TTF_Font * font)
 {
 	UIElement* ret = new Label(text, x, y, font);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 	return ret;
 }
 
 UIElement* Gui::CreateLabel(string text, int x, int y, _TTF_Font* font) {
 	UIElement* ret = new Label(text, x, y, font);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 	return ret;
 }
@@ -276,6 +309,8 @@ UIElement* Gui::CreateLabel(string text, int x, int y, _TTF_Font* font) {
 UIElement * Gui::CreateLabel(char * text, SDL_Rect area, _TTF_Font * font)
 {
 	UIElement* ret = new Label(text, area, font);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 	return ret;
 }
@@ -283,6 +318,8 @@ UIElement * Gui::CreateLabel(char * text, SDL_Rect area, _TTF_Font * font)
 UIElement * Gui::CreateInput(int x, int y, SDL_Rect detect_section, _TTF_Font * font)
 {
 	UIElement* ret = new InputText(x, y, detect_section, font);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 	return ret;
 }
@@ -294,6 +331,8 @@ UIElement * Gui::CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sec
 	tex = App->tex->Load(path);
 
 	ret = new Button(x, y, blit_sections, detect_sections, Tier, tex);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 
 	return ret;
@@ -302,6 +341,8 @@ UIElement * Gui::CreateButton(char* path, int x, int y, vector<SDL_Rect>blit_sec
 UIElement * Gui::CreateButton(SDL_Texture * texture, int x, int y, vector<SDL_Rect> blit_sections, vector<SDL_Rect> detect_sections, ButtonTier Tier)
 {
 	UIElement* ret = new Button(x, y, blit_sections, detect_sections, Tier, texture);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 
 	return ret;
@@ -311,6 +352,8 @@ UIElement * Gui::CreateScrollBar(int x, int y, ScrollBarModel model)
 {
 	UIElement* ret = nullptr;
 	ret = new ScrollBar(x, y, model);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 	return ret;
 }
@@ -319,6 +362,8 @@ UIElement * Gui::CreateQuad(SDL_Rect size, SDL_Color color)
 {
 	UIElement* ret = nullptr;
 	ret = new Quad(size, color);
+	ret->ID = elements_counter;
+	elements_counter++;
 	Elements.push_back(ret);
 	return ret;
 }

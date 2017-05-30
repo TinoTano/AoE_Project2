@@ -59,11 +59,19 @@ public:
 
 	bool Awake(pugi::xml_node&);
 	bool Start();
+
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
+
+
 	Event* createEvent(pugi::xml_node&);
 
 	//Callbacks for each event type
 	bool TriggerKillCallback(unitType t);
 	bool StepKillCallback(unitType t);
+
+	void DestroyQuest(Quest*);
+	Quest* AddQuest(string name, string description, int reward, int id, Event* trigger, vector<Event*> steps);
 
 private:
 	string path;

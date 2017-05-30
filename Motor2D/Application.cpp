@@ -385,7 +385,7 @@ const char* Application::GetOrganization() const
 }
 
 // Load / Save
-void Application::LoadGame(const char* file)
+void Application::LoadGame()
 {
 	// we should be checking if that file actually exist
 	// from the "GetSaveGames" list
@@ -394,13 +394,12 @@ void Application::LoadGame(const char* file)
 }
 
 // ---------------------------------------
-void Application::SaveGame(const char* file) const
+void Application::SaveGame() const
 {
 	// we should be checking if that file actually exist
 	// from the "GetSaveGames" list ... should we overwrite ?
 
 	want_to_save = true;
-	save_game = file;
 }
 
 // ---------------------------------------
@@ -414,7 +413,7 @@ bool Application::LoadGameNow()
 	bool ret = false;
 
 	char* buffer;
-	uint size = fs->Load(load_game.c_str(), &buffer);
+	uint size = fs->Load("save/save.xml", &buffer);
 
 	if(size > 0)
 	{
@@ -428,7 +427,7 @@ bool Application::LoadGameNow()
 		{
 			LOG("Loading new Game State from %s...", load_game.c_str());
 
-			root = data.child("game_state");
+			root = data.child("Save");
 			ret = true;
 
 			list<Module*>::iterator it;
@@ -462,7 +461,7 @@ bool Application::SavegameNow() const
 	pugi::xml_document data;
 	pugi::xml_node root;
 	
-	root = data.append_child("game_state");
+	root = data.append_child("Save");
 
 	list<Module*>::const_iterator it;
 	for (it = modules.begin(); it != modules.end(); it++)
@@ -476,7 +475,7 @@ bool Application::SavegameNow() const
 		data.save(stream);
 
 		// we are done, so write data to disk
-		fs->Save(save_game.c_str(), stream.str().c_str(), stream.str().length());
+		fs->Save("save.xml", stream.str().c_str(), stream.str().length());
 		LOG("... finished saving", save_game.c_str());
 	}
 	else

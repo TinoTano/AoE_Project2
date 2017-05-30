@@ -19,6 +19,7 @@ class Resource : public Entity
 public:
 	Resource();
 	Resource(int posX, int posY, Resource* resource);
+	Resource(int posX, int posY, Resource* resource, SDL_Rect rect);
 	~Resource();
 	
 	bool Draw();
