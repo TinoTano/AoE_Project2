@@ -89,6 +89,12 @@ bool Render::PostUpdate()
 
 	for (int it = 0; it < sprites_toDraw.size(); it++)
 	{
+		if (sprites_toDraw[it].change_color) {
+			SDL_SetTextureColorMod(sprites_toDraw[it].texture, sprites_toDraw[it].r, sprites_toDraw[it].g, sprites_toDraw[it].b);
+		}
+		else {
+			SDL_SetTextureColorMod(sprites_toDraw[it].texture, 255, 255, 255);
+		}
 		if (sprites_toDraw[it].texture != nullptr && sprites_toDraw[it].flip >= 0 && sprites_toDraw[it].flip < 3)
 			Blit(sprites_toDraw[it].texture, sprites_toDraw[it].pos.x, sprites_toDraw[it].pos.y, &sprites_toDraw[it].rect, sprites_toDraw[it].flip);
 		else

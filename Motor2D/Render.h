@@ -21,6 +21,7 @@ struct Sprite
 	int a = 255;
 	int radius = 0;
 	bool filled = true;
+	bool change_color = false;
 };
 
 struct CameraLimit

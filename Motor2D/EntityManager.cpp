@@ -93,7 +93,7 @@ bool EntityManager::Update(float arg_dt)
 	Resource* resource = nullptr;
 	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
 
-		if (selectedEntityList.front()->faction == FREE_MEN) {
+		if (selectedEntityList.front()->faction == FREE_MEN && !placingBuilding) {
 
 			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 				Unit* unit = (Unit*)(*it);
@@ -162,16 +162,13 @@ bool EntityManager::Update(float arg_dt)
 
 			aux.texture = building->entityTexture;
 			aux.pos.x = mouse.x - (building->imageWidth / 2);
-			aux.pos.y = mouse.y - (building->imageHeight / 2);
+			aux.pos.y = mouse.y - (building->imageHeight / 1.5f);
 			aux.priority = mouseY - (building->imageHeight / 2) + building->imageHeight;
 			aux.rect.w = building->imageWidth;
 			aux.rect.h = building->imageHeight;
 
-			App->render->sprites_toDraw.push_back(aux);
-
 			iPoint mouseMap = App->map->WorldToMap(mouseX, mouseY);
 			if (!App->collision->FindCollider(mouse, building->imageWidth / 2) && App->fog->Get(mouseMap.x, mouseMap.y) != 0) {
-				SDL_SetTextureColorMod(aux.texture, 255, 255, 255);
 
 				if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
 
@@ -192,12 +189,13 @@ bool EntityManager::Update(float arg_dt)
 					}
 				}
 			}
-			else
-				SDL_SetTextureColorMod(aux.texture, 255, 0, 0);
+			else {
+				aux.change_color = true;
+				aux.r = 255;
+			}
 
-
+			App->render->sprites_toDraw.push_back(aux);
 		}
-
 		else {
 			switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
 			{

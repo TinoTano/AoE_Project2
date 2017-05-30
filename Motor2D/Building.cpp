@@ -113,7 +113,7 @@ bool Building::Draw()
 	aux.texture = entityTexture;
 	aux.pos.x = entityPosition.x - (imageWidth / 2);
 	aux.pos.y = entityPosition.y - (imageHeight / 2);
-	aux.priority = entityPosition.y - (imageHeight / 2) + imageHeight;
+	aux.priority = entityPosition.y/* - (imageHeight / 2) + imageHeight*/;
 	aux.rect.w = imageWidth;
 	aux.rect.h = imageHeight;
 
