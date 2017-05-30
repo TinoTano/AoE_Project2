@@ -434,7 +434,8 @@ bool FogOfWar::Save(pugi::xml_node & d) const
 				int tile_id = layer->Get(x, y);
 				uint v = App->fog->Get(x, y);
 
-				if (tile_id > 0) dataInfo.append_child("Tile").append_attribute("value") = v;
+				if (tile_id > 0) 
+					dataInfo.append_child("Tile").append_attribute("value") = v;
 			}
 		}
 	}
@@ -444,11 +445,8 @@ bool FogOfWar::Save(pugi::xml_node & d) const
 
 bool FogOfWar::Load(pugi::xml_node & d)
 {
-	App->fog->entities_not_in_fog.clear();
-	App->fog->entities_on_fog.clear();
+	pugi::xml_node node = d.child("Visibility").child("Tile");
 
-	for (pugi::xml_node node = d.child("Visibility").child("Tile"); node; node = node.next_sibling("Tile"))
-	{
 		for (list<MapLayer*>::iterator it = App->map->data.layers.begin(); it != App->map->data.layers.end(); it++)
 		{
 			MapLayer* layer = *it;
@@ -461,11 +459,14 @@ bool FogOfWar::Load(pugi::xml_node & d)
 				for (int x = 0; x < App->map->data.width; ++x)
 				{
 					int tile_id = layer->Get(x, y);
-					if (tile_id > 0) data[(y*App->map->data.width) + x] = node.attribute("value").as_uint();
+					if (tile_id > 0)
+					{
+						data[(y*App->map->data.width) + x] = node.attribute("value").as_uint();
+						node = node.next_sibling("Tile");
+					}
 				}
 			}
 		}
-	}
 
 	return true;
 }

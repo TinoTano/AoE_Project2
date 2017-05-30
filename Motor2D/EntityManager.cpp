@@ -315,6 +315,8 @@ bool EntityManager::Load(pugi::xml_node & data)
 
 	App->entityManager->WorldEntityList.clear();
 	App->entityManager->selectedEntityList.clear();
+	App->fog->entities_not_in_fog.clear();
+	App->fog->entities_on_fog.clear();
 
 	// Creating all again
 
@@ -362,11 +364,13 @@ bool EntityManager::Load(pugi::xml_node & data)
 				player->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
 				player->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
 				App->entityManager->WorldEntityList.push_back(AI_faction->Town_center);
+				App->fog->AddEntity(App->entityManager->player->Town_center);
 			}
 			else {
 				AI_faction->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
 				AI_faction->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
 				App->entityManager->WorldEntityList.push_back(player->Town_center);
+				App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
 			}
 		}
 	}
