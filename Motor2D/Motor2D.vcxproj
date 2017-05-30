@@ -51,7 +51,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
@@ -68,7 +68,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <UseFullPaths>false</UseFullPaths>
       <ShowIncludes>false</ShowIncludes>
-      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -118,6 +118,7 @@
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Textures.cpp" />
     <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="unzip.cpp" />
     <ClCompile Include="Video.cpp" />
     <ClCompile Include="Villager.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -168,6 +169,7 @@
     <ClInclude Include="Render.h" />
     <ClInclude Include="Textures.h" />
     <ClInclude Include="Unit.h" />
+    <ClInclude Include="unzip.h" />
     <ClInclude Include="Video.h" />
     <ClInclude Include="Villager.h" />
     <ClInclude Include="Window.h" />

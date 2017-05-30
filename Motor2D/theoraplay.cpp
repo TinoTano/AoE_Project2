@@ -15,6 +15,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <tchar.h>
+#include <stdio.h>
 
 #ifdef _WIN32
 #pragma comment( lib, "ogg/libogg.lib" )
@@ -36,6 +38,9 @@
 #include "theoraplay.h"
 #include "theora/theoradec.h"
 #include "vorbis/codec.h"
+#include "unzip.h"
+#include "p2Log.h"
+#include <string>
 
 #define THEORAPLAY_INTERNAL 1
 
@@ -596,6 +601,20 @@ THEORAPLAY_Decoder *THEORAPLAY_startDecodeFile(const char *fname,
 	THEORAPLAY_Io *io = (THEORAPLAY_Io *)malloc(sizeof(THEORAPLAY_Io));
 	if (io == NULL)
 		return NULL;
+
+	HZIP hz;
+	hz = OpenZip(_T("..\\Game\\data.zip"), 0);
+	SetUnzipBaseDir(hz, _T("..\\Game"));
+	ZIPENTRY ze; GetZipItem(hz, -1, &ze); int numitems = ze.index;
+	for (int zi = 0; zi<numitems; zi++)
+	{
+		GetZipItem(hz, zi, &ze);
+		std::string c = ze.name;
+		if (c == "VideoLogoNemesis.ogv") {
+			UnzipItem(hz, zi, ze.name);
+		}
+	}
+	CloseZip(hz);
 
 	FILE *f = fopen(fname, "rb");
 	if (f == NULL)

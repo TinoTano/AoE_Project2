@@ -18,6 +18,8 @@
 #include "theora/theoradec.h"
 #include "vorbis/codec.h"
 #include "theoraplay.h"
+#include <experimental\filesystem>
+namespace fs = experimental::filesystem;
 
 Video::Video() : Module()
 {
@@ -140,9 +142,8 @@ void Video::queue_audio(const THEORAPLAY_AudioPacket *audio)
 void Video::LoadVideo(const char *fname)
 {
 	// TODO 1: Start decoding the file. One simple line of code. Use THEORAPLAY_VIDFMT_IYUV.
-
 	decoder = THEORAPLAY_startDecodeFile(fname, 30, THEORAPLAY_VIDFMT_IYUV);
-
+	
 	// Wait until we have video and/or audio data, so we can set up hardware.
 	while (!video) {
 		//if (!audio) audio = THEORAPLAY_getAudio(decoder);
@@ -176,6 +177,8 @@ void Video::LoadVideo(const char *fname)
 void Video::PlayVideo(const char *fname)
 {
 	// Loading video ---------------------
+	videoName = fname;
+	videoName = "..\\Game\\" + videoName;
 
 	ResetValues();
 	LoadVideo(fname);
@@ -191,7 +194,7 @@ bool Video::Update(float dt)
 	while (want_to_play && !quit && THEORAPLAY_isDecoding(decoder))
 	{
 		Uint32 now = SDL_GetTicks() - baseticks;
-
+		videoPlaying = true;
 		// ----------------------------------------------------------------
 
 		// TODO 2: Get the video frame from the decoder if !video
@@ -255,7 +258,10 @@ bool Video::Update(float dt)
 		SDL_RenderCopy(App->render->renderer, texture, NULL, NULL);
 		SDL_RenderPresent(App->render->renderer);
 	}
-
+	if (videoPlaying && THEORAPLAY_isDecoding(decoder) == 0) {
+		videoPlaying = false;
+		fs::remove(videoName.c_str());
+	}
 	return true;
 }
 

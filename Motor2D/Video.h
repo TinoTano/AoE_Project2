@@ -69,6 +69,9 @@ private:
 	static AudioQueue* audio_queue_tail;
 
 	SDL_Rect rendering_rect;
+
+	bool videoPlaying = false;
+	string videoName;
 };
 
 #endif // __VIDEO_H__

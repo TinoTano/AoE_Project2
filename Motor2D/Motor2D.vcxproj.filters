@@ -134,6 +134,9 @@
     <ClCompile Include="Video.cpp">
       <Filter>Project 2\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="unzip.cpp">
+      <Filter>Project 2\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PugiXml\src\pugiconfig.hpp">
@@ -280,6 +283,9 @@
     <ClInclude Include="theoraplay.h" />
     <ClInclude Include="Video.h">
       <Filter>Project 2\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="unzip.h">
+      <Filter>Project 2\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
