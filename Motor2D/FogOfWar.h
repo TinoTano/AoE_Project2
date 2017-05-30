@@ -67,6 +67,8 @@ public:
 	bool IsVisible(iPoint char_pos, Faction faction);
 	bool IsFrontier(iPoint point, in_fog_entity& player);
 	uint Get(int x, int y);
+	bool Save(pugi::xml_node & data) const;
+	bool Load(pugi::xml_node & data);
 
 	// Atlas
 

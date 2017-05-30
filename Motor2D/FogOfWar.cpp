@@ -416,3 +416,56 @@ void FogOfWar::SoftEdges()
 	}
 }
 
+bool FogOfWar::Save(pugi::xml_node & d) const
+{
+	pugi::xml_node dataInfo = d.append_child("Visibility");
+
+	for (list<MapLayer*>::iterator it = App->map->data.layers.begin(); it != App->map->data.layers.end(); it++)
+	{
+		MapLayer* layer = *it;
+
+		if (layer->properties.Get("Nodraw") != 0)
+			continue;
+
+		for (int y = 0; y < App->map->data.height; ++y)
+		{
+			for (int x = 0; x < App->map->data.width; ++x)
+			{
+				int tile_id = layer->Get(x, y);
+				uint v = App->fog->Get(x, y);
+
+				if (tile_id > 0) dataInfo.append_child("Tile").append_attribute("value") = v;
+			}
+		}
+	}
+
+	return true;
+}
+
+bool FogOfWar::Load(pugi::xml_node & d)
+{
+	App->fog->entities_not_in_fog.clear();
+	App->fog->entities_on_fog.clear();
+
+	for (pugi::xml_node node = d.child("Visibility").child("Tile"); node; node = node.next_sibling("Tile"))
+	{
+		for (list<MapLayer*>::iterator it = App->map->data.layers.begin(); it != App->map->data.layers.end(); it++)
+		{
+			MapLayer* layer = *it;
+
+			if (layer->properties.Get("Nodraw") != 0)
+				continue;
+
+			for (int y = 0; y < App->map->data.height; ++y)
+			{
+				for (int x = 0; x < App->map->data.width; ++x)
+				{
+					int tile_id = layer->Get(x, y);
+					if (tile_id > 0) data[(y*App->map->data.width) + x] = node.attribute("value").as_uint();
+				}
+			}
+		}
+	}
+
+	return true;
+}
