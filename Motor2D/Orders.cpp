@@ -181,7 +181,8 @@ void UnitAttackOrder::Start(Unit* unit)
 			if (unit->order_list.back()->order_type == MOVETO) 
 				unit->order_list.pop_back();
 		}
-		else if (unit->los->CheckCollision(nearest_enemy->collider)) {
+		else if ((unit->los->CheckCollision(nearest_enemy->collider) && unit->faction == SAURON_ARMY) ||
+			nearest_enemy->isActive && unit->faction == FREE_MEN) {
 
 			if (unit->order_list.back()->order_type != MOVETO) {
 				unit->order_list.push_back(new MoveToOrder(unit, nearest_enemy->collider->pos));
@@ -238,7 +239,7 @@ void UnitAttackOrder::Execute(Unit* unit) {
 
 bool UnitAttackOrder::CheckCompletion(Unit* unit) 
 {
-	return (unit->currentAnim->Finished());
+	return (unit->currentAnim->at(unit->currentDirection).Finished());
 }
 
 void GatherOrder::Start(Unit* unit) {
@@ -314,7 +315,7 @@ void GatherOrder::Execute(Unit* unit) {
 
 bool GatherOrder::CheckCompletion(Unit* unit) 
 {
-	return (unit->currentAnim->Finished());
+	return (unit->currentAnim->at(unit->currentDirection).Finished());
 }
 
 //Build order:
@@ -373,7 +374,7 @@ void BuildOrder::Execute(Unit* unit)
 
 bool BuildOrder::CheckCompletion(Unit* unit) 
 {
-	return (unit->currentAnim->Finished());
+	return (unit->currentAnim->at(unit->currentDirection).Finished());
 }
 
 SquadMoveToOrder::SquadMoveToOrder(Unit* commander, iPoint dest) {

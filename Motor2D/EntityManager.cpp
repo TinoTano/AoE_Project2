@@ -111,7 +111,7 @@ bool EntityManager::Update(float arg_dt)
 
 			case HOVERING_ENEMY:
 
-				if (clicked_on->entity->state != DESTROYED) {
+				if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
 						unit->order_list.push_front(new UnitAttackOrder());

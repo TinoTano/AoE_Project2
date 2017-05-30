@@ -57,9 +57,9 @@ Unit::Unit(int posX, int posY, Unit* unit)
 
 	entityTexture = unitIdleTexture;
 
-	SetAnim(state);
+	currentAnim = &idleAnimations;
 
-	SDL_Rect r = currentAnim->GetCurrentFrame();
+	SDL_Rect r = currentAnim->at(currentDirection).GetCurrentFrame();
 	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, r.w / 2, COLLIDER_UNIT, App->entityManager, (Entity*)this);
 	los = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, unit->los_value, COLLIDER_LOS, App->entityManager, (Entity*)this);
 
@@ -79,7 +79,7 @@ Unit::~Unit()
 
 bool Unit::Update(float dt)
 {
-	r = currentAnim->GetCurrentFrame();
+	r = currentAnim->at(currentDirection).GetCurrentFrame();
 
 	if (state != DESTROYED) {
 
@@ -110,10 +110,9 @@ bool Unit::Update(float dt)
 		}
 	}
 	else {
-		if (currentAnim->Finished()) 
+		if (currentAnim->at(currentDirection).Finished())
 			Destroy();
 	}
-
 
 	return true;
 }
@@ -158,7 +157,7 @@ bool Unit::Draw()
 	aux.pos.x = entityPosition.x - (r.w / 2);
 	aux.pos.y = entityPosition.y - (r.h / 2);
 	aux.priority = entityPosition.y - (r.h / 2) + r.h;
-	aux.flip = currentAnim->flip;
+	aux.flip = currentAnim->at(currentDirection).flip;
 
 	App->render->sprites_toDraw.push_back(aux);
 
@@ -175,31 +174,25 @@ bool Unit::Draw()
 
 void Unit::LookAt(fPoint dest)
 {
-	unitDirection direction;
-
 	float angle = atan2f(dest.y, dest.x) * RADTODEG;
 
 	if (angle < 22.5 && angle > -22.5)
-		direction = RIGHT;
+		currentDirection = RIGHT;
 	else if (angle >= 22.5 && angle <= 67.5)
-		direction = DOWN_RIGHT;
+		currentDirection = DOWN_RIGHT;
 	else if (angle > 67.5 && angle < 112.5)
-		direction = DOWN;
+		currentDirection = DOWN;
 	else if (angle >= 112.5 && angle <= 157.5)
-		direction = DOWN_LEFT;
+		currentDirection = DOWN_LEFT;
 	else if (angle > 157.5 || angle < -157.5)
-		direction = LEFT;
+		currentDirection = LEFT;
 	else if (angle >= -157.5 && angle <= -112.5)
-		direction = UP_LEFT;
+		currentDirection = UP_LEFT;
 	else if (angle > -112.5 && angle < -67.5)
-		direction = UP;
+		currentDirection = UP;
 	else if (angle >= -67.5 && angle <= -22.5)
-		direction = UP_RIGHT;
+		currentDirection = UP_RIGHT;
 
-	if (direction != currentDirection) {
-		currentDirection = direction;
-		SetAnim(state);
-	}
 }
 
 
@@ -211,53 +204,29 @@ void Unit::SetTexture(EntityState texture_of)
 	switch (texture_of) {
 	case IDLE:
 		entityTexture = unitIdleTexture;
+		currentAnim = &idleAnimations;
 		break;
 	case MOVING:
 		entityTexture = unitMoveTexture;
+		currentAnim = &movingAnimations;
 		break;
 	case ATTACKING:
 		entityTexture = unitAttackTexture;
+		currentAnim = &attackingAnimations;
 		break;
 	case DESTROYED:
 		entityTexture = unitDieTexture;
+		currentAnim = &dyingAnimations;
 		break;
 	case GATHERING:
 		villager = (Villager*)this;
 		entityTexture = villager->unitChoppingTexture;
+		currentAnim = &villager->choppingAnimations;
 		break;
 	case CONSTRUCTING:
 		villager = (Villager*)this;
 		entityTexture = villager->unitChoppingTexture;
-		break;
-	}
-
-	SetAnim(texture_of);
-}
-
-void Unit::SetAnim(EntityState anim_of) {
-
-	Villager* villager = nullptr;
-
-	switch (anim_of) {
-	case IDLE:
-		currentAnim = &idleAnimations[currentDirection];
-		break;
-	case MOVING:
-		currentAnim = &movingAnimations[currentDirection];
-		break;
-	case ATTACKING:
-		currentAnim = &attackingAnimations[currentDirection];
-		break;
-	case DESTROYED:
-		currentAnim = &dyingAnimations[currentDirection];
-		break;
-	case GATHERING:
-		villager = (Villager*)this;
-		currentAnim = &villager->choppingAnimations[currentDirection];
-	case CONSTRUCTING:
-		villager = (Villager*)this;
-		currentAnim = &villager->choppingAnimations[currentDirection];
-	default: 
+		currentAnim = &villager->choppingAnimations;
 		break;
 	}
 
