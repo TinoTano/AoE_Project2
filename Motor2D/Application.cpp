@@ -466,6 +466,7 @@ bool Application::SavegameNow() const
 	list<Module*>::const_iterator it;
 	for (it = modules.begin(); it != modules.end(); it++)
 	{
+		root.append_child((*it)->name.c_str());
 		ret = (*it)->Save(root.child((*it)->name.c_str()));
 	}
 

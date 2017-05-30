@@ -266,15 +266,15 @@ bool Scene::Update(float dt)
 	//if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 	//	questHUD.RemoveQuest(2);
 	//}
-	/*
+	
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
-		SaveScene();
+		App->SaveGame();
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) {
-		LoadScene();
+		App->LoadGame();
 	}
-*/
+
 	
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();

@@ -293,7 +293,7 @@ void FogOfWar::ManageEntities()
 {
 	for (list<Entity*>::iterator it = entities_not_in_fog.begin(); it != entities_not_in_fog.end(); it++)
 	{
-		if ((*it)->state != DESTROYED && (*it)->collider != nullptr) {
+		if ((*it)->state != DESTROYED && (*it)->collider != nullptr && (*it) != nullptr) {
 			if (IsVisible(App->map->WorldToMap((*it)->collider->pos.x, (*it)->collider->pos.y), (*it)->faction))
 				(*it)->isActive = true;
 			else

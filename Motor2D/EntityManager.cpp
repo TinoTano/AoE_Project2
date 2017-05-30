@@ -289,19 +289,33 @@ bool EntityManager::CleanUp()
 bool EntityManager::Load(pugi::xml_node & data)
 {
 	App->fog->entities_not_in_fog.clear();
+	App->fog->entities_not_in_fog.push_back(AI_faction->Town_center);
 	App->fog->entities_on_fog.clear();
+	//App->fog->entities_on_fog.push_back(player->Town_center->)
+	//App->fog->entities_on_fog.push_back(player->Town_center);
 	App->entityManager->selectedEntityList.clear();
 
 	for (list<Entity*>::iterator it = App->entityManager->WorldEntityList.begin(); it != App->entityManager->WorldEntityList.end(); ++it)
 	{
-		App->entityManager->DeleteEntity((*it));
+		if (*it != nullptr) {
+			if ((*it) != player->Town_center && (*it) != AI_faction->Town_center)
+			{
+				(*it)->Destroy();
+				App->entityManager->DeleteEntity((*it));
+			}
+		}
 	}
 
 	App->entityManager->WorldEntityList.clear();
+	App->entityManager->WorldEntityList.push_back(player->Town_center);
+	App->entityManager->WorldEntityList.push_back(AI_faction->Town_center);
 
 	for (list<Resource*>::iterator it = App->entityManager->resource_list.begin(); it != App->entityManager->resource_list.end(); ++it)
 	{
-		(*it)->Destroy();
+		if (*it != nullptr) {
+			(*it)->Destroy();
+			App->entityManager->DeleteEntity((*it));
+		}
 	}
 
 	App->entityManager->resource_list.clear();
@@ -318,12 +332,26 @@ bool EntityManager::Load(pugi::xml_node & data)
 
 	for (pugi::xml_node buildingNode = data.child("Building"); buildingNode; buildingNode = buildingNode.next_sibling("Building"))
 	{
-		Building* buildingTemplate = App->entityManager->CreateBuilding(buildingNode.child("Position").attribute("x").as_int(),
-			buildingNode.child("Position").attribute("y").as_int(),
-			(buildingType)buildingNode.child("Type").attribute("value").as_int());
+		if ((buildingType)buildingNode.child("Type").attribute("value").as_int() != TOWN_CENTER && (buildingType)buildingNode.child("Type").attribute("value").as_int() != SAURON_TOWER)
+		{
+			Building* buildingTemplate = App->entityManager->CreateBuilding(buildingNode.child("Position").attribute("x").as_int(),
+				buildingNode.child("Position").attribute("y").as_int(),
+				(buildingType)buildingNode.child("Type").attribute("value").as_int());
 
-		buildingTemplate->Life = buildingNode.child("Life").attribute("value").as_int();
-		buildingTemplate->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+			buildingTemplate->Life = buildingNode.child("Life").attribute("value").as_int();
+			buildingTemplate->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+		}
+		else {
+			if ((buildingType)buildingNode.child("Type").attribute("value").as_int() == TOWN_CENTER)
+			{
+				player->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
+				player->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+			}
+			else {
+				AI_faction->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
+				AI_faction->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+			}
+		}
 	}
 
 	for (pugi::xml_node resourceNode = data.child("Resource"); resourceNode; resourceNode = resourceNode.next_sibling("Resource")) {
@@ -343,6 +371,8 @@ bool EntityManager::Load(pugi::xml_node & data)
 	player->resources.gold = data.child("Player").attribute("gold").as_int();
 	player->resources.food = data.child("Player").attribute("food").as_int();
 	player->resources.stone = data.child("Player").attribute("stone").as_int();
+
+	player->tech_tree->Reset(FREE_MEN);
 
 	player->tech_tree->available_techs.clear();
 	for (pugi::xml_attribute available_techs = data.child("Player").child("TechTree").child("AvailableTechs").attribute("TechType");
@@ -374,6 +404,8 @@ bool EntityManager::Load(pugi::xml_node & data)
 	AI_faction->resources.gold = data.child("Enemy").attribute("gold").as_int();
 	AI_faction->resources.food = data.child("Enemy").attribute("food").as_int();
 	AI_faction->resources.stone = data.child("Enemy").attribute("stone").as_int();
+
+	AI_faction->tech_tree->Reset(SAURON_ARMY);
 
 	AI_faction->tech_tree->available_techs.clear();
 	for (pugi::xml_attribute available_techs = data.child("Enemy").child("TechTree").child("AvailableTechs").attribute("TechType");
