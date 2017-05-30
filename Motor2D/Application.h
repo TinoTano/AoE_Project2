@@ -62,8 +62,8 @@ public:
 	const char* GetOrganization() const;
 	float GetDT() const;
 
-	void LoadGame(const char* file);
-	void SaveGame(const char* file) const;
+	void LoadGame();
+	void SaveGame() const;
 	void GetSaveGames(list<string>& list_to_fill) const;
 
 	pugi::xml_node LoadGameDataFile(pugi::xml_document&) const;

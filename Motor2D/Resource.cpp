@@ -36,6 +36,28 @@ Resource::Resource(int posX, int posY, Resource* resource)
 
 }
 
+Resource::Resource(int posX, int posY, Resource * resource, SDL_Rect rect)
+{
+	entityPosition.x = posX;
+	entityPosition.y = posY;
+
+	res_type = resource->res_type;
+	contains = resource->contains;
+	MaxLife = resource->Life;
+	Life = resource->Life;
+	entityTexture = resource->entityTexture;
+	selectionWidth = resource->selectionWidth;
+	selectionAreaCenterPoint = resource->selectionAreaCenterPoint;
+
+
+	blit_rect = rect;
+
+	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y  /* - (selectionAreaCenterPoint.y / 4))*/ }, blit_rect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+
+	faction = NATURE;
+	App->fog->AddEntity(this);
+}
+
 
 Resource::~Resource()
 {

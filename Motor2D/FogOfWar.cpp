@@ -17,13 +17,23 @@ FogOfWar::~FogOfWar()
 {
 }
 
-bool FogOfWar::AddEntity(Entity* new_entity)
+bool FogOfWar::AddEntity(Entity* new_entity )
 {
 	if (new_entity->faction == FREE_MEN) 
 	{
 		in_fog_entity new_ally;
-		new_ally.pos = App->map->WorldToMap(new_entity->entityPosition.x, new_entity->entityPosition.y);
+		new_ally.pos = App->map->WorldToMap(new_entity->collider->pos.x, new_entity->collider->pos.y);
 		
+		Unit* aux = (Unit*)new_entity;
+		Building* aux2 = (Building*)new_entity;
+
+		if (new_entity->collider->type == COLLIDER_UNIT)
+			new_ally.radium = aux->los->r / 48;
+		else if (new_entity->collider->type == COLLIDER_BUILDING && aux2->range != nullptr)
+			new_ally.radium = aux2->range->r / 49;	
+		else
+			new_ally.radium = 4;
+
 		GetEntitiesCircleArea(new_ally);
 		new_ally.id = new_entity->entityID;
 		entities_on_fog.push_back(new_ally);
@@ -73,15 +83,15 @@ void FogOfWar::Update(iPoint prev_pos, iPoint next_pos, uint id)
 	{
 		if (curr->id == id)
 		{
-			if (prev_pos.x + 1 == next_pos.x)
-				MoveFrontier(prev_pos, "right", id);
-			else if (prev_pos.x - 1 == next_pos.x)
-				MoveFrontier(prev_pos, "left", id);
+			if (prev_pos.x < next_pos.x)
+				MoveFrontier(prev_pos, "right", id, (next_pos.x - prev_pos.x));
+			else if (prev_pos.x > next_pos.x)
+				MoveFrontier(prev_pos, "left", id, (prev_pos.x - next_pos.x));
 
-			if (prev_pos.y + 1 == next_pos.y)
-				MoveFrontier(prev_pos, "down", id);
-			else if (prev_pos.y - 1 == next_pos.y)
-				MoveFrontier(prev_pos, "up", id);
+			if (prev_pos.y < next_pos.y)
+				MoveFrontier(prev_pos, "down", id, (next_pos.y - prev_pos.y));
+			else if (prev_pos.y > next_pos.y)
+				MoveFrontier(prev_pos, "up", id, (prev_pos.y - next_pos.y));
 
 			SoftEdges();
 		}
@@ -92,7 +102,7 @@ void FogOfWar::Update(iPoint prev_pos, iPoint next_pos, uint id)
 
 void FogOfWar::GetEntitiesCircleArea(in_fog_entity& new_player)
 {
-	new_player.frontier = App->map->PropagateBFS({ new_player.pos.x, new_player.pos.y }, FOW_RADIUM);
+	new_player.frontier = App->map->PropagateBFS({ new_player.pos.x, new_player.pos.y }, new_player.radium);
 
 	DeletePicks(new_player);
 
@@ -100,7 +110,7 @@ void FogOfWar::GetEntitiesCircleArea(in_fog_entity& new_player)
 		data[(*it).y * App->map->data.width + (*it).x] = fow_clear;
 }
 
-void FogOfWar::MoveFrontier(iPoint prev_pos, const char* direction, uint id)
+void FogOfWar::MoveFrontier(iPoint prev_pos, const char* direction, uint id, int amount)
 {
 	string direction_str(direction);
 
@@ -108,7 +118,7 @@ void FogOfWar::MoveFrontier(iPoint prev_pos, const char* direction, uint id)
 	{
 		if (it->id == id)
 		{
-			MoveArea(*it, direction, id);
+			MoveArea(*it, direction, id, amount);
 		}
 	}
 }
@@ -129,7 +139,7 @@ void FogOfWar::GetCurrentPointsFromFrontier(in_fog_entity& player)
 
 	for (list<iPoint>::iterator it = player.frontier.begin(); it != player.frontier.end(); it++)
 	{
-		if (it->x < player.pos.x && it->y != player.pos.y + (FOW_RADIUM - 1) && it->y != player.pos.y - (FOW_RADIUM - 1))
+		if (it->x < player.pos.x && it->y != player.pos.y + (player.radium - 1) && it->y != player.pos.y - (player.radium - 1))
 		{
 			for (int x = it->x + 1;; x++)
 			{
@@ -157,7 +167,7 @@ void FogOfWar::FillFrontier()
 	}
 }
 
-void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint id)
+void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint id, int amount)
 {
 	for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
 	{
@@ -185,49 +195,57 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 
 	if (direction_str == "right")
 	{
-		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
-			(*it).x += 1;
+		for (int i = 0; i < amount; i++) {
+			for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
+				(*it).x += 1;
 
-		for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
-			(*it).x += 1;
+			for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
+				(*it).x += 1;
 
-		player_unity.pos.x += 1;
+			player_unity.pos.x += amount;
+		}
 	}
 
 
 	else if (direction_str == "left")
 	{
-		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
-			(*it).x -= 1;
+		for (int i = 0; i < amount; i++) {
+			for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
+				(*it).x -= 1;
 
-		for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
-			(*it).x -= 1;
+			for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
+				(*it).x -= 1;
 
-		player_unity.pos.x -= 1;
+			player_unity.pos.x -= amount;
+		}
 	}
 
 
 	else if (direction_str == "up")
 	{
-		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
-			(*it).y -= 1;
+		for (int i = 0; i < amount; i++) {
+			for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
+				(*it).y -= 1;
 
-		for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
-			(*it).y -= 1;
+			for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
+				(*it).y -= 1;
 
-		player_unity.pos.y -= 1;
+			player_unity.pos.y -= amount;
+		}
 	}
 
 
 	else if (direction_str == "down")
 	{
-		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
-			(*it).y += 1;
+		for (int i = 0; i < amount; i++) {
+			for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
+				(*it).y += 1;
 
-		for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
-			(*it).y += 1;
+			for (list<iPoint>::iterator it = player_unity.frontier.begin(); it != player_unity.frontier.end(); it++)
+				(*it).y += 1;
 
-		player_unity.pos.y += 1;
+			player_unity.pos.y += amount;
+		}
 	}
 
 
@@ -257,16 +275,16 @@ void FogOfWar::DeletePicks(in_fog_entity& player)
 
 	for (list<iPoint>::iterator it = player.frontier.begin(); it != player.frontier.end(); it++)
 	{
-		if ((*it) == iPoint(player.pos.x, player.pos.y + FOW_RADIUM))
+		if ((*it) == iPoint(player.pos.x, player.pos.y + player.radium))
 			(*it) = iPoint((*it).x, (*it).y - 1);
 
-		else if ((*it) == iPoint(player.pos.x, player.pos.y - FOW_RADIUM))
+		else if ((*it) == iPoint(player.pos.x, player.pos.y - player.radium))
 			(*it) = iPoint((*it).x, (*it).y + 1);
 
-		else if ((*it) == iPoint(player.pos.x + FOW_RADIUM, player.pos.y))
+		else if ((*it) == iPoint(player.pos.x + player.radium, player.pos.y))
 			(*it) = iPoint((*it).x - 1, (*it).y);
 
-		else if ((*it) == iPoint(player.pos.x - FOW_RADIUM, player.pos.y))
+		else if ((*it) == iPoint(player.pos.x - player.radium, player.pos.y))
 			(*it) = iPoint((*it).x + 1, (*it).y);
 	}
 }
@@ -275,7 +293,7 @@ void FogOfWar::ManageEntities()
 {
 	for (list<Entity*>::iterator it = entities_not_in_fog.begin(); it != entities_not_in_fog.end(); it++)
 	{
-		if ((*it)->state != DESTROYED) {
+		if ((*it)->state != DESTROYED && (*it)->collider != nullptr) {
 			if (IsVisible(App->map->WorldToMap((*it)->collider->pos.x, (*it)->collider->pos.y), (*it)->faction))
 				(*it)->isActive = true;
 			else
@@ -376,19 +394,23 @@ void FogOfWar::SoftEdges()
 			// Small part to complete the rounded edge
 
 			else if (Get((*it).x + 1, (*it).y) >= fow_clear_rup && Get((*it).x + 1, (*it).y) <= fow_clear_rectdownleft &&
-					 Get((*it).x, (*it).y + 1) >= fow_clear_rup && Get((*it).x, (*it).y + 1) <= fow_clear_rectdownleft)
+					 Get((*it).x, (*it).y + 1) >= fow_clear_rup && Get((*it).x, (*it).y + 1) <= fow_clear_rectdownleft &&
+				     Get((*it).x + 1, (*it).y + 1) >= fow_black && Get((*it).x + 1, (*it).y + 1) <= fow_grey_rright)
 					 data[(*it).y * App->map->data.width + (*it).x] = fow_clear_sdown;
 
 			else if (Get((*it).x - 1, (*it).y) >= fow_clear_rup && Get((*it).x - 1, (*it).y) <= fow_clear_rectdownleft &&
-					 Get((*it).x, (*it).y - 1) >= fow_clear_rup && Get((*it).x, (*it).y - 1) <= fow_clear_rectdownleft)
+					 Get((*it).x, (*it).y - 1) >= fow_clear_rup && Get((*it).x, (*it).y - 1) <= fow_clear_rectdownleft &&
+				     Get((*it).x - 1, (*it).y - 1) >= fow_black && Get((*it).x - 1, (*it).y - 1) <= fow_grey_rright)
 					 data[(*it).y * App->map->data.width + (*it).x] = fow_clear_sup;
 
 			else if (Get((*it).x - 1, (*it).y) >= fow_clear_rup && Get((*it).x - 1, (*it).y) <= fow_clear_rectdownleft &&
-					 Get((*it).x, (*it).y + 1) >= fow_clear_rup && Get((*it).x, (*it).y + 1) <= fow_clear_rectdownleft)
+					 Get((*it).x, (*it).y + 1) >= fow_clear_rup && Get((*it).x, (*it).y + 1) <= fow_clear_rectdownleft &&
+				     Get((*it).x - 1, (*it).y + 1) >= fow_black && Get((*it).x - 1, (*it).y + 1) <= fow_grey_rright)
 					 data[(*it).y * App->map->data.width + (*it).x] = fow_clear_sleft;
 
 			else if (Get((*it).x + 1, (*it).y) >= fow_clear_rup && Get((*it).x + 1, (*it).y) <= fow_clear_rectdownleft &&
-					 Get((*it).x, (*it).y - 1) >= fow_clear_rup && Get((*it).x, (*it).y - 1) <= fow_clear_rectdownleft)
+					 Get((*it).x, (*it).y - 1) >= fow_clear_rup && Get((*it).x, (*it).y - 1) <= fow_clear_rectdownleft &&
+				     Get((*it).x + 1, (*it).y - 1) >= fow_black && Get((*it).x + 1, (*it).y - 1) <= fow_grey_rright)
 				     data[(*it).y * App->map->data.width + (*it).x] = fow_clear_sright;
 		}
 	}

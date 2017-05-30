@@ -30,8 +30,8 @@ Collision::Collision() : Module()
 	matrix[COLLIDER_RESOURCE][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_RESOURCE][COLLIDER_LOS] = false;
 
-	matrix[COLLIDER_RANGE][COLLIDER_UNIT] = true;
-	matrix[COLLIDER_RANGE][COLLIDER_BUILDING] = true;
+	matrix[COLLIDER_RANGE][COLLIDER_UNIT] = false;
+	matrix[COLLIDER_RANGE][COLLIDER_BUILDING] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_RESOURCE] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_RANGE] = false;
 	matrix[COLLIDER_RANGE][COLLIDER_LOS] = false;
@@ -81,7 +81,7 @@ bool Collision::PreUpdate()
 	Collider *c2 =	nullptr;
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
-		if ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_RANGE || (*col1)->type == COLLIDER_LOS) {
+		if ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_LOS) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
@@ -159,6 +159,72 @@ bool Collision::CleanUp()
 	return true;
 }
 
+bool Collision::Load(pugi::xml_node &)
+{
+	/*for (list<Collider*>::const_iterator it = colliders.begin(); it != colliders.end(); ++it) {
+	DeleteCollider((*it));
+	}
+
+	colliders.clear();
+
+	for (pugi::xml_node collider = data.append_child("Collider"); collider; collider = collider.next_sibling("Collider"))
+	{
+	iPoint pos;
+	pos.x = collider.child("position").attribute("x").as_int();
+	pos.y = collider.child("position").attribute("y").as_int();
+
+	int radius = collider.attribute("radius").as_int();
+	int quadtree = collider.attribute("quadtree").as_int();
+	bool colliding = collider.attribute("collision").as_bool();
+	COLLIDER_TYPE type = (COLLIDER_TYPE)collider.attribute("type").as_uint();
+
+	Module* callback = nullptr;
+	for (list<Module*>::iterator it = App->modules.begin(); it != App->modules.end(); ++it)
+	{
+	if ((*it)->name == collider.attribute("callback").as_string())
+	{
+	callback = (*it);
+	}
+	}
+	Entity* entity = nullptr;
+	for (list<Entity*>::iterator it = App->entityManager->WorldEntityList.begin(); it != App->entityManager->WorldEntityList.end(); ++it)
+	{
+	if ((*it)->entityID == collider.attribute("entity").as_uint())
+	{
+	entity = (*it);
+	}
+	}
+
+	Collider* curr = AddCollider(pos, radius, type, callback, entity);
+	curr->quadtree_node = quadtree;
+	curr->colliding = colliding;
+	}*/
+
+	return true;
+}
+
+bool Collision::Save(pugi::xml_node & data) const
+{
+
+	//for (list<Collider*>::const_iterator it = colliders.begin(); it != colliders.end(); ++it){
+
+	//	pugi::xml_node collider = data.append_child("Collider");
+
+	//	pugi::xml_node pos = collider.append_child("position");
+	//	pos.append_attribute("x") = (*it)->pos.x;
+	//	pos.append_attribute("y") = (*it)->pos.y;
+
+	//	collider.append_attribute("radius") = (*it)->r;
+	//	collider.append_attribute("quadtree") = (*it)->quadtree_node;
+	//	collider.append_attribute("collision") = (*it)->colliding;
+	//	collider.append_attribute("type") = (*it)->type;
+	//	collider.append_attribute("callback") = (*it)->callback->name.c_str();
+	//	collider.append_attribute("entity") = (*it)->entity->entityID;
+	//}
+
+	return true;
+}
+
 Collider * Collision::AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback, Entity* entity)
 {
 	Collider* ret = new Collider(position, radius, type, callback, entity);
@@ -189,7 +255,7 @@ Unit* Collider::GetUnit() {
 
 	Unit* unit = nullptr;
 
-	if (type == COLLIDER_UNIT) 
+	if (entity->collider->type == COLLIDER_UNIT)
 		unit = (Unit*)entity;
 
 	return unit;
@@ -199,7 +265,7 @@ Building* Collider::GetBuilding() {
 
 	Building* building = nullptr;
 
-	if (type == COLLIDER_BUILDING)
+	if (entity->collider->type == COLLIDER_BUILDING)
 		building = (Building*)entity;
 
 	return building;
@@ -209,7 +275,7 @@ Resource* Collider::GetResource() {
 
 	Resource* resource = nullptr;
 
-	if (type == COLLIDER_RESOURCE)
+	if (entity->collider->type == COLLIDER_RESOURCE)
 		resource = (Resource*)entity;
 
 	return resource;

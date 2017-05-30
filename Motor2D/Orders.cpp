@@ -174,20 +174,35 @@ bool FollowOrder::CheckCompletion(Unit* unit)
 void UnitAttackOrder::Start(Unit* unit)
 {
 	if (Entity* nearest_enemy = App->entityManager->FindTarget(unit)) {   
-		unit->state = ATTACKING;
 
 		if (unit->range->CheckCollision(nearest_enemy->collider)) {
 			state = EXECUTING;
 			unit->SetTexture(ATTACKING);
+			if (unit->order_list.back()->order_type == MOVETO) 
+				unit->order_list.pop_back();
 		}
-		else if (unit->los->CheckCollision(nearest_enemy->collider))
-			unit->order_list.push_front(new MoveToOrder(unit, nearest_enemy->collider->pos));
+		else if ((unit->los->CheckCollision(nearest_enemy->collider) && unit->faction == SAURON_ARMY) ||
+			nearest_enemy->isActive && unit->faction == FREE_MEN) {
+
+			if (unit->order_list.back()->order_type != MOVETO) {
+				unit->order_list.push_back(new MoveToOrder(unit, nearest_enemy->collider->pos));
+				if (unit->order_list.back()->state == NEEDS_START)
+					unit->order_list.back()->Start(unit);
+			}
+			else {
+				if (unit->order_list.back()->state == COMPLETED)
+					unit->order_list.pop_back();
+				else
+					unit->order_list.back()->Execute(unit);
+			}
+		}
 		else
 			state = COMPLETED;
+
+		unit->state = ATTACKING;
 	}
 	else
 		state = COMPLETED;
-
 }
 
 //Attack order:
@@ -224,7 +239,7 @@ void UnitAttackOrder::Execute(Unit* unit) {
 
 bool UnitAttackOrder::CheckCompletion(Unit* unit) 
 {
-	return (unit->currentAnim->Finished());
+	return (unit->currentAnim->at(unit->currentDirection).Finished());
 }
 
 void GatherOrder::Start(Unit* unit) {
@@ -300,7 +315,7 @@ void GatherOrder::Execute(Unit* unit) {
 
 bool GatherOrder::CheckCompletion(Unit* unit) 
 {
-	return (unit->currentAnim->Finished());
+	return (unit->currentAnim->at(unit->currentDirection).Finished());
 }
 
 //Build order:
@@ -359,7 +374,7 @@ void BuildOrder::Execute(Unit* unit)
 
 bool BuildOrder::CheckCompletion(Unit* unit) 
 {
-	return (unit->currentAnim->Finished());
+	return (unit->currentAnim->at(unit->currentDirection).Finished());
 }
 
 SquadMoveToOrder::SquadMoveToOrder(Unit* commander, iPoint dest) {

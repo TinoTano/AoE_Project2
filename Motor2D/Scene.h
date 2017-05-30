@@ -45,9 +45,6 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	void LoadScene();
-	void SaveScene();
-
 	uint villagers_curr = 0, villagers_max = 0;
 	bool game_finished;
 

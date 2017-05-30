@@ -263,6 +263,11 @@ void PathFinding::CalculatePath(Path * path)
 
 	while (path->open.pathNodeList.size() > 0)
 	{
+		if (path->closed.pathNodeList.size() > 75) {
+			path->finished_path.push_back(path->destination);
+			break;
+		}
+
 		list<PathNode>::iterator lowest_score_node = path->open.GetNodeLowestScore(); // Get the lowest score node from the open list
 		path->closed.pathNodeList.push_back(*lowest_score_node);						  // Adds it to the closed list
 		path->open.pathNodeList.erase(lowest_score_node);								  // Delete the lowest_score_node from the open list

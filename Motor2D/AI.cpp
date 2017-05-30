@@ -416,4 +416,6 @@ Squad* AI::AssignUnit(Unit* unit) {
 			return (*it);
 		}
 	}
+
+	return nullptr;
 }

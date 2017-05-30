@@ -9,13 +9,11 @@
 #include "Module.h"
 #include "Unit.h"
 
-#define FOW_RADIUM 6
-
 enum fow_id
 {
 	fow_black,
 	fow_grey,
-	fow_grey_rup, fow_grey_rdown, fow_grey_rleft, fow_grey_rright, // Filled with black edge
+	fow_grey_rup, fow_grey_rdown, fow_grey_rleft, fow_grey_rright , // Filled with black edge
 
 	fow_clear,
 	fow_clear_rup, fow_clear_rdown, fow_clear_rleft, fow_clear_rright,
@@ -30,6 +28,7 @@ struct in_fog_entity
 	list<iPoint>	current_points;
 	iPoint			pos = { 0,0 };
 	int				id = -1;
+	uint            radium = 0;
 };
 
 class FogOfWar : public Module
@@ -48,8 +47,8 @@ public:
 
 	// Update Methods
 
-	void MoveFrontier(iPoint prev_pos, const char* direction, uint id);
-	void MoveArea(in_fog_entity& player, string direction, uint id);
+	void MoveFrontier(iPoint prev_pos, const char* direction, uint id, int amount);
+	void MoveArea(in_fog_entity& player, string direction, uint id, int amount);
 
 	// Create Areas
 

@@ -111,10 +111,10 @@ bool EntityManager::Update(float arg_dt)
 
 			case HOVERING_ENEMY:
 
-				if (clicked_on->entity->state != DESTROYED) {
+				if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
-						unit->order_list.push_back(new UnitAttackOrder());
+						unit->order_list.push_front(new UnitAttackOrder());
 						unit->state = ATTACKING;
 					}
 				}
@@ -286,6 +286,273 @@ bool EntityManager::CleanUp()
 	dt = 0;
 
 	return true;
+}
+
+bool EntityManager::Load(pugi::xml_node & data)
+{
+	App->fog->entities_not_in_fog.clear();
+	App->fog->entities_on_fog.clear();
+	App->entityManager->selectedEntityList.clear();
+
+	for (list<Entity*>::iterator it = App->entityManager->WorldEntityList.begin(); it != App->entityManager->WorldEntityList.end(); ++it)
+	{
+		App->entityManager->DeleteEntity((*it));
+	}
+
+	App->entityManager->WorldEntityList.clear();
+
+	for (list<Resource*>::iterator it = App->entityManager->resource_list.begin(); it != App->entityManager->resource_list.end(); ++it)
+	{
+		(*it)->Destroy();
+	}
+
+	App->entityManager->resource_list.clear();
+
+	for (pugi::xml_node unitNode = data.child("Unit"); unitNode; unitNode = unitNode.next_sibling("Unit"))
+	{
+		Unit* unitTemplate = App->entityManager->CreateUnit(unitNode.child("Position").attribute("x").as_int(),
+			unitNode.child("Position").attribute("y").as_int(),
+			(unitType)unitNode.child("Type").attribute("value").as_int());
+
+		unitTemplate->currentDirection = (unitDirection)unitNode.child("Direction").attribute("value").as_int();
+		unitTemplate->Life = unitNode.child("Life").attribute("value").as_int();
+	}
+
+	for (pugi::xml_node buildingNode = data.child("Building"); buildingNode; buildingNode = buildingNode.next_sibling("Building"))
+	{
+		Building* buildingTemplate = App->entityManager->CreateBuilding(buildingNode.child("Position").attribute("x").as_int(),
+			buildingNode.child("Position").attribute("y").as_int(),
+			(buildingType)buildingNode.child("Type").attribute("value").as_int());
+
+		buildingTemplate->Life = buildingNode.child("Life").attribute("value").as_int();
+		buildingTemplate->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+	}
+
+	for (pugi::xml_node resourceNode = data.child("Resource"); resourceNode; resourceNode = resourceNode.next_sibling("Resource")) {
+
+		SDL_Rect rect = { resourceNode.child("Rect").attribute("x").as_int(), resourceNode.child("Rect").attribute("y").as_int(),
+			resourceNode.child("Rect").attribute("w").as_int(), resourceNode.child("Rect").attribute("h").as_int() };
+
+		Resource* resourceTemplate = App->entityManager->ReLoadResource(resourceNode.child("Position").attribute("x").as_int(),
+			resourceNode.child("Position").attribute("y").as_int(),
+			(resourceItem)resourceNode.child("Type").attribute("value").as_int(), rect);
+
+		resourceTemplate->Life = resourceNode.child("Life").attribute("value").as_int();
+		/*App->fog->AddEntity(resourceTemplate);*/
+	}
+
+	player->resources.wood = data.child("Player").attribute("wood").as_int();
+	player->resources.gold = data.child("Player").attribute("gold").as_int();
+	player->resources.food = data.child("Player").attribute("food").as_int();
+	player->resources.stone = data.child("Player").attribute("stone").as_int();
+
+	player->tech_tree->available_techs.clear();
+	for (pugi::xml_attribute available_techs = data.child("Player").child("TechTree").child("AvailableTechs").attribute("TechType");
+	available_techs; available_techs = available_techs.next_attribute())
+	{
+		player->tech_tree->available_techs.push_back((TechType)available_techs.as_int());
+	}
+	player->tech_tree->available_buildings.clear();
+
+	for (pugi::xml_attribute available_buildings = data.child("Player").child("TechTree").child("AvailableBuildings").attribute("BuildingType");
+	available_buildings; available_buildings = available_buildings.next_attribute())
+	{
+		player->tech_tree->available_buildings.push_back((buildingType)available_buildings.as_int());
+	}
+	player->tech_tree->available_units.clear();
+	for (pugi::xml_node available_units = data.child("Player").child("TechTree").child("AvailableUnits").child("Unit");
+	available_units; available_units = available_units.next_sibling("Unit"))
+	{
+		pair<unitType, buildingType> element = { (unitType)available_units.attribute("UnitType").as_int(), (buildingType)available_units.attribute("BuildingType").as_int() };
+		player->tech_tree->available_units.push_back(element);
+	}
+	player->tech_tree->multiplier_list.clear();
+	for (pugi::xml_node multipliers = data.child("Player").child("Multipliers"); multipliers; multipliers = multipliers.next_sibling("Multipliers"))
+	{
+		player->tech_tree->multiplier_list.push_back(multipliers.attribute("Multiplier").as_float());
+	}
+
+	AI_faction->resources.wood = data.child("Enemy").attribute("wood").as_int();
+	AI_faction->resources.gold = data.child("Enemy").attribute("gold").as_int();
+	AI_faction->resources.food = data.child("Enemy").attribute("food").as_int();
+	AI_faction->resources.stone = data.child("Enemy").attribute("stone").as_int();
+
+	AI_faction->tech_tree->available_techs.clear();
+	for (pugi::xml_attribute available_techs = data.child("Enemy").child("TechTree").child("AvailableTechs").attribute("TechType");
+	available_techs; available_techs = available_techs.next_attribute())
+	{
+		AI_faction->tech_tree->available_techs.push_back((TechType)available_techs.as_int());
+	}
+	AI_faction->tech_tree->available_buildings.clear();
+	for (pugi::xml_attribute available_buildings = data.child("Enemy").child("TechTree").child("AvailableBuildings").attribute("BuildingType");
+	available_buildings; available_buildings = available_buildings.next_attribute())
+	{
+		AI_faction->tech_tree->available_buildings.push_back((buildingType)available_buildings.as_int());
+	}
+	AI_faction->tech_tree->available_units.clear();
+	for (pugi::xml_node available_units = data.child("Enemy").child("TechTree").child("AvailableUnits").child("Unit");
+	available_units; available_units = available_units.next_sibling("Unit"))
+	{
+		pair<unitType, buildingType> element = { (unitType)available_units.attribute("UnitType").as_int(), (buildingType)available_units.attribute("BuildingType").as_int() };
+		AI_faction->tech_tree->available_units.push_back(element);
+	}
+	AI_faction->tech_tree->multiplier_list.clear();
+	for (pugi::xml_node multipliers = data.child("Enemy").child("Multipliers"); multipliers; multipliers = multipliers.next_sibling("Multipliers"))
+	{
+		AI_faction->tech_tree->multiplier_list.push_back(multipliers.attribute("Multiplier").as_float());
+	}
+
+	App->sceneManager->level1_scene->UpdateResources();
+	return true;
+}
+
+bool EntityManager::Save(pugi::xml_node & data) const
+{
+
+	for (list<Unit*>::iterator it = App->entityManager->player->units.begin(); it != App->entityManager->player->units.end(); it++) {
+		if ((*it)->state != DESTROYED) {
+
+			pugi::xml_node unitNodeInfo = data.append_child("Unit");
+			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
+			positionNode.append_attribute("x") = (*it)->entityPosition.x;
+			positionNode.append_attribute("y") = (*it)->entityPosition.y;
+			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
+			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
+		}
+	}
+
+	for (list<Unit*>::iterator it = App->entityManager->AI_faction->units.begin(); it != App->entityManager->AI_faction->units.end(); it++) {
+		if ((*it)->state != DESTROYED) {
+			pugi::xml_node unitNodeInfo = data.append_child("Unit");
+			unitNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			pugi::xml_node positionNode = unitNodeInfo.append_child("Position");
+			positionNode.append_attribute("x") = (*it)->entityPosition.x;
+			positionNode.append_attribute("y") = (*it)->entityPosition.y;
+			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
+			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
+		}
+	}
+
+	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); it++) {
+		if ((*it)->state != DESTROYED) {
+			pugi::xml_node buildingNodeInfo = data.append_child("Building");
+			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
+			positionNode.append_attribute("x") = (*it)->entityPosition.x;
+			positionNode.append_attribute("y") = (*it)->entityPosition.y;
+			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+		}
+	}
+
+	for (list<Building*>::iterator it = App->entityManager->AI_faction->buildings.begin(); it != App->entityManager->AI_faction->buildings.end(); it++) {
+		if ((*it)->state != DESTROYED) {
+			pugi::xml_node buildingNodeInfo = data.append_child("Building");
+			buildingNodeInfo.append_child("Type").append_attribute("value") = (*it)->type;
+			pugi::xml_node positionNode = buildingNodeInfo.append_child("Position");
+			positionNode.append_attribute("x") = (*it)->entityPosition.x;
+			positionNode.append_attribute("y") = (*it)->entityPosition.y;
+			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+
+			App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
+		}
+	}
+	for (list<Resource*>::iterator it = App->entityManager->resource_list.begin(); it != App->entityManager->resource_list.end(); it++) {
+		pugi::xml_node resourceNodeInfo = data.append_child("Resource");
+		resourceNodeInfo.append_child("Type").append_attribute("value") = (*it)->contains;
+		pugi::xml_node positionNode = resourceNodeInfo.append_child("Position");
+		positionNode.append_attribute("x") = (*it)->entityPosition.x;
+		positionNode.append_attribute("y") = (*it)->entityPosition.y;
+		resourceNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
+		pugi::xml_node rect = resourceNodeInfo.append_child("Rect");
+		rect.append_attribute("x") = (*it)->blit_rect.x;
+		rect.append_attribute("y") = (*it)->blit_rect.y;
+		rect.append_attribute("w") = (*it)->blit_rect.w;
+		rect.append_attribute("h") = (*it)->blit_rect.h;
+	}
+
+	pugi::xml_node Player = data.append_child("Player");
+
+	Player.append_attribute("wood") = player->resources.wood;
+	Player.append_attribute("food") = player->resources.food;
+	Player.append_attribute("stone") = player->resources.stone;
+	Player.append_attribute("gold") = player->resources.gold;
+
+	Player.append_child("TechTree");
+
+	pugi::xml_node available_techs = Player.child("TechTree").append_child("AvailableTechs");
+	for (list<TechType>::iterator it = player->tech_tree->available_techs.begin(); it != player->tech_tree->available_techs.end(); ++it)
+	{
+		available_techs.append_attribute("TechType") = (*it);
+	}
+	pugi::xml_node available_buildings = Player.child("TechTree").append_child("AvailableBuildings");
+	for (list<buildingType>::iterator it = player->tech_tree->available_buildings.begin(); it != player->tech_tree->available_buildings.end(); ++it)
+	{
+		available_buildings.append_attribute("BuildingType") = (*it);
+	}
+	pugi::xml_node available_units = Player.child("TechTree").append_child("AvailableUnits");
+	for (list<pair<unitType, buildingType>>::iterator it = player->tech_tree->available_units.begin(); it != player->tech_tree->available_units.end(); ++it)
+	{
+		pugi::xml_node unit = available_units.append_child("Unit");
+		unit.append_attribute("UnitType") = (*it).first;
+		unit.append_attribute("BuildingType") = (*it).second;
+	}
+	pugi::xml_node multipliers = Player.child("TechTree").append_child("Multipliers");
+	for (vector<float>::iterator it = player->tech_tree->multiplier_list.begin(); it != player->tech_tree->multiplier_list.begin(); ++it)
+	{
+		multipliers.append_attribute("Multiplier") = (*it);
+	}
+
+	pugi::xml_node Enemy = data.append_child("Enemy");
+	Enemy.append_attribute("wood") = AI_faction->resources.wood;
+	Enemy.append_attribute("food") = AI_faction->resources.food;
+	Enemy.append_attribute("gold") = AI_faction->resources.gold;
+	Enemy.append_attribute("stone") = AI_faction->resources.stone;
+
+	Enemy.append_child("TechTree");
+	pugi::xml_node available_techs2 = Enemy.child("TechTree").append_child("AvailableTechs");
+	for (list<TechType>::iterator it = AI_faction->tech_tree->available_techs.begin(); it != AI_faction->tech_tree->available_techs.end(); ++it)
+	{
+		available_techs2.append_attribute("TechType") = (*it);
+	}
+	pugi::xml_node available_buildings2 = Enemy.child("TechTree").append_child("AvailableBuildings");
+	for (list<buildingType>::iterator it = AI_faction->tech_tree->available_buildings.begin(); it != AI_faction->tech_tree->available_buildings.end(); ++it)
+	{
+		available_buildings2.append_attribute("BuildingsType") = (*it);
+	}
+	pugi::xml_node available_units2 = Enemy.child("TechTree").append_child("AvailableUnits");
+	for (list<pair<unitType, buildingType>>::iterator it = AI_faction->tech_tree->available_units.begin(); it != AI_faction->tech_tree->available_units.end(); ++it)
+	{
+		pugi::xml_node unit = available_units2.append_child("Unit");
+		unit.append_attribute("UnitType") = (*it).first;
+		unit.append_attribute("BuildingType") = (*it).second;
+	}
+	pugi::xml_node multipliers2 = Enemy.child("TechTree").append_child("Multipliers");
+	for (vector<float>::iterator it = AI_faction->tech_tree->multiplier_list.begin(); it != AI_faction->tech_tree->multiplier_list.begin(); ++it)
+	{
+		multipliers2.append_attribute("Multipliers") = (*it);
+	}
+
+	return true;
+}
+
+Resource * EntityManager::ReLoadResource(int posX, int posY, resourceItem type, SDL_Rect rect)
+{
+	iPoint ret;
+	ret.x = posX;
+	ret.y = posY;
+	Resource* resource = new Resource(ret.x, ret.y, resourcesDB[type], rect);
+	resource->entityID = nextID;
+	nextID++;
+	resource_list.push_back(resource);
+
+	return resource;
 }
 
 
@@ -623,18 +890,6 @@ void EntityManager::OnCollision(Collision_data& col_data)
 	col_data.state = SOLVING;
 
 	switch (col_data.c1->type) {
-
-	case COLLIDER_RANGE:
-
-		if (col_data.c1->entity->faction != col_data.c2->entity->faction) {
-			if (unit = col_data.c1->GetUnit()){
-				if(unit->state == ATTACKING && unit->order_list.front()->order_type == MOVETO) 
-					unit->order_list.pop_front();
-			}
-			else
-				col_data.c1->entity->state = ATTACKING;  // is a building
-		}
-		break;
 
 	case COLLIDER_LOS:
 

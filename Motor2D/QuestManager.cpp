@@ -81,6 +81,153 @@ bool QuestManager::Start()
 	return ret;
 }
 
+bool QuestManager::Load(pugi::xml_node & data)
+{
+	for (list<Quest*>::iterator it = sleepQuests.begin(); it != sleepQuests.begin(); ++it)
+	{
+		/*DestroyQuest(*it);*/
+	}
+	sleepQuests.clear();
+
+	for (pugi::xml_node sleepQuests = data.child("SleepQuest"); sleepQuests; sleepQuests = sleepQuests.next_sibling("SleepQuests")) {
+		string Name(sleepQuests.attribute("Name").as_string());
+		string Desc(sleepQuests.attribute("Desc").as_string());
+		int reward = sleepQuests.attribute("Reward").as_int();
+		int id = sleepQuests.attribute("id").as_int();
+		EVENT_TYPE TriggerType = (EVENT_TYPE)sleepQuests.child("TriggerEvent").attribute("Type").as_int();
+		vector<Event*> StepEvents;
+
+		for (pugi::xml_node step_events = sleepQuests.child("StepEvent"); step_events; step_events = step_events.next_sibling("StepEvent"))
+		{
+			KillEvent* event = new KillEvent((EVENT_TYPE)step_events.attribute("EventType").as_int());
+			event->enemies_to_kill = step_events.attribute("Enemies").as_int();
+			event->unit_type = (unitType)step_events.attribute("Unit").as_int();
+			StepEvents.push_back(event);
+		}
+		Event* trigger = new Event(TriggerType);
+		this->sleepQuests.push_back(AddQuest(name, Desc, reward, id, trigger, StepEvents));
+	}
+
+
+	for (list<Quest*>::iterator it = closedQuests.begin(); it != closedQuests.begin(); ++it)
+	{
+		/*DestroyQuest(*it);*/
+	}
+	closedQuests.clear();
+
+	for (pugi::xml_node closedQuests = data.child("SleepQuest"); closedQuests; closedQuests = closedQuests.next_sibling("closedQuests")) {
+		string Name(closedQuests.attribute("Name").as_string());
+		string Desc(closedQuests.attribute("Desc").as_string());
+		int reward = closedQuests.attribute("Reward").as_int();
+		int id = closedQuests.attribute("id").as_int();
+		EVENT_TYPE TriggerType = (EVENT_TYPE)closedQuests.child("TriggerEvent").attribute("Type").as_int();
+		vector<Event*> StepEvents;
+
+		for (pugi::xml_node step_events = closedQuests.child("StepEvent"); step_events; step_events = step_events.next_sibling("StepEvent"))
+		{
+			KillEvent* event = new KillEvent((EVENT_TYPE)step_events.attribute("EventType").as_int());
+			event->enemies_to_kill = step_events.attribute("Enemies").as_int();
+			event->unit_type = (unitType)step_events.attribute("Unit").as_int();
+			StepEvents.push_back(event);
+		}
+		Event* trigger = new Event(TriggerType);
+		this->closedQuests.push_back(AddQuest(name, Desc, reward, id, trigger, StepEvents));
+	}
+
+	for (list<Quest*>::iterator it = activeQuests.begin(); it != activeQuests.begin(); ++it)
+	{
+		/*DestroyQuest(*it);*/
+	}
+	activeQuests.clear();
+
+	for (pugi::xml_node activeQuests = data.child("SleepQuest"); activeQuests; activeQuests = activeQuests.next_sibling("activeQuests")) {
+		string Name(activeQuests.attribute("Name").as_string());
+		string Desc(activeQuests.attribute("Desc").as_string());
+		int reward = activeQuests.attribute("Reward").as_int();
+		int id = activeQuests.attribute("id").as_int();
+		EVENT_TYPE TriggerType = (EVENT_TYPE)activeQuests.child("TriggerEvent").attribute("Type").as_int();
+		vector<Event*> StepEvents;
+
+		for (pugi::xml_node step_events = activeQuests.child("StepEvent"); step_events; step_events = step_events.next_sibling("StepEvent"))
+		{
+			KillEvent* event = new KillEvent((EVENT_TYPE)step_events.attribute("EventType").as_int());
+			event->enemies_to_kill = step_events.attribute("Enemies").as_int();
+			event->unit_type = (unitType)step_events.attribute("Unit").as_int();
+			StepEvents.push_back(event);
+		}
+
+		Event* trigger = new Event(TriggerType);
+		this->activeQuests.push_back(AddQuest(name, Desc, reward, id, trigger, StepEvents));
+	}
+
+	return true;
+}
+
+bool QuestManager::Save(pugi::xml_node & data) const
+{
+	for (list<Quest*>::const_iterator it = sleepQuests.begin(); it != sleepQuests.begin(); ++it) {
+		pugi::xml_node sleepQuests = data.append_child("SleepQuest");
+		sleepQuests.append_attribute("Name") = (*it)->name.c_str();
+		sleepQuests.append_attribute("Desc") = (*it)->description.c_str();
+		sleepQuests.append_attribute("Reward") = (*it)->reward;
+		sleepQuests.append_attribute("ID") = (*it)->id;
+		pugi::xml_node Trigger = sleepQuests.append_child("TriggerEvent");
+		KillEvent* trigger = (KillEvent*)(*it)->trigger;
+		Trigger.append_attribute("Type") = (*it)->trigger->type;
+
+		for (uint i = 0; i < (*it)->steps.size(); ++i)
+		{
+			pugi::xml_node Step = sleepQuests.append_child("StepEvent");
+			KillEvent* event = (KillEvent*)(*it)->steps[i];
+			Step.append_attribute("Unit") = event->unit_type;
+			Step.append_attribute("Enemies") = event->enemies_to_kill;
+			Step.append_attribute("EventType") = event->type;
+		}
+	}
+
+	for (list<Quest*>::const_iterator it = closedQuests.begin(); it != closedQuests.begin(); ++it) {
+		pugi::xml_node closedQuests = data.append_child("ClosedQuest");
+		closedQuests.append_attribute("Name") = (*it)->name.c_str();
+		closedQuests.append_attribute("Desc") = (*it)->description.c_str();
+		closedQuests.append_attribute("Reward") = (*it)->reward;
+		closedQuests.append_attribute("ID") = (*it)->id;
+		pugi::xml_node Trigger = closedQuests.append_child("TriggerEvent");
+		KillEvent* trigger = (KillEvent*)(*it)->trigger;
+		Trigger.append_attribute("Type") = (*it)->trigger->type;
+
+		for (uint i = 0; i < (*it)->steps.size(); ++i)
+		{
+			pugi::xml_node Step = closedQuests.append_child("StepEvent");
+			KillEvent* event = (KillEvent*)(*it)->steps[i];
+			Step.append_attribute("Unit") = event->unit_type;
+			Step.append_attribute("Enemies") = event->enemies_to_kill;
+			Step.append_attribute("EventType") = event->type;
+		}
+	}
+
+	for (list<Quest*>::const_iterator it = activeQuests.begin(); it != activeQuests.begin(); ++it) {
+		pugi::xml_node activeQuests = data.append_child("ActiveQuest");
+		activeQuests.append_attribute("Name") = (*it)->name.c_str();
+		activeQuests.append_attribute("Desc") = (*it)->description.c_str();
+		activeQuests.append_attribute("Reward") = (*it)->reward;
+		activeQuests.append_attribute("ID") = (*it)->id;
+		pugi::xml_node Trigger = activeQuests.append_child("TriggerEvent");
+		KillEvent* trigger = (KillEvent*)(*it)->trigger;
+		Trigger.append_attribute("Type") = (*it)->trigger->type;
+
+		for (uint i = 0; i < (*it)->steps.size(); ++i)
+		{
+			pugi::xml_node Step = activeQuests.append_child("StepEvent");
+			KillEvent* event = (KillEvent*)(*it)->steps[i];
+			Step.append_attribute("Unit") = event->unit_type;
+			Step.append_attribute("Enemies") = event->enemies_to_kill;
+			Step.append_attribute("EventType") = event->type;
+		}
+	}
+
+	return true;
+}
+
 Event * QuestManager::createEvent(pugi::xml_node &it)
 {
 	//Event factory method
@@ -160,6 +307,18 @@ bool QuestManager::StepKillCallback(unitType t)
 		}
 	}
 	return false;
+}
+
+Quest * QuestManager::AddQuest(string name, string description, int reward, int id, Event * trigger, vector<Event*> steps)
+{
+	Quest* quest = new Quest();
+	quest->name = name;
+	quest->description = description;
+	quest->reward = reward;
+	quest->id = id;
+	quest->trigger = trigger;
+	quest->steps = steps;
+	return quest;
 }
 
 //=============================================================================

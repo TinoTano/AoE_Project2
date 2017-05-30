@@ -41,7 +41,6 @@ public:
 	void Destroy();
 
 	void LookAt(fPoint dest);
-	void SetAnim(EntityState state);
 	void SetTexture(EntityState state);
 
 public:
@@ -78,7 +77,7 @@ public:
 	SDL_Texture* unitAttackTexture = nullptr;
 	SDL_Texture* unitDieTexture = nullptr;
 
-	Animation* currentAnim = nullptr;
+	vector<Animation>* currentAnim = nullptr;
 
 	iPoint next_pos = { 0,0 };
 
