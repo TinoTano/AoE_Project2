@@ -145,7 +145,7 @@ void UnitAttackOrder::Execute(Unit* unit) {
 
 				App->audio->PlayFightSound(unit);
 				//JOSEP HERE
-				if (unit->range->type == COLLIDER_RANGE ) 
+				if (unit->range_value > 0 ) 
 				{
 					pair<int, int> unitpos = {unit->GetPosition().x, unit->GetPosition().y };
 					pair<int, int> enemypos = { nearest_enemy->GetPosition().x,nearest_enemy->GetPosition().y };

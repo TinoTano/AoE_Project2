@@ -47,6 +47,7 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	Attack = unit->Attack;
 	Defense = unit->Defense;
 	cost = unit->cost;
+	range_value = unit->range_value;
 
 	//Animations
 	idleAnimations = unit->idleAnimations;
