@@ -96,10 +96,10 @@ void Audio::PlayDeadSound(Unit* unit) {
 
 	if (App->render->CullingCam(unit->entityPosition))
 	{
-		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT, unit->type == ROHAN_KNIGHT, unit->type == MOUNTED_DUNEDAIN)
-			App->audio->PlayFx(HORSE_DEAD_1 + (rand() % ((HORSE_DEAD_3 + 1) - HORSE_DEAD_1)));
+		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT || unit->type == ROHAN_KNIGHT || unit->type == MOUNTED_DUNEDAIN)
+			App->audio->PlayFx(rand() % ((HORSE_DEAD_3 - HORSE_DEAD_1) + 1) - HORSE_DEAD_1 - 1);
 		else
-			App->audio->PlayFx(DEAD_SOUND_1 + (rand() % ((DEAD_SOUND_6 + 1) - DEAD_SOUND_1)));
+			App->audio->PlayFx(rand() % ((DEAD_SOUND_6 - DEAD_SOUND_1) + 1) - DEAD_SOUND_1 - 1);
 	}		
 }
 
@@ -107,21 +107,20 @@ void Audio::PlayFightSound(Unit* unit) {
 
 	if (App->render->CullingCam(unit->entityPosition))
 	{
-		if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER, unit->type == ELVEN_CAVALRY, unit->type == DUNEDAIN_RANGE)
+		if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER || unit->type == ELVEN_CAVALRY || unit->type == DUNEDAIN_RANGE)
 			App->audio->PlayFx(BOW_ATTACK);
 		else
-			App->audio->PlayFx(SWORD_ATTACK_1 + (rand() % ((SWORD_ATTACK_8 + 1) - SWORD_ATTACK_1)));
+			App->audio->PlayFx(rand() % ((SWORD_ATTACK_8 - SWORD_ATTACK_1) + 1) + SWORD_ATTACK_1 - 1);
 	}
-
 }
 
 void Audio::PlaySelectSound(Unit* unit) {
 	if (App->render->CullingCam(unit->entityPosition))
 	{
-		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT, unit->type == ROHAN_KNIGHT, unit->type == MOUNTED_DUNEDAIN)
-			App->audio->PlayFx(SELECT_HORSE_1 + (rand() % ((SELECT_HORSE_3 + 1) - SELECT_HORSE_1)));
+		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT || unit->type == ROHAN_KNIGHT || unit->type == MOUNTED_DUNEDAIN)
+			App->audio->PlayFx(rand() % ((SELECT_HORSE_3 - SELECT_HORSE_1) + 1) + SELECT_HORSE_1 - 1);
 		else
-			App->audio->PlayFx(SELECT_UNIT_1 + (rand() % ((SELECT_UNIT_4 + 1) - SELECT_UNIT_1)));
+			App->audio->PlayFx(rand() % ((SELECT_UNIT_4 - SELECT_UNIT_1) + 1) + SELECT_UNIT_1 - 1);
 	}
 }
 

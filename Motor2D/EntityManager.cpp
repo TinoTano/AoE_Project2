@@ -63,6 +63,11 @@ bool EntityManager::Update(float arg_dt)
 	mouseY -= App->render->camera.y;
 	iPoint mouse = { mouseX, mouseY };
 
+	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+		if ((*it)->state == DESTROYED)
+			selectedEntityList.erase(it);
+	}
+
 	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
 
 		(*it)->Update(dt);
@@ -77,11 +82,6 @@ bool EntityManager::Update(float arg_dt)
 	for (list<Resource*>::iterator it = resource_list.begin(); it != resource_list.end(); it++) {
 		if (App->render->CullingCam((*it)->entityPosition) && ((*it)->isActive == true || App->map->godmode))
 			(*it)->Draw();
-	}
-
-	for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-		if ((*it)->state == DESTROYED)
-			selectedEntityList.erase(it);
 	}
 
 	player->tech_tree->Update();
