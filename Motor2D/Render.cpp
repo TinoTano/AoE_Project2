@@ -147,8 +147,11 @@ bool Render::PostUpdate()
 
 					iPoint tileWorld = App->map->MapToWorld(x, y);
 
-					if (tile_id > 0 && visibility != 0)
+					if ((0 < tile_id && tile_id < 6 || 12 > tile_id && tile_id < 14) && visibility != 0)
 						App->minimap->DrawTerrain(tileWorld.x, tileWorld.y, 0, 153, 51);
+
+					else if (visibility != 0)
+						App->minimap->DrawTerrain(tileWorld.x, tileWorld.y, 105, 105, 105);
 
 				}
 			}

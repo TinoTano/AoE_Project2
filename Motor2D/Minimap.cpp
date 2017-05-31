@@ -116,6 +116,28 @@ void Minimap::DrawUnits()
 			App->render->DrawQuad(rect, 255, 0, 0, true);
 		}
 	}
+
+	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); it++) {
+
+		SDL_Rect rect;
+		rect.x = minimapPos.x - App->render->camera.x + ((*it)->entityPosition.x * minimapRatio);
+		rect.y = minimapPos.y - App->render->camera.y + ((*it)->entityPosition.y * minimapRatio);
+		rect.w = 4;
+		rect.h = 4;
+		App->render->DrawQuad(rect, 0, 255, 255, true);
+	}
+
+	for (list<Building*>::iterator it = App->entityManager->AI_faction->buildings.begin(); it != App->entityManager->AI_faction->buildings.end(); it++) {
+
+		if ((*it)->isActive) {
+			SDL_Rect rect;
+			rect.x = minimapPos.x - App->render->camera.x + ((*it)->entityPosition.x * minimapRatio);
+			rect.y = minimapPos.y - App->render->camera.y + ((*it)->entityPosition.y * minimapRatio);
+			rect.w = 4;
+			rect.h = 4;
+			App->render->DrawQuad(rect, 255, 0, 255, true);
+		}
+	}
 }
 
 
