@@ -3,6 +3,7 @@
 #include "Audio.h"
 #include "p2Log.h"
 #include "Unit.h"
+#include "Render.h"
 #include <sstream>
 
 #include "SDL/include/SDL.h"
@@ -93,29 +94,35 @@ bool Audio::Awake(pugi::xml_node& config)
 
 void Audio::PlayDeadSound(Unit* unit) {
 
-	if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT, unit->type == ROHAN_KNIGHT, unit->type == MOUNTED_DUNEDAIN) 
-		App->audio->PlayFx(HORSE_DEAD_1 + (rand() % ((HORSE_DEAD_3 + 1) - HORSE_DEAD_1)));
-	else
-		App->audio->PlayFx(DEAD_SOUND_1 + (rand() % ((DEAD_SOUND_6 + 1) - DEAD_SOUND_1)));
-		
+	if (App->render->CullingCam(unit->entityPosition))
+	{
+		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT, unit->type == ROHAN_KNIGHT, unit->type == MOUNTED_DUNEDAIN)
+			App->audio->PlayFx(HORSE_DEAD_1 + (rand() % ((HORSE_DEAD_3 + 1) - HORSE_DEAD_1)));
+		else
+			App->audio->PlayFx(DEAD_SOUND_1 + (rand() % ((DEAD_SOUND_6 + 1) - DEAD_SOUND_1)));
+	}		
 }
 
 void Audio::PlayFightSound(Unit* unit) {
 
-	if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER, unit->type == ELVEN_CAVALRY, unit->type == DUNEDAIN_RANGE)
-		App->audio->PlayFx(BOW_ATTACK);
-	else
-		App->audio->PlayFx(SWORD_ATTACK_1 + (rand() % ((SWORD_ATTACK_8 + 1) - SWORD_ATTACK_1)));
+	if (App->render->CullingCam(unit->entityPosition))
+	{
+		if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER, unit->type == ELVEN_CAVALRY, unit->type == DUNEDAIN_RANGE)
+			App->audio->PlayFx(BOW_ATTACK);
+		else
+			App->audio->PlayFx(SWORD_ATTACK_1 + (rand() % ((SWORD_ATTACK_8 + 1) - SWORD_ATTACK_1)));
+	}
 
 }
 
 void Audio::PlaySelectSound(Unit* unit) {
-
-	if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT, unit->type == ROHAN_KNIGHT, unit->type == MOUNTED_DUNEDAIN)
-		App->audio->PlayFx(SELECT_HORSE_1 + (rand() % ((SELECT_HORSE_3 + 1) - SELECT_HORSE_1)));
-	else
-		App->audio->PlayFx(SELECT_UNIT_1 + (rand() % ((SELECT_UNIT_4 + 1) - SELECT_UNIT_1)));
-
+	if (App->render->CullingCam(unit->entityPosition))
+	{
+		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT, unit->type == ROHAN_KNIGHT, unit->type == MOUNTED_DUNEDAIN)
+			App->audio->PlayFx(SELECT_HORSE_1 + (rand() % ((SELECT_HORSE_3 + 1) - SELECT_HORSE_1)));
+		else
+			App->audio->PlayFx(SELECT_UNIT_1 + (rand() % ((SELECT_UNIT_4 + 1) - SELECT_UNIT_1)));
+	}
 }
 
 // Called before quitting
@@ -235,9 +242,4 @@ bool Audio::PlayFx(int fx_id, int repeat)
 	}
 
 	return ret;
-}
-
-void Audio::StopMusic()
-{
-	Mix_HaltMusic();
 }

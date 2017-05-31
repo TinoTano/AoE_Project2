@@ -75,8 +75,6 @@ public:
 	void PlayFightSound(Unit* unit);
 	void PlaySelectSound(Unit* unit);
 
-	void StopMusic();
-
 private:
 
 	_Mix_Music*			music = NULL;

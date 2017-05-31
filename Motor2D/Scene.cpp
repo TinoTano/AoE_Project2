@@ -167,7 +167,7 @@ bool Scene::Start()
 
 	// Music ==========================================================================================================
 
-	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
+	//App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
 
 	// Fog of war, entities & resources ===============================================================================
 
@@ -178,7 +178,7 @@ bool Scene::Start()
 
 	// Units
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y, ELVEN_CAVALRY);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y + 150, VENOMOUS_SPIDER);
+	/*App->entityManager->CreateUnit(TOWN_HALL_POS_X + 300, TOWN_HALL_POS_Y + 150, VENOMOUS_SPIDER);*/
 
 	// Buildings
 	App->entityManager->player->Town_center = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
@@ -202,11 +202,6 @@ bool Scene::Start()
 
 
 	// ================================================================================================================
-
-	//timer.Start();
-
-	Timer_lbl = (Label*)App->gui->CreateLabel("", -STARTING_CAMERA_X + 665, -STARTING_CAMERA_Y + 40, App->font->fonts[TWENTYSIX]);
-	Timer_lbl->SetColor({ 255, 255, 255, 255 });
 
 	game_finished = false;
 
@@ -321,21 +316,13 @@ bool Scene::Update(float dt)
 // Called each loop iteration
 bool Scene::PostUpdate()
 {
-
 	bool ret = true;
 
 	if ((App->entityManager->player->Town_center->Life <= 0 && game_finished == false) || App->entityManager->player->units.size() <= 0) {
-		Timer_lbl->SetString("DEFEAT");
-		Timer_lbl->SetColor({255, 0,0,255});
 		game_finished = true;
 	}
 	else if (App->entityManager->AI_faction->Town_center->Life <= 0 && game_finished == false) {
-		Timer_lbl->SetString("VICTORY");
-		Timer_lbl->SetColor({ 0, 255 ,0 , 255 });
 		game_finished = true;
-	}
-	if (buttons[BACKTOMENU]->current == CLICKIN) {
-		App->audio->PlayFx(BUTTON_SOUND);
 	}
 	else if (buttons[BACKTOMENU]->current == CLICKUP) {
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);

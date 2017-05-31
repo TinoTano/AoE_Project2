@@ -591,12 +591,6 @@ void CutSceneManager::PerformPlay(CutsceneElement * ele)
 
 void CutSceneManager::PerformStop(CutsceneElement * ele)
 {
-	//Just Music can be stoped now
-	if (ele->group == e_g_music)
-	{
-		App->audio->StopMusic();
-	}
-
 }
 
 void CutSceneManager::PerformModify(CutsceneElement * ele, CutsceneAction * act)

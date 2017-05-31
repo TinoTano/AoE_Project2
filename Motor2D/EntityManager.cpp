@@ -69,8 +69,7 @@ bool EntityManager::Update(float arg_dt)
 
 		if (App->render->CullingCam((*it)->entityPosition))
 		{
-			if ((*it)->faction == NATURE && (*it)->isActive == true) (*it)->Draw();
-			else if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true || App->map->godmode) (*it)->Draw();
+			if ((*it)->faction == SAURON_ARMY && (*it)->isActive == true || App->map->godmode) (*it)->Draw();
 			else if ((*it)->faction == FREE_MEN) (*it)->Draw();
 		}
 	}
@@ -916,15 +915,15 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	Unit* unit;
 
 	if (type == SLAVE_VILLAGER || type == ELF_VILLAGER) {
-
-		App->audio->PlayFx(CREATE_VILLAGER_SOUND);
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
 
 		if (unit->faction == player->faction) 
 			player->villagers.push_back((Villager*)unit);
 		else 
 			AI_faction->villagers.push_back((Villager*)unit);
-		
+
+		if (App->render->CullingCam(unit->entityPosition))
+			App->audio->PlayFx(CREATE_VILLAGER_SOUND);
 	}
 	else {
 		if (type == LEGOLAS || type == GANDALF || type == BALROG)
@@ -932,7 +931,8 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 		else
 			unit = new Unit(posX, posY, unitsDB[type]);
 
-		App->audio->PlayFx(CREATE_UNIT_SOUND);
+		if (App->render->CullingCam(unit->entityPosition))
+			App->audio->PlayFx(CREATE_UNIT_SOUND);
 	}
 
 	unit->entityID = nextID;

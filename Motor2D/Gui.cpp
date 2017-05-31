@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "Window.h"
 #include "Gui.h"
+#include "Audio.h"
 #include "SceneManager.h"
 #include <stdlib.h>  
 
@@ -644,6 +645,7 @@ MouseState Button::MouseDetect()
 				if (ret == HOVER)
 				{
 					if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
+						App->audio->PlayFx(BUTTON_SOUND);
 						ret = CLICKIN;
 					}
 				}

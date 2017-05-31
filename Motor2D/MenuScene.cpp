@@ -130,10 +130,9 @@ bool MenuScene::Start()
 	ui_menu.SetFocus(elements[0].position.first, elements[0].position.second, x, y);
 
 	App->gui->SetPriority();
-	// UNCOMMENT THIS TO TURN AUDIO ON
-	App->audio->active = false;
-	//LOAD FX
-	App->audio->PlayMusic("audio/music/m_menu.ogg", 0.0f);
+
+	// Menu Main Theme
+	//App->audio->PlayMusic("audio/music/m_menu.ogg", 0.0f);
 
 	return ret;
 }
@@ -212,19 +211,9 @@ bool MenuScene::Update(float dt)
 
 bool MenuScene::PostUpdate()
 {
-	if (buttons[0]->current == CLICKIN)
+	if (buttons[SKIRMISH]->current == CLICKUP)
 	{
-		App->audio->PlayFx(BUTTON_SOUND);
-	}
-	else if (buttons[SKIRMISH]->current == CLICKUP)
-	{
-		
-		/*if (!skirmish_menu.IsEnabled()) {
-			skirmish_menu.WindowOn();
-		}
-		else skirmish_menu.WindowOff();*/
-
-	App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
+		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
 		/*App->cutscene->Start();
 		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);*/
 		team = -1;
