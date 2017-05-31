@@ -18,6 +18,7 @@
 #include "Squad.h"
 #include "Hero.h"
 #include "Audio.h"
+#include "ParticleManager.h"
 
 //Move to Order:
 
@@ -194,6 +195,13 @@ void UnitAttackOrder::Execute(Unit* unit) {
 			if (unit->range->CheckCollision(nearest_enemy->collider)) {
 
 				App->audio->PlayFightSound(unit);
+				//JOSEP HERE
+				if (unit->range->type == COLLIDER_RANGE ) 
+				{
+					pair<int, int> unitpos = {unit->GetPosition().x, unit->GetPosition().y };
+					pair<int, int> enemypos = { nearest_enemy->GetPosition().x,nearest_enemy->GetPosition().y };
+					App->particlemanager->CreateArrow(400, unitpos, enemypos);
+				}
 				nearest_enemy->Life -= MAX(unit->Attack - nearest_enemy->Defense, unit->unitPiercingDamage);
 				if (nearest_enemy->state != ATTACKING)
 					App->entityManager->RallyCall(nearest_enemy);

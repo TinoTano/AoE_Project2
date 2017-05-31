@@ -116,6 +116,10 @@ bool EntityManager::Update(float arg_dt)
 						unit = (Unit*)(*it);
 						unit->order_list.push_front(new UnitAttackOrder());
 						unit->state = ATTACKING;
+						// Josep has been here, sorry if I flopped
+						/*if (unit->range > 0) {
+							App->particlemanager->CreateArrow(400, )
+						}*/
 					}
 				}
 				break;
