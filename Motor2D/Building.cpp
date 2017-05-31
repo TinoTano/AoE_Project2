@@ -21,6 +21,7 @@ Building::Building(int posX, int posY, Building* building)
 	entityPosition.x = posX;
 	entityPosition.y = posY;
 
+	name = building->name;
 	type = building->type;
 	faction = building->faction;
 	buildingPiercingDamage = building->buildingPiercingDamage;
@@ -129,6 +130,9 @@ bool Building::Draw()
 		drawLife(p);
 	}
 
+	techpos = { (int)(entityPosition.x - 25), (int) (entityPosition.y - (imageHeight / 2) + 5)};
+
+
 	return true;
 }
 
@@ -162,4 +166,33 @@ bool Building::Load(pugi::xml_node &)
 bool Building::Save(pugi::xml_node &) const
 {
 	return true;
+}
+
+void Building::drawTechnology(int MaxTech, int Tech)
+{
+
+		Sprite bar;
+		Sprite bar2;
+
+		int percent = ((MaxTech - Tech) * 100) / MaxTech;
+		int barPercent = (percent * TECHBAR_WIDTH) / 100;
+
+		bar.rect.x = bar2.rect.x = techpos.x;
+		bar.rect.y = bar2.rect.y = techpos.y;
+		bar.rect.w = TECHBAR_WIDTH;
+		bar.rect.h = bar2.rect.h = 5;
+		bar.priority = entityPosition.y + 10;
+		bar.r = 255;
+		bar.g = 255;
+		bar.b = 255;
+
+		bar2.rect.w = MIN(TECHBAR_WIDTH, MAX(TECHBAR_WIDTH - barPercent, 0));
+		bar2.priority = entityPosition.y + 11;
+		bar2.r = 0;
+		bar2.g = 25;
+		bar2.b = 255;
+
+		App->render->sprites_toDraw.push_back(bar);
+		App->render->sprites_toDraw.push_back(bar2);
+
 }

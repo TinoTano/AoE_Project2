@@ -27,7 +27,7 @@ Unit::Unit()
 
 Unit::Unit(int posX, int posY, Unit* unit)
 {
-
+	name = unit->name;
 	entityPosition.x = posX;
 	entityPosition.y = posY;
 	type = unit->type;

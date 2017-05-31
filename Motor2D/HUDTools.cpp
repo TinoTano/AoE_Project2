@@ -20,7 +20,7 @@ void TextAlert::Start(string text, uint duration, uint x, uint y) {
 }
 void TextAlert::Update() {
 	if (active) {
-		if (text_flicker.ReadSec() > 1) {
+		if (text_flicker.ReadSec() > 0.5) {
 			switch (color)
 			{
 			case 0:

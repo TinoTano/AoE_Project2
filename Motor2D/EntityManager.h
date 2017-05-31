@@ -48,14 +48,13 @@ public:
 
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
-	Resource* ReLoadResource(int posX, int posY, resourceItem type, SDL_Rect rect); // This is used instead of CreateResource when loading the game again.
-
 
 	bool LoadGameData();
 
 	Unit* CreateUnit(int posX, int posY, unitType type);
 	Building* CreateBuilding(int posX, int posY, buildingType type);
 	Resource* CreateResource(int posX, int posY, resourceItem type);
+	Resource* ReLoadResource(int posX, int posY, resourceItem type, SDL_Rect rect); // This is used instead of CreateResource when loading the game again.
 
 	void DeleteEntity(Entity* entity);
 	void OnCollision(Collider& c1, Collider& c2);

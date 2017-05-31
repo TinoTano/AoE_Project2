@@ -50,6 +50,7 @@ public:
 public:
 	int entityID = 0;
 	bool isActive = false;
+	string name;
 	SDL_Texture* entityTexture = nullptr;
 	iPoint entityPosition = { 0,0 };
 	Collider* collider = nullptr;

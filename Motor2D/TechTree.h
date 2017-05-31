@@ -87,6 +87,7 @@ public:
 	void StartResearch(TechType tech_id);
 	void Researched(TechType tech_id);
 
+
 };
 
 

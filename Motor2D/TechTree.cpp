@@ -1,4 +1,7 @@
 #include "TechTree.h"
+#include "Application.h"
+#include "EntityManager.h"
+#include "Gui.h"
 
 TechTree::TechTree() {
 
@@ -50,11 +53,27 @@ void TechTree::Reset(Faction faction){
 
 void TechTree::Update(){
 
+	string researched_tech;
 	if (!available_techs.empty()) {
 		for (list<TechType>::iterator it = available_techs.begin(); it != available_techs.end(); it++) {
 			Tech* tech = all_techs.at(*it);
-			if (tech->researching && tech->research_timer.Read() > tech->aux_timer + (tech->research_time * 1000))
-				Researched(*it);
+			if (tech->researching)
+			{
+				if (researched_tech == "") researched_tech = tech->name;
+				for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); ++it)
+				{
+					if (tech->researched_in == (*it)->type)
+					{
+						(*it)->drawTechnology((int)(tech->research_time * 1000), (int)tech->research_timer.Read() - (int)tech->aux_timer);
+					}
+				}
+				if (tech->research_timer.Read() > tech->aux_timer + (tech->research_time * 1000))
+				{
+					Researched(*it);
+					string outcome = researched_tech + " has been researched";
+					App->gui->hud->AlertText(outcome, 3);
+				}
+			}
 		}
 	}
 }

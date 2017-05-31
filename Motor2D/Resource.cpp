@@ -16,7 +16,7 @@ Resource::Resource(int posX, int posY, Resource* resource)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
-
+	name = resource->name;
 	res_type = resource->res_type;
 	contains = resource->contains;
 	MaxLife = resource->Life;

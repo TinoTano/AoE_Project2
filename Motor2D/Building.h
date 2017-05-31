@@ -8,6 +8,7 @@
 #include <list>
 #include <deque>
 
+#define TECHBAR_WIDTH 50
 
 enum buildingType {
 	TOWN_CENTER, HOUSE, BARRACKS, ARCHERY_RANGE, STABLES, SIEGE_WORKSHOP, MARKET, BLACKSMITH,
@@ -34,6 +35,8 @@ public:
 
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
+	void drawTechnology( int , int);
+	iPoint techpos;
 
 private:
 

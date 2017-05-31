@@ -696,6 +696,7 @@ bool EntityManager::LoadGameData()
 			else
 				unitTemplate = new Unit();
 
+			unitTemplate->name = unitNodeInfo.child("Info").child("Name").attribute("value").as_string();
 			unitTemplate->type = (unitType)unitNodeInfo.child("Info").child("ID").attribute("value").as_int();
 			unitTemplate->selectionRadius = unitNodeInfo.child("Info").child("SelectionRadius").attribute("value").as_uint();
 			unitTemplate->selectionAreaCenterPoint.x = unitNodeInfo.child("Info").child("BasePoint").attribute("x").as_int();
@@ -861,6 +862,7 @@ bool EntityManager::LoadGameData()
 			string idleTexturePath = buildingNodeInfo.child("Textures").child("Idle").attribute("value").as_string();
 			buildingTemplate->entityTexture = App->tex->Load(idleTexturePath.c_str());
 
+			buildingTemplate->name = buildingNodeInfo.child("Info").child("Name").attribute("value").as_string();
 			buildingTemplate->faction = (Faction)buildingNodeInfo.child("Stats").child("Faction").attribute("value").as_int();
 			buildingTemplate->Life = buildingNodeInfo.child("Stats").child("Life").attribute("value").as_int();
 			buildingTemplate->canAttack = buildingNodeInfo.child("Stats").child("CanAttack").attribute("value").as_bool();
@@ -893,7 +895,7 @@ bool EntityManager::LoadGameData()
 			for (pugi::xml_node rectsNode = resourceNodeInfo.child("Rects").child("Rect"); rectsNode; rectsNode = rectsNode.next_sibling("Rect")) {
 				resourceTemplate->blit_rects.push_back({ rectsNode.attribute("x").as_int(), rectsNode.attribute("y").as_int(), rectsNode.attribute("w").as_int(), rectsNode.attribute("h").as_int() });
 			}
-
+			resourceTemplate->name = resourceNodeInfo.child("Info").child("Name").attribute("value").as_string();
 			resourceTemplate->res_type = (resourceItem)resourceNodeInfo.child("Info").child("ID").attribute("value").as_int();
 			resourceTemplate->contains = (resourceType)resourceNodeInfo.child("Info").child("Type").attribute("value").as_int();
 			resourceTemplate->selectionWidth = resourceNodeInfo.child("Info").child("SelectionWidth").attribute("value").as_uint();
