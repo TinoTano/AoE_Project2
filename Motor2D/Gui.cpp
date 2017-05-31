@@ -5,6 +5,7 @@
 #include "Textures.h"
 #include "Fonts.h"
 #include "Input.h"
+#include "Audio.h"
 #include "Window.h"
 #include "Gui.h"
 #include "Audio.h"

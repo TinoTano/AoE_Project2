@@ -916,9 +916,9 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	if (type == SLAVE_VILLAGER || type == ELF_VILLAGER) {
 		unit = (Unit*) new Villager(posX, posY, (Villager*)unitsDB[type]);
 
-		if (unit->faction == player->faction) 
+		if (unit->faction == player->faction)
 			player->villagers.push_back((Villager*)unit);
-		else 
+		else
 			AI_faction->villagers.push_back((Villager*)unit);
 
 		if (App->render->CullingCam(unit->entityPosition))
@@ -926,12 +926,20 @@ Unit* EntityManager::CreateUnit(int posX, int posY, unitType type)
 	}
 	else {
 		if (type == LEGOLAS || type == GANDALF || type == BALROG)
+		{
 			unit = (Unit*) new Hero(posX, posY, (Hero*)unitsDB[type]);
+
+			if (App->render->CullingCam(unit->entityPosition))
+				App->audio->PlayFx(CREATE_HERO_SOUND);
+		}
+
 		else
+		{
 			unit = new Unit(posX, posY, unitsDB[type]);
 
-		if (App->render->CullingCam(unit->entityPosition))
-			App->audio->PlayFx(CREATE_UNIT_SOUND);
+			if (App->render->CullingCam(unit->entityPosition))
+				App->audio->PlayFx(CREATE_UNIT_SOUND);
+		}
 	}
 
 	unit->entityID = nextID;

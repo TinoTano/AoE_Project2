@@ -240,7 +240,7 @@ void GatherOrder::Execute(Unit* unit) {
 		if (Resource* resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition)) {   // not DESTROYED
 
 			if (villager->collider->CheckCollision(resource->collider)) {
-
+				App->audio->PlayGatherSound(resource);
 				villager->curr_capacity += MIN(resource->Life, villager->gathering_speed);
 				resource->Life -= MIN(resource->Life, villager->gathering_speed);
 
@@ -297,6 +297,11 @@ void BuildOrder::Execute(Unit* unit)
 
 				Villager* villager = (Villager*)unit;
 				to_build->Life += MIN(to_build->MaxLife - to_build->Life, villager->buildingSpeed);
+
+				if (App->render->CullingCam(unit->entityPosition))
+				{
+					App->audio->PlayFx(BUILDING_1 - 1);
+				}
 
 				if (to_build->Life >= to_build->MaxLife) {
 					to_build->Life = to_build->MaxLife;

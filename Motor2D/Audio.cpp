@@ -27,7 +27,7 @@ bool Audio::Awake(pugi::xml_node& config)
 	bool ret = true;
 	SDL_Init(0);
 
-	if(SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
+	if (SDL_InitSubSystem(SDL_INIT_AUDIO) < 0)
 	{
 		LOG("SDL_INIT_AUDIO could not initialize! SDL_Error: %s\n", SDL_GetError());
 		active = false;
@@ -38,7 +38,7 @@ bool Audio::Awake(pugi::xml_node& config)
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 
-	if((init & flags) != flags)
+	if ((init & flags) != flags)
 	{
 		LOG("Could not initialize Mixer lib. Mix_Init: %s", Mix_GetError());
 		active = false;
@@ -46,7 +46,7 @@ bool Audio::Awake(pugi::xml_node& config)
 	}
 
 	//Initialize SDL_mixer
-	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
 		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 		active = false;
@@ -56,6 +56,7 @@ bool Audio::Awake(pugi::xml_node& config)
 	App->audio->LoadFx("audio/fx/fx_button_click.wav");
 
 	App->audio->LoadFx("audio/fx/Creation_Unit.wav");
+	App->audio->LoadFx("audio/fx/relic.wav");
 	App->audio->LoadFx("audio/fx/Creation_Villager.wav");
 
 	App->audio->LoadFx("audio/fx/Dead_1.wav");
@@ -78,7 +79,13 @@ bool Audio::Awake(pugi::xml_node& config)
 	App->audio->LoadFx("audio/fx/Fight_7.wav");
 	App->audio->LoadFx("audio/fx/Fight_8.wav");
 
-	App->audio->LoadFx("audio/fx/bow.wav");
+	App->audio->LoadFx("audio/fx/arrow1.wav");
+	App->audio->LoadFx("audio/fx/arrow2.wav");
+	App->audio->LoadFx("audio/fx/arrow3.wav");
+	App->audio->LoadFx("audio/fx/arrow4.wav");
+	App->audio->LoadFx("audio/fx/arrow5.wav");
+	App->audio->LoadFx("audio/fx/arrow6.wav");
+	App->audio->LoadFx("audio/fx/arrow7.wav");
 
 	App->audio->LoadFx("audio/fx/Horse_Select_1.wav");
 	App->audio->LoadFx("audio/fx/Horse_Select_2.wav");
@@ -89,18 +96,39 @@ bool Audio::Awake(pugi::xml_node& config)
 	App->audio->LoadFx("audio/fx/Select_Unit_3.wav");
 	App->audio->LoadFx("audio/fx/Select_Unit_4.wav");
 
+	App->audio->LoadFx("audio/fx/populationlimit.wav");
+
+	App->audio->LoadFx("audio/fx/farming.wav");
+
+	App->audio->LoadFx("audio/fx/mine1.wav");
+	App->audio->LoadFx("audio/fx/mine2.wav");
+	App->audio->LoadFx("audio/fx/mine3.wav");
+
+
+	App->audio->LoadFx("audio/fx/build1.wav");
+	App->audio->LoadFx("audio/fx/build2.wav");
+
+	App->audio->LoadFx("audio/fx/buildingdeath1.wav");
+	App->audio->LoadFx("audio/fx/buildingdeath2.wav");
+	App->audio->LoadFx("audio/fx/buildingdeath3.wav");
+	App->audio->LoadFx("audio/fx/buildingdeath4.wav");
+
+	App->audio->LoadFx("audio/fx/femaledeath6.wav");
+
 	return ret;
 }
 
-void Audio::PlayDeadSound(Unit* unit) {
+void Audio::PlayUnitDeadSound(Unit* unit) {
 
 	if (App->render->CullingCam(unit->entityPosition))
 	{
 		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT || unit->type == ROHAN_KNIGHT || unit->type == MOUNTED_DUNEDAIN)
 			App->audio->PlayFx(rand() % ((HORSE_DEAD_3 - HORSE_DEAD_1) + 1) - HORSE_DEAD_1 - 1);
+		else if (unit->type == ELF_VILLAGER)
+			App->audio->PlayFx(FEMALE_DEATH_6 - 1);
 		else
 			App->audio->PlayFx(rand() % ((DEAD_SOUND_6 - DEAD_SOUND_1) + 1) - DEAD_SOUND_1 - 1);
-	}		
+	}
 }
 
 void Audio::PlayFightSound(Unit* unit) {
@@ -108,7 +136,7 @@ void Audio::PlayFightSound(Unit* unit) {
 	if (App->render->CullingCam(unit->entityPosition))
 	{
 		if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER || unit->type == ELVEN_CAVALRY || unit->type == DUNEDAIN_RANGE)
-			App->audio->PlayFx(BOW_ATTACK);
+			App->audio->PlayFx(rand() % ((BOW_ATTACK_7 - BOW_ATTACK_1) + 1) + BOW_ATTACK_1 - 1);
 		else
 			App->audio->PlayFx(rand() % ((SWORD_ATTACK_8 - SWORD_ATTACK_1) + 1) + SWORD_ATTACK_1 - 1);
 	}
@@ -124,15 +152,29 @@ void Audio::PlaySelectSound(Unit* unit) {
 	}
 }
 
+void Audio::PlayGatherSound(Resource* resource) {
+	if (App->render->CullingCam(resource->entityPosition))
+	{
+		// Falta posar wood
+
+		if (resource->contains == FOOD)
+			App->audio->PlayFx(FARMING - 1);
+		else if (resource->contains == GOLD)
+			App->audio->PlayFx(rand() % ((MINE_3 - MINE_1) + 1) + MINE_1 - 1);
+		else if (resource->contains == STONE)
+			App->audio->PlayFx(SWORD_ATTACK_7 - 1);
+	}
+}
+
 // Called before quitting
 bool Audio::CleanUp()
 {
-	if(!active)
+	if (!active)
 		return true;
 
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
-	if(music != NULL)
+	if (music != NULL)
 	{
 		Mix_FreeMusic(music);
 	}
@@ -155,12 +197,12 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
 
-	if(!active)
+	if (!active)
 		return false;
 
-	if(music != NULL)
+	if (music != NULL)
 	{
-		if(fade_time > 0.0f)
+		if (fade_time > 0.0f)
 		{
 			Mix_FadeOutMusic(int(fade_time * 1000.0f));
 		}
@@ -175,16 +217,16 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 
 	music = Mix_LoadMUS_RW(App->fs->Load(path), 1);
 
-	if(music == NULL)
+	if (music == NULL)
 	{
 		LOG("Cannot load music %s. Mix_GetError(): %s\n", path, Mix_GetError());
 		ret = false;
 	}
 	else
 	{
-		if(fade_time > 0.0f)
+		if (fade_time > 0.0f)
 		{
-			if(Mix_FadeInMusic(music, -1, (int) (fade_time * 1000.0f)) < 0)
+			if (Mix_FadeInMusic(music, -1, (int)(fade_time * 1000.0f)) < 0)
 			{
 				LOG("Cannot fade in music %s. Mix_GetError(): %s", path, Mix_GetError());
 				ret = false;
@@ -192,7 +234,7 @@ bool Audio::PlayMusic(const char* path, float fade_time)
 		}
 		else
 		{
-			if(Mix_PlayMusic(music, -1) < 0)
+			if (Mix_PlayMusic(music, -1) < 0)
 			{
 				LOG("Cannot play in music %s. Mix_GetError(): %s", path, Mix_GetError());
 				ret = false;
@@ -209,12 +251,12 @@ unsigned int Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
 
-	if(!active)
+	if (!active)
 		return 0;
 
 	Mix_Chunk* chunk = Mix_LoadWAV_RW(App->fs->Load(path), 1);
 
-	if(chunk == NULL)
+	if (chunk == NULL)
 	{
 		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
 	}
@@ -232,10 +274,10 @@ bool Audio::PlayFx(int fx_id, int repeat)
 {
 	bool ret = false;
 
-	if(!active)
+	if (!active)
 		return false;
 
-	if(fx_id > 0 && fx_id <= fx.size())
+	if (fx_id > 0 && fx_id <= fx.size())
 	{
 		Mix_PlayChannel(-1, fx[fx_id - 1], repeat);
 	}

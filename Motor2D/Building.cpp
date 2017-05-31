@@ -10,6 +10,7 @@
 #include "Orders.h"
 #include "math.h"
 #include "AI.h"
+#include "Audio.h"
 
 
 Building::Building()
@@ -149,6 +150,11 @@ void Building::Destroy() {
 
 	if(canAttack)
 		App->collision->DeleteCollider(range);
+
+	if (App->render->CullingCam(this->entityPosition))
+	{
+		App->audio->PlayFx(rand() % ((BUILDING_DEATH_4 - BUILDING_DEATH_1) + 1) - BUILDING_DEATH_1 - 1);
+	}
 
 	state = DESTROYED;
 	App->entityManager->DeleteEntity(this);

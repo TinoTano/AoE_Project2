@@ -13,6 +13,7 @@
 #include <stdlib.h>  
 #include "TechTree.h"
 #include "Hero.h"
+#include "Audio.h"
 
 //HUD
 HUD::HUD()
@@ -399,7 +400,11 @@ void HUD::Update() {
 											building->units_in_queue.push_back(ELF_VILLAGER);
 										}
 									}
-									else AlertText("NOT ENOUGH HOUSES", 5);
+									else
+									{
+										AlertText("NOT ENOUGH HOUSES", 5);
+										App->audio->PlayFx(POPULATION_LIMIT - 1);
+									}
 								}
 							}
 							if (create_hero_bt != nullptr && id == TOWN_CENTER) 
