@@ -76,31 +76,5 @@ public:
 };
 
 
-class FollowOrder : public Order {
-
-public:
-
-	FollowOrder() { order_type = FOLLOW; }
-
-	void Start(Unit* unit);
-	void Execute(Unit* unit);
-	bool CheckCompletion(Unit* unit);
-
-};
-
-class SquadMoveToOrder : public Order {
-
-public:
-
-	SquadMoveToOrder(Unit* unit, iPoint dest);
-
-	void Start(Unit* unit);
-	void Execute(Unit* unit);
-	bool CheckCompletion(Unit* unit);
-
-};
-
-
-
 
 #endif

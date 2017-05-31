@@ -8,7 +8,6 @@
 #include "TechTree.h"
 #include "Building.h"
 #include "Pathfinding.h"
-#include "Squad.h"
 #include "Resource.h"
 #include "Application.h"
 #include "GameFaction.h"
@@ -17,13 +16,8 @@
 #include <cstdlib>
 #include <deque>
 
-#define FOOD_PROPORTION 0.35
-#define WOOD_PROPORTION 0.35
-#define STONE_PROPORTION 0.15
-#define GOLD_PROPORTION 0.15
-
 enum AI_state {
-	EXPANDING, DEFENSIVE, OFFENSIVE
+	NULL_STATE, EXPANDING, DEFENSIVE, OFFENSIVE, MAX_STATES
 };
 
 
@@ -39,7 +33,7 @@ public:
 	bool Awake(pugi::xml_node&);
 
 	// Call before first frame
-	bool Start();
+	bool Start() { return true; };
 
 	// Called before all Updates
 	bool PreUpdate() { return true; };
@@ -56,59 +50,24 @@ public:
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
 
-	Squad* AssignUnit(Unit* unit);
-	void ManageAttack();
-	void StartAttack();
+	void QueueUnits();
+	void SelectBuilding(AI_state ai_state);
+	void ChangeState();
+	void LaunchAttack();
 
-	void UpdateThreats(Entity* entity);
-	void UpdateTargets(Entity* entity);
-	void RemoveThreats(Entity* entity);
-
-	void ManageUnitRequests();
-	void ManageBuildRequests();
-	void ManageVillagerRequests();
-	void ManageTechRequests();
-
-	void FillResourceRequests();
-	iPoint PlaceBuilding(buildingType type);
-
-	void IncreaseExpansionLevel();
-
-	void LoadExplorationMap();
-	void LoadAI_Data(pugi::xml_node& gameData);
 
 public:
 
 	// general utilities
 	Timer AI_timer;
 	GameFaction* Enemies = nullptr;
-	int expansion_level = 0;
 	AI_state state = EXPANDING;
+	AI_state forced_state = NULL_STATE;
 	bool enabled = false;
 
-	//expansion management
-	vector<list<buildingType>> expansion_build_table;
-	vector<list<TechType>> expansion_tech_table;
-	vector<int> villager_expansion_table;
-
-	//army management
-	int squad_size = 3;
-	list<Squad*> defensive_squads;
-	list<Squad*> offensive_squads;
-	list<pair<Entity*, iPoint>> targets;
-	list<pair<Entity*, iPoint>> threats;
-	list<iPoint> exploration_points;
-
-	//requests management
-	void Fetch_AICommand(Villager* villager);
-	list<resourceType> resource_requests; 
-	list<unitType> unit_requests;
-	list<buildingType> build_requests;
-	list<TechType> tech_requests;
-
-	//villager management
-	int requested_villagers = 0;
-
+	Building* selected_building = nullptr;
+	Building* forced_building = nullptr;
+	list<Unit*> last_attack_squad;
 };
 
 #endif

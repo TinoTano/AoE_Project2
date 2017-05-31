@@ -994,19 +994,13 @@ void EntityManager::DeleteEntity(Entity* entity)
 void EntityManager::OnCollision(Collider& c1, Collider& c2)
 {
 
-	if (c1.type == COLLIDER_LOS) {
+	if (c1.type == COLLIDER_LOS && c1.entity->faction == SAURON_ARMY && c2.entity->faction == FREE_MEN) {
+		Unit* unit = (Unit*)c1.entity;
 
-		if (c1.entity->faction == AI_faction->faction && c2.entity->faction == player->faction) {
-			if (c1.GetUnit())
-				App->ai->UpdateTargets(c2.entity);
-			else
-				App->ai->UpdateThreats(c2.entity);
-		}
+		if(unit->order_list.empty() || unit->order_list.front()->order_type == ATTACK)
+			unit->order_list.push_front(new UnitAttackOrder());
 	}
-	else {   //c1 == COLLIDER_UNIT
 
-
-	}
 }
 
 void EntityManager::AddResources(Villager* villager) {

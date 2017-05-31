@@ -15,7 +15,6 @@
 #include "SceneManager.h"
 #include "Orders.h"
 #include "AI.h"
-#include "Squad.h"
 #include "Hero.h"
 #include "Audio.h"
 #include "ParticleManager.h"
@@ -110,56 +109,6 @@ bool MoveToOrder::CheckCompletion(Unit* unit)
 		}
 	}
 	return false;
-}
-
-void FollowOrder::Start(Unit* unit) {
-
-	unit->next_pos = unit->entityPosition;
-	unit->SetTexture(MOVING);
-	state = EXECUTING;
-}
-
-void FollowOrder::Execute(Unit* unit) {
-
-	if (!CheckCompletion(unit)) {
-
-		if (!unit->collider->CheckCollision(unit->squad->commander->collider)) {
-			iPoint prev_posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.x);
-			unit->entityPosition = unit->next_pos;
-			iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.x);
-
-			fPoint velocity;
-			velocity.x = unit->squad->commander->entityPosition.x - unit->entityPosition.x;
-			velocity.y = unit->squad->commander->entityPosition.y - unit->entityPosition.y;
-
-			if (velocity.x != 0 && velocity.y != 0)
-				velocity.Normalize();
-
-			velocity = velocity * unit->unitMovementSpeed * App->entityManager->dt;
-			roundf(velocity.x);
-			roundf(velocity.y);
-
-			unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
-			unit->next_pos.y = unit->entityPosition.y + int(velocity.y);
-
-			unit->LookAt(velocity);
-
-			unit->collider->pos = { unit->next_pos.x, unit->next_pos.y + unit->selectionAreaCenterPoint.y };
-			unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-			unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-
-			App->fog->Update(prev_posMap, posMap, unit->entityID);
-			App->collision->quadTree->UpdateCol(unit->collider);
-		}
-	}
-	else
-		state = COMPLETED;
-
-}
-
-bool FollowOrder::CheckCompletion(Unit* unit)
-{
-	return (unit->squad->commander->path.empty());
 }
 
 void UnitAttackOrder::Start(Unit* unit)
@@ -376,52 +325,4 @@ void BuildOrder::Execute(Unit* unit)
 bool BuildOrder::CheckCompletion(Unit* unit) 
 {
 	return (unit->currentAnim->at(unit->currentDirection).Finished());
-}
-
-SquadMoveToOrder::SquadMoveToOrder(Unit* commander, iPoint dest) {
-
-	order_type = SQUADMOVETO;
-
-	commander->squad->ClearOrders();
-	commander->order_list.push_front(new MoveToOrder(commander, dest));
-
-	if (commander->path.empty()) 
-		state = COMPLETED;
-
-}
-
-void SquadMoveToOrder::Start(Unit* commander) {
-
-	state = EXECUTING;
-
-	for (list<Unit*>::iterator it = commander->squad->units.begin(); it != commander->squad->units.end(); it++) {
-		if ((*it)->entityPosition.DistanceTo(commander->entityPosition) > 500) {
-			commander->next_pos = commander->entityPosition;
-			state = NEEDS_START;
-			return;
-		}
-	}
-
-}
-
-void SquadMoveToOrder::Execute(Unit* commander) {
-
-	if (!CheckCompletion(commander)) {
-
-		for (list<Unit*>::iterator it = commander->squad->units.begin(); it != commander->squad->units.end(); it++) {
-			if((*it)->order_list.empty())
-				(*it)->order_list.push_back(new FollowOrder());
-
-			if ((*it)->entityPosition.DistanceTo(commander->entityPosition) > 500) {
-				commander->next_pos = commander->entityPosition;
-				state = NEEDS_START;
-				return;
-			}
-		}
-	}
-}
-
-bool SquadMoveToOrder::CheckCompletion(Unit* commander)
-{
-	return (commander->path.empty());
 }

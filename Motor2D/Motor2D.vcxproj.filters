@@ -97,9 +97,6 @@
     <ClCompile Include="QuestManager.cpp">
       <Filter>Project 2\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Squad.cpp">
-      <Filter>Project 2\Tools</Filter>
-    </ClCompile>
     <ClCompile Include="TechTree.cpp">
       <Filter>Project 2\Tools</Filter>
     </ClCompile>
@@ -249,9 +246,6 @@
     </ClInclude>
     <ClInclude Include="QuestManager.h">
       <Filter>Project 2\Modules</Filter>
-    </ClInclude>
-    <ClInclude Include="Squad.h">
-      <Filter>Project 2\Tools</Filter>
     </ClInclude>
     <ClInclude Include="TechTree.h">
       <Filter>Project 2\Tools</Filter>

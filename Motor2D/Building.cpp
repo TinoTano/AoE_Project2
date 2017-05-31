@@ -83,11 +83,8 @@ bool Building::Update(float dt)
 
 				Unit* unit = App->entityManager->CreateUnit(creation_place.x, creation_place.y, units_in_queue.front());
 
-				if (unit->type == SLAVE_VILLAGER)
-					App->ai->requested_villagers--;
-
-				if (unit->faction == SAURON_ARMY)
-					unit->squad = App->ai->AssignUnit(unit);
+				if (unit->faction == SAURON_ARMY && App->ai->state == OFFENSIVE)
+					App->ai->last_attack_squad.push_back(unit);
 
 				units_in_queue.pop_front();
 				aux_timer = creation_timer.Read();
@@ -143,14 +140,10 @@ bool Building::Draw()
 
 void Building::Destroy() {
 
-	if (faction == App->entityManager->player->faction) {
+	if (faction == App->entityManager->player->faction) 
 		App->entityManager->player->buildings.remove(this);
-		App->ai->RemoveThreats(this);
-	}
-	else {
+	else 
 		App->entityManager->AI_faction->buildings.remove(this);
-		App->ai->build_requests.push_back(type);
-	}
 
 	App->collision->DeleteCollider(collider);
 

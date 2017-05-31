@@ -110,7 +110,6 @@
     <ClCompile Include="Resource.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
-    <ClCompile Include="Squad.cpp" />
     <ClCompile Include="StaticQuadtree.cpp" />
     <ClCompile Include="TechTree.cpp" />
     <ClCompile Include="theoraplay.cpp" />
@@ -157,7 +156,6 @@
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneElement.h" />
     <ClInclude Include="SceneManager.h" />
-    <ClInclude Include="Squad.h" />
     <ClInclude Include="StaticQuadtree.h" />
     <ClInclude Include="TechTree.h" />
     <ClInclude Include="theoraplay.h" />

@@ -16,7 +16,6 @@
 #include "Hero.h"
 #include "Orders.h"
 #include "Villager.h"
-#include "Squad.h"
 #include "Audio.h"
 #include "AI.h"
 #include "QuestManager.h"
@@ -100,13 +99,8 @@ bool Unit::Update(float dt)
 				order_list.pop_front();
 		}
 		else {
-			if (state != IDLE) {
-				SetTexture(IDLE);
-				state = IDLE;
-			}
-
-			if (type == SLAVE_VILLAGER)
-				App->ai->Fetch_AICommand((Villager*)this);
+			if (state != IDLE) 
+				SetTexture(state = IDLE);
 		}
 	}
 	else {
@@ -124,7 +118,6 @@ void Unit::Destroy() {
 
 	if (faction == App->entityManager->player->faction) {
 		App->entityManager->player->units.remove(this);
-		App->ai->RemoveThreats(this);
 		if (IsVillager)
 			App->entityManager->player->villagers.remove((Villager*)this);
 	}
@@ -137,9 +130,6 @@ void Unit::Destroy() {
 	App->collision->DeleteCollider(collider);
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);
-
-	if (squad)
-		squad->Deassign(this);
 
 	SetTexture(DESTROYED);
 	state = DESTROYED;

@@ -191,13 +191,9 @@ bool Scene::Start()
 	// Villager
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y + 50, ELF_VILLAGER);
 
-	App->entityManager->CreateUnit(enemyTownCenterPos.x - 250, enemyTownCenterPos.y + 200, SLAVE_VILLAGER);
-	App->entityManager->CreateUnit(enemyTownCenterPos.x - 280, enemyTownCenterPos.y + 200, SLAVE_VILLAGER);
-
-	// Enable AI
-
+	// Enable AI 
 	App->ai->enabled = true;
-	App->ai->LoadExplorationMap();
+	App->ai->selected_building = App->entityManager->AI_faction->Town_center;
 	App->collision->quadTree;
 
 
