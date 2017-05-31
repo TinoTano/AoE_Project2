@@ -36,6 +36,7 @@ public:
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
 	void drawTechnology( int , int);
+	void drawUnitsInQueue(int MaxTime ,int Time, bool isHero);
 	iPoint techpos;
 
 private:

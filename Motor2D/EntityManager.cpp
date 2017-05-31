@@ -846,6 +846,7 @@ bool EntityManager::LoadGameData()
 
 				Hero* heroTemplate = (Hero*)unitTemplate;
 				heroTemplate->skill->type = (Skill_type)unitNodeInfo.child("Stats").child("SkillType").attribute("value").as_int(1);;
+				heroTemplate->IsHero = true;
 			}
 
 			unitsDB.insert(pair<int, Unit*>(unitTemplate->type, unitTemplate));

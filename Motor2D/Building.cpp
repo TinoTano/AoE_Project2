@@ -69,7 +69,12 @@ bool Building::Update(float dt)
 	if (state != DESTROYED && state != BEING_BUILT) {
 
 		if (!units_in_queue.empty()) {
-
+			
+			if (App->entityManager->unitsDB[units_in_queue.front()]->faction == FREE_MEN)
+			drawUnitsInQueue((int)(App->entityManager->unitsDB[units_in_queue.front()]->cooldown_time * 1000), (int)creation_timer.Read() - (int) aux_timer, App->entityManager->unitsDB[units_in_queue.front()]->IsHero);
+			
+			/*(int)(tech->research_time * 1000), (int)tech->research_timer.Read() - (int)tech->aux_timer*/
+			
 			if (creation_timer.Read() - aux_timer > App->entityManager->unitsDB[units_in_queue.front()]->cooldown_time * 1000) {
 
 				iPoint creation_place = App->map->WorldToMap(entityPosition.x, entityPosition.y + 250);
@@ -191,6 +196,45 @@ void Building::drawTechnology(int MaxTech, int Tech)
 		bar2.r = 0;
 		bar2.g = 25;
 		bar2.b = 255;
+
+		App->render->sprites_toDraw.push_back(bar);
+		App->render->sprites_toDraw.push_back(bar2);
+
+}
+
+void Building::drawUnitsInQueue(int MaxTime, int Time, bool isHero)
+{
+		Sprite bar;
+		Sprite bar2;
+
+		if (MaxTime <= 0) MaxTime = Time;
+		int percent = (((MaxTime - Time) * 100) / MaxTime);
+		int barPercent = (percent * TECHBAR_WIDTH) / 100;
+
+		bar.rect.x = bar2.rect.x = techpos.x;
+		bar.rect.y = bar2.rect.y = techpos.y + 5;
+		bar.rect.w = TECHBAR_WIDTH;
+		bar.rect.h = bar2.rect.h = 5;
+		bar.priority = entityPosition.y + 10;
+		bar.r = 255;
+		bar.g = 255;
+		bar.b = 255;
+
+		bar2.rect.w = MIN(TECHBAR_WIDTH, MAX(TECHBAR_WIDTH - barPercent, 0));
+		bar2.priority = entityPosition.y + 11;
+
+		if (isHero)
+		{
+			bar2.r = 255;
+			bar2.g = 180;
+			bar2.b = 30;
+		}
+		else
+		{
+			bar2.r = 255;
+			bar2.g = 127;
+			bar2.b = 80;
+		}
 
 		App->render->sprites_toDraw.push_back(bar);
 		App->render->sprites_toDraw.push_back(bar2);

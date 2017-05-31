@@ -53,13 +53,15 @@ void TechTree::Reset(Faction faction){
 
 void TechTree::Update(){
 
-	string researched_tech;
+	string researched_tech, outcome;
 	if (!available_techs.empty()) {
 		for (list<TechType>::iterator it = available_techs.begin(); it != available_techs.end(); it++) {
 			Tech* tech = all_techs.at(*it);
 			if (tech->researching)
 			{
+				//  --------------- GUI --------------
 				if (researched_tech == "") researched_tech = tech->name;
+
 				for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); ++it)
 				{
 					if (tech->researched_in == (*it)->type)
@@ -67,12 +69,26 @@ void TechTree::Update(){
 						(*it)->drawTechnology((int)(tech->research_time * 1000), (int)tech->research_timer.Read() - (int)tech->aux_timer);
 					}
 				}
+				//  ---------------------------------
+
 				if (tech->research_timer.Read() > tech->aux_timer + (tech->research_time * 1000))
 				{
 					Researched(*it);
-					string outcome = researched_tech + " has been researched";
-					App->gui->hud->AlertText(outcome, 3);
+
+
+					//  --------------- GUI --------------
+					for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); ++it)
+					{
+						if (tech->researched_in == (*it)->type)
+						{
+							if (tech->researched_in)
+								outcome = researched_tech + " has been researched";
+							App->gui->hud->AlertText(outcome, 3);
+						}
+					}
+					//  ---------------------------------
 				}
+					
 			}
 		}
 	}
