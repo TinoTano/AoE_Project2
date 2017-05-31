@@ -67,11 +67,6 @@ bool Collision::PreUpdate()
 {
 	for (list<Collider*>::iterator it = colliders_to_delete.begin(); it != colliders_to_delete.end(); it++) {
 
-		for (list<Collision_data*>::iterator it2 = collision_list.begin(); it2 != collision_list.end(); it2++) {
-			if ((*it) == (*it2)->c1 || (*it) == (*it2)->c2)
-				(*it2)->state = SOLVED;
-		}
-
 		quadTree->Remove(*it);
 		colliders_to_delete.erase(it);
 		RELEASE(*it);
@@ -90,32 +85,10 @@ bool Collision::PreUpdate()
 			for (list<Collider*>::iterator col2 = potential_collisions.begin(); col2 != potential_collisions.end(); col2++) {
 				c2 = (*col2);
 
-				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c1 != c2) {
-					if (!FindCollision(c1, c2)) {
-						Collision_data* collision = new Collision_data(c1, c2);   
-						collision_list.push_back(collision);
-					}
-				}
+				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c1 != c2) 
+					c1->callback->OnCollision(*c1, *c2);
 			}
 		}
-	}
-
-	for (list<Collision_data*>::iterator collisions = collision_list.begin(); collisions != collision_list.end(); collisions++) {
-
-		if ((*collisions)->state == UNSOLVED) 
-			(*collisions)->c1->callback->OnCollision(*(*collisions));
-
-		if ((*collisions)->state == SOLVING) {
-			if ((*collisions)->c1->CheckCollision((*collisions)->c2) == false)
-				(*collisions)->state = SOLVED;
-		}
-
-		if ((*collisions)->state == SOLVED) {
-			(*collisions)->c1->colliding = (*collisions)->c2->colliding = false;
-			RELEASE(*collisions);
-			collisions = collision_list.erase(collisions);
-		}
-
 	}
 
 	return true;
@@ -144,16 +117,6 @@ bool Collision::CleanUp()
 	}
 
 	colliders.clear();
-
-	list<Collision_data*>::reverse_iterator it2 = collision_list.rbegin();
-
-	while (it2 != collision_list.rend())
-	{
-		RELEASE(*it2);
-		++it2;
-	}
-
-	collision_list.clear();
 	quadTree->ClearTree();
 
 	return true;
@@ -294,16 +257,6 @@ void Collision::DebugDraw()
 				App->render->DrawIsometricCircle((*it)->pos.x, (*it)->pos.y, (*it)->r, 0, 0, 255, 255);
 		}
 	}
-}
-
-bool Collision::FindCollision(Collider* col1, Collider* col2) {
-
-	for (list<Collision_data*>::iterator it = collision_list.begin(); it != collision_list.end(); it++) {
-		if (((*it)->c1 == col1 && (*it)->c2 == col2) || ((*it)->c2 == col1 && (*it)->c1 == col2))
-			return true;
-	}
-
-	return false;
 }
 
 Collider* Collision::FindCollider(iPoint worldPos, int radius) {

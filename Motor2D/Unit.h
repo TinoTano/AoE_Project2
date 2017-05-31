@@ -39,9 +39,11 @@ public:
 	bool Update(float dt);
 	bool Draw();
 	void Destroy();
+	fPoint CheckStep();
 
 	void LookAt(fPoint dest);
 	void SetTexture(EntityState state);
+	void SubordinatedMovement(iPoint p);
 
 public:
 	// STATS

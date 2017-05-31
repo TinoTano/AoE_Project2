@@ -231,3 +231,72 @@ void Unit::SetTexture(EntityState texture_of)
 	}
 
 }
+
+void Unit::SubordinatedMovement(iPoint p) {
+
+	if (order_list.back()->order_type != MOVETO) {
+		order_list.push_back(new MoveToOrder(this, p));
+		if (order_list.back()->state == NEEDS_START)
+			order_list.back()->Start(this);
+	}
+	else {
+		if (order_list.back()->state == COMPLETED)
+			order_list.pop_back();
+		else
+			order_list.back()->Execute(this);
+	}
+}
+
+fPoint Unit::CheckStep() {
+
+	fPoint velocity, initial_vel;
+	iPoint next_step;
+
+	velocity.x = destinationTileWorld.x - collider->pos.x;
+	velocity.y = destinationTileWorld.y - collider->pos.y;
+
+	if (velocity.x != 0 || velocity.y != 0)
+		velocity.Normalize();
+
+	float angle = atan2f(velocity.y, velocity.x) * RADTODEG;
+
+	velocity = velocity * unitMovementSpeed * App->entityManager->dt;
+	roundf(velocity.x);
+	roundf(velocity.y);
+
+	initial_vel.x = velocity.x;
+	initial_vel.y = velocity.y;
+
+	for (int i = 0; i < 4; i++) {
+
+		next_step = { collider->pos.x + int(velocity.x) , collider->pos.y + int(velocity.y) };
+
+		if (!App->collision->FindCollider(next_step, collider->r) &&
+			next_step.DistanceTo(destinationTileWorld) <= collider->pos.DistanceTo(destinationTileWorld))
+			return velocity;
+		else {
+			if (i == 0)
+				angle += 45;
+			else if (i == 1)
+				angle -= 90;
+			else if (i == 2)
+				angle += 135;
+			else
+				angle -= 180;
+
+			if (angle > 360)
+				angle -= 360;
+			else if (angle < 0)
+				angle = 360 + angle;
+
+			velocity.y = sin(angle);
+			velocity.x = cos(angle);
+
+			velocity = velocity * unitMovementSpeed * App->entityManager->dt;
+			roundf(velocity.x);
+			roundf(velocity.y);
+		}
+	}
+
+	return initial_vel;
+}

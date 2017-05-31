@@ -22,16 +22,6 @@ enum COLLIDER_TYPE
 	COLLIDER_MAX
 };
 
-enum Collision_state {
-
-	UNSOLVED,
-	SOLVING,
-	SOLVED
-
-};
-
-
-
 struct Collider
 {
 	iPoint pos = { 0,0 };
@@ -62,17 +52,6 @@ struct Collider
 	Resource* GetResource();
 };
 
-struct Collision_data {
-
-	Collider* c1 = nullptr;
-	Collider* c2 = nullptr;
-	Collision_state state = UNSOLVED;
-
-	Collision_data(Collider* c1, Collider* c2) : c1(c1), c2(c2)
-	{}
-
-};
-
 class Collision : public Module
 {
 public:
@@ -100,7 +79,6 @@ public:
 
 	Collider* AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
 	void DeleteCollider(Collider* collider);
-	bool FindCollision(Collider* col1, Collider* col2);
 
 	Collider* FindCollider(iPoint point, int radius = 0);
 	void DebugDraw();
@@ -115,7 +93,6 @@ private:
 
 public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
-	list<Collision_data*> collision_list;
 	StaticQuadTree* quadTree = nullptr;
 };
 

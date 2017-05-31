@@ -58,7 +58,7 @@ public:
 	Resource* CreateResource(int posX, int posY, resourceItem type);
 
 	void DeleteEntity(Entity* entity);
-	void OnCollision(Collision_data& col_data);
+	void OnCollision(Collider& c1, Collider& c2);
 
 	void FillSelectedList();
 	void DrawSelectedList();

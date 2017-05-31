@@ -50,7 +50,7 @@ MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 		unit->path.push_back((*it));
 
 	destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
-		unit->path.push_back(destMap);
+	unit->path.push_back(destMap);
 }
 
 void MoveToOrder::Start(Unit* unit) {
@@ -78,16 +78,7 @@ void MoveToOrder::Execute(Unit* unit) {
 		unit->entityPosition = unit->next_pos;
 		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
 
-		fPoint velocity;
-		velocity.x = unit->destinationTileWorld.x - unit->collider->pos.x;
-		velocity.y = unit->destinationTileWorld.y - unit->collider->pos.y;
-
-		if (velocity.x != 0 || velocity.y != 0)
-			velocity.Normalize();
-
-		velocity = velocity * unit->unitMovementSpeed * App->entityManager->dt;
-		roundf(velocity.x);
-		roundf(velocity.y);
+		fPoint velocity = unit->CheckStep();
 
 		unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
 		unit->next_pos.y = unit->entityPosition.y + int(velocity.y);
@@ -97,7 +88,6 @@ void MoveToOrder::Execute(Unit* unit) {
 		unit->collider->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
-
 
 		App->fog->Update(prev_posMap, posMap, unit->entityID);
 		App->collision->quadTree->UpdateCol(unit->collider);
@@ -183,18 +173,7 @@ void UnitAttackOrder::Start(Unit* unit)
 		}
 		else if ((unit->los->CheckCollision(nearest_enemy->collider) && unit->faction == SAURON_ARMY) ||
 			nearest_enemy->isActive && unit->faction == FREE_MEN) {
-
-			if (unit->order_list.back()->order_type != MOVETO) {
-				unit->order_list.push_back(new MoveToOrder(unit, nearest_enemy->collider->pos));
-				if (unit->order_list.back()->state == NEEDS_START)
-					unit->order_list.back()->Start(unit);
-			}
-			else {
-				if (unit->order_list.back()->state == COMPLETED)
-					unit->order_list.pop_back();
-				else
-					unit->order_list.back()->Execute(unit);
-			}
+			unit->SubordinatedMovement(nearest_enemy->collider->pos);
 		}
 		else
 			state = COMPLETED;
@@ -250,19 +229,26 @@ void GatherOrder::Start(Unit* unit) {
 	if (villager->curr_capacity > 0) {
 
 		if (unit->faction == App->entityManager->player->faction) {
-			if (villager->collider->CheckCollision(App->entityManager->player->Town_center->collider))
+			if (villager->collider->CheckCollision(App->entityManager->player->Town_center->collider)) {
 				App->entityManager->AddResources(villager);
+				if (unit->order_list.back()->order_type == MOVETO)
+					unit->order_list.pop_back();
+			}
 			else
-				unit->order_list.push_front(new MoveToOrder(unit, App->entityManager->player->Town_center->collider->pos));
+				unit->SubordinatedMovement(App->entityManager->player->Town_center->collider->pos);
 		}
 		else{
 			if (villager->collider->CheckCollision(App->entityManager->AI_faction->Town_center->collider)) {
+
+				if (unit->order_list.back()->order_type == MOVETO)
+					unit->order_list.pop_back();
+
 				App->entityManager->AddResources(villager);
 				state = COMPLETED;
 				return;
 			}
 			else
-				unit->order_list.push_front(new MoveToOrder(unit, App->entityManager->AI_faction->Town_center->collider->pos));
+				unit->SubordinatedMovement(App->entityManager->AI_faction->Town_center->collider->pos);
 		}
 	}
 
@@ -271,8 +257,12 @@ void GatherOrder::Start(Unit* unit) {
 		if (Resource* resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition)) {
 
 			if (!villager->collider->CheckCollision(resource->collider))
-				unit->order_list.push_front(new MoveToOrder(unit, resource->collider->pos));
+				unit->SubordinatedMovement(resource->collider->pos);
 			else {
+
+				if (unit->order_list.back()->order_type == MOVETO)
+					unit->order_list.pop_back();
+
 				state = EXECUTING;
 				unit->SetTexture(GATHERING);
 				return;
@@ -326,9 +316,12 @@ void BuildOrder::Start(Unit* unit) {
 	if (Building* to_build = App->entityManager->FindNearestBuilding(unit)) {
 		unit->state = CONSTRUCTING;
 
-		if (!unit->collider->CheckCollision(to_build->collider))
-			unit->order_list.push_front(new MoveToOrder(unit, to_build->collider->pos));
+		if (!unit->collider->CheckCollision(to_build->collider)) {
+			unit->SubordinatedMovement(to_build->collider->pos);
+		}
 		else {
+			if (unit->order_list.back()->order_type == MOVETO)
+				unit->order_list.pop_back();
 			unit->SetTexture(CONSTRUCTING);
 			state = EXECUTING;
 		}

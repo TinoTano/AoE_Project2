@@ -984,85 +984,21 @@ void EntityManager::DeleteEntity(Entity* entity)
 }
 
 
-void EntityManager::OnCollision(Collision_data& col_data)
+void EntityManager::OnCollision(Collider& c1, Collider& c2)
 {
 
-	//possible colliding elements
-	Unit* unit = nullptr;
-	Unit* enemy = nullptr;
-	Building* building = nullptr;
-	Resource* resource = nullptr;
-	Villager* villager = nullptr;
+	if (c1.type == COLLIDER_LOS) {
 
-	col_data.c1->colliding = true;
-	col_data.c2->colliding = true;
-	col_data.state = SOLVING;
-
-	switch (col_data.c1->type) {
-
-	case COLLIDER_LOS:
-
-		if (col_data.c1->entity->faction == AI_faction->faction && col_data.c2->entity->faction == player->faction) {
-			if (col_data.c1->type == COLLIDER_UNIT)
-				App->ai->UpdateTargets(col_data.c2->entity);
+		if (c1.entity->faction == AI_faction->faction && c2.entity->faction == player->faction) {
+			if (c1.GetUnit())
+				App->ai->UpdateTargets(c2.entity);
 			else
-				App->ai->UpdateThreats(col_data.c2->entity);
-
-
-			if (col_data.c1->CheckCollision(col_data.c2) == true)
-				col_data.state = UNSOLVED;
+				App->ai->UpdateThreats(c2.entity);
 		}
-		else
-			col_data.state = SOLVED;
+	}
+	else {   //c1 == COLLIDER_UNIT
 
-		break;
 
-	case COLLIDER_UNIT:
-
-		unit = col_data.c1->GetUnit();
-		if (!unit->order_list.empty()) {
-
-			switch (unit->order_list.back()->order_type) {
-
-			case GATHER:
-
-				villager = (Villager*)unit;
-				if (villager->curr_capacity == 0) {
-					if (resource = col_data.c2->GetResource()) {
-						if (resource->contains == villager->resource_carried && villager->curr_capacity == 0) {
-							if (unit->order_list.front()->order_type == MOVETO)
-								unit->order_list.pop_front();
-						}
-					}
-				}
-				else {
-					if (building = col_data.c2->GetBuilding()) {
-						if (building->type == TOWN_CENTER || building->type == SAURON_TOWER) {
-							if (unit->order_list.front()->order_type == MOVETO)
-								unit->order_list.pop_front();
-						}
-					}
-				}
-				break;
-
-			case BUILD:
-
-				if (building = col_data.c2->GetBuilding()) {
-					if (building->state == BEING_BUILT) {
-						if (unit->order_list.front()->order_type == MOVETO)
-							unit->order_list.pop_front();
-					}
-				}
-				break;
-
-			default:
-				break;
-			}
-		}
-		break;
-
-	default: 
-		break;
 	}
 }
 
