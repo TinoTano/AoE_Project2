@@ -120,8 +120,10 @@ void UnitAttackOrder::Start(Unit* unit)
 		if (unit->range->CheckCollision(nearest_enemy->collider)) {
 			state = EXECUTING;
 			unit->SetTexture(ATTACKING);
-			if (unit->order_list.back()->order_type == MOVETO) 
-				unit->order_list.pop_back();
+			if (unit->sub_movement) {
+				RELEASE(unit->sub_movement);
+				unit->sub_movement = nullptr;
+			}
 		}
 		else if ((unit->los->CheckCollision(nearest_enemy->collider) && unit->faction == SAURON_ARMY) ||
 			nearest_enemy->isActive && unit->faction == FREE_MEN) {
@@ -190,8 +192,10 @@ void GatherOrder::Start(Unit* unit) {
 		if (unit->faction == App->entityManager->player->faction) {
 			if (villager->collider->CheckCollision(App->entityManager->player->Town_center->collider)) {
 				App->entityManager->AddResources(villager);
-				if (unit->order_list.back()->order_type == MOVETO)
-					unit->order_list.pop_back();
+				if (unit->sub_movement) {
+					RELEASE(unit->sub_movement);
+					unit->sub_movement = nullptr;
+				}
 			}
 			else
 				unit->SubordinatedMovement(App->entityManager->player->Town_center->collider->pos);
@@ -199,8 +203,10 @@ void GatherOrder::Start(Unit* unit) {
 		else{
 			if (villager->collider->CheckCollision(App->entityManager->AI_faction->Town_center->collider)) {
 
-				if (unit->order_list.back()->order_type == MOVETO)
-					unit->order_list.pop_back();
+				if (unit->sub_movement) {
+					RELEASE(unit->sub_movement);
+					unit->sub_movement = nullptr;
+				}
 
 				App->entityManager->AddResources(villager);
 				state = COMPLETED;
@@ -219,9 +225,10 @@ void GatherOrder::Start(Unit* unit) {
 				unit->SubordinatedMovement(resource->collider->pos);
 			else {
 
-				if (unit->order_list.back()->order_type == MOVETO)
-					unit->order_list.pop_back();
-
+				if (unit->sub_movement) {
+					RELEASE(unit->sub_movement);
+					unit->sub_movement = nullptr;
+				}
 				state = EXECUTING;
 				unit->SetTexture(GATHERING);
 				return;
@@ -279,8 +286,10 @@ void BuildOrder::Start(Unit* unit) {
 			unit->SubordinatedMovement(to_build->collider->pos);
 		}
 		else {
-			if (unit->order_list.back()->order_type == MOVETO)
-				unit->order_list.pop_back();
+			if (unit->sub_movement) {
+				RELEASE(unit->sub_movement);
+				unit->sub_movement = nullptr;
+			}
 			unit->SetTexture(CONSTRUCTING);
 			state = EXECUTING;
 		}

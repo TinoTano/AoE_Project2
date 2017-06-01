@@ -113,7 +113,7 @@ bool EntityManager::Update(float arg_dt)
 				if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
-						unit->order_list.push_front(new UnitAttackOrder());
+						unit->order_list.push_back(new UnitAttackOrder());
 						unit->state = ATTACKING;
 					}
 				}
@@ -998,12 +998,15 @@ void EntityManager::DeleteEntity(Entity* entity)
 void EntityManager::OnCollision(Collider& c1, Collider& c2)
 {
 
-	if (c1.type == COLLIDER_LOS && c1.entity->faction == SAURON_ARMY && c2.entity->faction == FREE_MEN) {
-		Unit* unit = (Unit*)c1.entity;
+	Unit* unit = nullptr;
 
-		if(unit->order_list.empty() || unit->order_list.front()->order_type == ATTACK)
-			unit->order_list.push_front(new UnitAttackOrder());
-	}
+	if (c1.entity->faction == SAURON_ARMY) 
+		unit = (Unit*)c1.entity;
+	else
+		unit = (Unit*)c2.entity;
+
+	if(unit->order_list.empty() || unit->state != ATTACKING)
+		unit->order_list.push_front(new UnitAttackOrder());
 
 }
 

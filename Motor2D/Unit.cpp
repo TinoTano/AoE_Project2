@@ -222,16 +222,18 @@ void Unit::SetTexture(EntityState texture_of)
 
 void Unit::SubordinatedMovement(iPoint p) {
 
-	if (order_list.back()->order_type != MOVETO) {
-		order_list.push_back(new MoveToOrder(this, p));
-		if (order_list.back()->state == NEEDS_START)
-			order_list.back()->Start(this);
+	if (sub_movement == nullptr) {
+		sub_movement = new MoveToOrder(this, p);
+		if (sub_movement->state == NEEDS_START)
+			sub_movement->Start(this);
 	}
 	else {
-		if (order_list.back()->state == COMPLETED)
-			order_list.pop_back();
+		if (sub_movement->state == COMPLETED) {
+			RELEASE(sub_movement);
+			sub_movement = nullptr;
+		}
 		else
-			order_list.back()->Execute(this);
+			sub_movement->Execute(this);
 	}
 }
 

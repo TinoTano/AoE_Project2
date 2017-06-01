@@ -76,7 +76,7 @@ bool Collision::PreUpdate()
 	Collider *c2 =	nullptr;
 	
 	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
-		if ((*col1)->type == COLLIDER_UNIT || (*col1)->type == COLLIDER_LOS) {
+		if ((*col1)->type == COLLIDER_LOS) {
 			c1 = (*col1);
 
 			potential_collisions.clear();
@@ -85,7 +85,7 @@ bool Collision::PreUpdate()
 			for (list<Collider*>::iterator col2 = potential_collisions.begin(); col2 != potential_collisions.end(); col2++) {
 				c2 = (*col2);
 
-				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c1 != c2) 
+				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c1->entity->faction != c2->entity->faction)
 					c1->callback->OnCollision(*c1, *c2);
 			}
 		}

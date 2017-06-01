@@ -65,6 +65,7 @@ public:
 	Collider* los = nullptr;
 	Collider* range = nullptr;
 	list<Order*> order_list;
+	Order* sub_movement = nullptr;
 	int selectionRadius = 0;
 	Squad* squad = nullptr;
 
