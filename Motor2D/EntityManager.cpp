@@ -903,6 +903,7 @@ bool EntityManager::LoadGameData()
 		}
 
 		player->tech_tree->LoadTechTree(gameData.child("FPTechs"));
+		App->gui->LoadTechInfo();
 		AI_faction->tech_tree->LoadTechTree(gameData.child("SATechs"));
 	}
 

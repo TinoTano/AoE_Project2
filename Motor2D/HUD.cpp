@@ -12,6 +12,7 @@
 #include "Orders.h"
 #include <stdlib.h>  
 #include "TechTree.h"
+#include "EntityManager.h"
 #include "Hero.h"
 #include "Audio.h"
 
@@ -381,20 +382,20 @@ void HUD::Update() {
 							HUDBuildingMenu();
 						}
 						else {
-							if (create_unit_bt != nullptr && id != TOWN_CENTER) 
+							if (create_unit_bt != nullptr)
 							{
 								if (create_unit_bt->current == CLICKUP)
 								{
 									HUDCreateUnits();
 								}
 							}
-							if (create_villager_bt != nullptr && id == TOWN_CENTER) 
+							if (create_villager_bt != nullptr && id == TOWN_CENTER)
 							{
-								if (create_villager_bt->current == CLICKUP) 
+								if (create_villager_bt->current == CLICKUP)
 								{
-									if (App->sceneManager->level1_scene->CheckUnitsRoom()) 
+									if (App->sceneManager->level1_scene->CheckUnitsRoom())
 									{
-										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost)) 
+										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost))
 										{
 											App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_max);
 											building->units_in_queue.push_back(ELF_VILLAGER);
@@ -407,56 +408,56 @@ void HUD::Update() {
 									}
 								}
 							}
-							if (create_hero_bt != nullptr && id == TOWN_CENTER) 
+							/*if (create_hero_bt != nullptr && id == TOWN_CENTER)
 							{
-								if (create_hero_bt->current == CLICKUP)
-								{
-									HUDCreateHero();
-								}
+							if (create_hero_bt->current == CLICKUP)
+							{
+							HUDCreateHero();
 							}
+							}*/
 							/*if (!studying_tech) {*/
-								for (uint i = 0; i < App->gui->tech_bt.size(); ++i)
-								{
-									if (App->gui->tech_bt[i].button != nullptr) {
-										if (App->gui->tech_bt[i].button->current == CLICKUP)
+							for (uint i = 0; i < App->gui->tech_bt.size(); ++i)
+							{
+								if (App->gui->tech_bt[i].button != nullptr) {
+									if (App->gui->tech_bt[i].button->current == CLICKUP)
+									{
+										if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost))
 										{
-											if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost))
-											{
-												App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
-												studying_tech = true;
-												tech_studied = App->gui->tech_bt[i].type;
-											}
+											App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
+											studying_tech = true;
+											tech_studied = App->gui->tech_bt[i].type;
 										}
 									}
 								}
-						/*	}*/
+							}
+							/*	}*/
 							/*else if (studying_tech) {
-								
-								max_life = App->entityManager->player->tech_tree->all_techs[tech_studied]->aux_timer + (App->entityManager->player->tech_tree->all_techs[tech_studied]->research_time * 1000);
-								curr_life = (int)App->entityManager->player->tech_tree->all_techs[tech_studied]->research_timer.Read();
-								if (curr_life >= max_life) curr_life = max_life;
-								_itoa_s(curr_life, currlife, 65, 10);
-								life_str += "     ";
-								life_str += currlife;
-								life_str += "/";
-								_itoa_s(max_life, maxlife, 65, 10);
-								life_str += maxlife;
-								life_str += "(sec)";
-								life->SetString(life_str);
-								if (max_life == 0) max_life = curr_life;
-								percent = ((max_life - curr_life) * 100) / max_life;
-								barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
-								bar.rect.y = bar.rect.y + bar.rect.h;
-								bar.rect.h = 5;
-								bar.r = 200;
-								bar.g = 200;
-								bar.b = 200;
-								App->render->ui_toDraw.push_back(bar);
-								bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
-								bar.r = 0;
-								bar.b = 255;
-								bar.g = 100;
-								App->render->ui_toDraw.push_back(bar);
+
+							max_life = App->entityManager->player->tech_tree->all_techs[tech_studied]->aux_timer + (App->entityManager->player->tech_tree->all_techs[tech_studied]->research_time * 1000);
+							curr_life = (int)App->entityManager->player->tech_tree->all_techs[tech_studied]->research_timer.Read();
+							if (curr_life >= max_life) curr_life = max_life;
+							_itoa_s(curr_life, currlife, 65, 10);
+							life_str += "     ";
+							life_str += currlife;
+							life_str += "/";
+							_itoa_s(max_life, maxlife, 65, 10);
+							life_str += maxlife;
+							life_str += "(sec)";
+							life->SetString(life_str);
+							if (max_life == 0) max_life = curr_life;
+							percent = ((max_life - curr_life) * 100) / max_life;
+							barPercent = (percent * App->gui->SpriteBuildings.front().GetRect().w) / 100;
+							bar.rect.y = bar.rect.y + bar.rect.h;
+							bar.rect.h = 5;
+							bar.r = 200;
+							bar.g = 200;
+							bar.b = 200;
+							App->render->ui_toDraw.push_back(bar);
+							bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
+							bar.r = 0;
+							bar.b = 255;
+							bar.g = 100;
+							App->render->ui_toDraw.push_back(bar);
 							}*/
 						}
 						break;
@@ -752,34 +753,31 @@ bool Gui::LoadHUDData()
 			UnitSprite unit(type, proportions, id, name);
 			SpriteResources.push_back(unit);
 		}
-		for (unitNodeInfo = HUDData.child("FPTechs").child("Tech"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Tech"))
+		/*for (unitNodeInfo = HUDData.child("FPTechs").child("Tech"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Tech"))
 		{
-			tech_button bt;
-			string name(unitNodeInfo.child("Name").attribute("value").as_string());
-			bt.name = name;
-			string desc(unitNodeInfo.child("Description").attribute("value").as_string());
-			bt.desc = desc;
-			int id = unitNodeInfo.child("ID").attribute("value").as_int();
-			bt.type = (TechType)id;
+		tech_button bt;
+		string name(unitNodeInfo.child("Name").attribute("value").as_string());
+		bt.name = name;
+		string desc(unitNodeInfo.child("Description").attribute("value").as_string());
+		bt.desc = desc;
+		int id = unitNodeInfo.child("ID").attribute("value").as_int();
+		bt.type = (TechType)id;
 
-			proportions.x = unitNodeInfo.child("Position").attribute("x").as_int();
-			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
-			proportions.w = 39;
-			proportions.h = 40;
-			bt.blit_sections.push_back(proportions);
-			proportions.x += proportions.w;
-			bt.blit_sections.push_back(proportions);
-			bt.button = nullptr;
 
-			string wood(unitNodeInfo.child("Cost").attribute("woodCost").as_string());
-			string food(unitNodeInfo.child("Cost").attribute("foodCost").as_string());
-			string gold(unitNodeInfo.child("Cost").attribute("goldCost").as_string());
-			string stone(unitNodeInfo.child("Cost").attribute("stoneCost").as_string());
-			string costs = "wood: " + wood + " food: " + food + " gold: " + gold + " stone: " + stone;
-			bt.cost = costs;
 
-			tech_bt.push_back(bt);
-		}
+		proportions.x += proportions.w;
+		bt.blit_sections.push_back(proportions);
+		bt.button = nullptr;
+
+		string wood(unitNodeInfo.child("Cost").attribute("woodCost").as_string());
+		string food(unitNodeInfo.child("Cost").attribute("foodCost").as_string());
+		string gold(unitNodeInfo.child("Cost").attribute("goldCost").as_string());
+		string stone(unitNodeInfo.child("Cost").attribute("stoneCost").as_string());
+		string costs = "wood: " + wood + " food: " + food + " gold: " + gold + " stone: " + stone;
+		bt.cost = costs;
+
+		tech_bt.push_back(bt);
+		}*/
 		for (unitNodeInfo = HUDData.child("SATechs").child("Tech"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Tech"))
 		{
 			tech_button bt;
@@ -811,4 +809,28 @@ bool Gui::LoadHUDData()
 
 	}
 	return ret;
+}
+
+void Gui::LoadTechInfo() {
+	for (vector<Tech*>::iterator it = App->entityManager->player->tech_tree->all_techs.begin(); it != App->entityManager->player->tech_tree->all_techs.end(); ++it)
+	{
+		tech_button bt;
+		string name((*it)->name);
+		bt.name = name;
+		string desc((*it)->desc);
+		bt.desc = desc;
+		int id = (*it)->id;
+		bt.type = (TechType)id;
+
+		bt.blit_sections.push_back((*it)->minature);
+
+		SDL_Rect p = (*it)->minature;
+		p.x += p.w;
+
+		bt.blit_sections.push_back(p);
+		bt.button = nullptr;
+
+		bt.cost = "wood: " + std::to_string((*it)->cost.wood) + " food: " + std::to_string((*it)->cost.food) + " gold: " + std::to_string((*it)->cost.gold) + " stone: " + std::to_string((*it)->cost.stone);
+		tech_bt.push_back(bt);
+	}
 }
