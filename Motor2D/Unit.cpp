@@ -134,7 +134,7 @@ void Unit::Destroy() {
 
 	SetTexture(DESTROYED);
 	state = DESTROYED;
-	App->audio->PlayDeadSound(this);
+	App->audio->PlayUnitDeadSound(this);
 
 	App->entityManager->DeleteEntity(this);
 }
