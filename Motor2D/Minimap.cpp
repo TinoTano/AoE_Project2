@@ -32,8 +32,9 @@ bool Minimap::CleanUp()
 
 bool Minimap::Start()
 {
-	minimapClickable.w = 108;
-	minimapClickable.h = 68;
+
+	minimapClickable.w = 247;
+	minimapClickable.h = 120;
 
 	minimapPos.x = 1105;
 	minimapPos.y = 549;
@@ -46,6 +47,7 @@ bool Minimap::Start()
 bool Minimap::Update(float dt)
 {
 	SDL_Point mousePos;
+
 	iPoint cameraOldPos = { App->render->camera.x, App->render->camera.y };
 
 	App->input->GetMousePosition(mousePos.x, mousePos.y);
@@ -78,8 +80,8 @@ bool Minimap::Update(float dt)
 
 void Minimap::GetClickableArea(std::pair<int, int> position)
 {
-	minimapClickable.x = position.first + 131;
-	minimapClickable.y = position.second + 42;
+	minimapClickable.x = position.first + 50;
+	minimapClickable.y = position.second + 12;
 
 }
 
