@@ -68,10 +68,10 @@ bool Scene::Start()
 	App->render->camera.x = STARTING_CAMERA_X;
 	App->render->camera.y = STARTING_CAMERA_Y;
 
-	App->render->cameraScene.down = -3090;
-	App->render->cameraScene.up = -1180;
-	App->render->cameraScene.left = 1680;
-	App->render->cameraScene.right = -1410;
+	App->render->cameraScene.down = -3745;
+	App->render->cameraScene.up = -245;
+	App->render->cameraScene.left = 3993;
+	App->render->cameraScene.right = -3000;
 
 	// Loading UI ====================================================
 
