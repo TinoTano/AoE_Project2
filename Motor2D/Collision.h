@@ -80,7 +80,7 @@ public:
 	Collider* AddCollider(iPoint position, int radius, COLLIDER_TYPE type, Module* callback = nullptr, Entity* entity = nullptr);
 	void DeleteCollider(Collider* collider);
 
-	Collider* FindCollider(iPoint point, int radius = 0);
+	Collider* FindCollider(iPoint point, int radius = 0, Collider* collider_to_ignore = nullptr);
 	void DebugDraw();
 
 private:

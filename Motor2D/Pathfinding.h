@@ -20,6 +20,7 @@
 
 struct Path;
 struct PathNode;
+class Unit;
 
 class PathFinding : public Module
 {
@@ -40,7 +41,7 @@ public:
 	bool CheckBoundaries(const iPoint& pos) const;
 
 	// Utility: returns true is the tile is walkable
-	bool IsWalkable(const iPoint& pos) const;
+	bool IsWalkable(const iPoint& pos, Collider* collider_to_ignore = nullptr);
 
 	// Utility: return the walkability value of a tile
 	uchar GetTileAt(const iPoint& pos) const;
@@ -49,7 +50,6 @@ public:
 
 	iPoint FindNearestAvailable(iPoint origin, int range = 1, iPoint target = { -1,-1 });
 	void CalculatePath(Path* path);
-	void Repath(Unit* unit);
 
 private:
 
@@ -59,6 +59,8 @@ private:
 	// all map walkability values [0..255]
 	uchar* map;
 public:
+	Unit* current_unit;
+
 };
 
 // forward declaration

@@ -68,7 +68,7 @@ Unit::Unit(int posX, int posY, Unit* unit)
 	else
 		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, collider->r, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 	
-	destinationTileWorld = entityPosition;
+	next_pos = destinationTileWorld = entityPosition;
 }
 
 Unit::~Unit()
@@ -259,31 +259,32 @@ fPoint Unit::CheckStep() {
 
 		next_step = { collider->pos.x + int(velocity.x) , collider->pos.y + int(velocity.y) };
 
-		if (!App->collision->FindCollider(next_step, collider->r) &&
-			next_step.DistanceTo(destinationTileWorld) <= collider->pos.DistanceTo(destinationTileWorld))
-			return velocity;
-		else {
-			if (i == 0)
-				angle += 45;
-			else if (i == 1)
-				angle -= 90;
-			else if (i == 2)
-				angle += 135;
-			else
-				angle -= 180;
-
-			if (angle > 360)
-				angle -= 360;
-			else if (angle < 0)
-				angle = 360 + angle;
-
-			velocity.y = sin(angle);
-			velocity.x = cos(angle);
-
-			velocity = velocity * unitMovementSpeed * App->entityManager->dt;
-			roundf(velocity.x);
-			roundf(velocity.y);
+		if (!App->collision->FindCollider(next_step, collider->r, collider)) {
+			if (next_step.DistanceTo(destinationTileWorld) <= collider->pos.DistanceTo(destinationTileWorld))
+				return velocity;
 		}
+
+		if (i == 0)
+			angle += 45;
+		else if (i == 1)
+			angle -= 90;
+		else if (i == 2)
+			angle += 135;
+		else
+			angle -= 180;
+
+		if (angle > 360)
+			angle -= 360;
+		else if (angle < 0)
+			angle = 360 + angle;
+
+		velocity.y = cos(angle);
+		velocity.x = sin(angle);
+
+		velocity = velocity * unitMovementSpeed * App->entityManager->dt;
+		roundf(velocity.x);
+		roundf(velocity.y);
+
 	}
 
 	return initial_vel;

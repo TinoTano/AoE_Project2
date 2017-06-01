@@ -28,10 +28,10 @@ MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 	iPoint origin = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
 	iPoint destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
 
-	if (!App->pathfinding->IsWalkable(destMap))
+	if (!App->pathfinding->IsWalkable(destMap, unit->collider) && !App->collision->FindCollider(destMap, unit->collider->r, unit->collider))
 		destMap = App->pathfinding->FindNearestAvailable(destMap, 5);
 
-	if (!App->pathfinding->IsWalkable(origin))
+	if (!App->pathfinding->IsWalkable(origin, unit->collider))
 		origin = App->pathfinding->FindNearestAvailable(origin, 5);
 
 	if (origin.x == -1 || destMap.x == -1) {
@@ -44,7 +44,9 @@ MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 	path.origin = origin;
 	path.destination = destMap;
 
+	App->pathfinding->current_unit = unit;
 	App->pathfinding->CalculatePath(&path);
+	App->pathfinding->current_unit = nullptr;
 
 	for (list<iPoint>::iterator it = path.finished_path.begin(); it != path.finished_path.end(); it++)
 		unit->path.push_back((*it));

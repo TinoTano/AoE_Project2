@@ -259,7 +259,7 @@ void Collision::DebugDraw()
 	}
 }
 
-Collider* Collision::FindCollider(iPoint worldPos, int radius) {
+Collider* Collision::FindCollider(iPoint worldPos, int radius, Collider* collider_to_ignore) {
 
 	Collider* col = nullptr;
 	iPoint MapPos = App->map->WorldToMap(worldPos.x, worldPos.y);
@@ -275,7 +275,7 @@ Collider* Collision::FindCollider(iPoint worldPos, int radius) {
 				col = (*it);
 		}
 
-		if (col->pos.DistanceTo(worldPos) > (col->r + radius) || col->entity->state == DESTROYED)
+		if (col->pos.DistanceTo(worldPos) > (col->r + radius) || col->entity->state == DESTROYED || col == collider_to_ignore)
 			col = nullptr;
 	}
 
