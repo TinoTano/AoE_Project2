@@ -114,9 +114,6 @@ bool Unit::Update(float dt)
 
 void Unit::Destroy() {
 
-	if (App->quest->TriggerKillCallback(type) == false)
-		App->quest->StepKillCallback(type);
-
 	if (faction == App->entityManager->player->faction) {
 		App->entityManager->player->units.remove(this);
 		if (IsVillager)

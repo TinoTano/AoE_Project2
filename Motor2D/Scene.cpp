@@ -211,6 +211,7 @@ bool Scene::Start()
 	villagers_curr = villagers_max = 1;
 	UpdateVillagers(villagers_curr, villagers_max);
 
+	App->quest->Start();
 	questHUD.Start();
 
 	return true;
@@ -343,6 +344,7 @@ bool Scene::CleanUp()
 	App->entityManager->CleanUp();
 	App->collision->CleanUp();
 	App->fog->CleanUp();
+	App->quest->CleanUp();
 	return true;
 }
 

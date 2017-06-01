@@ -6,13 +6,13 @@
 #include <vector>
 #include "p2Point.h"
 #include "Collision.h"
-#include "Unit.h"
+#include "Building.h"
 
 class Collider;
 enum EVENT_TYPE
 {
 	//Define event types
-	KILL_EVENT = 0
+	DESTROY_EVENT = 0
 };
 
 class Event
@@ -24,15 +24,15 @@ public:
 	EVENT_TYPE type;
 };
 
-class KillEvent : public Event // Right now it only works for enemy units
+class DestroyEvent : public Event // Right now it only works for enemy units
 {
 public:
-	KillEvent(EVENT_TYPE type) :Event(type) {};
+	DestroyEvent(EVENT_TYPE type) :Event(type) {};
 
-	~KillEvent() {};
+	~DestroyEvent() {};
 
-	unitType unit_type;
-	uint enemies_to_kill;
+	buildingType building_type;
+	uint buildings_to_kill;
 };
 
 class Quest
@@ -46,6 +46,7 @@ public:
 	string description;
 	int reward;
 	int id;
+	uint state;
 	Event* trigger = nullptr;
 	vector <Event*> steps;
 };
@@ -59,27 +60,20 @@ public:
 
 	bool Awake(pugi::xml_node&);
 	bool Start();
+	bool CleanUp();
 
-	bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&) const;
-
+	//bool Load(pugi::xml_node&);
+	//bool Save(pugi::xml_node&) const;
 
 	Event* createEvent(pugi::xml_node&);
 
-	//Callbacks for each event type
-	bool TriggerKillCallback(unitType t);
-	bool StepKillCallback(unitType t);
-
-	void DestroyQuest(Quest*);
-	Quest* AddQuest(string name, string description, int reward, int id, Event* trigger, vector<Event*> steps);
+	/*bool TriggerKillCallback(unitType t);*/
+	bool StepKillCallback(buildingType t);
 
 private:
 	string path;
 
-	list<Quest*> sleepQuests;
-	list<Quest*> closedQuests;
-public:
-	list<Quest*> activeQuests;
+	list<Quest*> AllQuests;
 };
 
 #endif
