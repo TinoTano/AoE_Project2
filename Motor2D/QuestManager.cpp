@@ -168,9 +168,12 @@ bool QuestManager::CleanUp()
 		{
 			RELEASE((*it2));
 		}
-
+		(*it)->steps.clear();
 		RELEASE((*it));
 	}
+
+	AllQuests.clear();
+
 	return true;
 }
 
