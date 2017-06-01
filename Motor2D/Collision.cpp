@@ -265,7 +265,7 @@ Collider* Collision::FindCollider(iPoint worldPos, int radius, Collider* collide
 	iPoint MapPos = App->map->WorldToMap(worldPos.x, worldPos.y);
 	int quadtree_node = ((trunc((float)(MapPos.y / NODES_FOR_ROW)) * NODES_FOR_ROW) + (trunc((float)(MapPos.x / NODES_FOR_ROW))));
 
-	if (colliders.size() > 0 && (quadtree_node >= 0 && quadtree_node < 100)) {
+	if (colliders.size() > 0 && (quadtree_node >= 0 && quadtree_node < 64)) {
 		col = colliders.front();
 		for (list<Collider*>::iterator it = quadTree->nodes.at(quadtree_node).begin(); it != quadTree->nodes.at(quadtree_node).end(); it++) {
 			if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)

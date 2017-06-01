@@ -5,7 +5,7 @@
 #include <vector>
 #include "Collision.h"
 
-#define NODES_FOR_ROW 20
+#define NODES_FOR_ROW 8
 
 class StaticQuadTree
 {

@@ -27,7 +27,7 @@ void StaticQuadTree::ClearTree() {
 void StaticQuadTree::UpdateCol(Collider* col)
 {
 	int current_node = Locate(col);
-	if (current_node != col->quadtree_node && current_node >= 0 && current_node < 100) {
+	if (current_node != col->quadtree_node && current_node >= 0 && current_node < 64) {
 		nodes.at(col->quadtree_node).remove(col);
 		nodes.at(col->quadtree_node = current_node).push_back(col);
 	}
@@ -37,7 +37,7 @@ void StaticQuadTree::UpdateCol(Collider* col)
 void StaticQuadTree::Insert(Collider* col) 
 {
 	col->quadtree_node = Locate(col);
-	if(col->quadtree_node < 100 && col->quadtree_node >= 0)
+	if(col->quadtree_node < 64 && col->quadtree_node >= 0)
 		nodes.at(col->quadtree_node).push_back(col);
 }
 

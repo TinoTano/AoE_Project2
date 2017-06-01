@@ -38,7 +38,7 @@ bool AI::Update(float dt) {
 void AI::QueueUnits() {
 
 	//unitType type = rand() % selected_building->available_units.size();
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 1; i++)
 		selected_building->units_in_queue.push_back(GOBLIN_SOLDIER);
 	
 }
