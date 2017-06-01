@@ -1279,11 +1279,11 @@ void EntityManager::DrawSelectedList() {
 			break;
 		case COLLIDER_BUILDING:
 			building = (Building*)(*it);
-			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y + ((int)building->imageHeight - (*it)->selectionAreaCenterPoint.y) }, building->selectionWidth);
+			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y}, building->selectionWidth);
 			break;
 		case COLLIDER_RESOURCE:
 			resource = (Resource*)(*it);
-			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y + ((int)resource->blit_rect.h - (*it)->selectionAreaCenterPoint.y) }, resource->selectionWidth);
+			App->render->DrawIsometricRect({ (*it)->entityPosition.x, (*it)->entityPosition.y - 15 }, resource->selectionWidth);
 			break;
 		}
 	}

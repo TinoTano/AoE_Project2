@@ -48,10 +48,10 @@ Building::Building(int posX, int posY, Building* building)
 
 	GetBuildingBoundaries();
 
-	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
+	collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y }, imageWidth / 2, COLLIDER_BUILDING, App->entityManager, (Entity*)this);
 	
 	if(building->canAttack)
-		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + ((int)imageHeight - selectionAreaCenterPoint.y - 15) }, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
+		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y }, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 
 	attack_timer.Start();
 }
@@ -113,13 +113,26 @@ bool Building::Update(float dt)
 bool Building::Draw()
 {
 	Sprite aux;
-
-	aux.texture = entityTexture;
-	aux.pos.x = entityPosition.x - (imageWidth / 2);
-	aux.pos.y = entityPosition.y - (imageHeight / 2);
-	aux.priority = entityPosition.y/* - (imageHeight / 2) + imageHeight*/;
-	aux.rect.w = imageWidth;
-	aux.rect.h = imageHeight;
+	
+	if (state == BEING_BUILT)
+	{
+		aux.texture = entityTexture;
+		aux.pos.x = entityPosition.x - (imageWidth / 2);
+		aux.pos.y = entityPosition.y - (imageHeight / 2);
+		aux.priority = entityPosition.y;
+		aux.rect.w = imageWidth;
+		aux.rect.h = imageHeight;
+	}
+	else
+	{
+		aux.texture = entityTexture;
+		aux.pos.x = entityPosition.x - (imageWidth / 2);
+		aux.pos.y = entityPosition.y - selectionAreaCenterPoint.y +  15;
+		aux.priority = entityPosition.y;
+		aux.rect.w = imageWidth;
+		aux.rect.h = imageHeight;
+	}
+	
 
 	App->render->sprites_toDraw.push_back(aux);
 
@@ -129,11 +142,16 @@ bool Building::Draw()
 	}
 
 	if (lifebar_timer.ReadSec() < 5) {
-		iPoint p(entityPosition.x - 25, entityPosition.y - (imageHeight / 2));
+		iPoint p;
+		if (state == BEING_BUILT)
+			p = { entityPosition.x - 25, entityPosition.y };
+		else
+			p = {entityPosition.x - 25, entityPosition.y - selectionAreaCenterPoint.y};
+
 		drawLife(p);
 	}
 
-	techpos = { (int)(entityPosition.x - 25), (int) (entityPosition.y - (imageHeight / 2) + 5)};
+	techpos = { (int)(entityPosition.x - 25), entityPosition.y - selectionAreaCenterPoint.y + 10};
 
 
 	return true;
