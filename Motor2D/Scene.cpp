@@ -23,6 +23,7 @@
 #include "FogOfWar.h"
 #include "Minimap.h"
 #include "Fonts.h"
+#include "CutSceneManager.h"
 
 Scene::Scene() : SceneElement("scene")
 {
@@ -113,6 +114,16 @@ bool Scene::Start()
 	elements[9].position.first = elements[8].position.first;
 	elements[9].position.second = elements[8].position.second + elements[8].detect_sections.front().h + y / 100;
 
+	elements[10].position.first = elements[4].position.first + elements[10].detect_sections.front().w + 5;
+	elements[10].position.second = elements[4].position.second;
+
+	elements[11].position.first = elements[8].position.first;
+	elements[11].position.second = elements[8].position.second;
+
+	elements[12].position.first = elements[9].position.first;
+	elements[12].position.second = elements[9].position.second;
+	
+
 	for (uint it = 0; it < elements.size(); ++it) {
 		switch (elements[it].type)
 		{
@@ -130,13 +141,22 @@ bool Scene::Start()
 	Label* back_to_menu_lbl = (Label*)App->gui->CreateLabel("Back To Main Menu", buttons[BACKTOMENU]->pos.first + x / 30, buttons[BACKTOMENU]->pos.second, App->font->fonts[SIXTEEN]);
 	Label* quit_game_lbl = (Label*)App->gui->CreateLabel("Quit Game", buttons[QUITGAME]->pos.first + x / 20, buttons[QUITGAME]->pos.second, App->font->fonts[SIXTEEN]);
 	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", buttons[SAVEGAME]->pos.first + x / 20, buttons[SAVEGAME]->pos.second, App->font->fonts[SIXTEEN]);
-	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", buttons[CANCEL]->pos.first + x / 15, buttons[CANCEL]->pos.second, App->font->fonts[SIXTEEN]);
-	Label* load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 35, buttons[LOADGAME]->pos.second, App->font->fonts[SIXTEEN]);
-	back_to_menu_lbl->SetSize(16);
-	quit_game_lbl->SetSize(16);
-	save_game_lbl->SetSize(16);
-	cancel_lbl->SetSize(16);
-	load_game_lbl->SetSize(16);
+	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", buttons[CANCEL]->pos.first + x / 18, buttons[CANCEL]->pos.second, App->font->fonts[SIXTEEN]);
+	Label* load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 20, buttons[LOADGAME]->pos.second, App->font->fonts[SIXTEEN]);
+	Label* yes_lbl = (Label*)App->gui->CreateLabel("YES", buttons[CANCEL]->pos.first + x / 13, buttons[CANCEL]->pos.second + y/500, App->font->fonts[SIXTEEN]);
+	Label* no_lbl = (Label*)App->gui->CreateLabel("NO", buttons[LOADGAME]->pos.first + x / 13, buttons[LOADGAME]->pos.second + y / 500, App->font->fonts[SIXTEEN]);
+	Label* surrender_lbl = (Label*)App->gui->CreateLabel("Do you want to surrender?", buttons[BACKTOMENU]->pos.first + x / 50, buttons[BACKTOMENU]->pos.second, App->font->fonts[SIXTEEN]);
+	
+	surrender_menu.in_window.push_back(images[WINDOW]);
+	surrender_menu.in_window.push_back(buttons[YES]);
+	surrender_menu.in_window.push_back(buttons[NO]);
+	surrender_menu.in_window.push_back(yes_lbl);
+	surrender_menu.in_window.push_back(no_lbl);
+	surrender_menu.in_window.push_back(surrender_lbl);
+
+	surrender_menu.WindowOff();
+
+	surrender_menu.SetFocus(images[3]->pos.first, images[3]->pos.second, 280, 280);
 
 	ui_menu.in_window.push_back(images[WINDOW]);
 	ui_menu.in_window.push_back(buttons[BACKTOMENU]);
@@ -205,15 +225,15 @@ bool Scene::Start()
 	App->entityManager->player->resources.gold += 100;
 	App->entityManager->player->resources.wood += 100;
 
-	UpdateResources();
+UpdateResources();
 
-	villagers_curr = villagers_max = 1;
-	UpdateVillagers(villagers_curr, villagers_max);
+villagers_curr = villagers_max = 1;
+UpdateVillagers(villagers_curr, villagers_max);
 
-	App->quest->Start();
-	questHUD.Start();
+App->quest->Start();
+questHUD.Start();
 
-	return true;
+return true;
 }
 
 // Called each loop iteration
@@ -231,7 +251,7 @@ bool Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
 		App->map->godmode = !App->map->godmode;
-		
+
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
@@ -257,7 +277,7 @@ bool Scene::Update(float dt)
 	//if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 	//	questHUD.RemoveQuest(2);
 	//}
-	
+
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
 		App->SaveGame();
 	}
@@ -266,7 +286,7 @@ bool Scene::Update(float dt)
 		App->LoadGame();
 	}
 
-	
+
 	App->gui->ScreenMoves(App->render->MoveCameraWithCursor(dt));
 	App->map->Draw();
 
@@ -274,20 +294,60 @@ bool Scene::Update(float dt)
 	// --------------------------------------------
 	//						UI
 	//---------------------------------------------
-	if (ui_menu.IsEnabled()) App->gui->Focus(ui_menu.FocusArea());
+	if (ui_menu.IsEnabled())
+	{
+		App->gui->Focus(ui_menu.FocusArea());
 
-	if (buttons[MENU]->current == CLICKUP || App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
-		UpdateVillagers(5, 10);
+		if (buttons[QUITGAME]->current == CLICKUP) App->quit = true;
+
+		if (buttons[CANCEL]->current == CLICKUP) {
+			ui_menu.WindowOff();
+			App->gui->Unfocus();
+		}
+	}
+	if (surrender_menu.IsEnabled()) {
+		App->gui->Focus(surrender_menu.FocusArea());
+
+		if (buttons[YES]->current == CLICKUP)
+		{
+			CleanUp();
+			App->cutscene->Start();
+			App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
+
+		}
+		if (buttons[NO]->current == CLICKUP)
+		{
+			surrender_menu.WindowOff();
+			App->gui->Unfocus();
+		}
+	}
+
+	if (buttons[MENU]->current == CLICKUP)
+	{
 		ui_menu.WindowOn();
-		App->gui->hud->alert.CleanUp();
-	}
-	if (buttons[QUITGAME]->current == CLICKUP) App->quit = true;
-
-	else if (buttons[CANCEL]->current == CLICKUP) {
-		ui_menu.WindowOff();
-		App->gui->Unfocus();
 	}
 
+	if (buttons[SURRENDER]->current == CLICKUP)
+	{
+		surrender_menu.WindowOn();
+	}
+	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
+		if (ui_menu.IsEnabled()) {
+			ui_menu.WindowOff();
+			App->gui->Unfocus();
+		}
+		else if (!ui_menu.IsEnabled() && !surrender_menu.IsEnabled())
+		{
+			ui_menu.WindowOn();
+		}
+		else if (!ui_menu.IsEnabled() && surrender_menu.IsEnabled())
+		{
+			surrender_menu.WindowOff();
+			App->gui->Unfocus();
+		}
+	}
+
+	
 	bool cursoron = false;
 	for (uint i = 0; i < buttons.size(); ++i) {
 		if (buttons[i]->current == HOVER || buttons[i]->current == CLICKIN)

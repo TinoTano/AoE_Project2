@@ -53,7 +53,7 @@ private:
 	// TIMER
 
 	// UI ELEMENTS
-	WindowUI ui_menu;
+	WindowUI ui_menu, surrender_menu;
 	Label* back_to_menu_lbl = nullptr, *quit_game_lbl = nullptr, *save_game_lbl = nullptr, *cancel_lbl = nullptr;
 
 	vector<Info> elements;
@@ -74,7 +74,7 @@ public:
 	// RESOURCES 
 	Label* wood = nullptr, *food = nullptr, *gold = nullptr, *stone = nullptr, *villagers = nullptr;
 
-	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL, LOADGAME };
+	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL, LOADGAME, SURRENDER, YES, NO };
 	enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
 
 };
