@@ -54,6 +54,7 @@ public:
 	void SelectBuilding(AI_state ai_state);
 	void ChangeState();
 	void LaunchAttack();
+	void CheckCollisions();
 
 
 public:
@@ -68,6 +69,7 @@ public:
 	Building* selected_building = nullptr;
 	Building* forced_building = nullptr;
 	list<Unit*> last_attack_squad;
+	list<Collider*> potential_collisions;
 };
 
 #endif

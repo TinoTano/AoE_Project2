@@ -3,6 +3,8 @@
 #include "Application.h"
 #include "Orders.h"
 #include "SceneManager.h"
+#include "Collision.h"
+#include "StaticQuadtree.h"
 #include "Pathfinding.h"
 #include <time.h>
 #include <algorithm>
@@ -17,6 +19,8 @@ bool AI::Awake(pugi::xml_node& gameData) {
 bool AI::Update(float dt) {
 
 	if (enabled) {
+
+		CheckCollisions();
 		bool completed = false;
 
 		if (state == EXPANDING) {
@@ -108,4 +112,29 @@ bool AI::Load(pugi::xml_node &)
 bool AI::Save(pugi::xml_node & data) const
 {
 	return true;
+}
+
+void AI::CheckCollisions() {
+
+	for (list<Unit*>::iterator enemy = Enemies->units.begin(); enemy != Enemies->units.end(); enemy++) {
+
+		potential_collisions.clear();
+		App->collision->quadTree->Retrieve(potential_collisions, (*enemy)->los);
+
+		for (list<Unit*>::iterator ally = App->entityManager->player->units.begin(); ally != App->entityManager->player->units.end(); ally++) {
+
+			if ((*enemy)->los->CheckCollision((*ally)->collider)) {
+				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING)
+					(*enemy)->order_list.push_front(new UnitAttackOrder());
+			}
+		}
+
+		for (list<Building*>::iterator ally_building = App->entityManager->player->buildings.begin(); ally_building != App->entityManager->player->buildings.end(); ally_building++) {
+
+			if ((*enemy)->los->CheckCollision((*ally_building)->collider)) {
+				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING)
+					(*enemy)->order_list.push_front(new UnitAttackOrder());
+			}
+		}
+	}
 }

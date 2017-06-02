@@ -72,25 +72,6 @@ bool Collision::PreUpdate()
 		RELEASE(*it);
 	}
 
-	Collider *c1 =	nullptr;
-	Collider *c2 =	nullptr;
-	
-	for (list<Collider*>::iterator col1 = colliders.begin(); col1 != colliders.end(); col1++) {
-		if ((*col1)->type == COLLIDER_LOS) {
-			c1 = (*col1);
-
-			potential_collisions.clear();
-			quadTree->Retrieve(potential_collisions, c1);
-
-			for (list<Collider*>::iterator col2 = potential_collisions.begin(); col2 != potential_collisions.end(); col2++) {
-				c2 = (*col2);
-
-				if (c1->CheckCollision(c2) == true && matrix[c1->type][c2->type] && c1->callback && c1->entity->faction != c2->entity->faction)
-					c1->callback->OnCollision(*c1, *c2);
-			}
-		}
-	}
-
 	return true;
 }
 
@@ -265,7 +246,7 @@ Collider* Collision::FindCollider(iPoint worldPos, int radius, Collider* collide
 	iPoint MapPos = App->map->WorldToMap(worldPos.x, worldPos.y);
 	int quadtree_node = ((trunc((float)(MapPos.y / NODES_FOR_ROW)) * NODES_FOR_ROW) + (trunc((float)(MapPos.x / NODES_FOR_ROW))));
 
-	if (colliders.size() > 0 && (quadtree_node >= 0 && quadtree_node < 64)) {
+	if (colliders.size() > 0 && (quadtree_node >= 0 && quadtree_node < 99)) {
 		col = colliders.front();
 		for (list<Collider*>::iterator it = quadTree->nodes.at(quadtree_node).begin(); it != quadTree->nodes.at(quadtree_node).end(); it++) {
 			if ((*it)->type == COLLIDER_RANGE || (*it)->type == COLLIDER_LOS)

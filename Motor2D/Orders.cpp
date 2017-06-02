@@ -126,7 +126,7 @@ void UnitAttackOrder::Start(Unit* unit)
 			}
 		}
 		else if ((unit->los->CheckCollision(nearest_enemy->collider) && unit->faction == SAURON_ARMY) ||
-			nearest_enemy->isActive && unit->faction == FREE_MEN) {
+			(nearest_enemy->isActive && unit->faction == FREE_MEN)) {
 			unit->SubordinatedMovement(nearest_enemy->collider->pos);
 		}
 		else

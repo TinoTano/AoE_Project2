@@ -57,7 +57,6 @@ public:
 	Resource* ReLoadResource(int posX, int posY, resourceItem type, SDL_Rect rect); // This is used instead of CreateResource when loading the game again.
 
 	void DeleteEntity(Entity* entity);
-	void OnCollision(Collider& c1, Collider& c2);
 
 	void FillSelectedList();
 	void DrawSelectedList();

@@ -996,21 +996,6 @@ void EntityManager::DeleteEntity(Entity* entity)
 }
 
 
-void EntityManager::OnCollision(Collider& c1, Collider& c2)
-{
-
-	Unit* unit = nullptr;
-
-	if (c1.entity->faction == SAURON_ARMY) 
-		unit = (Unit*)c1.entity;
-	else
-		unit = (Unit*)c2.entity;
-
-	if(unit->order_list.empty() || unit->state != ATTACKING)
-		unit->order_list.push_front(new UnitAttackOrder());
-
-}
-
 void EntityManager::AddResources(Villager* villager) {
 
 	StoredResources* resources = nullptr;
@@ -1106,29 +1091,26 @@ Entity* EntityManager::FindTarget(Entity* entity) {
 
 	iPoint aux{ -1,-1 };
 	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
-		if((*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
+		if ((*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
 			ret = (*it);
 			aux = (*it)->entityPosition;
 		}
 	}
 
-	if (ret == nullptr) {
+	list<Building*>* enemy_buildings = nullptr;
 
-		list<Building*>* enemy_buildings = nullptr;
+	if (entity->faction == player->faction)
+		enemy_buildings = &AI_faction->buildings;
+	else
+		enemy_buildings = &player->buildings;
 
-		if (entity->faction == player->faction)
-			enemy_buildings = &AI_faction->buildings;
-		else
-			enemy_buildings = &player->buildings;
-
-		aux.create(-1, -1);
-		for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
-			if ((*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
-				ret = (*it);
-				aux = (*it)->collider->pos;
-			}
+	for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
+		if ((*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
+			ret = (*it);
+			aux = (*it)->collider->pos;
 		}
 	}
+
 
 	return ret;
 }
