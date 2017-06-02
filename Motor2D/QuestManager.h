@@ -72,8 +72,8 @@ public:
 
 	Event* createEvent(pugi::xml_node&);
 
-	bool TriggerReachCallback(buildingType t);
-	bool StepDestroyCallback(buildingType t);
+	bool TriggerCallback(buildingType t);
+	bool StepCallback(buildingType t);
 
 	list<Quest*> AllQuests;
 

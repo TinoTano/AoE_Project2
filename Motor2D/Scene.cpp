@@ -213,8 +213,8 @@ bool Scene::Start()
 	// Enable AI 
 	App->ai->enabled = true;
 	App->ai->selected_building = App->entityManager->AI_faction->Town_center;
-	App->entityManager->CreateBuilding(0, 500, ORC_BARRACKS);
-	App->entityManager->CreateBuilding(0, 4100, ORC_ARCHERY_RANGE);
+	App->fog->AddEntity(App->entityManager->CreateBuilding(0, 500, ORC_BARRACKS));
+	App->fog->AddEntity(App->entityManager->CreateBuilding(0, 4100, ORC_ARCHERY_RANGE));
 	App->collision->quadTree;
 
 
@@ -393,8 +393,6 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
-	questHUD.CleanUp();
-	ui_menu.CleanUp();
 	App->gui->DestroyALLUIElements();
 	elements.clear();
 	images.clear();
@@ -402,6 +400,8 @@ bool Scene::CleanUp()
 
 	App->ai->enabled = false;
 
+	questHUD.CleanUp();
+	ui_menu.CleanUp();
 	App->entityManager->CleanUp();
 	App->collision->CleanUp();
 	App->fog->CleanUp();

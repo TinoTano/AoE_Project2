@@ -83,7 +83,7 @@ Event* QuestManager::createEvent(pugi::xml_node &it)
 	else if (type == REACH_EVENT)
 	{
 		ReachEvent* ret = new ReachEvent(REACH_EVENT);
-		ret->building_type = (buildingType)it.child("destroy_building").attribute("id").as_uint();
+		ret->building_type = (buildingType)it.child("reach_building").attribute("id").as_uint();
 		return ret;
 	}
 
@@ -92,7 +92,7 @@ Event* QuestManager::createEvent(pugi::xml_node &it)
 
 // Kill Callbacks ===============================================================================
 
-bool QuestManager::TriggerReachCallback(buildingType t)
+bool QuestManager::TriggerCallback(buildingType t)
 {
 	// Iterates all quests
 	for (std::list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
@@ -104,10 +104,11 @@ bool QuestManager::TriggerReachCallback(buildingType t)
 			if ((*it)->trigger->type == REACH_EVENT)
 			{
 				ReachEvent* event = (ReachEvent*)(*it)->trigger;
-				if (event->type == t)
+				if (event->building_type == t)
 				{
 					LOG("Quest Triggered");
 					(*it)->state = 1;
+					App->gui->hud->AlertText("New side quest!", 5);
 					App->sceneManager->level1_scene->questHUD.AddActiveQuest((*it)->name, (*it)->description, (*it)->id);
 
 					return true;
@@ -118,7 +119,7 @@ bool QuestManager::TriggerReachCallback(buildingType t)
 	return false;
 }
 
-bool QuestManager::StepDestroyCallback(buildingType t)
+bool QuestManager::StepCallback(buildingType t)
 {
 	// Iterates all quests
 	for (std::list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
@@ -150,6 +151,18 @@ bool QuestManager::StepDestroyCallback(buildingType t)
 					}
 
 					return true;
+				}
+			}
+			if ((*it)->step->type == REACH_EVENT)
+			{
+				ReachEvent* event = ((ReachEvent*)(*it)->step);
+
+				if (event->building_type == t)
+				{
+					LOG("Quest completed");
+					App->gui->hud->AlertText("Quest completed", 5);
+					App->sceneManager->level1_scene->questHUD.RemoveQuest((*it)->id);
+					(*it)->state = 2;
 				}
 			}
 		}

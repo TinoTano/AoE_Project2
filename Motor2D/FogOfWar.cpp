@@ -295,7 +295,15 @@ void FogOfWar::ManageEntities()
 	{
 		if ((*it)->state != DESTROYED && (*it)->state < 7 && (*it)->state >= 0 && (*it)->collider != nullptr && (*it) != nullptr) {
 			if (IsVisible(App->map->WorldToMap((*it)->collider->pos.x, (*it)->collider->pos.y), (*it)->faction))
+			{
 				(*it)->isActive = true;
+				if ((*it)->collider->type == COLLIDER_BUILDING)
+				{
+					Building* aux = (Building*)(*it);
+					if (!App->quest->TriggerCallback(aux->type))
+						App->quest->StepCallback(aux->type);
+				}
+			}
 			else
 				(*it)->isActive = false;
 		}
