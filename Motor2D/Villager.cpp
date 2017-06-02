@@ -12,4 +12,6 @@ Villager::Villager(int posx, int posy, Villager* unit) : Unit(posx, posy, (Unit*
 	choppingAnimations = unit->choppingAnimations;
 
 	IsVillager = true;
+
+	entityType = ENTITY_UNIT;
 }

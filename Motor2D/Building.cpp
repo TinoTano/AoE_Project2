@@ -54,6 +54,8 @@ Building::Building(int posX, int posY, Building* building)
 		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y }, imageWidth, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 
 	attack_timer.Start();
+
+	entityType = ENTITY_BUILDING;
 }
 
 Building::~Building()

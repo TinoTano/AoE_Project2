@@ -69,6 +69,8 @@ Unit::Unit(int posX, int posY, Unit* unit)
 		range = App->collision->AddCollider({ entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y }, collider->r, COLLIDER_RANGE, App->entityManager, (Entity*)this);
 	
 	next_pos = destinationTileWorld = entityPosition;
+
+	entityType = ENTITY_UNIT;
 }
 
 Unit::~Unit()

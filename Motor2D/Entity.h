@@ -33,6 +33,10 @@ struct Cost {
 class Entity
 {
 public:
+
+	enum EntityType {
+		ENTITY_NONE, ENTITY_UNIT, ENTITY_BUILDING, ENTITY_RESOURCE
+	};
 	Entity();
 	~Entity();
 	iPoint GetPosition() const;
@@ -66,6 +70,8 @@ public:
 	Timer lifebar_timer;
 
 	iPoint selectionAreaCenterPoint = { 0,0 };
+
+	EntityType entityType = ENTITY_NONE;
 
 };
 

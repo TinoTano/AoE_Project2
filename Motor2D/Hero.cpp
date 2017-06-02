@@ -28,6 +28,7 @@ Hero::Hero(int posx, int posy, Hero* unit) : Unit(posx, posy, (Unit*)unit) {
 		break;
 	}
 
+	entityType = ENTITY_UNIT;
 }
 
 Hero::~Hero() 
