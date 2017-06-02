@@ -19,8 +19,20 @@ bool AI::Update(float dt) {
 	if (enabled) {
 		bool completed = false;
 
-		if (state == EXPANDING)
-			completed = (selected_building->Life >= selected_building->MaxLife);
+		if (state == EXPANDING) {
+			if (AI_timer.ReadSec() >= 2) {
+				selected_building->Life += 100;
+				AI_timer.Start();
+			}
+
+			if (selected_building->Life >= selected_building->MaxLife) {
+				selected_building->Life = selected_building->MaxLife;
+				selected_building->entityTexture = App->entityManager->buildingsDB[selected_building->type]->entityTexture;
+				selected_building->GetBuildingBoundaries();
+				selected_building->state = IDLE;
+				completed = true;
+			}
+		}
 		else                                                                           //state OFFENSIVE or DEFENSIVE
 			completed = (selected_building->units_in_queue.empty());
 
