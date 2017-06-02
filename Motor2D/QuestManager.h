@@ -9,30 +9,35 @@
 #include "Building.h"
 
 class Collider;
-enum EVENT_TYPE
-{
-	//Define event types
-	DESTROY_EVENT = 0
-};
+
+enum rewardType { NOTHING, INCREASE_GOLD, CREATE_HERO };
+enum eventType { DESTROY_EVENT, REACH_EVENT };
 
 class Event
 {
 public:
-	Event(EVENT_TYPE type) : type(type) {};
+	Event(eventType type) : type(type) {};
 	~Event() {};
 
-	EVENT_TYPE type;
+	eventType type;
 };
 
-class DestroyEvent : public Event // Right now it only works for enemy units
+class ReachEvent : public Event
 {
 public:
-	DestroyEvent(EVENT_TYPE type) :Event(type) {};
+	ReachEvent(eventType type) :Event(type) {};
+	~ReachEvent() {};
 
+	buildingType building_type;
+};
+
+class DestroyEvent : public Event 
+{
+public:
+	DestroyEvent(eventType type) : Event(type) {};
 	~DestroyEvent() {};
 
 	buildingType building_type;
-	uint buildings_to_kill;
 };
 
 class Quest
@@ -44,11 +49,11 @@ public:
 public:
 	string name;
 	string description;
-	int reward;
+	rewardType reward;
 	int id;
 	uint state;
 	Event* trigger = nullptr;
-	vector <Event*> steps;
+	Event* step = nullptr;
 };
 
 class QuestManager : public Module
@@ -62,18 +67,18 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	//bool Load(pugi::xml_node&);
-	//bool Save(pugi::xml_node&) const;
+	/*bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;*/
 
 	Event* createEvent(pugi::xml_node&);
 
-	/*bool TriggerKillCallback(unitType t);*/
-	bool StepKillCallback(buildingType t);
+	bool TriggerReachCallback(buildingType t);
+	bool StepDestroyCallback(buildingType t);
+
+	list<Quest*> AllQuests;
 
 private:
 	string path;
-
-	list<Quest*> AllQuests;
 };
 
 #endif
