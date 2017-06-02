@@ -72,6 +72,13 @@ bool Minimap::Update(float dt)
 			movement.second = App->render->camera.y - cameraOldPos.y;
 
 			App->gui->ScreenMoves(movement);
+
+			uint x, y;
+
+			App->win->GetWindowSize(x, y);
+
+			offsetX = ((x * minimapRatio) / 2);
+			offsetY = ((y * minimapRatio) / 2);
 		}
 	}
 
@@ -149,8 +156,8 @@ void Minimap::DrawCamera()
 	SDL_Rect rect;
 
 	App->win->GetWindowSize(x, y);
-	rect.x = minimapPos.x - App->render->camera.x - (App->render->camera.x * minimapRatio);
-	rect.y = minimapPos.y - App->render->camera.y - (App->render->camera.y * minimapRatio);
+	rect.x = minimapPos.x - App->render->camera.x - (App->render->camera.x * minimapRatio) - offsetX;
+	rect.y = minimapPos.y - App->render->camera.y - (App->render->camera.y * minimapRatio) - offsetY;
 	rect.w = x * minimapRatio;
 	rect.h = y * minimapRatio;
 

@@ -43,6 +43,9 @@ private:
 
 	double minimapRatio;
 
+	int offsetX = 0;
+	int offsetY = 0;
+
 
 };
 
