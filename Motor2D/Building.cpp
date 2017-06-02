@@ -10,6 +10,7 @@
 #include "Orders.h"
 #include "math.h"
 #include "AI.h"
+#include "SceneManager.h"
 #include "Audio.h"
 
 
@@ -56,6 +57,9 @@ Building::Building(int posX, int posY, Building* building)
 	attack_timer.Start();
 
 	entityType = ENTITY_BUILDING;
+
+	if (type == MILL)
+		mill_food.Start();
 }
 
 Building::~Building()
@@ -71,6 +75,15 @@ bool Building::Update(float dt)
 
 	if (state != DESTROYED && state != BEING_BUILT) {
 
+		if (type == MILL)
+			{
+			if (mill_food.ReadSec() >= 3)
+			{
+				App->entityManager->player->resources.food += 5;
+				App->sceneManager->level1_scene->UpdateResources();
+				mill_food.Start();
+			}
+		}
 		if (!units_in_queue.empty()) {
 			
 			if (App->entityManager->unitsDB[units_in_queue.front()]->faction == FREE_MEN)

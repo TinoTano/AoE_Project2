@@ -40,6 +40,7 @@ public:
 	iPoint techpos;
 
 private:
+	Timer mill_food;
 
 public:
 	//STATS:
