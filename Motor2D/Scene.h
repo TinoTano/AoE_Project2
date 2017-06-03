@@ -54,7 +54,6 @@ private:
 
 	// UI ELEMENTS
 	WindowUI ui_menu, surrender_menu;
-	Label* back_to_menu_lbl = nullptr, *quit_game_lbl = nullptr, *save_game_lbl = nullptr, *cancel_lbl = nullptr;
 
 	vector<Info> elements;
 	vector<Image*> images;

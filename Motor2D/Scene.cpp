@@ -162,13 +162,13 @@ bool Scene::Start()
 	ui_menu.in_window.push_back(buttons[BACKTOMENU]);
 	ui_menu.in_window.push_back(buttons[QUITGAME]);
 	ui_menu.in_window.push_back(buttons[SAVEGAME]);
-	ui_menu.in_window.push_back(buttons[CANCEL]);
 	ui_menu.in_window.push_back(buttons[LOADGAME]);
+	ui_menu.in_window.push_back(buttons[CANCEL]);
 	ui_menu.in_window.push_back(back_to_menu_lbl);
 	ui_menu.in_window.push_back(quit_game_lbl);
 	ui_menu.in_window.push_back(save_game_lbl);
-	ui_menu.in_window.push_back(cancel_lbl);
 	ui_menu.in_window.push_back(load_game_lbl);
+	ui_menu.in_window.push_back(cancel_lbl);
 
 	ui_menu.WindowOff();
 	ui_menu.SetFocus(images[3]->pos.first, images[3]->pos.second, 280, 280);
@@ -227,15 +227,15 @@ bool Scene::Start()
 	App->entityManager->player->resources.gold += 100;
 	App->entityManager->player->resources.wood += 100;
 
-UpdateResources();
+	UpdateResources();
 
-villagers_curr = villagers_max = 1;
-UpdateVillagers(villagers_curr, villagers_max);
+	villagers_curr = villagers_max = 1;
+	UpdateVillagers(villagers_curr, villagers_max);
 
-App->quest->Start();
-questHUD.Start();
+	App->quest->Start();
+	questHUD.Start();
 
-return true;
+	return true;
 }
 
 // Called each loop iteration
@@ -307,23 +307,6 @@ bool Scene::Update(float dt)
 			App->gui->Unfocus();
 		}
 	}
-	if (surrender_menu.IsEnabled()) {
-		App->gui->Focus(surrender_menu.FocusArea());
-
-		if (buttons[YES]->current == CLICKUP)
-		{
-			CleanUp();
-			App->cutscene->Start();
-			App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
-
-		}
-		if (buttons[NO]->current == CLICKUP)
-		{
-			surrender_menu.WindowOff();
-			App->gui->Unfocus();
-		}
-	}
-
 	if (buttons[MENU]->current == CLICKUP)
 	{
 		ui_menu.WindowOn();
@@ -364,9 +347,21 @@ bool Scene::Update(float dt)
 
 	App->minimap->GetClickableArea(images[MINIMAP]->pos);
 
-	// ---------------------------------------
+	if (surrender_menu.IsEnabled()) {
+		App->gui->Focus(surrender_menu.FocusArea());
 
-	//UpdateTime(timer.ReadSec());
+		if (buttons[YES]->current == CLICKUP)
+		{
+			App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
+			/*App->cutscene->Start();
+			App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);*/
+		}
+		if (buttons[NO]->current == CLICKUP)
+		{
+			surrender_menu.WindowOff();
+			App->gui->Unfocus();
+		}
+	}
 
 	return true;
 }
@@ -393,15 +388,18 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
+	questHUD.CleanUp();
+	ui_menu.CleanUp();
+	surrender_menu.CleanUp();
+
 	App->gui->DestroyALLUIElements();
+
 	elements.clear();
 	images.clear();
 	buttons.clear();
 
 	App->ai->enabled = false;
 
-	questHUD.CleanUp();
-	ui_menu.CleanUp();
 	App->entityManager->CleanUp();
 	App->collision->CleanUp();
 	App->fog->CleanUp();

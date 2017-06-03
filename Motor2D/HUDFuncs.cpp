@@ -488,6 +488,7 @@ void HUD::ClearMultiple()
 			App->gui->DestroyUIElement(it._Ptr->_Myval);
 		}
 	}
+	multiple.clear();
 }
 
 void HUD::ClearBuilding() {

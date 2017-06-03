@@ -3,9 +3,9 @@
 
 
 class QuestsShown {
-	public:
-	Label* name_lbl, *desc_lbl;
-		string name, desc;
+public:
+	Label* name_lbl = nullptr, *desc_lbl = nullptr;
+	string name, desc;
 	int id;
 public:
 	void AddQuest(string argname, string argdesc, int argid);

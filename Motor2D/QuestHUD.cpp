@@ -66,12 +66,16 @@ void QuestHUD::CleanUp()
 	App->gui->DestroyUIElement(no_quest_lbl);
 	no_quest_lbl = nullptr;
 
-	if (vec_quest.size() > 0) {
+	if (vec_quest.size() > 0) 
+	{
 		int h = vec_quest.front()->id;
-		for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it) {
+
+		for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it) 
+		{
 			RemoveQuest(h);
 			++h;
 		}
+		vec_quest.clear();
 	}
 }
 
@@ -87,13 +91,14 @@ void QuestHUD::AddActiveQuest(string argname, string argdesc, int id)
 void QuestHUD::RemoveQuest(int argid)
 {
 	QuestsShown* c;
+
 	for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it){
 		if (argid == it._Ptr->_Myval->id) {
+
 			c = it._Ptr->_Myval;
 			it._Ptr->_Myval->CleanUpQuest();
 		}
 	}
-	vec_quest.remove(c);
 }
 
 void QuestsShown::AddQuest(string argname, string argdesc, int argid) {
