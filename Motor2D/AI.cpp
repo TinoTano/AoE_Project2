@@ -16,6 +16,34 @@ bool AI::Awake(pugi::xml_node& gameData) {
 	return true;
 }
 
+bool AI::Start() {
+
+	pugi::xml_document gameDataFile;
+	pugi::xml_node gameData;
+	gameData = App->LoadGameDataFile(gameDataFile);
+
+	LoadAI_Data(gameData);
+
+	return true;
+}
+
+void AI::LoadAI_Data(pugi::xml_node& gameData) {
+
+	pugi::xml_node AvailableUnit;
+
+	if (gameData.empty() == false)
+	{
+		for (AvailableUnit = gameData.child("AI").child("AvailableUnit"); AvailableUnit; AvailableUnit = AvailableUnit.next_sibling("AvailableUnit")) {
+
+			buildingType building = (buildingType)AvailableUnit.attribute("building").as_int();
+			unitType unit = (unitType)AvailableUnit.attribute("unit").as_int();
+			available_unit.insert(pair<buildingType, unitType>(building, unit));
+		}
+	}
+}
+
+
+
 bool AI::Update(float dt) {
 
 	if (enabled) {
@@ -53,9 +81,8 @@ bool AI::Update(float dt) {
 
 void AI::QueueUnits() {
 
-	//unitType type = rand() % selected_building->available_units.size();
 	for (int i = 0; i < 1; i++)
-		selected_building->units_in_queue.push_back(GOBLIN_SOLDIER);
+		selected_building->units_in_queue.push_back(available_unit[selected_building->type]);
 	
 }
 

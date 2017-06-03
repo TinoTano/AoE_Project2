@@ -33,7 +33,7 @@ public:
 	bool Awake(pugi::xml_node&);
 
 	// Call before first frame
-	bool Start() { return true; };
+	bool Start();
 
 	// Called before all Updates
 	bool PreUpdate() { return true; };
@@ -49,12 +49,13 @@ public:
 
 	bool Load(pugi::xml_node&);
 	bool Save(pugi::xml_node&) const;
+	void LoadAI_Data(pugi::xml_node& gameData);
 
 	void QueueUnits();
-	void SelectBuilding(AI_state ai_state);
 	void ChangeState();
 	void LaunchAttack();
 	void CheckCollisions();
+	void SelectBuilding(AI_state ai_state);
 
 
 public:
@@ -70,6 +71,7 @@ public:
 	Building* forced_building = nullptr;
 	list<Unit*> last_attack_squad;
 	list<Collider*> potential_collisions;
+	map<int, unitType> available_unit;
 };
 
 #endif
