@@ -331,14 +331,15 @@ void HUD::Update() {
 									case VILLAGERMENU:
 										if (hero_state != HEROMENU)
 										{
-											HUDHeroMenu();
+											HUDHeroMenu(hero->skill->type);
+											skill_bt_support->enabled = false;
 										}
 										else {
 											if (hero->skill->ready) {
-												skill_bt->enabled = true;
+												skill_bt_support->enabled = true;
 											}
-											else skill_bt->enabled = false;
-											if (skill_bt->current == CLICKUP)
+											else skill_bt_support->enabled = false;
+											if (skill_bt_support->current == CLICKUP)
 											{
 												hero->skill->Activate(hero);
 											}
@@ -560,6 +561,7 @@ void HUD::Update() {
 	bool free_unit = true;
 	bool free_building = true;
 	bool free_tech = true;
+	bool free_skill = true;
 
 	for (uint i = 0; i < App->gui->unit_bt.size(); ++i) {
 		if (App->gui->unit_bt[i].button != nullptr) {
@@ -590,8 +592,16 @@ void HUD::Update() {
 		}
 	}
 
+	for (uint i = 0; i < App->gui->skill_bt.size(); ++i) {
+		if (App->gui->skill_bt[i].button != nullptr) {
+			if (App->gui->skill_bt[i].button->current == HOVER) {
+				BlitInfoSkill(App->gui->skill_bt[i]);
+				free_skill = false;
+			}
+		}
+	}
 
-	if (free_unit == true && free_building == true && free_tech == true) {
+	if (free_unit == true && free_building == true && free_tech == true && free_skill == true) {
 		App->gui->DestroyUIElement(info_lbl);
 		info_lbl = nullptr;
 		App->gui->DestroyUIElement(desc_lbl);
@@ -806,7 +816,35 @@ bool Gui::LoadHUDData()
 
 			sauron_tech_bt.push_back(bt);
 		}
+		for (pugi::xml_node Node = HUDData.child("Skills").child("Skill"); Node; Node = Node.next_sibling("Skill"))
+		{
+			skill_button bt;
+			string name(Node.child("Name").attribute("value").as_string());
+			bt.name = name;
+			string desc(Node.child("Description").attribute("value").as_string());
+			bt.desc = desc;
 
+			string cooldown(Node.child("Cooldown").attribute("value").as_string());
+			bt.cooldown = cooldown;
+
+			string changes(Node.child("Changes").attribute("value").as_string());
+			bt.changes = changes;
+
+			int id = Node.child("ID").attribute("value").as_int();
+			bt.type = (Skill_type)id;
+
+			proportions.x = Node.child("Position").attribute("x").as_int();
+			proportions.y = Node.child("Position").attribute("y").as_int();
+			proportions.w = 39;
+			proportions.h = 40;
+
+			bt.blit_sections.push_back(proportions);
+			proportions.x += proportions.w;
+			bt.blit_sections.push_back(proportions);
+			bt.button = nullptr;
+
+			skill_bt.push_back(bt);
+		}
 	}
 	return ret;
 }

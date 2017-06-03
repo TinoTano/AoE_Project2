@@ -6,6 +6,7 @@
 #include <list>
 #include <string>
 #include <vector>
+#include "Hero.h"
 #include "TechTree.h"
 #include "EntityManager.h"
 
@@ -54,6 +55,7 @@ enum ScrollBarModel {
 
 class UnitSprite;
 class Info;
+class skill_button;
 class UIElement {
 public:
 	UIElement(bool argenabled, int argx, int argy, ElementType argtype, SDL_Texture* argtexture);
@@ -349,9 +351,10 @@ private:
 		HEROMENU
 	};
 	HUDHeroState hero_state;
+	Button* skill_bt_support = nullptr;
+
 	// ------- MENU ----------
-	Button* skill_bt = nullptr;
-	void HUDHeroMenu();
+	void HUDHeroMenu(Skill_type skill);
 	void HUDClearHeroMenu();
 	// ------ CREATE BUILDINGS -------
 	void HUDCreateBuildings();
@@ -386,6 +389,7 @@ private:
 	void BlitInfoUnit(unit_button bt);
 	void BlitInfoBuilding(building_button bt);
 	void BlitInfoTech(tech_button bt);
+	void BlitInfoSkill(skill_button bt);
 	Label* info_lbl = nullptr, *desc_lbl = nullptr, *cost_lbl = nullptr;
 
 public:
@@ -462,6 +466,7 @@ public:
 	vector<unit_button> unit_bt;
 	vector<tech_button> tech_bt;
 	vector<tech_button> sauron_tech_bt;
+	vector<skill_button> skill_bt;
 
 	// ----- UNIT CLASS ----- //
 	// -------------------- //
@@ -542,4 +547,15 @@ struct tech_button {
 	vector<SDL_Rect> blit_sections;
 	TechType type;
 };
+
+struct skill_button {
+	Button* button = nullptr;
+	string name;
+	string desc;
+	string cooldown;
+	string changes;
+	vector<SDL_Rect> blit_sections;
+	Skill_type type;
+};
+
 #endif // __j1GUI_H__

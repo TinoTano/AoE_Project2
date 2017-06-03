@@ -40,28 +40,29 @@ void HUD::HUDClearVillagerMenu()
 	blit_sections.clear();
 }
 
-void HUD::HUDHeroMenu()
+void HUD::HUDHeroMenu(Skill_type skill)
 {
 	switch (hero_state) {
 	}
 	hero_state = HEROMENU;
 
-	vector<SDL_Rect> blit_sections;
 
-	blit_sections.push_back({ 210, 64, 39, 40 });
-	blit_sections.push_back({ 249, 64, 39, 40 });
-
-	skill_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-
-	all_bt.push_back(skill_bt);
-
-	blit_sections.clear();
+	for (uint i = 0; i < App->gui->skill_bt.size(); ++i)
+	{
+		if (App->gui->skill_bt[i].type == skill)
+		{
+			skill_bt_support = App->gui->skill_bt[i].button = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, App->gui->skill_bt[i].blit_sections, buttons_positions, TIER2);
+		}
+	}
 }
 
 void HUD::HUDClearHeroMenu()
 {
-	App->gui->DestroyUIElement(skill_bt);
-	blit_sections.clear();
+	for (uint i = 0; i < App->gui->skill_bt.size(); ++i) {
+		App->gui->DestroyUIElement(App->gui->skill_bt[i].button);
+		App->gui->skill_bt[i].button = nullptr;
+	}
+	skill_bt_support = nullptr;
 }
 
 void HUD::HUDCreateBuildings()
@@ -179,9 +180,9 @@ void HUD::HUDBuildingMenu()
 			if (available_techs[i] == App->gui->tech_bt[i2].type)
 			{
 				if (App->gui->tech_bt[i2].button == nullptr) {
-				App->gui->tech_bt[i2].button = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, App->gui->tech_bt[i2].blit_sections, buttons_positions, TIER2);
-				all_bt.push_back(App->gui->tech_bt[i2].button);
-				tech_place++;
+					App->gui->tech_bt[i2].button = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[tech_place].x - CAMERA_OFFSET_X, buttons_positions[tech_place].y - CAMERA_OFFSET_Y, App->gui->tech_bt[i2].blit_sections, buttons_positions, TIER2);
+					all_bt.push_back(App->gui->tech_bt[i2].button);
+					tech_place++;
 				}
 			}
 		}
@@ -217,7 +218,7 @@ void HUD::HUDCreateHero()
 	vector<SDL_Rect> blit_sections;
 
 	App->gui->unit_bt[LEGOLAS].button = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[0].x - CAMERA_OFFSET_X, buttons_positions[0].y - CAMERA_OFFSET_Y, App->gui->unit_bt[LEGOLAS].blit_sections, buttons_positions, TIER2);
-	
+
 	App->gui->unit_bt[GANDALF].button = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, App->gui->unit_bt[GANDALF].blit_sections, buttons_positions, TIER2);
 
 	App->gui->unit_bt[BALROG].button = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[2].x - CAMERA_OFFSET_X, buttons_positions[2].y - CAMERA_OFFSET_Y, App->gui->unit_bt[BALROG].blit_sections, buttons_positions, TIER2);
@@ -330,7 +331,7 @@ void HUD::BlitInfoUnit(unit_button bt)
 	App->render->ui_toDraw.push_back(quad);
 	if (info_lbl == nullptr) {
 		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, App->font->fonts[TWENTY]);
-		info_lbl->SetColor({255, 255, 255, 255});
+		info_lbl->SetColor({ 255, 255, 255, 255 });
 		desc_lbl = (Label*)App->gui->CreateLabel(bt.desc, quad.rect.x, quad.rect.y + 22, nullptr);
 		desc_lbl->SetColor({ 255, 255, 255, 255 });
 
@@ -344,7 +345,7 @@ void HUD::BlitInfoTech(tech_button bt)
 	Sprite quad;
 	quad.rect.x = x - x - App->render->camera.x;
 	quad.rect.y = y / 2 + (y / 8) + y / 50 - App->render->camera.y;
-	quad.rect.w = 400;
+	quad.rect.w = 600;
 	quad.rect.h = 80;
 	quad.a = 180;
 	App->render->ui_toDraw.push_back(quad);
@@ -359,6 +360,24 @@ void HUD::BlitInfoTech(tech_button bt)
 
 }
 
+void HUD::BlitInfoSkill(skill_button bt)
+{
+	Sprite quad;
+	quad.rect.x = x - x - App->render->camera.x;
+	quad.rect.y = y / 2 + (y / 8) + y / 50 - App->render->camera.y;
+	quad.rect.w = 400;
+	quad.rect.h = 80;
+	quad.a = 180;
+	App->render->ui_toDraw.push_back(quad);
+	if (info_lbl == nullptr) {
+		info_lbl = (Label*)App->gui->CreateLabel(bt.name, quad.rect.x, quad.rect.y, App->font->fonts[TWENTY]);
+		info_lbl->SetColor({ 255, 255, 255, 255 });
+		desc_lbl = (Label*)App->gui->CreateLabel(bt.desc, quad.rect.x, quad.rect.y + 22, nullptr);
+		desc_lbl->SetColor({ 255, 255, 255, 255 });
+		cost_lbl = (Label*)App->gui->CreateLabel(bt.changes + " Cooldown: " + bt.cooldown + "s", quad.rect.x, quad.rect.y + 45, nullptr);
+		cost_lbl->SetColor({ 255, 255, 255, 255 });
+	}
+}
 
 void HUD::StartResourceInfo()
 {
@@ -451,7 +470,8 @@ void HUD::GetSelection() {
 			HUDVillagerMenu();
 		}
 		else if (unit->IsHero) {
-			HUDHeroMenu();
+			Hero* hero = (Hero*)unit;
+			HUDHeroMenu(hero->skill->type);
 		}
 		break;
 	case MULTIPLESELECTION:
