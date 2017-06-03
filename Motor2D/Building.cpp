@@ -43,7 +43,13 @@ Building::Building(int posX, int posY, Building* building)
 	}
 	else {
 		Life = 1;
-		state = BEING_BUILT;
+		if (faction == FREE_MEN)
+			state = BEING_BUILT;
+		else {
+			state = DESTROYED;
+			creation_timer.Start();
+		}
+		
 		entityTexture = App->entityManager->constructingPhase1;
 	}
 
@@ -174,24 +180,31 @@ bool Building::Draw()
 
 void Building::Destroy() {
 
-	if (faction == App->entityManager->player->faction) 
-		App->entityManager->player->buildings.remove(this);
-	else 
-		App->entityManager->AI_faction->buildings.remove(this);
+	if (faction == SAURON_ARMY){
+		Life = -1;
+		creation_timer.Start();
+	}
+	else {
+		if (faction == App->entityManager->player->faction)
+			App->entityManager->player->buildings.remove(this);
+		else
+			App->entityManager->AI_faction->buildings.remove(this);
 
-	App->collision->DeleteCollider(collider);
+		App->collision->DeleteCollider(collider);
 
-	if(canAttack)
-		App->collision->DeleteCollider(range);
+		if (canAttack)
+			App->collision->DeleteCollider(range);
 
-	if (App->render->CullingCam(this->entityPosition))
-	{
-		App->audio->PlayFx(rand() % ((BUILDING_DEATH_4 - BUILDING_DEATH_1) + 1) - BUILDING_DEATH_1 - 1);
+		if (App->render->CullingCam(this->entityPosition))
+		{
+			App->audio->PlayFx(rand() % ((BUILDING_DEATH_4 - BUILDING_DEATH_1) + 1) - BUILDING_DEATH_1 - 1);
+		}
+
+
+		App->entityManager->DeleteEntity(this);
 	}
 
 	state = DESTROYED;
-
-	App->entityManager->DeleteEntity(this);
 
 }
 

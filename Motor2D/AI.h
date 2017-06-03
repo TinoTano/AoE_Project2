@@ -62,10 +62,12 @@ public:
 
 	// general utilities
 	Timer AI_timer;
+	Timer build_timer;
 	GameFaction* Enemies = nullptr;
 	AI_state state = EXPANDING;
 	AI_state forced_state = NULL_STATE;
 	bool enabled = false;
+	bool completed = true;
 
 	Building* selected_building = nullptr;
 	Building* forced_building = nullptr;

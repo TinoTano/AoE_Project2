@@ -23,6 +23,7 @@ bool AI::Start() {
 	gameData = App->LoadGameDataFile(gameDataFile);
 
 	LoadAI_Data(gameData);
+	AI_timer.Start();
 
 	return true;
 }
@@ -49,31 +50,38 @@ bool AI::Update(float dt) {
 	if (enabled) {
 
 		CheckCollisions();
-		bool completed = false;
 
-		if (state == EXPANDING) {
-			if (AI_timer.ReadSec() >= 2) {
-				selected_building->Life += 100;
-				AI_timer.Start();
-			}
+		if (!completed) {
 
-			if (selected_building->Life >= selected_building->MaxLife) {
-				selected_building->Life = selected_building->MaxLife;
-				selected_building->entityTexture = App->entityManager->buildingsDB[selected_building->type]->entityTexture;
-				selected_building->GetBuildingBoundaries();
-				selected_building->state = IDLE;
-				completed = true;
+			if (state == EXPANDING) {
+
+				if (selected_building->type == SAURON_TOWER)
+					return (completed = true);
+
+				if ((selected_building->Life >= selected_building->MaxLife)) {
+					selected_building->Life = selected_building->MaxLife;
+					selected_building->entityTexture = App->entityManager->buildingsDB[selected_building->type]->entityTexture;
+					selected_building->GetBuildingBoundaries();
+					selected_building->state = IDLE;
+					completed = true;
+				}
+				else if (build_timer.ReadSec() >= 2) {
+					selected_building->Life += 100;
+					build_timer.Start();
+				}
 			}
+			else                                                                           //state OFFENSIVE or DEFENSIVE
+				completed = (selected_building->units_in_queue.empty());
 		}
-		else                                                                           //state OFFENSIVE or DEFENSIVE
-			completed = (selected_building->units_in_queue.empty());
 
-		if (completed) {
+		if (completed && AI_timer.ReadSec() > 20) {
 
 			ChangeState();
 
 			if (state == OFFENSIVE && !last_attack_squad.empty())
 				LaunchAttack();
+
+			completed = false;
 		}
 	}
 	return true;
@@ -81,7 +89,7 @@ bool AI::Update(float dt) {
 
 void AI::QueueUnits() {
 
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 3; i++)
 		selected_building->units_in_queue.push_back(available_unit[selected_building->type]);
 	
 }
@@ -91,7 +99,7 @@ void AI::SelectBuilding(AI_state ai_state) {
 	vector<Building*> buildings;
 
 	for (list<Building*>::iterator it = Enemies->buildings.begin(); it != Enemies->buildings.end(); it++) {
-		if (((*it)->state == BEING_BUILT && ai_state == EXPANDING) || ((*it)->state != BEING_BUILT && ai_state != EXPANDING))
+		if (((*it)->state == DESTROYED && ai_state == EXPANDING && (*it)->creation_timer.ReadSec() > 20) || ((*it)->state != DESTROYED && ai_state != EXPANDING))
 			buildings.push_back(*it);
 	}
 
@@ -118,6 +126,8 @@ void AI::ChangeState() {
 
 	if (state == OFFENSIVE || state == DEFENSIVE)
 		QueueUnits();	
+
+	AI_timer.Start();
 }
 
 void AI::LaunchAttack() {
