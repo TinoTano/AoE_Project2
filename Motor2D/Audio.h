@@ -71,6 +71,9 @@ enum FX {
 
 	FEMALE_DEATH_6,
 
+	VICTORY, 
+	DEFEAT
+
 };
 
 class Audio : public Module

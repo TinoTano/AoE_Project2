@@ -91,7 +91,7 @@ void AI::QueueUnits() {
 
 	for (int i = 0; i < 3; i++)
 		selected_building->units_in_queue.push_back(available_unit[selected_building->type]);
-	
+
 }
 
 void AI::SelectBuilding(AI_state ai_state) {
@@ -125,9 +125,13 @@ void AI::ChangeState() {
 	}
 
 	if (state == OFFENSIVE || state == DEFENSIVE)
+<<<<<<< HEAD
 		QueueUnits();	
 
 	AI_timer.Start();
+=======
+		QueueUnits();
+>>>>>>> origin/master
 }
 
 void AI::LaunchAttack() {
@@ -141,13 +145,81 @@ void AI::LaunchAttack() {
 }
 
 
-bool AI::Load(pugi::xml_node &)
+bool AI::Load(pugi::xml_node & data)
 {
+
+	state = (AI_state)data.child("State").attribute("value").as_int();
+	forced_state = (AI_state)data.child("ForcedState").attribute("value").as_int();
+	enabled = data.child("Enabled").attribute("value").as_bool();
+	Enemies = App->entityManager->AI_faction;
+
+	for (list<Entity*>::iterator it = App->entityManager->WorldEntityList.begin(); it != App->entityManager->WorldEntityList.end(); ++it)
+	{
+		if (data.child("SelectedBuilding").attribute("value").as_int() == (*it)->entityID)
+		{
+			selected_building = (Building*)(*it);
+		}
+		if (data.child("ForcedBuilding").attribute("value").as_int() == (*it)->entityID)
+		{
+			forced_building = (Building*)(*it);
+		}
+	}
+
+	last_attack_squad.clear();
+	for (pugi::xml_attribute lastsquad = data.child("LastAttacks").attribute("Squad"); lastsquad; lastsquad = lastsquad.next_attribute())
+	 {
+		 for (list<Entity*>::iterator it = App->entityManager->WorldEntityList.begin(); it != App->entityManager->WorldEntityList.end(); ++it)
+		 {
+			 if (lastsquad.as_int() == (*it)->entityID)
+			 {
+				 Unit* unit = (Unit*)(*it);
+				 last_attack_squad.push_back(unit);
+			 }
+		 }
+	}
+
+	potential_collisions.clear();
+
+	available_unit.clear();
+
+	for (pugi::xml_node it = data.child("AvailableUnits").child("AvailableUnit"); it; it = it.next_sibling("AvailableUnit"))
+	{
+		map<int, unitType> load;
+		int number = it.attribute("Num").as_int();
+		unitType type = (unitType)it.attribute("Unit").as_int();
+		load.emplace(number, type); 
+	}
+
 	return true;
 }
 
 bool AI::Save(pugi::xml_node & data) const
 {
+
+	data.append_child("State").append_attribute("value") = (int)state;
+	data.append_child("ForcedState").append_attribute("value") = (int)forced_state;
+	data.append_child("Enabled").append_attribute("value") = enabled;
+	if (selected_building != nullptr)
+	data.append_child("SelectedBuilding").append_attribute("value") = selected_building->entityID;
+	if (forced_building != nullptr)
+	data.append_child("ForcedBuilding").append_attribute("value") = forced_building->entityID;
+
+	pugi::xml_node lastsquad = data.append_child("LastAttacks");
+
+		for (list<Unit*>::const_iterator it = last_attack_squad.begin(); it != last_attack_squad.end(); ++it )
+	{
+		lastsquad.append_attribute("Squad") = (*it)->entityID;
+	}
+
+		pugi::xml_node availableunits = data.append_child("AvailableUnits");
+
+		for (map<int, unitType>::const_iterator it = available_unit.begin(); it != available_unit.end(); ++it)
+		{
+			pugi::xml_node unit = availableunits.append_child("AvailableUnit");
+			unit.append_attribute("Num") = (*it).first;
+			unit.append_attribute("Unit") = (*it).second;
+		}
+
 	return true;
 }
 

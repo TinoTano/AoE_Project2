@@ -115,6 +115,9 @@ bool Audio::Awake(pugi::xml_node& config)
 
 	App->audio->LoadFx("audio/fx/femaledeath6.wav");
 
+	App->audio->LoadFx("audio/fx/victory.wav");
+	App->audio->LoadFx("audio/fx/defeat.wav");
+
 	return ret;
 }
 

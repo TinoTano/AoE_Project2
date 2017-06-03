@@ -337,6 +337,7 @@ bool EntityManager::Load(pugi::xml_node & data)
 
 		unitTemplate->currentDirection = (unitDirection)unitNode.child("Direction").attribute("value").as_int();
 		unitTemplate->Life = unitNode.child("Life").attribute("value").as_int();
+		unitTemplate->entityID = unitNode.child("ID").attribute("value").as_int();
 
 		for (pugi::xml_node order = unitNode.child("Order"); order; order = order.next_sibling("Order"))
 		{
@@ -360,6 +361,7 @@ bool EntityManager::Load(pugi::xml_node & data)
 
 			buildingTemplate->Life = buildingNode.child("Life").attribute("value").as_int();
 			buildingTemplate->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+			buildingTemplate->entityID = buildingNode.child("ID").attribute("value").as_int();
 		}
 		else {
 			if ((buildingType)buildingNode.child("Type").attribute("value").as_int() == TOWN_CENTER)
@@ -392,6 +394,8 @@ bool EntityManager::Load(pugi::xml_node & data)
 
 		resourceTemplate->Life = resourceNode.child("Life").attribute("value").as_int();
 	}
+
+	// FACTIONS
 
 	player->resources.wood = data.child("Player").attribute("wood").as_int();
 	player->resources.gold = data.child("Player").attribute("gold").as_int();
@@ -489,6 +493,7 @@ bool EntityManager::Save(pugi::xml_node & data) const
 			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			unitNodeInfo.append_child("ID").append_attribute("value") = (*it)->entityID;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
 			// UNIT ORDERS MAMA ;)
 			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); ++it2)
@@ -512,6 +517,7 @@ bool EntityManager::Save(pugi::xml_node & data) const
 			unitNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			unitNodeInfo.append_child("Direction").append_attribute("value") = (*it)->currentDirection;
 			unitNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			unitNodeInfo.append_child("ID").append_attribute("value") = (*it)->entityID;
 			pugi::xml_node destTileNode = unitNodeInfo.append_child("DestinationTile");
 			for (list<Order*>::iterator it2 = (*it)->order_list.begin(); it2 != (*it)->order_list.end(); ++it2)
 			{
@@ -536,6 +542,7 @@ bool EntityManager::Save(pugi::xml_node & data) const
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
 			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
+			buildingNodeInfo.append_child("ID").append_attribute("value") = (*it)->entityID;
 		}
 	}
 	// -------------------------------------------
@@ -549,7 +556,7 @@ bool EntityManager::Save(pugi::xml_node & data) const
 			positionNode.append_attribute("y") = (*it)->entityPosition.y;
 			buildingNodeInfo.append_child("Life").append_attribute("value") = (*it)->Life;
 			buildingNodeInfo.append_child("State").append_attribute("value") = (*it)->state;
-
+			buildingNodeInfo.append_child("ID").append_attribute("value") = (*it)->entityID;
 			App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
 		}
 	}
