@@ -114,6 +114,7 @@ bool EntityManager::Update(float arg_dt)
 				if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
+						unit->order_list.pop_back();
 						unit->order_list.push_back(new UnitAttackOrder());
 						unit->state = ATTACKING;
 					}

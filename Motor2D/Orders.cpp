@@ -125,10 +125,8 @@ void UnitAttackOrder::Start(Unit* unit)
 				unit->sub_movement = nullptr;
 			}
 		}
-		else if ((unit->los->CheckCollision(nearest_enemy->collider) && unit->faction == SAURON_ARMY) ||
-			(nearest_enemy->isActive && unit->faction == FREE_MEN)) {
+		else if ((unit->los->CheckCollision(nearest_enemy->collider) || (nearest_enemy->isActive && unit->faction == FREE_MEN))) 
 			unit->SubordinatedMovement(nearest_enemy->collider->pos);
-		}
 		else
 			state = COMPLETED;
 

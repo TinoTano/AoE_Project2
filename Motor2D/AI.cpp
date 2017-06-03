@@ -125,13 +125,9 @@ void AI::ChangeState() {
 	}
 
 	if (state == OFFENSIVE || state == DEFENSIVE)
-<<<<<<< HEAD
 		QueueUnits();	
 
 	AI_timer.Start();
-=======
-		QueueUnits();
->>>>>>> origin/master
 }
 
 void AI::LaunchAttack() {
