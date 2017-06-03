@@ -251,9 +251,6 @@ public:
 	void CleanUp();
 
 };
-enum EntityType {
-	UNIT, BUILDING, RESOURCE
-};
 
 class TextAlert {
 public:

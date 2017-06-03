@@ -67,13 +67,13 @@ public:
 	bool Start();
 	bool CleanUp();
 
-	/*bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&) const;*/
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
 
 	Event* createEvent(pugi::xml_node&);
 
-	bool TriggerCallback(buildingType t);
-	bool StepCallback(buildingType t);
+	bool TriggerCallback(Building* t);
+	bool StepCallback(Building* t);
 
 	list<Quest*> AllQuests;
 

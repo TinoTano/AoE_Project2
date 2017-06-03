@@ -90,6 +90,6 @@ void Resource::Destroy() {
 
 	state = DESTROYED;
 
-	App->collision->DeleteCollider(collider);
+	if (collider != nullptr) App->collision->DeleteCollider(collider);
 	App->entityManager->DeleteEntity(this);
 }

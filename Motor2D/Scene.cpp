@@ -201,11 +201,11 @@ bool Scene::Start()
 
 	// Buildings
 	App->entityManager->player->Town_center = App->entityManager->CreateBuilding(TOWN_HALL_POS_X, TOWN_HALL_POS_Y, TOWN_CENTER);
-	App->fog->AddEntity(App->entityManager->player->Town_center);
+	App->entityManager->player->Town_center;
 
 	iPoint enemyTownCenterPos{ 1800, 2800, };
 	App->entityManager->AI_faction->Town_center = App->entityManager->CreateBuilding(enemyTownCenterPos.x, enemyTownCenterPos.y, SAURON_TOWER);
-	App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
+	App->entityManager->AI_faction->Town_center;
 
 	// Villager
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y + 50, ELF_VILLAGER);
@@ -213,8 +213,8 @@ bool Scene::Start()
 	// Enable AI 
 	App->ai->enabled = true;
 	App->ai->selected_building = App->entityManager->AI_faction->Town_center;
-	App->fog->AddEntity(App->entityManager->CreateBuilding(0, 500, ORC_BARRACKS));
-	App->fog->AddEntity(App->entityManager->CreateBuilding(0, 4100, ORC_ARCHERY_RANGE));
+	App->entityManager->CreateBuilding(0, 500, ORC_BARRACKS);
+	App->entityManager->CreateBuilding(0, 4100, ORC_ARCHERY_RANGE);
 	App->collision->quadTree;
 
 

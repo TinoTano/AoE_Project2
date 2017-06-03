@@ -10,6 +10,7 @@
 #include "Textures.h"
 #include "Resource.h"
 #include "Audio.h"
+#include "Entity.h"
 #include "Collision.h"
 #include "SceneManager.h"
 #include "Hero.h"
@@ -243,6 +244,9 @@ bool EntityManager::PostUpdate()
 		{
 			list<Entity*>::iterator unitToDestroy = i;
 			++i;
+
+			App->quest->StepCallback((Building*)(*unitToDestroy));
+
 			DestroyEntity((*unitToDestroy));
 		}
 
@@ -969,6 +973,8 @@ Building* EntityManager::CreateBuilding(int posX, int posY,  buildingType type)
 		AI_faction->buildings.push_back(building);
 
 	WorldEntityList.push_back(building);
+
+	App->fog->AddEntity(building);
 	return building;
 }
 
@@ -989,7 +995,7 @@ Resource* EntityManager::CreateResource(int posX, int posY, resourceItem item)
 void EntityManager::DeleteEntity(Entity* entity)
 {
 	removeEntityList.push_back(entity);
-	if(entity->collider->type == COLLIDER_RESOURCE)
+	if(entity->entityType == ENTITY_RESOURCE)
 		resource_list.remove((Resource*)entity);
 	else
 		WorldEntityList.remove(entity);

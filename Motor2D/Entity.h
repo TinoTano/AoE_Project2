@@ -30,13 +30,14 @@ struct Cost {
 
 };
 
+enum EntityType {
+	ENTITY_NONE, ENTITY_UNIT, ENTITY_BUILDING, ENTITY_RESOURCE
+};
+
 class Entity
 {
 public:
 
-	enum EntityType {
-		ENTITY_NONE, ENTITY_UNIT, ENTITY_BUILDING, ENTITY_RESOURCE
-	};
 	Entity();
 	~Entity();
 	iPoint GetPosition() const;

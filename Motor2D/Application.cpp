@@ -65,7 +65,6 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(gui);
 	AddModule(ai);
 	AddModule(cutscene);
- 	AddModule(quest);
 	AddModule(video);
 
 	// scene last
@@ -76,6 +75,7 @@ Application::Application(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(collision);
 	AddModule(fog);
 	AddModule(minimap);
+	AddModule(quest);
 	
 	// render last to swap buffer
 	AddModule(render);

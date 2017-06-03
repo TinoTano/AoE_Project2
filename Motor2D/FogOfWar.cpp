@@ -300,8 +300,8 @@ void FogOfWar::ManageEntities()
 				if ((*it)->collider->type == COLLIDER_BUILDING)
 				{
 					Building* aux = (Building*)(*it);
-					if (!App->quest->TriggerCallback(aux->type))
-						App->quest->StepCallback(aux->type);
+					if (!App->quest->TriggerCallback(aux))
+						App->quest->StepCallback(aux);
 				}
 			}
 			else

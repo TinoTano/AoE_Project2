@@ -191,10 +191,6 @@ void Building::Destroy() {
 
 	state = DESTROYED;
 
-	if (!App->quest->TriggerCallback(type))
-		App->quest->StepCallback(type);
-
-
 	App->entityManager->DeleteEntity(this);
 
 }

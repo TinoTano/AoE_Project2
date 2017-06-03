@@ -92,7 +92,7 @@ Event* QuestManager::createEvent(pugi::xml_node &it)
 
 // Kill Callbacks ===============================================================================
 
-bool QuestManager::TriggerCallback(buildingType t)
+bool QuestManager::TriggerCallback(Building* t)
 {
 	// Iterates all quests
 	for (std::list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
@@ -104,7 +104,7 @@ bool QuestManager::TriggerCallback(buildingType t)
 			if ((*it)->trigger->type == REACH_EVENT)
 			{
 				ReachEvent* event = (ReachEvent*)(*it)->trigger;
-				if (event->building_type == t)
+				if (event->building_type == t->type && t->isActive)
 				{
 					LOG("Quest Triggered");
 					(*it)->state = 1;
@@ -119,7 +119,7 @@ bool QuestManager::TriggerCallback(buildingType t)
 	return false;
 }
 
-bool QuestManager::StepCallback(buildingType t)
+bool QuestManager::StepCallback(Building* t)
 {
 	// Iterates all quests
 	for (std::list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
@@ -132,7 +132,7 @@ bool QuestManager::StepCallback(buildingType t)
 			{
 				DestroyEvent* event = ((DestroyEvent*)(*it)->step);
 
-				if (event->building_type == t)
+				if (event->building_type == t->type && t->Life <= 0)
 				{
 					LOG("Quest completed");
 					App->gui->hud->AlertText("Quest completed", 5);
@@ -157,7 +157,7 @@ bool QuestManager::StepCallback(buildingType t)
 			{
 				ReachEvent* event = ((ReachEvent*)(*it)->step);
 
-				if (event->building_type == t)
+				if (event->building_type == t->type)
 				{
 					LOG("Quest completed");
 					App->gui->hud->AlertText("Quest completed", 5);
@@ -170,30 +170,32 @@ bool QuestManager::StepCallback(buildingType t)
 	return false;
 }
 
-//bool QuestManager::Save(pugi::xml_node & d) const
-//{
-//	pugi::xml_node dataInfo = d.append_child("Quest");
-//
-//	for (list <Quest*>::const_iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
-//	{
-//		dataInfo.append_attribute("state") = (*it)->state;
-//	}
-//
-//	return true;
-//}
-//
-//bool QuestManager::Load(pugi::xml_node & d)
-//{
-//	pugi::xml_node node = d.child("Quest");
-//
-//	for (list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
-//	{
-//		(*it)->state = node.attribute("state").as_uint();
-//		node = node.next_sibling("Quest");
-//	}
-//
-//	return true;
-//}
+bool QuestManager::Save(pugi::xml_node & d) const
+{
+	pugi::xml_node dataInfo = d.append_child("Quests");
+
+	for (list <Quest*>::const_iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
+	{
+		dataInfo.append_child("Quest").append_attribute("state") = (*it)->state;
+	}
+
+	return true;
+}
+
+bool QuestManager::Load(pugi::xml_node & d)
+{
+	pugi::xml_node node = d.child("Quests").child("Quest");
+
+	for (list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
+	{
+		(*it)->state = node.attribute("state").as_uint();
+		if ((*it)->state == 1)
+			App->sceneManager->level1_scene->questHUD.AddActiveQuest((*it)->name, (*it)->description, (*it)->id);
+		node = node.next_sibling("Quest");
+	}
+
+	return true;
+}
 
 bool QuestManager::CleanUp()
 {

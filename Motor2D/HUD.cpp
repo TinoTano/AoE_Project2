@@ -688,7 +688,7 @@ bool Gui::LoadHUDData()
 		for (unitNodeInfo = HUDData.child("Units").child("Unit"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Unit"))
 		{
 			unit_button bt;
-			EntityType type = UNIT;
+			EntityType type = ENTITY_UNIT;
 			string name(unitNodeInfo.child("Name").attribute("value").as_string());
 			bt.name = name;
 			string desc(unitNodeInfo.child("Description").attribute("value").as_string());
@@ -715,7 +715,7 @@ bool Gui::LoadHUDData()
 		for (unitNodeInfo = HUDData.child("Buildings").child("Building"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Building"))
 		{
 			building_button bt;
-			EntityType type = BUILDING;
+			EntityType type = ENTITY_BUILDING;
 			string name(unitNodeInfo.child("Name").attribute("value").as_string());
 			bt.name = name;
 			string desc(unitNodeInfo.child("Description").attribute("value").as_string());
@@ -743,7 +743,7 @@ bool Gui::LoadHUDData()
 		}
 		for (unitNodeInfo = HUDData.child("Resources").child("Resource"); unitNodeInfo; unitNodeInfo = unitNodeInfo.next_sibling("Resource"))
 		{
-			EntityType type = RESOURCE;
+			EntityType type = ENTITY_RESOURCE;
 			string name(unitNodeInfo.child("Name").attribute("value").as_string());
 
 			int id = unitNodeInfo.child("ID").attribute("value").as_int();
