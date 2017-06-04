@@ -225,10 +225,11 @@ void AI::CheckCollisions() {
 		potential_collisions.clear();
 		App->collision->quadTree->Retrieve(potential_collisions, (*enemy)->los);
 
+
 		for (list<Unit*>::iterator ally = App->entityManager->player->units.begin(); ally != App->entityManager->player->units.end(); ally++) {
 
 			if ((*enemy)->los->CheckCollision((*ally)->collider)) {
-				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING)
+				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING) 
 					(*enemy)->order_list.push_front(new UnitAttackOrder());
 			}
 		}
@@ -238,6 +239,27 @@ void AI::CheckCollisions() {
 			if ((*enemy)->los->CheckCollision((*ally_building)->collider)) {
 				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING)
 					(*enemy)->order_list.push_front(new UnitAttackOrder());
+			}
+		}
+
+		for (list<Unit*>::iterator enemy2 = App->entityManager->AI_faction->units.begin(); enemy2 != App->entityManager->AI_faction->units.end(); enemy2++) {
+
+			if ((*enemy)->collider->CheckCollision((*enemy2)->collider) && (*enemy) != (*enemy2)) {
+				bool needs_to_move = false;
+
+				if ((*enemy)->order_list.empty() && (*enemy2)->order_list.empty())
+					needs_to_move = true;
+				else if (!(*enemy)->order_list.empty() && !(*enemy2)->order_list.empty()) {
+					if ((*enemy)->order_list.front()->order_type != MOVETO && ((*enemy2)->order_list.front()->order_type != MOVETO))
+						needs_to_move = true;
+				}
+
+				if(needs_to_move){
+					iPoint destMap = App->map->WorldToMap((*enemy)->entityPosition.x, (*enemy)->entityPosition.y);
+					destMap = App->pathfinding->FindNearestWalkable(destMap);
+					iPoint destWorld = App->map->MapToWorld(destMap.x, destMap.y);
+					(*enemy)->order_list.push_front(new MoveToOrder((*enemy), destWorld));
+				}
 			}
 		}
 	}

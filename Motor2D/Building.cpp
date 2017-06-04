@@ -109,7 +109,10 @@ bool Building::Update(float dt)
 				creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
 				App->collision->relevant_unit = nullptr;
 
-				unit->entityPosition = creation_place;
+				unit->next_pos = unit->destinationTileWorld = unit->entityPosition = creation_place;
+
+				unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+				unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 
 				if (unit->faction == SAURON_ARMY && App->ai->state == OFFENSIVE)
 					App->ai->last_attack_squad.push_back(unit);
