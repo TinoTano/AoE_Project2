@@ -399,16 +399,16 @@ bool Scene::PostUpdate()
 
 	if ((App->entityManager->player->Town_center->Life <= 0 && game_finished == false) || (App->entityManager->player->units.size() <= 0 && game_finished == false)) {
 		game_finished = true;
-		Label* defeat = (Label*)App->gui->CreateLabel("DEFEAT", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 250, App->font->fonts[EIGHTY]);
+		Label* defeat = (Label*)App->gui->CreateLabel("DEFEAT", -STARTING_CAMERA_X + 600, -STARTING_CAMERA_Y + 280, App->font->fonts[EIGHTY]);
 		defeat->SetColor({ 255, 0, 0, 255 });
-		App->audio->PlayFx(DEFEAT - 1);
+		App->audio->PlayFx(DEFEAT);
 		App->entityManager->game_stops = true;
 	}
 
 	else if (App->entityManager->AI_faction->Town_center->Life <= 0 && game_finished == false) {
 
-		Label* victory = (Label*)App->gui->CreateLabel("VICTORY", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 250, App->font->fonts[EIGHTY]);
-		App->audio->PlayFx(VICTORY - 1);
+		Label* victory = (Label*)App->gui->CreateLabel("VICTORY", -STARTING_CAMERA_X + 600, -STARTING_CAMERA_Y + 280, App->font->fonts[EIGHTY]);
+		App->audio->PlayFx(VICTORY);
 		victory->SetColor({ 0, 255, 0, 255 });
 		game_finished = true;
 		App->entityManager->game_stops = true;

@@ -309,7 +309,7 @@ void BuildOrder::Execute(Unit* unit)
 
 				if (App->render->CullingCam(unit->entityPosition))
 				{
-					App->audio->PlayFx(BUILDING_1 - 1);
+					App->audio->PlayFx(rand() % ((BUILDING_2 - BUILDING_1) + 1) + BUILDING_1);
 				}
 
 				if (to_build->Life >= to_build->MaxLife) {

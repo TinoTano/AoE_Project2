@@ -405,7 +405,7 @@ void HUD::Update() {
 									else
 									{
 										AlertText("NOT ENOUGH HOUSES", 5);
-										App->audio->PlayFx(POPULATION_LIMIT - 1);
+										App->audio->PlayFx(POPULATION_LIMIT);
 									}
 								}
 							}

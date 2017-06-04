@@ -87,7 +87,7 @@ bool CutSceneManager::Update(float dt)
 		finished = true;
 		if (App->sceneManager->current_scene == App->sceneManager->play_scene)
 		{
-			ClearScene();
+			CleanUp();
 			App->sceneManager->ChangeScene(App->sceneManager->current_scene, App->sceneManager->level1_scene);
 		}
 	}
@@ -98,7 +98,7 @@ bool CutSceneManager::Update(float dt)
 bool CutSceneManager::CleanUp()
 {
 	ClearScene();
-
+	App->fog->CleanUp();
 	return true;
 }
 
@@ -111,6 +111,7 @@ void CutSceneManager::Play(const char * path, Scene* next_scene)
 {
 	if (App->sceneManager->current_scene == App->sceneManager->menu_scene) App->sceneManager->ChangeScene(App->sceneManager->menu_scene, App->sceneManager->play_scene);
 	else App->sceneManager->ChangeScene(App->sceneManager->level1_scene, App->sceneManager->play_scene);
+
 	Load(path);
 	scene_timer.Start();
 	finished = false;

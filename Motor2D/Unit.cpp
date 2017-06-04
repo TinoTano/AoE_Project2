@@ -138,6 +138,7 @@ void Unit::Destroy() {
 	if (faction == FREE_MEN) App->fog->DeleteEntityFog(this->entityID);
 
 	App->audio->PlayUnitDeadSound(this);
+
 	App->entityManager->DeleteEntity(this);
 }
 

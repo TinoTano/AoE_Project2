@@ -177,16 +177,16 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 	{
 		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
 		{
-			if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
+			if (Get((*it).x, (*it).y + 1) == fow_black && Get((*it).x + 1, (*it).y) == fow_black)
 				data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rdown;
 
-			else if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
+			else if (Get((*it).x, (*it).y + 1) == fow_black && Get((*it).x - 1, (*it).y) == fow_black)
 				data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rleft;
 
-			else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
+			else if (Get((*it).x, (*it).y - 1) == fow_black && Get((*it).x + 1, (*it).y) == fow_black)
 				data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rright;
 
-			else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
+			else if (Get((*it).x, (*it).y - 1) == fow_black && Get((*it).x - 1, (*it).y) == fow_black)
 				data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rup;
 
 			else
@@ -273,7 +273,6 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 			}
 		}
 	}
-
 }
 
 void FogOfWar::DeletePicks(in_fog_entity& player)
@@ -488,23 +487,23 @@ bool FogOfWar::Load(pugi::xml_node & d)
 
 void FogOfWar::DeleteEntityFog(uint id)
 {
-	for (vector<in_fog_entity>::iterator curr = App->fog->entities_on_fog.begin(); curr != App->fog->entities_on_fog.end(); curr++)
+	for (vector<in_fog_entity>::iterator curr = entities_on_fog.begin(); curr !=  entities_on_fog.end(); curr++)
 	{
 		if (curr->id == id)
 		{
 			// Put all clear area into grey area
 			for (list<iPoint>::iterator it = (*curr).current_points.begin(); it != (*curr).current_points.end(); it++)
 			{
-				if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
+				if (Get((*it).x, (*it).y + 1) == fow_black && Get((*it).x + 1, (*it).y) == fow_black)
 					data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rdown;
 
-				else if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
+				else if (Get((*it).x, (*it).y + 1) == fow_black && Get((*it).x - 1, (*it).y) == fow_black)
 					data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rleft;
 
-				else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
+				else if (Get((*it).x, (*it).y - 1) == fow_black && Get((*it).x + 1, (*it).y) == fow_black)
 					data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rright;
 
-				else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
+				else if (Get((*it).x, (*it).y - 1) == fow_black && Get((*it).x - 1, (*it).y) == fow_black)
 					data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rup;
 
 				else
@@ -512,8 +511,21 @@ void FogOfWar::DeleteEntityFog(uint id)
 			}
 
 			// Erase from list
-			App->fog->entities_on_fog.erase(curr);
+			entities_on_fog.erase(curr);
 			break;
+		}
+	}
+
+	// Redraw fow clear again in case of overlaping
+	for (vector<in_fog_entity>::iterator it = entities_on_fog.begin(); it != entities_on_fog.end(); it++)
+	{
+		if (it->id != id)
+		{
+			for (list<iPoint>::iterator it2 = it->current_points.begin(); it2 != it->current_points.end(); it2++)
+			{
+				data[(*it2).y * App->map->data.width + (*it2).x] = fow_clear;
+			}
+			SoftEdges();
 		}
 	}
 }

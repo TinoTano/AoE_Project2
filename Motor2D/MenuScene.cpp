@@ -8,6 +8,7 @@
 #include "CutSceneManager.h"
 #include "Video.h"
 #include "Fonts.h"
+#include "FogOfWar.h"
 
 MenuScene::MenuScene() : SceneElement("menu")
 {

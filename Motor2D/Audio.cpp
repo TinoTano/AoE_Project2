@@ -77,7 +77,6 @@ bool Audio::Awake(pugi::xml_node& config)
 	App->audio->LoadFx("audio/fx/Fight_5.wav");
 	App->audio->LoadFx("audio/fx/Fight_6.wav");
 	App->audio->LoadFx("audio/fx/Fight_7.wav");
-	App->audio->LoadFx("audio/fx/Fight_8.wav");
 
 	App->audio->LoadFx("audio/fx/arrow1.wav");
 	App->audio->LoadFx("audio/fx/arrow2.wav");
@@ -122,35 +121,33 @@ bool Audio::Awake(pugi::xml_node& config)
 
 void Audio::PlayUnitDeadSound(Unit* unit) {
 
-	if (App->render->CullingCam(unit->entityPosition))
+	if (App->render->CullingCam(unit->entityPosition) && (unit->faction== FREE_MEN || unit->isActive == true))
 	{
 		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT || unit->type == ROHAN_KNIGHT || unit->type == MOUNTED_DUNEDAIN)
-			App->audio->PlayFx(rand() % ((HORSE_DEAD_3 - HORSE_DEAD_1) + 1) - HORSE_DEAD_1 - 1);
-		else if (unit->type == ELF_VILLAGER)
-			App->audio->PlayFx(FEMALE_DEATH_6 - 1);
+			App->audio->PlayFx(rand() % ((HORSE_DEAD_3 - HORSE_DEAD_1) + 1) - HORSE_DEAD_1);
 		else
-			App->audio->PlayFx(rand() % ((DEAD_SOUND_6 - DEAD_SOUND_1) + 1) - DEAD_SOUND_1 - 1);
+			App->audio->PlayFx(rand() % ((DEAD_SOUND_6 - DEAD_SOUND_1) + 1) - DEAD_SOUND_1);
 	}
 }
 
 void Audio::PlayFightSound(Unit* unit) {
 
-	if (App->render->CullingCam(unit->entityPosition))
+	if (App->render->CullingCam(unit->entityPosition) && (unit->faction == FREE_MEN || unit->isActive == true))
 	{
 		if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER || unit->type == ELVEN_CAVALRY || unit->type == DUNEDAIN_RANGE)
 			App->audio->PlayFx(rand() % ((BOW_ATTACK_7 - BOW_ATTACK_1) + 1) + BOW_ATTACK_1 - 1);
 		else
-			App->audio->PlayFx(rand() % ((SWORD_ATTACK_8 - SWORD_ATTACK_1) + 1) + SWORD_ATTACK_1 - 1);
+			App->audio->PlayFx(rand() % ((SWORD_ATTACK_7 - SWORD_ATTACK_1) + 1) + SWORD_ATTACK_1);
 	}
 }
 
 void Audio::PlaySelectSound(Unit* unit) {
-	if (App->render->CullingCam(unit->entityPosition))
+	if (App->render->CullingCam(unit->entityPosition) && (unit->faction == FREE_MEN || unit->isActive == true))
 	{
 		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT || unit->type == ROHAN_KNIGHT || unit->type == MOUNTED_DUNEDAIN)
-			App->audio->PlayFx(rand() % ((SELECT_HORSE_3 - SELECT_HORSE_1) + 1) + SELECT_HORSE_1 - 1);
+			App->audio->PlayFx(rand() % ((SELECT_HORSE_3 - SELECT_HORSE_1) + 1) + SELECT_HORSE_1);
 		else
-			App->audio->PlayFx(rand() % ((SELECT_UNIT_4 - SELECT_UNIT_1) + 1) + SELECT_UNIT_1 - 1);
+			App->audio->PlayFx(rand() % ((SELECT_UNIT_4 - SELECT_UNIT_1) + 1) + SELECT_UNIT_1);
 	}
 }
 
@@ -160,11 +157,13 @@ void Audio::PlayGatherSound(Resource* resource) {
 		// Falta posar wood
 
 		if (resource->contains == FOOD)
-			App->audio->PlayFx(FARMING - 1);
+			App->audio->PlayFx(FARMING);
+		if (resource->contains == WOOD)
+			App->audio->PlayFx(rand() % ((BUILDING_2 - BUILDING_1) + 1) + BUILDING_1);
 		else if (resource->contains == GOLD)
-			App->audio->PlayFx(rand() % ((MINE_3 - MINE_1) + 1) + MINE_1 - 1);
+			App->audio->PlayFx(rand() % ((MINE_3 - MINE_1) + 1) + MINE_1);
 		else if (resource->contains == STONE)
-			App->audio->PlayFx(SWORD_ATTACK_7 - 1);
+			App->audio->PlayFx(SWORD_ATTACK_7);
 	}
 }
 
