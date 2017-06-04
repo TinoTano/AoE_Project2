@@ -196,15 +196,6 @@ bool MenuScene::Update(float dt)
 	else if (images[SAURONARMY]->current == CLICKUP) {
 		team = 1;
 	}
-	bool cursoron = false;
-	for (uint i = 0; i < buttons.size(); ++i) {
-		if (buttons[i]->current == HOVER || buttons[i]->current == CLICKIN)
-			cursoron = true;
-	}
-
-	if (cursoron == true)
-		App->gui->cursor->SetCursor(3);
-	else App->gui->cursor->SetCursor(0);
 
 	// ---------------------------------------
 	return true;

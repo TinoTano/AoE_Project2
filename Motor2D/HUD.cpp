@@ -562,6 +562,7 @@ void HUD::Update() {
 	bool free_building = true;
 	bool free_tech = true;
 	bool free_skill = true;
+	bool free_villager = true;
 
 	for (uint i = 0; i < App->gui->unit_bt.size(); ++i) {
 		if (App->gui->unit_bt[i].button != nullptr) {
@@ -601,7 +602,15 @@ void HUD::Update() {
 		}
 	}
 
-	if (free_unit == true && free_building == true && free_tech == true && free_skill == true) {
+	if (create_villager_bt != nullptr) {
+		if (create_villager_bt->current == HOVER)
+		{
+			BlitInfoVillager();
+			free_villager = false;
+		}
+	}
+
+	if (free_unit == true && free_building == true && free_tech == true && free_skill == true && free_villager == true) {
 		App->gui->DestroyUIElement(info_lbl);
 		info_lbl = nullptr;
 		App->gui->DestroyUIElement(desc_lbl);

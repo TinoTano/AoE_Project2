@@ -81,6 +81,24 @@ bool Gui::PreUpdate()
 }
 bool Gui::Update(float dt)
 {
+	bool cursoron = false;
+
+	for (list<UIElement*>::const_iterator it = Elements.begin(); it != Elements.end(); ++it) {
+		if ((*it)->type == BUTTON)
+		{
+			if ((*it)->current == HOVER || (*it)->current == CLICKIN)
+			{
+				cursoron = true;
+			}
+		}
+	}
+	
+
+	if (cursoron == true)
+		cursor->SetCursor(3);
+	else cursor->SetCursor(0);
+
+
 	return true;
 }
 

@@ -146,12 +146,6 @@ void HUD::HUDBuildingMenu()
 
 	if (name->str == "TOWN CENTER") {
 
-		blit_sections.push_back({ 209, 24, 39, 40 });
-		blit_sections.push_back({ 247, 24, 39, 40 });
-
-		create_hero_bt = (Button*)App->gui->CreateButton("gui/game_scene_ui.png", buttons_positions[1].x - CAMERA_OFFSET_X, buttons_positions[1].y - CAMERA_OFFSET_Y, blit_sections, buttons_positions, TIER2);
-		all_bt.push_back(create_hero_bt);
-		blit_sections.clear();
 		blit_sections.push_back({ 52, 24, 39, 40 });
 		blit_sections.push_back({ 91, 24, 39, 40 });
 
@@ -194,9 +188,11 @@ void HUD::HUDBuildingMenu()
 void HUD::HUDClearBuildingMenu()
 {
 	App->gui->DestroyUIElement(create_unit_bt);
-	App->gui->DestroyUIElement(create_hero_bt);
+	create_unit_bt = nullptr;
 	App->gui->DestroyUIElement(create_villager_bt);
+	create_villager_bt = nullptr;
 	App->gui->DestroyUIElement(cancel_bt);
+	cancel_bt = nullptr;
 
 	for (uint i = 0; i < App->gui->tech_bt.size(); ++i) {
 		App->gui->DestroyUIElement(App->gui->tech_bt[i].button);
@@ -381,6 +377,24 @@ void HUD::BlitInfoSkill(skill_button bt)
 	}
 }
 
+void HUD::BlitInfoVillager()
+{
+	Sprite quad;
+	quad.rect.x = x - x - App->render->camera.x;
+	quad.rect.y = y / 2 + (y / 8) + y / 50 - App->render->camera.y;
+	quad.rect.w = 400;
+	quad.rect.h = 80;
+	quad.a = 180;
+	App->render->ui_toDraw.push_back(quad);
+	if (info_lbl == nullptr) {
+		info_lbl = (Label*)App->gui->CreateLabel("Villager", quad.rect.x, quad.rect.y, App->font->fonts[TWENTY]);
+		info_lbl->SetColor({ 255, 255, 255, 255 });
+		desc_lbl = (Label*)App->gui->CreateLabel("Villagers can gather resources and create buildings.", quad.rect.x, quad.rect.y + 22, nullptr);
+		desc_lbl->SetColor({ 255, 255, 255, 255 });
+		cost_lbl = (Label*)App->gui->CreateLabel("food: 50", quad.rect.x, quad.rect.y + 45, nullptr);
+		cost_lbl->SetColor({ 255, 255, 255, 255 });
+	}
+}
 void HUD::StartResourceInfo()
 {
 	char currlife[65], maxlife[65];

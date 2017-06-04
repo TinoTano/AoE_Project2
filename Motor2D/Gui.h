@@ -390,6 +390,7 @@ private:
 	void BlitInfoBuilding(building_button bt);
 	void BlitInfoTech(tech_button bt);
 	void BlitInfoSkill(skill_button bt);
+	void BlitInfoVillager();
 	Label* info_lbl = nullptr, *desc_lbl = nullptr, *cost_lbl = nullptr;
 
 public:
