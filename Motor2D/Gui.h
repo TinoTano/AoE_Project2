@@ -364,8 +364,6 @@ private:
 	// -----------------------
 
 	enum HUDBuildingState { BUILDINGNULL, BUILDINGMENU, BUILDINGCREATEUNITS, BUILDINGCREATEHERO };
-	TechType tech_studied;
-	bool studying_tech = false;
 	HUDBuildingState building_state;
 	vector<vector<SDL_Rect> > units_rects;
 	void DrawBuildingBar();
@@ -398,6 +396,8 @@ public:
 	TextAlert alert;
 	void AlertText(string text, uint duration);
 	bool tech_success = false;
+	bool studying_tech = false;
+	TechType tech_studied;
 };
 
 

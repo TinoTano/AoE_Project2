@@ -148,6 +148,11 @@ bool QuestManager::StepCallback(Building* t)
 					else if ((*it)->reward == CREATE_HERO)
 					{
 						// Create a unit here
+						App->entityManager->player->tech_tree->Researched(ROHAN_HORSES);
+						App->gui->hud->studying_tech = true;
+						App->gui->hud->tech_studied = App->gui->tech_bt[ROHAN_HORSES].type;
+						App->gui->hud->AlertText("Check your Castle for a new unit", 3);
+						App->entityManager->player->Town_center->units_in_queue.push_back(ROHAN_KNIGHT);			
 					}
 
 					return true;
