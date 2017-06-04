@@ -334,14 +334,17 @@ void HUD::Update() {
 										if (hero_state != HEROMENU)
 										{
 											HUDHeroMenu(hero->skill->type);
+											if (skill_bt_support != nullptr)
 											skill_bt_support->enabled = false;
 										}
 										else {
 											if (hero->skill->ready) {
+												if (skill_bt_support != nullptr)
 												skill_bt_support->enabled = true;
 											}
-											else skill_bt_support->enabled = false;
-											if (skill_bt_support->current == CLICKUP || App->input->GetKey(App->input->controls[HERO_SPECIAL_ATTACK]) == KEY_DOWN)
+											else 
+												if (skill_bt_support != nullptr) skill_bt_support->enabled = false;
+											if (skill_bt_support != nullptr && (skill_bt_support->current == CLICKUP || App->input->GetKey(App->input->controls[HERO_SPECIAL_ATTACK]) == KEY_DOWN))
 											{
 												hero->skill->Activate(hero);
 											}

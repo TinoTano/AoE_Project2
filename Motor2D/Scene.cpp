@@ -145,8 +145,9 @@ bool Scene::Start()
 	Label* save_game_lbl = (Label*)App->gui->CreateLabel("Save Game", buttons[SAVEGAME]->pos.first + x / 20, buttons[SAVEGAME]->pos.second, App->font->fonts[SIXTEEN]);
 	Label* cancel_lbl = (Label*)App->gui->CreateLabel("Cancel", buttons[CANCEL]->pos.first + x / 18, buttons[CANCEL]->pos.second, App->font->fonts[SIXTEEN]);
 	Label* load_game_lbl = (Label*)App->gui->CreateLabel("Load Game", buttons[LOADGAME]->pos.first + x / 20, buttons[LOADGAME]->pos.second, App->font->fonts[SIXTEEN]);
-	Label* yes_lbl = (Label*)App->gui->CreateLabel("YES", buttons[CANCEL]->pos.first + x / 13, buttons[CANCEL]->pos.second + y/500, App->font->fonts[SIXTEEN]);
-	Label* no_lbl = (Label*)App->gui->CreateLabel("NO", buttons[LOADGAME]->pos.first + x / 13, buttons[LOADGAME]->pos.second + y / 500, App->font->fonts[SIXTEEN]);
+	
+	Label* yes_lbl = (Label*)App->gui->CreateLabel("YES", buttons[LOADGAME]->pos.first + x / 13, buttons[LOADGAME]->pos.second + y/500, App->font->fonts[SIXTEEN]);
+	Label* no_lbl = (Label*)App->gui->CreateLabel("NO", buttons[CANCEL]->pos.first + x / 13, buttons[CANCEL]->pos.second + y / 500, App->font->fonts[SIXTEEN]);
 	Label* surrender_lbl = (Label*)App->gui->CreateLabel("Do you want to surrender?", buttons[BACKTOMENU]->pos.first + x / 50, buttons[BACKTOMENU]->pos.second, App->font->fonts[SIXTEEN]);
 	
 	surrender_menu.in_window.push_back(images[WINDOW]);

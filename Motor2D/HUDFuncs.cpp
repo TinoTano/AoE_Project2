@@ -63,6 +63,7 @@ void HUD::HUDClearHeroMenu()
 		App->gui->DestroyUIElement(App->gui->skill_bt[i].button);
 		App->gui->skill_bt[i].button = nullptr;
 	}
+	App->gui->DestroyUIElement(skill_bt_support);
 	skill_bt_support = nullptr;
 }
 
