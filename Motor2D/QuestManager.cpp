@@ -107,6 +107,16 @@ bool QuestManager::TriggerCallback(Building* t)
 				{
 					LOG("Quest Triggered");
 					(*it)->state = 1;
+
+					// Check if both quests are completed
+					uint counter = 0;
+					for (std::list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
+					{
+						if ((*it)->state == 1)
+							counter++;
+					}
+					if (counter == 2) App->sceneManager->level1_scene->questHUD.RemoveQuest(0);
+
 					App->gui->hud->AlertText("New side quest!", 5);
 					App->sceneManager->level1_scene->questHUD.AddActiveQuest((*it)->name, (*it)->description, (*it)->id);
 
@@ -155,17 +165,6 @@ bool QuestManager::StepCallback(Building* t)
 						App->gui->hud->AlertText("Check your Castle for a new unit", 3);
 						App->entityManager->player->Town_center->units_in_queue.push_back(ROHAN_KNIGHT);			
 					}
-
-					// Check if both quests are completed
-					uint counter = 0;
-					for (std::list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
-					{
-						if ((*it)->state == 2)
-							counter++;
-					}
-
-					if (counter == 2) App->sceneManager->level1_scene->questHUD.RemoveQuest(0);
-
 					ret = true;
 				}
 			}
