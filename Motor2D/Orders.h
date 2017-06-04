@@ -39,6 +39,9 @@ public:
 	void Execute(Unit* unit);
 	bool CheckCompletion(Unit* unit);
 
+private:
+	iPoint lastPathPos = { 0,0 };
+
 };
 
 class UnitAttackOrder : public Order {

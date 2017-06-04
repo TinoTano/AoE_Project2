@@ -11,6 +11,7 @@
 
 #define DEFAULT_PATH_LENGTH 50
 #define INVALID_WALK_CODE 255
+#define FIND_RADIUS 5
 
 // --------------------------------------------------
 // Recommended reading:
@@ -50,6 +51,8 @@ public:
 
 	iPoint FindNearestAvailable(iPoint origin, int range = 1, iPoint target = { -1,-1 });
 	void CalculatePath(Path* path);
+	vector<iPoint> CreatePath(const iPoint& origin, const iPoint& destination);
+	iPoint FindNearestWalkable(const iPoint& origin);
 
 private:
 
@@ -58,6 +61,9 @@ private:
 	uint height;
 	// all map walkability values [0..255]
 	uchar* map;
+
+public:
+	Unit* current_unit;
 };
 
 // forward declaration
@@ -114,9 +120,11 @@ struct Path {
 	iPoint origin;
 	iPoint destination;
 
-	list<iPoint> finished_path;
+	vector<iPoint> finished_path;
 
 	bool completed;
+	
+	iPoint difference = { 0,0 };
 };
 
 #endif // __PATHFINDING_H__

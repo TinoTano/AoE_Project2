@@ -21,18 +21,121 @@
 
 //Move to Order:
 
+//MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
+//
+//	order_type = MOVETO; 
+//	unit->path.clear();
+//	iPoint origin = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
+//	iPoint destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
+//	App->collision->relevant_unit = unit;
+//
+//	if (!App->pathfinding->IsWalkable(destMap))
+//		destMap = App->pathfinding->FindNearestAvailable(destMap, 5);
+//
+//	if (!App->pathfinding->IsWalkable(origin))
+//		origin = App->pathfinding->FindNearestAvailable(origin, 5);
+//
+//	if (origin.x == -1 || destMap.x == -1) {
+//		state == COMPLETED;
+//		return;
+//	}
+//
+//	Path path;
+//	path.open.pathNodeList.push_back(PathNode(0, 0, origin, NULL));
+//	path.origin = origin;
+//	path.destination = destMap;
+//
+//	App->pathfinding->CalculatePath(&path);
+//
+//	for (list<iPoint>::iterator it = path.finished_path.begin(); it != path.finished_path.end(); it++)
+//		unit->path.push_back((*it));
+//
+//	destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
+//	unit->path.push_back(destMap);
+//
+//	App->collision->relevant_unit = nullptr;
+//}
+//
+//void MoveToOrder::Start(Unit* unit) {
+//
+//	state = COMPLETED;
+//
+//	if (!unit->path.empty()) {
+//
+//		unit->destinationTileWorld = App->map->MapToWorld(unit->path.front().x, unit->path.front().y);
+//		unit->path.pop_front();
+//
+//		unit->next_pos = unit->entityPosition;
+//		unit->state = MOVING;
+//
+//		unit->SetTexture(MOVING);
+//		state = EXECUTING;
+//	}
+//}
+//
+//void MoveToOrder::Execute(Unit* unit) {
+//
+//	if (!CheckCompletion(unit)) {
+//
+//		iPoint prev_posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+//		unit->entityPosition = unit->next_pos;
+//		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+//
+//		fPoint velocity;
+//		velocity.x = unit->destinationTileWorld.x - unit->collider->pos.x;
+//		velocity.y = unit->destinationTileWorld.y - unit->collider->pos.y;
+//
+//		if (velocity.x != 0 || velocity.y != 0)
+//			velocity.Normalize();
+//
+//		velocity = velocity * unit->unitMovementSpeed * App->entityManager->dt;
+//		roundf(velocity.x);
+//		roundf(velocity.y);
+//
+//		unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
+//		unit->next_pos.y = unit->entityPosition.y + int(velocity.y);
+//
+//		unit->LookAt(velocity);
+//
+//		unit->collider->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+//		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+//		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
+//
+//		App->fog->Update(prev_posMap, posMap, unit->entityID);
+//		App->collision->quadTree->UpdateCol(unit->collider);
+//
+//	}
+//	else
+//		state = COMPLETED;
+//
+//}
+//
+//bool MoveToOrder::CheckCompletion(Unit* unit)
+//{
+//	if (unit->collider->pos.DistanceTo(unit->destinationTileWorld) < 10) {
+//		if (unit->path.empty())
+//			return true;
+//		else {
+//			unit->destinationTileWorld = App->map->MapToWorld(unit->path.front().x, unit->path.front().y);
+//			unit->path.pop_front();
+//		}
+//	}
+//	return false;
+//}
+
 MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 
-	order_type = MOVETO; 
+	order_type = MOVETO;
+	//App->pathfinding->DeletePath(unit->path_id);
 	unit->path.clear();
+
 	iPoint origin = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
 	iPoint destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
-	App->collision->relevant_unit = unit;
 
-	if (!App->pathfinding->IsWalkable(destMap))
+	if (!App->pathfinding->IsWalkable(destMap, unit->collider) /*&& !App->collision->FindCollider(destMap, unit->collider->r, unit->collider)*/)
 		destMap = App->pathfinding->FindNearestAvailable(destMap, 5);
 
-	if (!App->pathfinding->IsWalkable(origin))
+	if (!App->pathfinding->IsWalkable(origin, unit->collider))
 		origin = App->pathfinding->FindNearestAvailable(origin, 5);
 
 	if (origin.x == -1 || destMap.x == -1) {
@@ -40,34 +143,38 @@ MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 		return;
 	}
 
-	Path path;
-	path.open.pathNodeList.push_back(PathNode(0, 0, origin, NULL));
-	path.origin = origin;
-	path.destination = destMap;
+	iPoint worldOrigin = App->map->MapToWorld(origin.x, origin.y);
+	App->pathfinding->current_unit = unit;
+	unit->path = App->pathfinding->CreatePath(worldOrigin, destMap);
+	App->pathfinding->current_unit = nullptr;
+	if (unit->path.empty()) {
+		state = COMPLETED;
+		return;
+	}
+	/*else {
+	unit->pathReady = false;
+	unit->pathIsCalculating = true;
+	}*/
 
-	App->pathfinding->CalculatePath(&path);
+	lastPathPos = destWorld;
 
-	for (list<iPoint>::iterator it = path.finished_path.begin(); it != path.finished_path.end(); it++)
-		unit->path.push_back((*it));
-
-	destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
-	unit->path.push_back(destMap);
-
-	App->collision->relevant_unit = nullptr;
 }
 
 void MoveToOrder::Start(Unit* unit) {
 
-	state = COMPLETED;
+	//state = COMPLETED;
 
 	if (!unit->path.empty()) {
-
-		unit->destinationTileWorld = App->map->MapToWorld(unit->path.front().x, unit->path.front().y);
-		unit->path.pop_front();
-
-		unit->next_pos = unit->entityPosition;
+		if (unit->path.size() == 1) {
+			unit->destinationTileWorld = lastPathPos;
+		}
+		else {
+			if (unit->path.front().DistanceTo(unit->entityPosition) < 30) {
+				unit->path.erase(unit->path.begin());
+			}
+			unit->destinationTileWorld = unit->path.front();
+		}
 		unit->state = MOVING;
-
 		unit->SetTexture(MOVING);
 		state = EXECUTING;
 	}
@@ -78,8 +185,15 @@ void MoveToOrder::Execute(Unit* unit) {
 	if (!CheckCompletion(unit)) {
 
 		iPoint prev_posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
-		unit->entityPosition = unit->next_pos;
-		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+
+		if (!unit->path.empty()) {
+			if (prev_posMap == App->map->WorldToMap(unit->path.front().x, unit->path.front().y)) {
+				unit->path.erase(unit->path.begin());
+			}
+		}
+		else {
+			unit->destinationTileWorld = lastPathPos;
+		}
 
 		fPoint velocity;
 		velocity.x = unit->destinationTileWorld.x - unit->collider->pos.x;
@@ -92,8 +206,8 @@ void MoveToOrder::Execute(Unit* unit) {
 		roundf(velocity.x);
 		roundf(velocity.y);
 
-		unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
-		unit->next_pos.y = unit->entityPosition.y + int(velocity.y);
+		unit->entityPosition.x += int(velocity.x);
+		unit->entityPosition.y += int(velocity.y);
 
 		unit->LookAt(velocity);
 
@@ -101,25 +215,33 @@ void MoveToOrder::Execute(Unit* unit) {
 		unit->range->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 		unit->los->pos = { unit->entityPosition.x, unit->entityPosition.y + unit->selectionAreaCenterPoint.y };
 
+		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
+
 		App->fog->Update(prev_posMap, posMap, unit->entityID);
 		App->collision->quadTree->UpdateCol(unit->collider);
 
 	}
-	else
+	else {
 		state = COMPLETED;
-
+		//unit->pathReady = false;
+		//App->pathfinding->DeletePath(unit->path_id);
+		unit->path.clear();
+	}
 }
 
 bool MoveToOrder::CheckCompletion(Unit* unit)
 {
 	if (unit->collider->pos.DistanceTo(unit->destinationTileWorld) < 10) {
-		if (unit->path.empty())
+		if (unit->path.empty()) {
+			//unit->pathIsCalculating = false;
 			return true;
+		}
 		else {
-			unit->destinationTileWorld = App->map->MapToWorld(unit->path.front().x, unit->path.front().y);
-			unit->path.pop_front();
+			unit->destinationTileWorld = unit->path.front();
+			unit->path.erase(unit->path.begin());
 		}
 	}
+
 	return false;
 }
 

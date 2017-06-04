@@ -59,7 +59,7 @@ public:
 	// Utilities
 	SDL_Rect r = { 0,0,0,0 };
 	unitDirection currentDirection = RIGHT;
-	list<iPoint> path;
+	vector<iPoint> path;
 	iPoint destinationTileWorld = { 0,0 };
 	Collider* los = nullptr;
 	Collider* range = nullptr;
@@ -83,6 +83,8 @@ public:
 
 	iPoint next_pos = { 0,0 };
 
+private:
+	bool debugMode = false;
 };
 
 

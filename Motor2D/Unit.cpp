@@ -163,6 +163,18 @@ bool Unit::Draw()
 	if (lifebar_timer.ReadSec() < 5)
 		drawLife({ entityPosition.x - 25, entityPosition.y - (r.h / 2) }); //25:  HPBAR_WIDTH / 2
 
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
+		debugMode = !debugMode;
+	}
+
+	if (!path.empty() && debugMode) {
+		for (vector<iPoint>::iterator it = path.begin(); it != path.end(); it++) {
+			iPoint toMap = App->map->WorldToMap((*it).x, (*it).y);
+			iPoint toWorld = App->map->MapToWorld((*it).x, (*it).y);
+			App->render->DrawIsometricRect((*it), 96);
+		}
+	}
+
 	return true;
 }
 
