@@ -255,7 +255,6 @@ bool Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN) {
 		App->map->godmode = !App->map->godmode;
-
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN) {
@@ -278,16 +277,22 @@ bool Scene::Update(float dt)
 		App->sceneManager->level1_scene->UpdateResources();
 	}
 
-	//if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
-	//	questHUD.RemoveQuest(2);
-	//}
+	// Move camera by shortcut
+	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
 
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN) {
-		App->SaveGame();
-	}
+		iPoint cameraOldPos = { App->render->camera.x, App->render->camera.y };
 
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN) {
-		App->LoadGame();
+
+		App->render->camera.x = STARTING_CAMERA_X;
+		App->render->camera.y = STARTING_CAMERA_Y;
+		App->render->culling_cam.x = -App->render->camera.x - 300;
+		App->render->culling_cam.y = -App->render->camera.y - 300;
+
+		std::pair<int, int> movement;
+		movement.first = App->render->camera.x - cameraOldPos.x;
+		movement.second = App->render->camera.y - cameraOldPos.y;
+
+		App->gui->ScreenMoves(movement);
 	}
 
 
