@@ -4,7 +4,7 @@
 #include "EntityManager.h"
 #include "Application.h"
 #include "SceneManager.h"
-
+#include "Audio.h"
 #define HPBAR_WIDTH 50
 
 Entity::Entity()
@@ -97,8 +97,11 @@ void Cost::SetToZero() {
 
 bool Cost::Spend(Cost cost) {
 
-	if (wood - cost.wood < 0 || food - cost.food < 0 || gold - cost.gold < 0 || stone - cost.stone < 0)
+	if (wood - cost.wood < 0 || food - cost.food < 0 || gold - cost.gold < 0 || stone - cost.stone < 0) {
+		App->audio->PlayFx(POPULATION_LIMIT);
 		return false;
+	}
+	
 
 	wood -= cost.wood; food -= cost.food; gold -= cost.gold; stone -= cost.stone;
 
