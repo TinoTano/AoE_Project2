@@ -250,7 +250,7 @@ bool EntityManager::PostUpdate()
 			list<Entity*>::iterator unitToDestroy = i;
 			++i;
 
-			App->quest->StepCallback((Building*)(*unitToDestroy));
+			if ((*unitToDestroy)->entityType == ENTITY_BUILDING) App->quest->StepCallback((Building*)(*unitToDestroy));
 
 			DestroyEntity((*unitToDestroy));
 		}

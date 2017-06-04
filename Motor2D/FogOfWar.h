@@ -69,6 +69,7 @@ public:
 	uint Get(int x, int y);
 	bool Save(pugi::xml_node & data) const;
 	bool Load(pugi::xml_node & data);
+	void DeleteEntityFog(uint id);
 
 	// Atlas
 

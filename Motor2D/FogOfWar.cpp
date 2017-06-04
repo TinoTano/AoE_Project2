@@ -174,24 +174,18 @@ void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint 
 {
 	for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
 	{
-		SDL_Rect r = { 0, 0, 0, 0 };
-
 		if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
-		{
 			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rdown;
-		}
+
 		else if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
-		{
 			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rleft;
-		}
+
 		else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
-		{
 			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rright;
-		}
+
 		else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
-		{
 			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rup;
-		}
+
 		else
 			data[(*it).y * App->map->data.width + (*it).x] = fow_grey;
 	}
@@ -480,4 +474,36 @@ bool FogOfWar::Load(pugi::xml_node & d)
 		}
 
 	return true;
+}
+
+void FogOfWar::DeleteEntityFog(uint id)
+{
+	for (vector<in_fog_entity>::iterator curr = App->fog->entities_on_fog.begin(); curr != App->fog->entities_on_fog.end(); curr++)
+	{
+		if (curr->id == id)
+		{
+			// Put all clear area into grey area
+			for (list<iPoint>::iterator it = (*curr).current_points.begin(); it != (*curr).current_points.end(); it++)
+			{
+				if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
+					data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rdown;
+
+				else if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
+					data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rleft;
+
+				else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
+					data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rright;
+
+				else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
+					data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rup;
+
+				else
+					data[(*it).y * App->map->data.width + (*it).x] = fow_grey;
+			}
+
+			// Erase from list
+			App->fog->entities_on_fog.erase(curr);
+			break;
+		}
+	}
 }

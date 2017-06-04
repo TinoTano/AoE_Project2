@@ -12,6 +12,7 @@
 #include "AI.h"
 #include "SceneManager.h"
 #include "Audio.h"
+#include "FogOfWar.h"
 
 
 Building::Building()
@@ -200,6 +201,7 @@ void Building::Destroy() {
 			App->audio->PlayFx(rand() % ((BUILDING_DEATH_4 - BUILDING_DEATH_1) + 1) - BUILDING_DEATH_1 - 1);
 		}
 
+		if (faction == FREE_MEN) App->fog->DeleteEntityFog(this->entityID);
 
 		App->entityManager->DeleteEntity(this);
 	}

@@ -19,6 +19,7 @@
 #include "Audio.h"
 #include "AI.h"
 #include "QuestManager.h"
+#include "FogOfWar.h"
 
 Unit::Unit()
 {
@@ -133,8 +134,10 @@ void Unit::Destroy() {
 
 	SetTexture(DESTROYED);
 	state = DESTROYED;
-	App->audio->PlayUnitDeadSound(this);
 
+	if (faction == FREE_MEN) App->fog->DeleteEntityFog(this->entityID);
+
+	App->audio->PlayUnitDeadSound(this);
 	App->entityManager->DeleteEntity(this);
 }
 
