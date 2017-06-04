@@ -61,8 +61,7 @@ bool QuestManager::Start()
 		AllQuests.push_back(new_quest);
 
 		// If it's already active we add the gui
-		if (new_quest->state == 1)
-			App->sceneManager->level1_scene->questHUD.AddActiveQuest(new_quest->name, new_quest->description, new_quest->id);
+		App->sceneManager->level1_scene->questHUD.AddActiveQuest("Explorer", "Explore the map, there are hidden quests!", 0);
 	}
 
 	return ret;
@@ -121,6 +120,8 @@ bool QuestManager::TriggerCallback(Building* t)
 
 bool QuestManager::StepCallback(Building* t)
 {
+	bool ret = false;
+
 	// Iterates all quests
 	for (std::list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
 	{
@@ -155,24 +156,23 @@ bool QuestManager::StepCallback(Building* t)
 						App->entityManager->player->Town_center->units_in_queue.push_back(ROHAN_KNIGHT);			
 					}
 
-					return true;
-				}
-			}
-			if ((*it)->step->type == REACH_EVENT)
-			{
-				ReachEvent* event = ((ReachEvent*)(*it)->step);
+					// Check if both quests are completed
+					uint counter = 0;
+					for (std::list <Quest*>::iterator it = AllQuests.begin(); it != AllQuests.end(); it++)
+					{
+						if ((*it)->state == 2)
+							counter++;
+					}
 
-				if (event->building_type == t->type)
-				{
-					LOG("Quest completed");
-					App->gui->hud->AlertText("Quest completed", 5);
-					App->sceneManager->level1_scene->questHUD.RemoveQuest((*it)->id);
-					(*it)->state = 2;
+					if (counter == 2) App->sceneManager->level1_scene->questHUD.RemoveQuest(0);
+
+					ret = true;
 				}
 			}
 		}
 	}
-	return false;
+
+	return ret;
 }
 
 bool QuestManager::Save(pugi::xml_node & d) const
