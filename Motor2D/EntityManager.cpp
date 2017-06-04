@@ -85,154 +85,158 @@ bool EntityManager::Update(float arg_dt)
 			(*it)->Draw();
 	}
 
-	player->tech_tree->Update();
-	AI_faction->tech_tree->Update();
+	if (!game_stops)
+	{
+		player->tech_tree->Update();
+		AI_faction->tech_tree->Update();
 
-	Unit* unit = nullptr;
-	Villager* villager = nullptr;
-	Resource* resource = nullptr;
-	if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
+		Unit* unit = nullptr;
+		Villager* villager = nullptr;
+		Resource* resource = nullptr;
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_RIGHT) == KEY_DOWN && !selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
 
-		if (selectedEntityList.front()->faction == FREE_MEN && !placingBuilding) {
-
-			for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-				Unit* unit = (Unit*)(*it);
-
-				for (list<Order*>::iterator it2 = unit->order_list.begin(); it2 != unit->order_list.end(); it2++) {
-					RELEASE(*it2);
-					unit->order_list.clear();
-				}
-				unit->order_list.push_front(new MoveToOrder(unit, mouse));
-			}
-
-			Collider* clicked_on = CheckCursorHover(mouse);
-
-			switch (cursor_hover) {
-
-			case HOVERING_ENEMY:
-
-				if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
-					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-						unit = (Unit*)(*it);
-						unit->order_list.pop_back();
-						unit->order_list.push_back(new UnitAttackOrder());
-						unit->state = ATTACKING;
-					}
-				}
-				break;
-
-			case HOVERING_RESOURCE:
+			if (selectedEntityList.front()->faction == FREE_MEN && !placingBuilding) {
 
 				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-					unit = (Unit*)(*it);
-					if (unit->IsVillager) {
-						villager = (Villager*)unit;
-						resource = (Resource*)clicked_on->entity;
-						villager->resource_carried = resource->contains;
-						villager->order_list.push_back(new GatherOrder());
+					Unit* unit = (Unit*)(*it);
+
+					for (list<Order*>::iterator it2 = unit->order_list.begin(); it2 != unit->order_list.end(); it2++) {
+						RELEASE(*it2);
+						unit->order_list.clear();
 					}
+					unit->order_list.push_front(new MoveToOrder(unit, mouse));
 				}
-				break;
 
-			case HOVERING_ALLY_BUILDING:
+				Collider* clicked_on = CheckCursorHover(mouse);
 
-				if (clicked_on->entity->state == BEING_BUILT) {
+				switch (cursor_hover) {
+
+				case HOVERING_ENEMY:
+
+					if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
+						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+							unit = (Unit*)(*it);
+							unit->order_list.pop_back();
+							unit->order_list.push_back(new UnitAttackOrder());
+							unit->state = ATTACKING;
+						}
+					}
+					break;
+
+				case HOVERING_RESOURCE:
 
 					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 						unit = (Unit*)(*it);
-						if (unit->IsVillager)
-							unit->order_list.push_back(new BuildOrder());
+						if (unit->IsVillager) {
+							villager = (Villager*)unit;
+							resource = (Resource*)clicked_on->entity;
+							villager->resource_carried = resource->contains;
+							villager->order_list.push_back(new GatherOrder());
+						}
 					}
-				}
+					break;
 
-			default: 
-				break;
+				case HOVERING_ALLY_BUILDING:
+
+					if (clicked_on->entity->state == BEING_BUILT) {
+
+						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+							unit = (Unit*)(*it);
+							if (unit->IsVillager)
+								unit->order_list.push_back(new BuildOrder());
+						}
+					}
+
+				default:
+					break;
+				}
 			}
+
+			if (placingBuilding)
+				placingBuilding = false;
 		}
 
-		if (placingBuilding) 
-			placingBuilding = false;
-	}
+		if (mouseY > NotHUD.y - CAMERA_OFFSET_Y && mouseY < NotHUD.h - CAMERA_OFFSET_Y) {
 
-	if (mouseY > NotHUD.y - CAMERA_OFFSET_Y && mouseY < NotHUD.h - CAMERA_OFFSET_Y) {
+			if (placingBuilding) {
 
-		if (placingBuilding) {
+				Building* building = buildingsDB[placing_type];
+				Sprite aux;
 
-			Building* building = buildingsDB[placing_type];
-			Sprite aux;
+				aux.texture = building->entityTexture;
+				aux.pos.x = mouse.x - (building->imageWidth / 2);
+				aux.pos.y = mouse.y - (building->imageHeight / 1.5f);
+				aux.priority = mouseY - (building->imageHeight / 2) + building->imageHeight;
+				aux.rect.w = building->imageWidth;
+				aux.rect.h = building->imageHeight;
 
-			aux.texture = building->entityTexture;
-			aux.pos.x = mouse.x - (building->imageWidth / 2);
-			aux.pos.y = mouse.y - (building->imageHeight / 1.5f);
-			aux.priority = mouseY - (building->imageHeight / 2) + building->imageHeight;
-			aux.rect.w = building->imageWidth;
-			aux.rect.h = building->imageHeight;
+				iPoint mouseMap = App->map->WorldToMap(mouseX, mouseY);
+				if (!App->collision->FindCollider(mouse, building->imageWidth / 2) && App->fog->Get(mouseMap.x, mouseMap.y) != 0) {
 
-			iPoint mouseMap = App->map->WorldToMap(mouseX, mouseY);
-			if (!App->collision->FindCollider(mouse, building->imageWidth / 2) && App->fog->Get(mouseMap.x, mouseMap.y) != 0) {
+					if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
 
-				if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP) {
+						if (player->resources.Spend(building->cost)) {
 
-					if (player->resources.Spend(building->cost)) {
+							building = CreateBuilding(mouse.x, mouse.y, placing_type);
+							placingBuilding = false;
+							App->fog->AddEntity(building);
 
-						building = CreateBuilding(mouse.x, mouse.y, placing_type);
-						placingBuilding = false;
-						App->fog->AddEntity(building);
+							if (!selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
 
-						if (!selectedEntityList.empty() && selectedListType == COLLIDER_UNIT) {
-
-							for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-								unit = (Unit*)(*it);
-								if (unit->IsVillager)
-									unit->order_list.push_front(new BuildOrder());
+								for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+									unit = (Unit*)(*it);
+									if (unit->IsVillager)
+										unit->order_list.push_front(new BuildOrder());
+								}
 							}
 						}
 					}
 				}
+				else {
+					aux.change_color = true;
+					aux.r = 255;
+				}
+
+				App->render->sprites_toDraw.push_back(aux);
 			}
 			else {
-				aux.change_color = true;
-				aux.r = 255;
-			}
+				switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
+				{
 
-			App->render->sprites_toDraw.push_back(aux);
+				case KEY_DOWN:
+					multiSelectionRect.x = mouseX;
+					multiSelectionRect.y = mouseY;
+					break;
+
+				case KEY_REPEAT:
+					multiSelectionRect.w = mouseX - multiSelectionRect.x;
+					multiSelectionRect.h = mouseY - multiSelectionRect.y;
+					break;
+
+				case KEY_UP:
+
+					FillSelectedList();
+					break;
+				}
+			}
 		}
-		else {
-			switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
-			{
 
-			case KEY_DOWN:
-				multiSelectionRect.x = mouseX;
-				multiSelectionRect.y = mouseY;
-				break;
+		if (!selectedEntityList.empty())
+			DrawSelectedList();
 
-			case KEY_REPEAT:
-				multiSelectionRect.w = mouseX - multiSelectionRect.x;
-				multiSelectionRect.h = mouseY - multiSelectionRect.y;
-				break;
+		if (multiSelectionRect.w != 0) {
+			Sprite square;
 
-			case KEY_UP:
-
-				FillSelectedList();
-				break;
-			}
+			square.rect = multiSelectionRect;
+			square.priority = 100000;
+			square.r = 255;
+			square.g = 255;
+			square.b = 255;
+			square.filled = false;
+			App->render->sprites_toDraw.push_back(square);
 		}
 	}
 
-	if (!selectedEntityList.empty())
-		DrawSelectedList();
-
-	if (multiSelectionRect.w != 0) {
-		Sprite square;
-
-		square.rect = multiSelectionRect;
-		square.priority = 100000;
-		square.r = 255;
-		square.g = 255;
-		square.b = 255;
-		square.filled = false;
-		App->render->sprites_toDraw.push_back(square);
-	}
 	return true;
 }
 
@@ -1045,7 +1049,7 @@ Resource* EntityManager::FindNearestResource(resourceType contains, iPoint pos) 
 
 			if (resource == nullptr)
 				resource = (*it);
-			else if (pos.DistanceTo((*it)->collider->pos) < pos.DistanceTo(resource->collider->pos))
+			else if ((*it)->collider != nullptr && resource->collider != nullptr && pos.DistanceTo((*it)->collider->pos) < pos.DistanceTo(resource->collider->pos))
 				resource = (*it);
 		}
 	}

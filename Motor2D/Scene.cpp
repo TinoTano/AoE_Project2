@@ -310,29 +310,49 @@ bool Scene::Update(float dt)
 		if (buttons[CANCEL]->current == CLICKUP) {
 			ui_menu.WindowOff();
 			App->gui->Unfocus();
+			App->entityManager->game_stops = false;
+		}
+		if (buttons[LOADGAME]->current == CLICKUP)
+		{
+			ui_menu.WindowOff();
+			App->gui->Unfocus();
+			App->entityManager->game_stops = false;
+			App->LoadGame();
+		}
+		if (buttons[SAVEGAME]->current == CLICKUP)
+		{
+			ui_menu.WindowOff();
+			App->gui->Unfocus();
+			App->entityManager->game_stops = false;
+			App->SaveGame();
 		}
 	}
 	if (buttons[MENU]->current == CLICKUP)
 	{
 		ui_menu.WindowOn();
+		App->entityManager->game_stops = true;
 	}
 
 	if (buttons[SURRENDER]->current == CLICKUP)
 	{
 		surrender_menu.WindowOn();
+		App->entityManager->game_stops = true;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN) {
 		if (ui_menu.IsEnabled()) {
 			ui_menu.WindowOff();
+			App->entityManager->game_stops = false;
 			App->gui->Unfocus();
 		}
 		else if (!ui_menu.IsEnabled() && !surrender_menu.IsEnabled())
 		{
 			ui_menu.WindowOn();
+			App->entityManager->game_stops = true;
 		}
 		else if (!ui_menu.IsEnabled() && surrender_menu.IsEnabled())
 		{
 			surrender_menu.WindowOff();
+			App->entityManager->game_stops = false;
 			App->gui->Unfocus();
 		}
 	}
@@ -365,6 +385,7 @@ bool Scene::Update(float dt)
 		{
 			surrender_menu.WindowOff();
 			App->gui->Unfocus();
+			App->entityManager->game_stops = false;
 		}
 	}
 
@@ -381,6 +402,7 @@ bool Scene::PostUpdate()
 		Label* defeat = (Label*)App->gui->CreateLabel("DEFEAT", -STARTING_CAMERA_X + 560, -STARTING_CAMERA_Y + 250, App->font->fonts[EIGHTY]);
 		defeat->SetColor({ 255, 0, 0, 255 });
 		App->audio->PlayFx(DEFEAT - 1);
+		App->entityManager->game_stops = true;
 	}
 	else if (App->entityManager->AI_faction->Town_center->Life <= 0 && game_finished == false) {
 
@@ -388,9 +410,11 @@ bool Scene::PostUpdate()
 		App->audio->PlayFx(VICTORY - 1);
 		victory->SetColor({ 0, 255, 0, 255 });
 		game_finished = true;
+		App->entityManager->game_stops = true;
 	}
 	else if (buttons[BACKTOMENU]->current == CLICKUP) {
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
+		App->entityManager->game_stops = false;
 	}
 	return ret;
 }
@@ -416,6 +440,11 @@ bool Scene::CleanUp()
 	App->collision->CleanUp();
 	App->fog->CleanUp();
 	App->quest->CleanUp();
+
+
+	App->entityManager->game_stops = false;
+
+
 	return true;
 }
 

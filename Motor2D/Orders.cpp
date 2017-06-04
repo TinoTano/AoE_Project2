@@ -219,7 +219,7 @@ void GatherOrder::Start(Unit* unit) {
 	if (villager->resource_carried != NONE) {
 		if (Resource* resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition)) {
 
-			if (!villager->collider->CheckCollision(resource->collider))
+			if (resource->collider !=nullptr && !villager->collider->CheckCollision(resource->collider))
 				unit->SubordinatedMovement(resource->collider->pos);
 			else {
 

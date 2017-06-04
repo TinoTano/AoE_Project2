@@ -86,6 +86,8 @@ private:
 
 public:
 	int nextID = 0;
+	bool game_stops = false;
+
 	list<Entity*> selectedEntityList;
 	COLLIDER_TYPE selectedListType = COLLIDER_NONE;
 

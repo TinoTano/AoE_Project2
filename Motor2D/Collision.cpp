@@ -186,13 +186,14 @@ void Collision::DeleteCollider(Collider * collider)
 
 bool Collider::CheckCollision(Collider* c2) const
 {
-	int radius = r + c2->r + 3;
-	int deltaX = pos.x - c2->pos.x;
-	int deltaY = pos.y - c2->pos.y;
-
-
-	return (abs(deltaX) < radius && abs(deltaY) < radius*sin(0.54f));
-
+	if (c2 != nullptr)
+	{
+		int radius = r + c2->r + 3;
+		int deltaX = pos.x - c2->pos.x;
+		int deltaY = pos.y - c2->pos.y;
+		return (abs(deltaX) < radius && abs(deltaY) < radius*sin(0.54f));
+	}
+	else return false;
 }
 
 Unit* Collider::GetUnit() {
