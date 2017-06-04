@@ -219,8 +219,8 @@ bool Scene::Start()
 
 	App->entityManager->CreateBuilding(enemyTownCenterPos.x + 200, enemyTownCenterPos.y - 200, BEAST_PIT);
 	App->entityManager->CreateBuilding(enemyTownCenterPos.x - 200, enemyTownCenterPos.y - 200, ORC_ARCHERY_RANGE);
-	App->entityManager->CreateBuilding(enemyTownCenterPos.x + 400, enemyTownCenterPos.y + 200, ORC_BARRACKS);
-	App->entityManager->CreateBuilding(enemyTownCenterPos.x - 400, enemyTownCenterPos.y + 200, URUK_HAI_PIT);
+	App->entityManager->CreateBuilding(enemyTownCenterPos.x + 400, enemyTownCenterPos.y, ORC_BARRACKS);
+	App->entityManager->CreateBuilding(enemyTownCenterPos.x - 400, enemyTownCenterPos.y, URUK_HAI_PIT);
 	App->entityManager->CreateBuilding(enemyTownCenterPos.x, enemyTownCenterPos.y + 300, ORC_BLACKSMITH);
 
 	// ================================================================================================================

@@ -132,8 +132,9 @@ void AI::ChangeState() {
 
 void AI::LaunchAttack() {
 
+	
 	for (list<Unit*>::iterator it = last_attack_squad.begin(); it != last_attack_squad.end(); it++) {
-		(*it)->order_list.push_front(new MoveToOrder((*it), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y }));
+		(*it)->order_list.push_front(new MoveToOrder((*it), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y + 200}));
 		(*it)->order_list.push_back(new UnitAttackOrder());
 	}
 
