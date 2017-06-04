@@ -341,7 +341,7 @@ void HUD::Update() {
 												skill_bt_support->enabled = true;
 											}
 											else skill_bt_support->enabled = false;
-											if (skill_bt_support->current == CLICKUP)
+											if (skill_bt_support->current == CLICKUP || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 											{
 												hero->skill->Activate(hero);
 											}
