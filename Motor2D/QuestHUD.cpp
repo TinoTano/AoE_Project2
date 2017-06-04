@@ -18,7 +18,7 @@ void QuestHUD::Start()
 
 	questx = x - App->render->camera.x - 300;
 
-	quest_lbl = (Label*)App->gui->CreateLabel("Side Quests", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 40, App->font->fonts[SIXTEEN]);
+	quest_lbl = (Label*)App->gui->CreateLabel("Side Quests", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 32, App->font->fonts[SIXTEEN]);
 	quest_lbl->SetColor({ 255, 255 ,255 ,255 });
 
 	questy = y / 2 - App->render->camera.y + 58;
@@ -54,9 +54,9 @@ void QuestHUD::Update()
 		if (vec_quest.size() == 2) {
 			if (vec_quest.back()->name_lbl == nullptr) {
 				vec_quest.back()->name += ":";
-				vec_quest.back()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy + 14 + 2, App->font->fonts[FOURTEEN]);
+				vec_quest.back()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy + 14 + 12, App->font->fonts[FOURTEEN]);
 				vec_quest.back()->name_lbl->SetColor({ 255, 255, 255, 255 });
-				vec_quest.back()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14 + 2 + 14, nullptr);
+				vec_quest.back()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14 + 12 + 14, nullptr);
 				vec_quest.back()->desc_lbl->SetColor({ 255, 255, 255, 255 });
 			}
 		}
