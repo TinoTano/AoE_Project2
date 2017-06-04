@@ -234,9 +234,6 @@ bool Scene::Start()
 
 	UpdateResources();
 
-	villagers_curr = villagers_max = 1;
-	UpdateVillagers(villagers_curr, villagers_max);
-
 	App->quest->Start();
 	questHUD.Start();
 
@@ -358,7 +355,7 @@ bool Scene::Update(float dt)
 	}
 
 	questHUD.Update();
-
+	UpdatePopulation();
 	App->minimap->GetClickableArea(images[MINIMAP]->pos);
 
 	if (surrender_menu.IsEnabled()) {
@@ -455,9 +452,13 @@ void Scene::UpdateResources()
 	gold->SetString(to_string(App->entityManager->player->resources.gold));
 }
 
-void Scene::UpdateVillagers(uint available_villagers, uint total_villagers)
+void Scene::UpdatePopulation()
 {
-	villagers->SetString(to_string(available_villagers) + '/' + to_string(total_villagers));
+	uint houses_count = 0;
+	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); ++it) {
+		if ((*it)->type == HOUSE) houses_count++;
+	}
+	villagers->SetString(to_string(App->entityManager->player->units.size()) + '/' + to_string((houses_count * 5) + 2));
 }
 
 bool Scene::CheckUnitsRoom()

@@ -400,7 +400,6 @@ void HUD::Update() {
 									{
 										if (App->entityManager->player->resources.Spend(App->entityManager->unitsDB[ELF_VILLAGER]->cost))
 										{
-											App->sceneManager->level1_scene->UpdateVillagers(++App->sceneManager->level1_scene->villagers_curr, ++App->sceneManager->level1_scene->villagers_max);
 											building->units_in_queue.push_back(ELF_VILLAGER);
 										}
 									}

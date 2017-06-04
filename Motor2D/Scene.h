@@ -61,7 +61,7 @@ private:
 
 public:
 	void UpdateResources();
-	void UpdateVillagers(uint available_villagers, uint total_villagers);
+	void UpdatePopulation();
 	bool CheckUnitsRoom();
 private:
 	// TIMER
