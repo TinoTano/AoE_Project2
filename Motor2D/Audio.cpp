@@ -104,7 +104,6 @@ bool Audio::Awake(pugi::xml_node& config)
 	App->audio->LoadFx("audio/fx/mine2.wav");
 	App->audio->LoadFx("audio/fx/mine3.wav");
 
-
 	App->audio->LoadFx("audio/fx/build1.wav");
 	App->audio->LoadFx("audio/fx/build2.wav");
 

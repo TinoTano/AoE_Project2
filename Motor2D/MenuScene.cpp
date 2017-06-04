@@ -213,9 +213,9 @@ bool MenuScene::PostUpdate()
 {
 	if (buttons[SKIRMISH]->current == CLICKUP)
 	{
-		App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
-		/*App->cutscene->Start();
-		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);*/
+		//App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
+		App->cutscene->Start();
+		App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
 		team = -1;
 	}
 	else if (buttons[2]->current == CLICKUP)

@@ -377,9 +377,9 @@ bool Scene::Update(float dt)
 
 		if (buttons[YES]->current == CLICKUP)
 		{
-			App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
-			/*App->cutscene->Start();
-			App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);*/
+			//App->sceneManager->ChangeScene(this, App->sceneManager->level1_scene);
+			App->cutscene->Start();
+			App->cutscene->Play("cutscene/first_cutscene.xml", App->sceneManager->level1_scene);
 		}
 		if (buttons[NO]->current == CLICKUP)
 		{
@@ -404,6 +404,7 @@ bool Scene::PostUpdate()
 		App->audio->PlayFx(DEFEAT - 1);
 		App->entityManager->game_stops = true;
 	}
+
 	else if (App->entityManager->AI_faction->Town_center->Life <= 0 && game_finished == false) {
 
 		Label* victory = (Label*)App->gui->CreateLabel("VICTORY", -STARTING_CAMERA_X + 570, -STARTING_CAMERA_Y + 250, App->font->fonts[EIGHTY]);
@@ -412,10 +413,12 @@ bool Scene::PostUpdate()
 		game_finished = true;
 		App->entityManager->game_stops = true;
 	}
+
 	else if (buttons[BACKTOMENU]->current == CLICKUP) {
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
 		App->entityManager->game_stops = false;
 	}
+
 	return ret;
 }
 

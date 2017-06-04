@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "Textures.h"
 #include "FileSystem.h"
+#include "SceneManager.h"
 #include "Map.h"
 
 FogOfWar::FogOfWar() : Module()
@@ -172,23 +173,32 @@ void FogOfWar::FillFrontier()
 
 void FogOfWar::MoveArea(in_fog_entity& player_unity, string direction_str, uint id, int amount)
 {
-	for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
+	if (App->sceneManager->current_scene == App->sceneManager->level1_scene)
 	{
-		if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
-			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rdown;
+		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
+		{
+			if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
+				data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rdown;
 
-		else if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
-			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rleft;
+			else if (App->fog->Get((*it).x, (*it).y + 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
+				data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rleft;
 
-		else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
-			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rright;
+			else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x + 1, (*it).y) == fow_black)
+				data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rright;
 
-		else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
-			data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rup;
+			else if (App->fog->Get((*it).x, (*it).y - 1) == fow_black && App->fog->Get((*it).x - 1, (*it).y) == fow_black)
+				data[(*it).y * App->map->data.width + (*it).x] = fow_grey_rup;
 
-		else
-			data[(*it).y * App->map->data.width + (*it).x] = fow_grey;
+			else
+				data[(*it).y * App->map->data.width + (*it).x] = fow_grey;
+		}
 	}
+	else
+	{
+		for (list<iPoint>::iterator it = player_unity.current_points.begin(); it != player_unity.current_points.end(); it++)
+			data[(*it).y * App->map->data.width + (*it).x] = fow_black;
+	}
+	
 
 	if (direction_str == "right")
 	{
