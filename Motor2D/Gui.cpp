@@ -1032,7 +1032,7 @@ void Cursor::Draw() {
 	crsr.rect = sprite_list[id];
 	crsr.texture = texture;
 	crsr.priority = 100;
-	App->render->ui_toDraw.push_back(crsr);
+	App->render->cursor = crsr;
 }
 void Cursor::SetCursor(int id) {
 	this->id = id;

@@ -84,6 +84,7 @@ public:
 	SDL_Rect		culling_cam;
 	std::deque<Sprite> sprites_toDraw;
 	std::deque<Sprite> ui_toDraw;
+	Sprite cursor;
 
 	CameraLimit cameraScene;
 

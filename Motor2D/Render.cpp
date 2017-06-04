@@ -161,8 +161,9 @@ bool Render::PostUpdate()
 	}
 
 	// ==============================================================================
-
-
+	// CURSOR =======================
+	Blit(cursor.texture, cursor.pos.x, cursor.pos.y, &cursor.rect, cursor.flip);
+// =================================
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);
 	return true;

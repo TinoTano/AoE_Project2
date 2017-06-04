@@ -238,6 +238,7 @@ bool MenuScene::PostUpdate()
 
 bool MenuScene::CleanUp()
 {
+	ui_menu.WindowOff();
 	ui_menu.CleanUp();
 	skirmish_menu.CleanUp();
 	App->gui->DestroyALLUIElements();
