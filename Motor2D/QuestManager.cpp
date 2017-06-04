@@ -59,10 +59,10 @@ bool QuestManager::Start()
 
 		// We first add the quest to the all quest list
 		AllQuests.push_back(new_quest);
-
-		// If it's already active we add the gui
-		App->sceneManager->level1_scene->questHUD.AddActiveQuest("Explorer", "Explore the map, there are hidden quests!", 0);
 	}
+
+	// If it's already active we add the gui
+	App->sceneManager->level1_scene->questHUD.AddActiveQuest("Explorer", "Explore the map, there are hidden quests!", 0);
 
 	return ret;
 }
