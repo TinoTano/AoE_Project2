@@ -62,8 +62,8 @@ bool Minimap::Update(float dt)
 	{
 		if (SDL_PointInRect(&mousePos, &minimapClickable))
 		{
-			App->render->camera.x = (-minimapNewPos.x + minimapPos.x) / minimapRatio;
-			App->render->camera.y = (-minimapNewPos.y + minimapPos.y) / minimapRatio;
+			App->render->camera.x = (-minimapNewPos.x + minimapPos.x + offsetX) / minimapRatio;
+			App->render->camera.y = (-minimapNewPos.y + minimapPos.y + offsetY) / minimapRatio;
 			App->render->culling_cam.x = -App->render->camera.x - 300;
 			App->render->culling_cam.y = -App->render->camera.y - 300;
 
@@ -87,8 +87,8 @@ bool Minimap::Update(float dt)
 
 void Minimap::GetClickableArea(std::pair<int, int> position)
 {
-	minimapClickable.x = position.first + 50;
-	minimapClickable.y = position.second + 12;
+	minimapClickable.x = position.first + 72;
+	minimapClickable.y = position.second + 25;
 
 }
 
@@ -156,8 +156,8 @@ void Minimap::DrawCamera()
 	SDL_Rect rect;
 
 	App->win->GetWindowSize(x, y);
-	rect.x = minimapPos.x - App->render->camera.x - (App->render->camera.x * minimapRatio) - offsetX;
-	rect.y = minimapPos.y - App->render->camera.y - (App->render->camera.y * minimapRatio) - offsetY;
+	rect.x = minimapPos.x - App->render->camera.x - (App->render->camera.x * minimapRatio);
+	rect.y = minimapPos.y - App->render->camera.y - (App->render->camera.y * minimapRatio);
 	rect.w = x * minimapRatio;
 	rect.h = y * minimapRatio;
 
