@@ -419,6 +419,9 @@ bool Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
+	App->entityManager->player->tech_tree->Reset(FREE_MEN);
+	App->entityManager->AI_faction->tech_tree->Reset(SAURON_ARMY);
+
 	questHUD.CleanUp();
 	ui_menu.CleanUp();
 	surrender_menu.CleanUp();

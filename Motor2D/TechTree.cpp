@@ -47,6 +47,10 @@ void TechTree::Reset(Faction faction) {
 		p = { GOBLIN_SOLDIER, ORC_BARRACKS };
 		available_units.push_back(p);
 	}
+	for (uint i = 0; i < all_techs.size(); ++i)
+	{
+		all_techs[i]->researching = false;
+	}
 }
 
 
