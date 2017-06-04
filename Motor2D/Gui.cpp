@@ -83,10 +83,11 @@ bool Gui::Update(float dt)
 {
 	bool cursoron = false;
 
-	for (list<UIElement*>::const_iterator it = Elements.begin(); it != Elements.end(); ++it) {
+	for (list<UIElement*>::iterator it = Elements.begin(); it != Elements.end(); ++it) {
+		
 		if ((*it)->type == BUTTON)
 		{
-			if ((*it)->current == HOVER || (*it)->current == CLICKIN)
+			if ((*it)->current == HOVER || (*it)->current == CLICKUP)
 			{
 				cursoron = true;
 			}
@@ -96,7 +97,8 @@ bool Gui::Update(float dt)
 
 	if (cursoron == true)
 		cursor->SetCursor(3);
-	else cursor->SetCursor(0);
+	else 
+		cursor->SetCursor(0);
 
 
 	return true;
@@ -585,7 +587,6 @@ void Label::Movement(pair<int, int> movement) {
 Button::Button(int x, int y, vector<SDL_Rect>blit_sections, vector<SDL_Rect>detect_sections, ButtonTier Tier, SDL_Texture* argtexture) : UIElement(true, x, y, BUTTON, argtexture), button_tier(Tier) {
 	this->blit_sections = blit_sections;
 	this->detect_sections = detect_sections;
-
 }
 
 void Button::Update()

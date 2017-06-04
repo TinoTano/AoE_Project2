@@ -357,17 +357,6 @@ bool Scene::Update(float dt)
 		}
 	}
 
-	
-	bool cursoron = false;
-	for (uint i = 0; i < buttons.size(); ++i) {
-		if (buttons[i]->current == HOVER || buttons[i]->current == CLICKIN)
-			cursoron = true;
-	}
-
-	if (cursoron == true)
-		App->gui->cursor->SetCursor(3);
-	else App->gui->cursor->SetCursor(0);
-
 	questHUD.Update();
 
 	App->minimap->GetClickableArea(images[MINIMAP]->pos);
