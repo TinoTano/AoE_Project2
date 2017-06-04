@@ -299,8 +299,8 @@ void FogOfWar::ManageEntities()
 {
 	for (list<Entity*>::iterator it = entities_not_in_fog.begin(); it != entities_not_in_fog.end(); it++)
 	{
-		if ((*it)->state != DESTROYED && (*it)->state < 7 && (*it)->state >= 0 && (*it)->collider != nullptr && (*it) != nullptr) {
-			if (IsVisible(App->map->WorldToMap((*it)->collider->pos.x, (*it)->collider->pos.y), (*it)->faction))
+		if ((*it) != nullptr && (*it)->state != DESTROYED && (*it)->collider != nullptr) {
+			if (IsVisible(App->map->WorldToMap((*it)->collider->pos.x, (*it)->collider->pos.y), (*it)))
 			{
 				(*it)->isActive = true;
 				if ((*it)->collider->type == COLLIDER_BUILDING)
@@ -317,13 +317,17 @@ void FogOfWar::ManageEntities()
 }
 
 
-bool FogOfWar::IsVisible(iPoint char_pos, Faction faction)
+bool FogOfWar::IsVisible(iPoint char_pos, Entity* e)
 {
 	bool ret = false;
 
-	if (faction == NATURE && Get(char_pos.x, char_pos.y) != fow_black) ret = true;
-	if (faction == SAURON_ARMY && Get(char_pos.x, char_pos.y) == fow_clear) ret = true;
-	if (faction == FREE_MEN) ret = true;
+	if (e->faction == NATURE && Get(char_pos.x, char_pos.y) != fow_black) ret = true;
+	if (e->faction == SAURON_ARMY)
+	{
+		if (e->entityType == ENTITY_BUILDING && Get(char_pos.x, char_pos.y) != fow_black) ret = true;
+		if (e->entityType == ENTITY_UNIT && Get(char_pos.x, char_pos.y) == fow_clear) ret = true;
+	}
+	if (e->faction == FREE_MEN) ret = true;
 
 	return ret;
 }

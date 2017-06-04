@@ -64,7 +64,7 @@ public:
 
 	// Utilility
 
-	bool IsVisible(iPoint char_pos, Faction faction);
+	bool IsVisible(iPoint char_pos, Entity* e);
 	bool IsFrontier(iPoint point, in_fog_entity& player);
 	uint Get(int x, int y);
 	bool Save(pugi::xml_node & data) const;

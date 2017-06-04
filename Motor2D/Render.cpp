@@ -152,7 +152,6 @@ bool Render::PostUpdate()
 
 					else if (visibility != 0)
 						App->minimap->DrawTerrain(tileWorld.x, tileWorld.y, 105, 105, 105);
-
 				}
 			}
 		}
