@@ -144,10 +144,10 @@ void AI::LaunchAttack() {
 bool AI::Load(pugi::xml_node & data)
 {
 
+	Enemies = App->entityManager->AI_faction;
 	state = (AI_state)data.child("State").attribute("value").as_int();
 	forced_state = (AI_state)data.child("ForcedState").attribute("value").as_int();
 	enabled = data.child("Enabled").attribute("value").as_bool();
-	Enemies = App->entityManager->AI_faction;
 
 	for (list<Entity*>::iterator it = App->entityManager->WorldEntityList.begin(); it != App->entityManager->WorldEntityList.end(); ++it)
 	{
@@ -191,7 +191,6 @@ bool AI::Load(pugi::xml_node & data)
 
 bool AI::Save(pugi::xml_node & data) const
 {
-
 	data.append_child("State").append_attribute("value") = (int)state;
 	data.append_child("ForcedState").append_attribute("value") = (int)forced_state;
 	data.append_child("Enabled").append_attribute("value") = enabled;

@@ -371,16 +371,44 @@ bool EntityManager::Load(pugi::xml_node & data)
 		else {
 			if ((buildingType)buildingNode.child("Type").attribute("value").as_int() == TOWN_CENTER)
 			{
-				player->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
-				player->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
-				App->entityManager->WorldEntityList.push_back(AI_faction->Town_center);
-				App->fog->AddEntity(App->entityManager->player->Town_center);
+				if (player->Town_center->Life <= 0) {
+					player->Town_center->Destroy();
+
+					Building* buildingTemplate = App->entityManager->CreateBuilding(buildingNode.child("Position").attribute("x").as_int(),
+						buildingNode.child("Position").attribute("y").as_int(),
+						(buildingType)buildingNode.child("Type").attribute("value").as_int());
+					buildingTemplate->Life = buildingNode.child("Life").attribute("value").as_int();
+					buildingTemplate->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+					buildingTemplate->entityID = buildingNode.child("ID").attribute("value").as_int();
+					player->Town_center = buildingTemplate;
+				}
+				else {
+					player->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
+					player->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+					App->entityManager->WorldEntityList.push_back(player->Town_center);
+					App->fog->AddEntity(App->entityManager->player->Town_center);
+				}
 			}
 			else {
-				AI_faction->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
-				AI_faction->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
-				App->entityManager->WorldEntityList.push_back(player->Town_center);
-				App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
+				if ((buildingType)buildingNode.child("Type").attribute("value").as_int() == SAURON_TOWER)
+				{
+					if (AI_faction->Town_center->Life <= 0) {
+						Building* buildingTemplate = App->entityManager->CreateBuilding(buildingNode.child("Position").attribute("x").as_int(),
+							buildingNode.child("Position").attribute("y").as_int(),
+							(buildingType)buildingNode.child("Type").attribute("value").as_int());
+						buildingTemplate->Life = buildingNode.child("Life").attribute("value").as_int();
+						buildingTemplate->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+						buildingTemplate->entityID = buildingNode.child("ID").attribute("value").as_int();
+						AI_faction->Town_center = buildingTemplate;
+					}
+					else {
+						AI_faction->Town_center->Life = buildingNode.child("Life").attribute("value").as_int();
+						AI_faction->Town_center->state = (EntityState)buildingNode.child("State").attribute("value").as_int();
+						App->entityManager->WorldEntityList.push_back(AI_faction->Town_center);
+						App->fog->AddEntity(App->entityManager->AI_faction->Town_center);
+					}
+				}
+			
 			}
 		}
 	}
@@ -407,8 +435,9 @@ bool EntityManager::Load(pugi::xml_node & data)
 	player->resources.food = data.child("Player").attribute("food").as_int();
 	player->resources.stone = data.child("Player").attribute("stone").as_int();
 
+	player->faction = FREE_MEN;
 	player->tech_tree->Reset(FREE_MEN);
-
+	
 	player->tech_tree->available_techs.clear();
 	for (pugi::xml_attribute available_techs = data.child("Player").child("TechTree").child("AvailableTechs").attribute("TechType");
 	available_techs; available_techs = available_techs.next_attribute())
@@ -440,6 +469,7 @@ bool EntityManager::Load(pugi::xml_node & data)
 	AI_faction->resources.food = data.child("Enemy").attribute("food").as_int();
 	AI_faction->resources.stone = data.child("Enemy").attribute("stone").as_int();
 
+	AI_faction->faction = SAURON_ARMY;
 	AI_faction->tech_tree->Reset(SAURON_ARMY);
 
 	AI_faction->tech_tree->available_techs.clear();
