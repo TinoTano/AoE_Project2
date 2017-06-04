@@ -747,6 +747,7 @@ bool Gui::LoadHUDData()
 			proportions.y = unitNodeInfo.child("Position").attribute("y").as_int();
 			bt.blit_sections.push_back(proportions);
 			bt.blit_sections.push_back(proportions);
+
 			bt.button = nullptr;
 
 			string wood(unitNodeInfo.child("Cost").attribute("woodCost").as_string());

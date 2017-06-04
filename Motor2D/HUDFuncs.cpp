@@ -87,7 +87,7 @@ void HUD::HUDCreateBuildings()
 		for (uint i2 = 0; i2 < App->gui->building_bt.size(); ++i2) {
 			if (App->gui->building_bt[i2].type == available_buildings[i])
 				if (App->gui->building_bt[i2].button == nullptr) {
-					App->gui->building_bt[i2].button = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[c].x - CAMERA_OFFSET_X, buttons_positions[c].y - CAMERA_OFFSET_Y, buildings_rects[c], buttons_positions, TIER2);
+					App->gui->building_bt[i2].button = (Button*)App->gui->CreateButton("gui/BuildingMiniatures.png", buttons_positions[c].x - CAMERA_OFFSET_X, buttons_positions[c].y - CAMERA_OFFSET_Y, App->gui->building_bt[i2].blit_sections, buttons_positions, TIER2);
 					c++;
 					all_bt.push_back(App->gui->building_bt[i2].button);
 				}
