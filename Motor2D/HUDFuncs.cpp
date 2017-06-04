@@ -37,6 +37,7 @@ void HUD::HUDVillagerMenu()
 void HUD::HUDClearVillagerMenu()
 {
 	App->gui->DestroyUIElement(create_building_bt);
+	create_building_bt = nullptr;
 	blit_sections.clear();
 }
 
@@ -108,6 +109,7 @@ void HUD::HUDClearCreateBuildings()
 		App->gui->building_bt[i].button = nullptr;
 	}
 	App->gui->DestroyUIElement(cancel_bt);
+	cancel_bt = nullptr;
 	blit_sections.clear();
 }
 
@@ -512,23 +514,23 @@ void HUD::ClearMultiple()
 }
 
 void HUD::ClearBuilding() {
+
+	if (single != nullptr)
 	App->gui->DestroyUIElement(single);
+	if (name != nullptr)
 	App->gui->DestroyUIElement(name);
+	if(life != nullptr)
 	App->gui->DestroyUIElement(life);
 
-	switch (building_state)
-	{
-	case BUILDINGMENU:
-		HUDClearBuildingMenu();
-		break;
-	case BUILDINGCREATEUNITS:
-		HUDClearCreateUnits();
-		break;
-	case BUILDINGCREATEHERO:
-		HUDClearCreateHero();
-		break;
-	}
+	HUDClearBuildingMenu();
+
+	HUDClearCreateUnits();
+
+	HUDClearCreateHero();
+	
 	building_state = BUILDINGNULL;
+	selected_building = nullptr;
+
 }
 
 void HUD::ClearSingle()
@@ -556,20 +558,23 @@ void HUD::ClearSingle()
 		App->gui->DestroyUIElement(life);
 	}
 
-	switch (villager_state)
-	{
-	case VILLAGERMENU:
+
 		HUDClearVillagerMenu();
-		break;
-	case VILLAGERCREATEBUILDINGS:
+
 		HUDClearCreateBuildings();
-		break;
-	}
-	switch (hero_state)
-	{
-	case HEROMENU:
+	
 		HUDClearHeroMenu();
-	}
+
+	selected_unit = nullptr;
+
+	single = nullptr;
+	name = nullptr;
+	armor_val = nullptr;
+	damage_val = nullptr;
+	life = nullptr;
+	sword_img = nullptr;
+	armor_img = nullptr;
+
 	blit_sections.clear();
 	villager_state = VILLAGERNULL;
 	hero_state = HERONULL;
@@ -577,17 +582,37 @@ void HUD::ClearSingle()
 
 void HUD::ClearResource()
 {
-	App->gui->DestroyUIElement(single);
-	App->gui->DestroyUIElement(name);
-	App->gui->DestroyUIElement(life);
+	if (single != nullptr)
+	{
+		App->gui->DestroyUIElement(single);
+		single = nullptr;
+	}
+	if (name != nullptr)
+	{
+		App->gui->DestroyUIElement(name);
+		name = nullptr;
+	}
+	if (life != nullptr)
+	{
+		App->gui->DestroyUIElement(life);
+		life = nullptr;
+	}
+
+	selected_resource = nullptr;
 }
 
 void HUD::ClearAll()
 {
+	ClearSingle();
+	ClearBuilding();
+	ClearMultiple();
+	ClearResource();
+
 	for (uint i = 0; i < all_bt.size(); ++i) {
 		App->gui->DestroyUIElement(all_bt[i]);
 	}
 	all_bt.clear();
+
 	for (uint i = 0; i < App->gui->building_bt.size(); ++i) {
 		App->gui->DestroyUIElement(App->gui->building_bt[i].button);
 		App->gui->building_bt[i].button = nullptr;
@@ -597,10 +622,11 @@ void HUD::ClearAll()
 		App->gui->unit_bt[i].button = nullptr;
 	}
 
-
+	type = NONE;
 	villager_state = VILLAGERNULL;
 	hero_state = HERONULL;
 	building_state = BUILDINGNULL;
+	studying_tech = false;
 
 }
 

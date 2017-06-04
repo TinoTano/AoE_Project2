@@ -417,6 +417,7 @@ bool Scene::PostUpdate()
 	else if (buttons[BACKTOMENU]->current == CLICKUP) {
 		App->sceneManager->ChangeScene(this, App->sceneManager->menu_scene);
 		App->entityManager->game_stops = false;
+			
 	}
 
 	return ret;
@@ -431,6 +432,7 @@ bool Scene::CleanUp()
 	ui_menu.CleanUp();
 	surrender_menu.CleanUp();
 
+	App->gui->hud->ClearAll();
 	App->gui->DestroyALLUIElements();
 
 	elements.clear();
