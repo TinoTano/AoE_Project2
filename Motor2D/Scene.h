@@ -73,7 +73,7 @@ public:
 	// RESOURCES 
 	Label* wood = nullptr, *food = nullptr, *gold = nullptr, *stone = nullptr, *villagers = nullptr;
 
-	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, CANCEL, LOADGAME, SURRENDER, YES, NO };
+	enum BUTTONS { MENU = 0, BACKTOMENU, QUITGAME, SAVEGAME, LOADGAME, CANCEL, SURRENDER, YES, NO };
 	enum IMAGES { TOP = 0, BOTTOM, MINIMAP, WINDOW };
 
 };
