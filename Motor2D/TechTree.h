@@ -47,7 +47,6 @@ struct Tech {
 	list<pair<unitType, buildingType>> unlocks_unit;
 	pair<float, TechMultiplier> multipliers;
 	buildingType unlocks_building;
-
 	buildingType researched_in;
 	bool researching = false;
 	Cost cost;
@@ -70,6 +69,7 @@ public:
 
 public:
 
+	bool researching_tech = false;
 	TechTree();
 
 	void Reset(Faction faction);

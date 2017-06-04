@@ -53,6 +53,7 @@ void TechTree::Reset(Faction faction) {
 void TechTree::Update() {
 
 	string researched_tech, outcome;
+
 	if (!available_techs.empty()) {
 		Tech* tech = nullptr;
 		for (list<TechType>::iterator it = available_techs.begin(); it != available_techs.end(); it++) {
@@ -66,6 +67,7 @@ void TechTree::Update() {
 			if ((*it) >= 10) break;
 			if (tech != nullptr && tech->researching)
 			{
+				researching_tech = true;
 				//  --------------- GUI --------------
 				if (researched_tech == "") researched_tech = tech->name;
 
@@ -91,6 +93,7 @@ void TechTree::Update() {
 							if (tech->researched_in)
 								outcome = researched_tech + " has been researched";
 							App->gui->hud->AlertText(outcome, 3);
+							researching_tech = false;
 						}
 					}
 					//  --------------------------------
@@ -103,9 +106,11 @@ void TechTree::Update() {
 
 void TechTree::StartResearch(TechType tech_id)
 {
-	if (!all_techs.at(tech_id)->researching) {
-		all_techs.at(tech_id)->aux_timer = all_techs.at(tech_id)->research_timer.Read();
-		all_techs.at(tech_id)->researching = true;
+	if (researching_tech == false) {
+		if (!all_techs.at(tech_id)->researching) {
+			all_techs.at(tech_id)->aux_timer = all_techs.at(tech_id)->research_timer.Read();
+			all_techs.at(tech_id)->researching = true;
+		}
 	}
 }
 
