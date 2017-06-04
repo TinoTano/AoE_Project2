@@ -20,9 +20,10 @@ FogOfWar::~FogOfWar()
 
 bool FogOfWar::AddEntity(Entity* new_entity )
 {
-	if (new_entity->faction == FREE_MEN) 
+	if (new_entity->collider != nullptr && new_entity->faction == FREE_MEN) 
 	{
 		in_fog_entity new_ally;
+		
 		new_ally.pos = App->map->WorldToMap(new_entity->collider->pos.x, new_entity->collider->pos.y);
 		
 		Unit* aux = (Unit*)new_entity;

@@ -111,12 +111,13 @@ bool EntityManager::Update(float arg_dt)
 				switch (cursor_hover) {
 
 				case HOVERING_ENEMY:
-
-					if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
-						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-							unit = (Unit*)(*it);
-							unit->order_list.push_back(new UnitAttackOrder());
-							unit->state = ATTACKING;
+					if (clicked_on != nullptr) {
+						if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
+							for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+								unit = (Unit*)(*it);
+								unit->order_list.push_back(new UnitAttackOrder());
+								unit->state = ATTACKING;
+							}
 						}
 					}
 					break;
@@ -1168,7 +1169,7 @@ Building* EntityManager::FindNearestBuilding(Unit* unit) {
 
 	iPoint aux{ -1,-1 };
 	for (list<Building*>::iterator it = ally_buildings->begin(); it != ally_buildings->end(); it++) {
-		if ((*it)->state == BEING_BUILT && unit->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
+		if ((*it)->collider != nullptr && unit->collider != nullptr && (*it)->state == BEING_BUILT && unit->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
 			ret = (*it);
 			aux = (*it)->collider->pos;
 		}
@@ -1189,7 +1190,7 @@ Entity* EntityManager::FindTarget(Entity* entity) {
 
 	iPoint aux{ -1,-1 };
 	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
-		if ((*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
+		if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
 			ret = (*it);
 			aux = (*it)->entityPosition;
 		}
@@ -1203,7 +1204,7 @@ Entity* EntityManager::FindTarget(Entity* entity) {
 		enemy_buildings = &player->buildings;
 
 	for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
-		if ((*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
+		if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
 			ret = (*it);
 			aux = (*it)->collider->pos;
 		}
@@ -1338,7 +1339,7 @@ void EntityManager::FillSelectedList() {
 
 	}
 
-	if (!selectedEntityList.empty()) {
+	if (!selectedEntityList.empty() && selectedEntityList.front()->collider != nullptr) {
 		selectedListType = selectedEntityList.front()->collider->type;
 		if(selectedListType == COLLIDER_UNIT)
 			App->audio->PlaySelectSound((Unit*)selectedEntityList.front());

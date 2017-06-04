@@ -129,32 +129,34 @@ MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 	//App->pathfinding->DeletePath(unit->path_id);
 	unit->path.clear();
 
-	iPoint origin = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
-	iPoint destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
+	if (unit->collider != nullptr) {
+		iPoint origin = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
+		iPoint destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
 
-	if (!App->pathfinding->IsWalkable(destMap, unit->collider) /*&& !App->collision->FindCollider(destMap, unit->collider->r, unit->collider)*/)
-		destMap = App->pathfinding->FindNearestAvailable(destMap, 5);
+		if (!App->pathfinding->IsWalkable(destMap, unit->collider) /*&& !App->collision->FindCollider(destMap, unit->collider->r, unit->collider)*/)
+			destMap = App->pathfinding->FindNearestAvailable(destMap, 5);
 
-	if (!App->pathfinding->IsWalkable(origin, unit->collider))
-		origin = App->pathfinding->FindNearestAvailable(origin, 5);
+		if (!App->pathfinding->IsWalkable(origin, unit->collider))
+			origin = App->pathfinding->FindNearestAvailable(origin, 5);
 
-	if (origin.x == -1 || destMap.x == -1) {
-		state == COMPLETED;
-		return;
+		if (origin.x == -1 || destMap.x == -1) {
+			state == COMPLETED;
+			return;
+		}
+
+		iPoint worldOrigin = App->map->MapToWorld(origin.x, origin.y);
+		App->pathfinding->current_unit = unit;
+		unit->path = App->pathfinding->CreatePath(worldOrigin, destMap);
+		App->pathfinding->current_unit = nullptr;
+		if (unit->path.empty()) {
+			state = COMPLETED;
+			return;
+		}
+		/*else {
+		unit->pathReady = false;
+		unit->pathIsCalculating = true;
+		}*/
 	}
-
-	iPoint worldOrigin = App->map->MapToWorld(origin.x, origin.y);
-	App->pathfinding->current_unit = unit;
-	unit->path = App->pathfinding->CreatePath(worldOrigin, destMap);
-	App->pathfinding->current_unit = nullptr;
-	if (unit->path.empty()) {
-		state = COMPLETED;
-		return;
-	}
-	/*else {
-	unit->pathReady = false;
-	unit->pathIsCalculating = true;
-	}*/
 
 	lastPathPos = destWorld;
 
