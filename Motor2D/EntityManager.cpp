@@ -229,11 +229,11 @@ bool EntityManager::Update(float arg_dt)
 		if (!selectedEntityList.empty())
 			DrawSelectedList();
 
-		if (multiSelectionRect.w != 0) {
+		if (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
 			Sprite square;
 
 			square.rect = multiSelectionRect;
-			square.priority = 100000;
+			square.priority = 10000;
 			square.r = 255;
 			square.g = 255;
 			square.b = 255;
