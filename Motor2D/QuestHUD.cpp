@@ -51,6 +51,13 @@ void QuestHUD::Update()
 			vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14, nullptr);
 			vec_quest.front()->desc_lbl->SetColor({ 255, 255, 255, 255 });
 		}
+		if (vec_quest.size() == 2) {
+			vec_quest.back()->name += ":";
+			vec_quest.back()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy + 14 + 2, App->font->fonts[FOURTEEN]);
+			vec_quest.back()->name_lbl->SetColor({ 255, 255, 255, 255 });
+			vec_quest.back()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14 + 2+ 14, nullptr);
+			vec_quest.back()->desc_lbl->SetColor({ 255, 255, 255, 255 });
+		}
 	}
 
 }
