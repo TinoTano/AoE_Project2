@@ -205,9 +205,9 @@ bool EntityManager::Update(float arg_dt)
 				App->render->sprites_toDraw.push_back(aux);
 			}
 			else {
+				// Selecting units by clicking/dragging
 				switch (App->input->GetMouseButtonDown(SDL_BUTTON_LEFT))
 				{
-
 				case KEY_DOWN:
 					multiSelectionRect.x = mouseX;
 					multiSelectionRect.y = mouseY;
@@ -222,6 +222,26 @@ bool EntityManager::Update(float arg_dt)
 
 					FillSelectedList();
 					break;
+				}
+
+				// Selecting ALL units by shortcut
+				if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+				{
+					selectedEntityList.clear();
+					for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) 
+					{
+						if (App->render->CullingCam((*it)->entityPosition))
+						{
+							if ((*it)->faction == FREE_MEN && (*it)->entityType == ENTITY_UNIT)
+								selectedEntityList.push_back((Entity*)(*it));
+						}
+					}
+
+					if (selectedEntityList.size() == 1)
+					{
+						list<Entity*>::iterator it = selectedEntityList.begin();
+						clicked_entity = (*it);
+					}
 				}
 			}
 		}
