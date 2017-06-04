@@ -151,6 +151,7 @@ void TechTree::Researched(TechType tech_id) {
 
 		available_techs.remove(tech_id);
 	}
+	App->gui->hud->tech_success = true;
 }
 
 

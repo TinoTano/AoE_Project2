@@ -383,6 +383,7 @@ void HUD::Update() {
 						if (building_state != BUILDINGMENU)
 						{
 							HUDBuildingMenu();
+							tech_success = false;
 						}
 						else {
 							if (create_unit_bt != nullptr)
@@ -423,14 +424,25 @@ void HUD::Update() {
 								if (App->gui->tech_bt[i].button != nullptr) {
 									if (App->gui->tech_bt[i].button->current == CLICKUP)
 									{
-										if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost))
+										if (App->entityManager->player->tech_tree->researching_tech == false) {
+											if (App->entityManager->player->resources.Spend(App->entityManager->player->tech_tree->all_techs.at(App->gui->tech_bt[i].type)->cost))
+											{
+												App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
+												studying_tech = true;
+												tech_studied = App->gui->tech_bt[i].type;
+											}
+										}
+										else
 										{
-											App->entityManager->player->tech_tree->StartResearch(App->gui->tech_bt[i].type);
-											studying_tech = true;
-											tech_studied = App->gui->tech_bt[i].type;
+											App->audio->PlayFx(POPULATION_LIMIT);
 										}
 									}
 								}
+							}
+							if (tech_success) {
+								tech_success = false;
+								HUDClearBuildingMenu();
+								HUDBuildingMenu();
 							}
 							/*	}*/
 							/*else if (studying_tech) {

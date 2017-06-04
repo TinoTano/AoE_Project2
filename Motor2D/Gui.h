@@ -397,7 +397,7 @@ public:
 	// ------- OTHER USEFUL UTENSILS ------------
 	TextAlert alert;
 	void AlertText(string text, uint duration);
-
+	bool tech_success = false;
 };
 
 
