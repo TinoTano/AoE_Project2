@@ -42,7 +42,10 @@ bool FogOfWar::AddEntity(Entity* new_entity )
 		SoftEdges();
 	}
 	else
+	{
 		entities_not_in_fog.push_back(new_entity);
+		ManageEntities();
+	}
 
 	return true;
 }

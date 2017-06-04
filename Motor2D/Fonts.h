@@ -46,7 +46,7 @@ private:
 	const char* default_path;
 };
 
-enum fontslist { EIGHT, SIXTEEN, TWENTY, FOURTEEN, EIGHTEEN, TWENTYSIX };
+enum fontslist { EIGHT, SIXTEEN, TWENTY, FOURTEEN, EIGHTEEN, TWENTYSIX, EIGHTY };
 
 
 #endif // __FONTS_H__

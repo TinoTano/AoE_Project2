@@ -45,6 +45,7 @@ bool Fonts::Start()
 	Load(nullptr, 14);
 	Load(nullptr, 18);
 	Load(nullptr, 26);
+	Load(nullptr, 80);
 	return true;
 }
 
