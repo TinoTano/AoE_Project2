@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "Render.h"
 #include "Map.h"
+#include "Unit.h"
 #include "Window.h"
 #include "StaticQuadtree.h"
 
@@ -262,4 +263,21 @@ Collider* Collision::FindCollider(iPoint worldPos, int radius, Collider* collide
 	}
 
 	return col;
+}
+
+
+bool Collision::CheckCollisionsIn(iPoint worldPos) {
+
+	bool ret = false;
+
+	Collider* col = new Collider(*relevant_unit->collider);
+	col->pos = worldPos;
+
+	for (list<Collider*>::iterator it = colliders.begin(); it != colliders.end(); it++) {
+		if (col->CheckCollision(*it))
+			ret = true;
+	}
+	RELEASE(col);
+
+	return ret;
 }

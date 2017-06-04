@@ -100,11 +100,16 @@ bool Building::Update(float dt)
 			
 			if (creation_timer.Read() - aux_timer > App->entityManager->unitsDB[units_in_queue.front()]->cooldown_time * 1000) {
 
+
+				Unit* unit = App->entityManager->CreateUnit(entityPosition.x, entityPosition.y + 250, units_in_queue.front());
+
+				App->collision->relevant_unit = unit;
 				iPoint creation_place = App->map->WorldToMap(entityPosition.x, entityPosition.y + 250);
 				creation_place = App->pathfinding->FindNearestAvailable(creation_place, 5);
 				creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
+				App->collision->relevant_unit = nullptr;
 
-				Unit* unit = App->entityManager->CreateUnit(creation_place.x, creation_place.y, units_in_queue.front());
+				unit->entityPosition = creation_place;
 
 				if (unit->faction == SAURON_ARMY && App->ai->state == OFFENSIVE)
 					App->ai->last_attack_squad.push_back(unit);

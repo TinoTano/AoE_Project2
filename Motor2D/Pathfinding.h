@@ -58,9 +58,6 @@ private:
 	uint height;
 	// all map walkability values [0..255]
 	uchar* map;
-public:
-	Unit* current_unit;
-
 };
 
 // forward declaration

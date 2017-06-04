@@ -27,11 +27,12 @@ MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 	unit->path.clear();
 	iPoint origin = App->map->WorldToMap(unit->collider->pos.x, unit->collider->pos.y);
 	iPoint destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
+	App->collision->relevant_unit = unit;
 
-	if (!App->pathfinding->IsWalkable(destMap, unit->collider) && !App->collision->FindCollider(destMap, unit->collider->r, unit->collider))
+	if (!App->pathfinding->IsWalkable(destMap))
 		destMap = App->pathfinding->FindNearestAvailable(destMap, 5);
 
-	if (!App->pathfinding->IsWalkable(origin, unit->collider))
+	if (!App->pathfinding->IsWalkable(origin))
 		origin = App->pathfinding->FindNearestAvailable(origin, 5);
 
 	if (origin.x == -1 || destMap.x == -1) {
@@ -44,15 +45,15 @@ MoveToOrder::MoveToOrder(Unit* unit, iPoint destWorld) {
 	path.origin = origin;
 	path.destination = destMap;
 
-	App->pathfinding->current_unit = unit;
 	App->pathfinding->CalculatePath(&path);
-	App->pathfinding->current_unit = nullptr;
 
 	for (list<iPoint>::iterator it = path.finished_path.begin(); it != path.finished_path.end(); it++)
 		unit->path.push_back((*it));
 
 	destMap = App->map->WorldToMap(destWorld.x, destWorld.y);
 	unit->path.push_back(destMap);
+
+	App->collision->relevant_unit = nullptr;
 }
 
 void MoveToOrder::Start(Unit* unit) {
@@ -80,7 +81,16 @@ void MoveToOrder::Execute(Unit* unit) {
 		unit->entityPosition = unit->next_pos;
 		iPoint posMap = App->map->WorldToMap(unit->entityPosition.x, unit->entityPosition.y);
 
-		fPoint velocity = unit->CheckStep();
+		fPoint velocity;
+		velocity.x = unit->destinationTileWorld.x - unit->collider->pos.x;
+		velocity.y = unit->destinationTileWorld.y - unit->collider->pos.y;
+
+		if (velocity.x != 0 || velocity.y != 0)
+			velocity.Normalize();
+
+		velocity = velocity * unit->unitMovementSpeed * App->entityManager->dt;
+		roundf(velocity.x);
+		roundf(velocity.y);
 
 		unit->next_pos.x = unit->entityPosition.x + int(velocity.x);
 		unit->next_pos.y = unit->entityPosition.y + int(velocity.y);

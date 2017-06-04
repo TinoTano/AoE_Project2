@@ -44,12 +44,12 @@ bool PathFinding::CheckBoundaries(const iPoint& pos) const
 }
 
 // Utility: returns true is the tile is walkable
-bool PathFinding::IsWalkable(const iPoint& pos, Collider* collider_to_ignore)
+bool PathFinding::IsWalkable(const iPoint& Mappos, Collider* collider_to_ignore)
 {
-	uchar t = GetTileAt(pos);
-	iPoint worldpos = App->map->MapToWorld(pos.x, pos.y);
+	uchar t = GetTileAt(Mappos);
+	iPoint WorldPos = App->map->MapToWorld(Mappos.x, Mappos.y);
 
-	return (t != INVALID_WALK_CODE && !App->collision->FindCollider(worldpos, 0, collider_to_ignore));
+	return (t != INVALID_WALK_CODE && !App->collision->CheckCollisionsIn(WorldPos));
 }
 
 // Utility: return the walkability value of a tile
@@ -181,7 +181,7 @@ bool PathFinding::Jump(int current_x, int current_y, int dx, int dy, iPoint star
 {
 	iPoint next(current_x + dx, current_y + dy);
 
-	if (IsWalkable(next, current_unit->collider) == false)
+	if (IsWalkable(next) == false)
 		return false;
 	else if (next.x == end.x && next.y == end.y)
 	{
@@ -191,12 +191,12 @@ bool PathFinding::Jump(int current_x, int current_y, int dx, int dy, iPoint star
 
 	if (dx != 0 && dy != 0) // Diagonal Case   
 	{
-		if (!IsWalkable(iPoint(current_x + dx, current_y), current_unit->collider))
+		if (!IsWalkable(iPoint(current_x + dx, current_y)))
 		{
 			new_node.pos = next;
 			return true;
 		}
-		else if (!IsWalkable(iPoint(current_x, current_y + dy), current_unit->collider))
+		else if (!IsWalkable(iPoint(current_x, current_y + dy)))
 		{
 			new_node.pos = next;
 			return true;
@@ -214,17 +214,17 @@ bool PathFinding::Jump(int current_x, int current_y, int dx, int dy, iPoint star
 	{
 		if (dx != 0) // Horizontal case
 		{
-			if (!IsWalkable(iPoint(current_x, current_y + 1), current_unit->collider))
+			if (!IsWalkable(iPoint(current_x, current_y + 1)))
 			{
-				if (IsWalkable(iPoint(current_x + dx, current_y + 1), current_unit->collider))
+				if (IsWalkable(iPoint(current_x + dx, current_y + 1)))
 				{
 					new_node.pos = next;
 					return true;
 				}
 			}
-			else if (!IsWalkable(iPoint(current_x, current_y - 1), current_unit->collider))
+			else if (!IsWalkable(iPoint(current_x, current_y - 1)))
 			{
-				if (IsWalkable(iPoint(current_x + dx, current_y - 1), current_unit->collider))
+				if (IsWalkable(iPoint(current_x + dx, current_y - 1)))
 				{
 					new_node.pos = next;
 					return true;
@@ -233,17 +233,17 @@ bool PathFinding::Jump(int current_x, int current_y, int dx, int dy, iPoint star
 		}
 		else // Vertical case
 		{
-			if (!IsWalkable(iPoint(current_x + 1, current_y), current_unit->collider))
+			if (!IsWalkable(iPoint(current_x + 1, current_y)))
 			{
-				if (IsWalkable(iPoint(current_x + 1, current_y + dy), current_unit->collider))
+				if (IsWalkable(iPoint(current_x + 1, current_y + dy)))
 				{
 					new_node.pos = next;
 					return true;
 				}
 			}
-			else if (!IsWalkable(iPoint(current_x - 1, current_y), current_unit->collider))
+			else if (!IsWalkable(iPoint(current_x - 1, current_y)))
 			{
-				if (IsWalkable(iPoint(current_x - 1, current_y + dy), current_unit->collider))
+				if (IsWalkable(iPoint(current_x - 1, current_y + dy)))
 				{
 					new_node.pos = next;
 					return true;
@@ -263,7 +263,7 @@ void PathFinding::CalculatePath(Path * path)
 
 	while (path->open.pathNodeList.size() > 0)
 	{
-		if (path->closed.pathNodeList.size() > 75) {
+		if (path->closed.pathNodeList.size() > 350) {
 			path->finished_path.push_back(path->destination);
 			break;
 		}

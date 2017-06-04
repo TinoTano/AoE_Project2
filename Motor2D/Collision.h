@@ -81,6 +81,7 @@ public:
 	void DeleteCollider(Collider* collider);
 
 	Collider* FindCollider(iPoint point, int radius = 0, Collider* collider_to_ignore = nullptr);
+	bool CheckCollisionsIn(iPoint worldPos);
 	void DebugDraw();
 
 private:
@@ -94,6 +95,7 @@ private:
 public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
 	StaticQuadTree* quadTree = nullptr;
+	Unit* relevant_unit = nullptr;
 };
 
 #endif // __ModuleCollision_H__
