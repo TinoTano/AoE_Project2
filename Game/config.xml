@@ -32,4 +32,7 @@
         <quest>
                <data file="quests/questData.xml"/>
         </quest>
+     	<input>
+               <shortcuts select_units="Q" select_villagers="W" restart_camera="E" hero_attack="SPACE" />
+        </input>
 </config>

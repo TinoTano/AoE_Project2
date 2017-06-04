@@ -9,6 +9,14 @@
 
 struct SDL_Rect;
 
+enum Controls {
+	SELECT_ALL_UNITS,
+	SELECT_ALL_VILLAGERS,
+	MOVE_CAMERA,
+	HERO_SPECIAL_ATTACK,
+	__LAST_CONTROLS
+};
+
 enum EventWindow
 {
 	WE_QUIT = 0,
@@ -73,6 +81,10 @@ public:
 
 	string	GetText();
 	uint	TextSize();
+
+	SDL_Scancode SelectedKey(std::string s);
+	int controls[__LAST_CONTROLS];
+
 private:
 	bool		windowEvents[WE_COUNT];
 	KeyState*	keyboard;

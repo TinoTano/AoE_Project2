@@ -226,7 +226,7 @@ bool EntityManager::Update(float arg_dt)
 				}
 
 				// Selecting ALL units by shortcut
-				if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
+				if (App->input->GetKey(App->input->controls[SELECT_ALL_UNITS]) == KEY_DOWN)
 				{
 					selectedEntityList.clear();
 					for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) 
@@ -248,7 +248,7 @@ bool EntityManager::Update(float arg_dt)
 					}
 				}
 
-				if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+				if (App->input->GetKey(App->input->controls[SELECT_ALL_VILLAGERS]) == KEY_DOWN)
 				{
 					selectedEntityList.clear();
 					for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++)
