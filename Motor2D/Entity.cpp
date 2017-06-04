@@ -39,15 +39,27 @@ void Entity::drawLife(iPoint barPos) {
 	bar.rect.w = HPBAR_WIDTH;
 	bar.rect.h = bar2.rect.h = 5;
 	bar.priority = entityPosition.y + 10;
+
 	bar.r = 255;
-	bar.g = 0;
-	bar.b = 0;
+	bar.g = 255;
+	bar.b = 255;
+
 
 	bar2.rect.w = MIN(HPBAR_WIDTH, MAX(HPBAR_WIDTH - barPercent, 0));
 	bar2.priority = entityPosition.y + 11;
-	bar2.r = 0;
-	bar2.g = 255;
-	bar2.b = 0;
+
+	if (faction == FREE_MEN)
+	{
+		bar2.r = 0;
+		bar2.g = 255;
+		bar2.b = 0;
+	}
+	else
+	{
+		bar2.r = 255;
+		bar2.g = 0;
+		bar2.b = 0;
+	}
 
 	App->render->sprites_toDraw.push_back(bar);
 	App->render->sprites_toDraw.push_back(bar2);
