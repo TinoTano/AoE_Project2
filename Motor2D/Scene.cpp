@@ -278,7 +278,7 @@ bool Scene::Update(float dt)
 	}
 
 	// Move camera by shortcut
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN) {
+	if (App->input->GetKey(SDL_SCANCODE_E) == KEY_DOWN) {
 
 		iPoint cameraOldPos = { App->render->camera.x, App->render->camera.y };
 

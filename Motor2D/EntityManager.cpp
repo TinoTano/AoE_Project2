@@ -233,7 +233,32 @@ bool EntityManager::Update(float arg_dt)
 						if (App->render->CullingCam((*it)->entityPosition))
 						{
 							if ((*it)->faction == FREE_MEN && (*it)->entityType == ENTITY_UNIT)
-								selectedEntityList.push_back((Entity*)(*it));
+							{
+								Unit* aux = (Unit*)(*it);
+								if (aux->IsVillager == false) selectedEntityList.push_back((Entity*)(*it));
+							}
+						}
+					}
+
+					if (selectedEntityList.size() == 1)
+					{
+						list<Entity*>::iterator it = selectedEntityList.begin();
+						clicked_entity = (*it);
+					}
+				}
+
+				if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+				{
+					selectedEntityList.clear();
+					for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++)
+					{
+						if (App->render->CullingCam((*it)->entityPosition))
+						{
+							if ((*it)->faction == FREE_MEN && (*it)->entityType == ENTITY_UNIT)
+							{
+								Unit* aux = (Unit*)(*it);
+								if (aux->IsVillager == true) selectedEntityList.push_back((Entity*)(*it));
+							}
 						}
 					}
 
