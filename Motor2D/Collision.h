@@ -88,7 +88,6 @@ private:
 
 	list<Collider*> colliders;
 	list<Collider*> colliders_to_delete;
-	bool debug = false;
 	
 	list<Collider*> potential_collisions;
 
@@ -96,6 +95,7 @@ public:
 	bool matrix[COLLIDER_MAX][COLLIDER_MAX];
 	StaticQuadTree* quadTree = nullptr;
 	Unit* relevant_unit = nullptr;
+	bool debug = false;
 };
 
 #endif // __ModuleCollision_H__

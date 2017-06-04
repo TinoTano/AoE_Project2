@@ -47,6 +47,8 @@ bool CutSceneManager::Start()
 	App->render->culling_cam.x = -App->render->camera.x - 300;
 	App->render->culling_cam.y = -App->render->camera.y - 300;
 
+	App->pathfinding->isGameScene = false;
+
 	return true;
 }
 

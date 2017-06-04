@@ -100,6 +100,7 @@ bool Collision::CleanUp()
 
 	colliders.clear();
 	quadTree->ClearTree();
+	debug = false;
 
 	return true;
 }

@@ -63,7 +63,8 @@ private:
 	uchar* map;
 
 public:
-	Unit* current_unit;
+	Unit* current_unit = nullptr;
+	bool isGameScene = false;
 };
 
 // forward declaration

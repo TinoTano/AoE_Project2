@@ -64,6 +64,8 @@ bool Scene::Start()
 		start = true;
 	}
 
+	App->pathfinding->isGameScene = true;
+
 	// Loading camera position && limits =======================================
 
 	App->render->camera.x = STARTING_CAMERA_X;

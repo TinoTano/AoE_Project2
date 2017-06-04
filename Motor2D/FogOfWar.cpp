@@ -54,7 +54,10 @@ bool FogOfWar::AddEntity(Entity* new_entity )
 
 uint FogOfWar::Get(int x, int y)
 {
-	return data[(y*App->map->data.width) + x];
+	if (((y*App->map->data.width) + x) < dataSize) {
+		return data[(y*App->map->data.width) + x];
+	}
+	return 0;
 }
 
 bool FogOfWar::Awake(pugi::xml_node& conf)
@@ -71,10 +74,10 @@ bool FogOfWar::Start()
 {
 	active = true;
 
-	int size = App->map->data.width*App->map->data.height;
-	data = new uint[size];
+	dataSize = App->map->data.width*App->map->data.height;
+	data = new uint[dataSize];
 
-	memset(data, 0, size * sizeof(uint));
+	memset(data, 0, dataSize * sizeof(uint));
 	texture_grey = App->tex->Load(path_texture1.c_str());
 	texture_black = App->tex->Load(path_texture2.c_str());
 

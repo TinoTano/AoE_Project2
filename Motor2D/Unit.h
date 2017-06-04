@@ -83,8 +83,6 @@ public:
 
 	iPoint next_pos = { 0,0 };
 
-private:
-	bool debugMode = false;
 };
 
 

@@ -49,7 +49,10 @@ bool PathFinding::IsWalkable(const iPoint& pos, Collider* collider_to_ignore)
 	uchar t = GetTileAt(pos);
 	iPoint worldpos = App->map->MapToWorld(pos.x, pos.y);
 
-	return (t != INVALID_WALK_CODE && !App->collision->FindCollider(worldpos, 0, collider_to_ignore));
+	if (!isGameScene) {
+		return (t != INVALID_WALK_CODE && t > 0);
+	}
+	return (t != INVALID_WALK_CODE && t > 0 && !App->collision->FindCollider(worldpos, 0, collider_to_ignore));
 }
 
 // Utility: return the walkability value of a tile
@@ -354,18 +357,18 @@ void PathFinding::CalculatePath(Path * path)
 				path->finished_path[i].y = current_world.y + path->difference.y;
 			}
 
-			/*iPoint dest = path->finished_path.back();
+			iPoint dest = path->finished_path.back();
 			vector<iPoint> tempPath;
 
 			for (int i = 0; i < path->finished_path.size(); i++) {
-			if (path->finished_path[i] != dest) {
-			if (path->finished_path[i+1].DistanceTo(dest) < path->finished_path[i].DistanceTo(dest)) {
-			tempPath.push_back(path->finished_path[i]);
-			}
-			}
+				if (path->finished_path[i] != dest) {
+					if (path->finished_path[i+1].DistanceTo(dest) < path->finished_path[i].DistanceTo(dest)) {
+					tempPath.push_back(path->finished_path[i]);
+					}
+				}
 			}
 			path->finished_path.clear();
-			path->finished_path = tempPath;*/
+			path->finished_path = tempPath;
 
 			path->completed = true;
 

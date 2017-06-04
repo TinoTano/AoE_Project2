@@ -81,6 +81,7 @@ public:
 	iPoint				        prev_pos = { 0,0 };
 	iPoint				        next_pos = { 0,0 };
 	uint*						data = nullptr;
+	uint						dataSize = 0;
 
 private:
 	string                      path_texture1;
