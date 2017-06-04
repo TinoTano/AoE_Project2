@@ -25,13 +25,13 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	selectionWidth = resource->selectionWidth;
 	selectionAreaCenterPoint = resource->selectionAreaCenterPoint;
 	
-	
 	int rectID = rand() % resource->blit_rects.size();
 	blit_rect = resource->blit_rects.at(rectID);
 
-	if (res_type == BLACK_TREE || res_type == GREEN_TREE || res_type == GOLD_MINE || res_type == BUSH || res_type == STONE_MINE) {
+	if(selectionWidth)
 		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y }, selectionWidth, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
-	}
+	else
+		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y }, blit_rect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
 
 	entityType = ENTITY_RESOURCE;
 	
@@ -40,7 +40,7 @@ Resource::Resource(int posX, int posY, Resource* resource)
 
 }
 
-Resource::Resource(int posX, int posY, Resource * resource, SDL_Rect rect)
+Resource::Resource(int posX, int posY, Resource* resource, SDL_Rect rect)
 {
 	entityPosition.x = posX;
 	entityPosition.y = posY;
@@ -53,12 +53,12 @@ Resource::Resource(int posX, int posY, Resource * resource, SDL_Rect rect)
 	selectionWidth = resource->selectionWidth;
 	selectionAreaCenterPoint = resource->selectionAreaCenterPoint;
 
-
 	blit_rect = rect;
 
-	if (res_type == BLACK_TREE || res_type == GREEN_TREE || res_type == GOLD_MINE || res_type == BUSH || res_type == STONE_MINE) {
+	if (selectionWidth)
 		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y }, selectionWidth, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
-	}
+	else
+		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y }, blit_rect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
 
 	entityType = ENTITY_RESOURCE;
 

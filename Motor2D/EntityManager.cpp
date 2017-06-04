@@ -104,7 +104,6 @@ bool EntityManager::Update(float arg_dt)
 						RELEASE(*it2);
 						unit->order_list.clear();
 					}
-					unit->order_list.push_front(new MoveToOrder(unit, mouse));
 				}
 
 				Collider* clicked_on = CheckCursorHover(mouse);
@@ -116,7 +115,6 @@ bool EntityManager::Update(float arg_dt)
 					if (clicked_on->entity->state != DESTROYED && clicked_on->entity->isActive) {
 						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 							unit = (Unit*)(*it);
-							unit->order_list.pop_back();
 							unit->order_list.push_back(new UnitAttackOrder());
 							unit->state = ATTACKING;
 						}
@@ -125,13 +123,16 @@ bool EntityManager::Update(float arg_dt)
 
 				case HOVERING_RESOURCE:
 
-					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-						unit = (Unit*)(*it);
-						if (unit->IsVillager) {
-							villager = (Villager*)unit;
-							resource = (Resource*)clicked_on->entity;
-							villager->resource_carried = resource->contains;
-							villager->order_list.push_back(new GatherOrder());
+					resource = (Resource*)clicked_on->entity;
+
+					if (resource->contains != NONE) {
+						for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+							unit = (Unit*)(*it);
+							if (unit->IsVillager) {
+								villager = (Villager*)unit;
+								villager->resource_carried = resource->contains;
+								villager->order_list.push_back(new GatherOrder());
+							}
 						}
 					}
 					break;
@@ -148,6 +149,10 @@ bool EntityManager::Update(float arg_dt)
 					}
 
 				default:
+					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+						Unit* unit = (Unit*)(*it);
+						unit->order_list.push_front(new MoveToOrder(unit, mouse));
+					}
 					break;
 				}
 			}
