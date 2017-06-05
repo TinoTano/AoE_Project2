@@ -70,8 +70,9 @@ bool EntityManager::Update(float arg_dt)
 	}
 
 	for (list<Entity*>::iterator it = WorldEntityList.begin(); it != WorldEntityList.end(); it++) {
-
-		(*it)->Update(dt);
+		if (!game_stops) {
+			(*it)->Update(dt);
+		}
 
 		if (App->render->CullingCam((*it)->entityPosition))
 		{

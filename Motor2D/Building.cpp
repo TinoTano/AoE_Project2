@@ -138,7 +138,7 @@ bool Building::Draw()
 {
 	Sprite aux;
 	
-	if (state == BEING_BUILT || state == DESTROYED)
+	if (state == BEING_BUILT || (faction == SAURON_ARMY && state == DESTROYED && type != SAURON_TOWER))
 	{
 		aux.texture = entityTexture;
 		aux.pos.x = entityPosition.x - (imageWidth / 2);
@@ -177,7 +177,7 @@ bool Building::Draw()
 
 	if (lifebar_timer.ReadSec() < 5) {
 		iPoint p;
-		if (state == BEING_BUILT)
+		if (state == BEING_BUILT || (faction == SAURON_ARMY && state == DESTROYED && type != SAURON_TOWER))
 			p = { entityPosition.x - 25, entityPosition.y };
 		else
 			p = {entityPosition.x - 25, entityPosition.y - selectionAreaCenterPoint.y};
