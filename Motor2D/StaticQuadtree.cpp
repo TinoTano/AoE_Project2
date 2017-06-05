@@ -26,31 +26,46 @@ void StaticQuadTree::ClearTree() {
 }
 void StaticQuadTree::UpdateCol(Collider* col)
 {
-	int current_node = Locate(col);
-	if (current_node != col->quadtree_node && current_node >= 0 && current_node < 99) {
-		nodes.at(col->quadtree_node).remove(col);
-		nodes.at(col->quadtree_node = current_node).push_back(col);
+	if (col != nullptr)
+	{
+		int current_node = Locate(col);
+		if (current_node != col->quadtree_node && current_node >= 0 && current_node < 99) {
+			nodes.at(col->quadtree_node).remove(col);
+			nodes.at(col->quadtree_node = current_node).push_back(col);
+		}
 	}
-	
 }
 
 void StaticQuadTree::Insert(Collider* col) 
 {
-	col->quadtree_node = Locate(col);
-	if(col->quadtree_node < 99 && col->quadtree_node >= 0)
-		nodes.at(col->quadtree_node).push_back(col);
+	if (col != nullptr) {
+		col->quadtree_node = Locate(col);
+		if (col->quadtree_node < 99 && col->quadtree_node >= 0)
+			nodes.at(col->quadtree_node).push_back(col);
+	}
 }
 
 int StaticQuadTree::Locate(Collider* col) {
-	iPoint MapPos = App->map->WorldToMap(col->pos.x, col->pos.y);   
-	return ((trunc((float)(MapPos.y / NODES_FOR_ROW)) * NODES_FOR_ROW) + (trunc((float)(MapPos.x / NODES_FOR_ROW))));
-
+	iPoint MapPos;
+	if (col != nullptr) 
+	{
+		MapPos = App->map->WorldToMap(col->pos.x, col->pos.y);
+		return ((trunc((float)(MapPos.y / NODES_FOR_ROW)) * NODES_FOR_ROW) + (trunc((float)(MapPos.x / NODES_FOR_ROW))));
+	}
+	else
+	return 0;
 }
 void StaticQuadTree::Remove(Collider* col)
 {
-	nodes.at(col->quadtree_node).remove(col);
+	if (col != nullptr)
+	{
+		nodes.at(col->quadtree_node).remove(col);
+	}
 }
 void StaticQuadTree::Retrieve(list<Collider*> &potentialColliders, Collider* col)
 {
-	potentialColliders = nodes.at(col->quadtree_node);
+	if (col != nullptr) 
+	{
+		potentialColliders = nodes.at(col->quadtree_node);
+	}
 }
