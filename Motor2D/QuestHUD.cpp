@@ -63,12 +63,55 @@ void QuestHUD::Update()
 				vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14, nullptr);
 				vec_quest.front()->desc_lbl->SetColor({ 255, 255, 255, 255 });
 			}
+			else {
+				vec_quest.front()->name_lbl->pos.first = questx;
+				vec_quest.front()->name_lbl->pos.second = questy;
+				vec_quest.front()->desc_lbl->pos.first = questx;
+				vec_quest.front()->desc_lbl->pos.second = questy + 14;
+			}
 			if (vec_quest.back()->name_lbl == nullptr) {
 				vec_quest.back()->name += ":";
 				vec_quest.back()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.back()->name, questx, questy + 14 + 12, App->font->fonts[FOURTEEN]);
 				vec_quest.back()->name_lbl->SetColor({ 255, 165, 0, 255 });
 				vec_quest.back()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.back()->desc, questx, questy + 14 + 12 + 14, nullptr);
 				vec_quest.back()->desc_lbl->SetColor({ 255, 255, 255, 255 });
+			}
+			else {
+				vec_quest.back()->name_lbl->pos.first = questx;
+				vec_quest.back()->name_lbl->pos.second = questy + 14 + 12;
+				vec_quest.back()->desc_lbl->pos.first = questx;
+				vec_quest.back()->desc_lbl->pos.second = questy + 14 + 12 + 14;
+
+			}
+		}
+		if (vec_quest.size() == 3)
+		{
+			if (vec_quest.front()->name_lbl == nullptr) {
+				vec_quest.front()->name += ":";
+				vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy, App->font->fonts[FOURTEEN]);
+				vec_quest.front()->name_lbl->SetColor({ 255, 165, 0, 255 });
+				vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14, nullptr);
+				vec_quest.front()->desc_lbl->SetColor({ 255, 255, 255, 255 });
+			}
+			else {
+				vec_quest.front()->name_lbl->pos.first = questx;
+				vec_quest.front()->name_lbl->pos.second = questy;
+				vec_quest.front()->desc_lbl->pos.first = questx;
+				vec_quest.front()->desc_lbl->pos.second = questy + 14;
+			}
+			if (vec_quest.back()->name_lbl == nullptr) {
+				vec_quest.back()->name += ":";
+				vec_quest.back()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.back()->name, questx, questy + 14 + 12, App->font->fonts[FOURTEEN]);
+				vec_quest.back()->name_lbl->SetColor({ 255, 165, 0, 255 });
+				vec_quest.back()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.back()->desc, questx, questy + 14 + 12 + 14, nullptr);
+				vec_quest.back()->desc_lbl->SetColor({ 255, 255, 255, 255 });
+			}
+			else {
+				vec_quest.back()->name_lbl->pos.first = questx;
+				vec_quest.back()->name_lbl->pos.second = questy + 14 + 12;
+				vec_quest.back()->desc_lbl->pos.first = questx;
+				vec_quest.back()->desc_lbl->pos.second = questy + 14 + 12 + 14;
+
 			}
 		}
 	}
@@ -101,13 +144,38 @@ void QuestHUD::CleanUp()
 
 void QuestHUD::AddActiveQuest(string argname, string argdesc, int id)
 {
-	RemoveQuest(id);
+	
+	vector<QuestsShown*> quests;
+
+	for (list<QuestsShown*>::iterator it = vec_quest.begin(); it != vec_quest.end(); ++it) {
+	
+		string name((*it)->name);
+		string desc((*it)->desc);
+		uint i = (*it)->id;
+		RemoveQuest(id);
+
+		QuestsShown* quest;
+		quest = new QuestsShown();
+
+		quest->AddQuest(name, desc, i);
+
+		
+		quests.push_back(quest);
+	}
+
+	for (uint i = 0; i < quests.size(); ++i)
+	{
+		vec_quest.push_back(quests[i]);
+	}
+	quests.clear();
+
 
 	QuestsShown* quest;
 	quest = new QuestsShown();
 	quest->AddQuest(argname, argdesc, id);
 
 	vec_quest.push_back(quest);
+	int a = 3;
 }
 
 void QuestHUD::RemoveQuest(int argid)
