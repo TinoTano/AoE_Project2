@@ -39,9 +39,12 @@ void StaticQuadTree::UpdateCol(Collider* col)
 void StaticQuadTree::Insert(Collider* col) 
 {
 	if (col != nullptr) {
-		col->quadtree_node = Locate(col);
-		if (col->quadtree_node < 99 && col->quadtree_node >= 0)
-			nodes.at(col->quadtree_node).push_back(col);
+		int nodeNumber = Locate(col);
+		if (nodeNumber >= 0 && nodeNumber < 99) {
+			col->quadtree_node = Locate(col);
+			if (col->quadtree_node < 99 && col->quadtree_node >= 0)
+				nodes.at(col->quadtree_node).push_back(col);
+		}
 	}
 }
 
