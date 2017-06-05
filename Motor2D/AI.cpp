@@ -65,7 +65,7 @@ bool AI::Update(float dt) {
 					selected_building->state = IDLE;
 					completed = true;
 				}
-				else if (build_timer.ReadSec() >= 2) {
+				else if (build_timer.ReadSec() >= 3) {
 					selected_building->Life += 100;
 					build_timer.Start();
 				}
@@ -74,7 +74,7 @@ bool AI::Update(float dt) {
 				completed = (selected_building->units_in_queue.empty());
 		}
 
-		if (completed && AI_timer.ReadSec() > 20) {
+		if (completed && AI_timer.ReadSec() > 60) {
 
 			ChangeState();
 
@@ -89,7 +89,16 @@ bool AI::Update(float dt) {
 
 void AI::QueueUnits() {
 
-	for (int i = 0; i < 3; i++)
+	int num = 0, life = App->entityManager->unitsDB[available_unit[selected_building->type]]->MaxLife;
+
+	if (life < 50)
+		num = 5;
+	else if (life < 200)
+		num = 3;
+	else
+		num = 1;
+
+	for (int i = 0; i < num; i++)
 		selected_building->units_in_queue.push_back(available_unit[selected_building->type]);
 
 }
@@ -99,13 +108,18 @@ void AI::SelectBuilding(AI_state ai_state) {
 	vector<Building*> buildings;
 
 	for (list<Building*>::iterator it = Enemies->buildings.begin(); it != Enemies->buildings.end(); it++) {
-		if (((*it)->state == DESTROYED && ai_state == EXPANDING && (*it)->creation_timer.ReadSec() > 20) || ((*it)->state != DESTROYED && ai_state != EXPANDING))
+		if (((*it)->state == DESTROYED && ai_state == EXPANDING && (*it)->creation_timer.ReadSec() > 60) || ((*it)->state != DESTROYED && ai_state != EXPANDING))
 			buildings.push_back(*it);
 	}
 
 	if (!buildings.empty()) {
-		int random = rand() % buildings.size();
-		selected_building = buildings.at(random);
+
+		selected_building = buildings.front();
+
+		for (vector<Building*>::iterator it2 = buildings.begin(); it2 != buildings.end(); it2++) {
+			if ((*it2)->MaxLife < selected_building->MaxLife)
+				selected_building = (*it2);
+		}
 	}
 	else
 		selected_building = App->entityManager->AI_faction->Town_center;

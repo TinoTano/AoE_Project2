@@ -217,8 +217,16 @@ bool Scene::Start()
 	App->entityManager->AI_faction->Town_center;
 	App->ai->selected_building = App->entityManager->AI_faction->Town_center = App->entityManager->CreateBuilding(enemyTownCenterPos.x, enemyTownCenterPos.y, SAURON_TOWER);
 
-	App->entityManager->CreateBuilding(0, 500, ORC_BARRACKS);
-	App->entityManager->CreateBuilding(0, 4100, ORC_ARCHERY_RANGE);
+	Building* aux = App->entityManager->CreateBuilding(0, 500, ORC_BARRACKS);
+	aux->Life = aux->MaxLife;
+	aux->entityTexture = App->entityManager->buildingsDB[ORC_BARRACKS]->entityTexture;
+	aux->GetBuildingBoundaries();
+	aux->state = IDLE;
+	aux = App->entityManager->CreateBuilding(0, 4100, ORC_ARCHERY_RANGE);
+	aux->Life = aux->MaxLife;
+	aux->entityTexture = App->entityManager->buildingsDB[ORC_ARCHERY_RANGE]->entityTexture;
+	aux->GetBuildingBoundaries();
+	aux->state = IDLE;
 
 	App->entityManager->CreateBuilding(enemyTownCenterPos.x + 200, enemyTownCenterPos.y - 200, BEAST_PIT);
 	App->entityManager->CreateBuilding(enemyTownCenterPos.x - 200, enemyTownCenterPos.y - 200, ORC_ARCHERY_RANGE);
