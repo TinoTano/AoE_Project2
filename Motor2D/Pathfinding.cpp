@@ -52,7 +52,7 @@ bool PathFinding::IsWalkable(const iPoint& pos, Collider* collider_to_ignore)
 	if (!isGameScene) {
 		return (t != INVALID_WALK_CODE && t > 0);
 	}
-	return (t != INVALID_WALK_CODE && t > 0 && !App->collision->FindCollider(worldpos, 0, collider_to_ignore));
+	return (t != INVALID_WALK_CODE && !App->collision->FindCollider(worldpos, 0, collider_to_ignore));
 }
 
 // Utility: return the walkability value of a tile
@@ -131,10 +131,6 @@ uint PathNode::FindWalkableAdjacents(PathList& list_to_fill, int range) const
 			}
 		}
 	}
-
-	// Needs optimization for diagonals if sides are not walkable
-
-	return list_to_fill.pathNodeList.size();
 }
 
 // PathNode -------------------------------------------------------------------------
@@ -150,8 +146,11 @@ int PathNode::Score() const
 // ----------------------------------------------------------------------------------
 int PathNode::CalculateF(const iPoint& destination)
 {
-	g = parent->g + this->pos.DistanceManhattan(parent->pos);
-	h = pos.DistanceManhattan(destination);
+	/*g = parent->g + this->pos.DistanceManhattan(parent->pos);
+	h = pos.DistanceManhattan(destination);*/
+
+	g = parent->g + parent->pos.DistanceOctile(pos);
+	h = pos.DistanceOctile(destination) * 10;
 
 	return g + h;
 }
@@ -260,64 +259,6 @@ bool PathFinding::Jump(int current_x, int current_y, int dx, int dy, iPoint star
 	return Jump(next.x, next.y, dx, dy, start, end, new_node);
 }
 
-
-//void PathFinding::CalculatePath(Path * path)
-//{
-//
-//	while (path->open.pathNodeList.size() > 0)
-//	{
-//		if (path->closed.pathNodeList.size() > 75) {
-//			path->finished_path.push_back(path->destination);
-//			break;
-//		}
-//
-//		list<PathNode>::iterator lowest_score_node = path->open.GetNodeLowestScore(); // Get the lowest score node from the open list
-//		path->closed.pathNodeList.push_back(*lowest_score_node);						  // Adds it to the closed list
-//		path->open.pathNodeList.erase(lowest_score_node);								  // Delete the lowest_score_node from the open list
-//		list<PathNode>::iterator next_tile = --path->closed.pathNodeList.end();		  // Next tile will be the newly added node
-//
-//		if (next_tile->pos == path->destination)
-//		{
-//			path->finished_path.clear();
-//			const PathNode* path_node = &(*next_tile);
-//
-//			while (path_node) // We backtrack to create the resulting path
-//			{
-//				path->finished_path.push_back(path_node->pos); // That path will be stored in finished_path, inside path
-//				path_node = path_node->parent;
-//			}
-//
-//			path->finished_path.reverse();
-//
-//			break;	// As the path is completed we exit the loop
-//		}
-//		path->adjacent.pathNodeList.clear();											// Fill a list with all adjacent nodes
-//		next_tile->IdentifySuccessors(path->adjacent, path->origin, path->destination, this);
-//
-//		for (std::list<PathNode>::iterator it = path->adjacent.pathNodeList.begin(); it != path->adjacent.pathNodeList.end();)
-//		{																			// Iterate for every adjacent node
-//			if (path->closed.Find(it->pos) != path->closed.pathNodeList.end())
-//			{
-//				++it;
-//				continue;
-//			}
-//
-//			list<PathNode>::iterator adjacent_in_open = path->open.Find(it->pos);	// save from the open list to adjacent_in_open
-//																					// the node that has the position of the current
-//			if (adjacent_in_open == path->open.pathNodeList.end())						// iterator
-//			{
-//				it->CalculateF(path->destination);
-//				path->open.pathNodeList.push_back(*it);
-//			}
-//			else if (adjacent_in_open->g > it->g + 1)
-//			{
-//				adjacent_in_open->parent = it->parent;
-//				adjacent_in_open->CalculateF(path->destination);
-//			}
-//			++it;
-//		}
-//	}
-//}
 
 void PathFinding::CalculatePath(Path * path)
 {

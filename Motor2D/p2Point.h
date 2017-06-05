@@ -137,6 +137,17 @@ public:
 		return abs(v.x - x) + abs(v.y - y);
 	}
 
+	TYPE DistanceOctile(const p2Point& v) const
+	{
+		int xDistance = abs(x - v.x);
+		int yDistance = abs(y - v.y);
+		if (xDistance > yDistance)
+			return 14 * yDistance + 10 * (xDistance - yDistance);
+		else
+			return 14 * xDistance + 10 * (yDistance - xDistance);
+
+	}
+
 	void Normalize()
 	{
 		float module = sqrt(x * x + y * y);

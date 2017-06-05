@@ -208,6 +208,21 @@ void MoveToOrder::Execute(Unit* unit) {
 		roundf(velocity.x);
 		roundf(velocity.y);
 
+		if (unit->unitMovementSpeed >= 130) {
+			if (int(velocity.x) == 1) {
+				velocity.x = 2;
+			}
+			else if (int(velocity.x) == -1) {
+				velocity.x = -2;
+			}
+			if (int(velocity.y) == 1) {
+				velocity.y = 2;
+			}
+			else if (int(velocity.y) == -1) {
+				velocity.y = -2;
+			}
+		}
+
 		unit->entityPosition.x += int(velocity.x);
 		unit->entityPosition.y += int(velocity.y);
 

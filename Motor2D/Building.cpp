@@ -149,7 +149,12 @@ bool Building::Draw()
 		aux.texture = entityTexture;
 		aux.pos.x = entityPosition.x - (imageWidth / 2);
 		aux.pos.y = entityPosition.y - (imageHeight / 2);
-		aux.priority = entityPosition.y;
+		if (collider != nullptr) {
+			aux.priority = collider->pos.y;
+		}
+		else {
+			aux.priority = entityPosition.y/* - (r.h / 2) + r.h*/;
+		}
 		aux.rect.w = imageWidth;
 		aux.rect.h = imageHeight;
 	}
@@ -158,7 +163,12 @@ bool Building::Draw()
 		aux.texture = entityTexture;
 		aux.pos.x = entityPosition.x - (imageWidth / 2);
 		aux.pos.y = entityPosition.y - selectionAreaCenterPoint.y +  15;
-		aux.priority = entityPosition.y;
+		if (collider != nullptr) {
+			aux.priority = collider->pos.y;
+		}
+		else {
+			aux.priority = entityPosition.y/* - (r.h / 2) + r.h*/;
+		}
 		aux.rect.w = imageWidth;
 		aux.rect.h = imageHeight;
 	}

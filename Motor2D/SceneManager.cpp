@@ -40,7 +40,7 @@ bool SceneManager::Update(float dt)
 {
 	if (current_scene != nullptr)
 		current_scene->Update(dt);
-	return true;;
+	return true;
 }
 
 bool SceneManager::PostUpdate()

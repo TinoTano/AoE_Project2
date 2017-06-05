@@ -78,7 +78,12 @@ bool Resource::Draw()
 	resource.pos.x = entityPosition.x - (blit_rect.w / 2);
 	resource.pos.y = entityPosition.y - blit_rect.h;
 	resource.texture = entityTexture;
-	resource.priority = entityPosition.y;
+	if (collider != nullptr) {
+		resource.priority = collider->pos.y;
+	}
+	else {
+		resource.priority = entityPosition.y/* - (r.h / 2) + r.h*/;
+	}
 	resource.rect = blit_rect;
 
 	App->render->sprites_toDraw.push_back(resource);

@@ -150,7 +150,12 @@ bool Unit::Draw()
 	aux.texture = entityTexture;
 	aux.pos.x = entityPosition.x - (r.w / 2);
 	aux.pos.y = entityPosition.y - (r.h / 2);
-	aux.priority = entityPosition.y/* - (r.h / 2) + r.h*/;
+	if (collider != nullptr) {
+		aux.priority = collider->pos.y;
+	}
+	else {
+		aux.priority = entityPosition.y/* - (r.h / 2) + r.h*/;
+	}
 	aux.flip = currentAnim->at(currentDirection).flip;
 
 	App->render->sprites_toDraw.push_back(aux);
