@@ -190,7 +190,7 @@ bool Scene::Start()
 
 	// Music ==========================================================================================================
 
-	//App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
+	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
 
 	// Fog of war, entities & resources ===============================================================================
 

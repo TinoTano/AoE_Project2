@@ -133,7 +133,7 @@ bool MenuScene::Start()
 	App->gui->SetPriority();
 
 	// Menu Main Theme
-	//App->audio->PlayMusic("audio/music/m_menu.ogg", 0.0f);
+	App->audio->PlayMusic("audio/music/m_menu.ogg", 0.0f);
 
 	return ret;
 }
