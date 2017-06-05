@@ -105,7 +105,7 @@ bool Building::Update(float dt)
 
 				App->collision->relevant_unit = unit;
 				iPoint creation_place = App->map->WorldToMap(entityPosition.x, entityPosition.y + 250);
-				creation_place = App->pathfinding->FindNearestAvailable(creation_place, 5);
+				creation_place = App->pathfinding->FindNearestAvailable(creation_place, 10);
 				creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
 				App->collision->relevant_unit = nullptr;
 

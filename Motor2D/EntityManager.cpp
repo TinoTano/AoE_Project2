@@ -1183,7 +1183,7 @@ Entity* EntityManager::FindTarget(Entity* entity) {
 	list<Unit*>* enemy_units = nullptr;
 	Entity* ret = nullptr;
 
-	if (entity->faction == player->faction)
+	if (entity->faction == FREE_MEN)
 		enemy_units = &AI_faction->units;
 	else
 		enemy_units = &player->units;
@@ -1204,7 +1204,7 @@ Entity* EntityManager::FindTarget(Entity* entity) {
 		enemy_buildings = &player->buildings;
 
 	for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
-		if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
+		if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < entity->collider->pos.DistanceTo(aux)) {
 			ret = (*it);
 			aux = (*it)->collider->pos;
 		}
