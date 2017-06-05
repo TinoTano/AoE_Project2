@@ -131,6 +131,7 @@ uint PathNode::FindWalkableAdjacents(PathList& list_to_fill, int range) const
 			}
 		}
 	}
+	return list_to_fill.pathNodeList.size();
 }
 
 // PathNode -------------------------------------------------------------------------
