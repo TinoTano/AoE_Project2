@@ -216,7 +216,7 @@ void Building::Destroy() {
 
 		if (App->render->CullingCam(this->entityPosition))
 		{
-			App->audio->PlayFx(rand() % ((BUILDING_DEATH_4 - BUILDING_DEATH_1) + 1) - BUILDING_DEATH_1);
+			App->audio->PlayFx(rand() % ((BUILDING_DEATH_4 - BUILDING_DEATH_1) + 1) + BUILDING_DEATH_1);
 		}
 
 		if (faction == FREE_MEN) App->fog->DeleteEntityFog(this->entityID);
