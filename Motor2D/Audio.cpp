@@ -121,12 +121,12 @@ bool Audio::Awake(pugi::xml_node& config)
 
 void Audio::PlayUnitDeadSound(Unit* unit) {
 
-	if (App->render->CullingCam(unit->entityPosition) && (unit->faction== FREE_MEN || unit->isActive == true))
+	if (App->render->CullingCam(unit->entityPosition) && (unit->faction == FREE_MEN || unit->isActive == true))
 	{
 		if (unit->type == ELVEN_CAVALRY || unit->type == GONDOR_KNIGHT || unit->type == ROHAN_KNIGHT || unit->type == MOUNTED_DUNEDAIN)
-			App->audio->PlayFx(rand() % ((HORSE_DEAD_3 - HORSE_DEAD_1) + 1) - HORSE_DEAD_1);
+			App->audio->PlayFx(rand() % ((HORSE_DEAD_3 - HORSE_DEAD_1) + 1) + HORSE_DEAD_1);
 		else
-			App->audio->PlayFx(rand() % ((DEAD_SOUND_6 - DEAD_SOUND_1) + 1) - DEAD_SOUND_1);
+			App->audio->PlayFx(rand() % ((DEAD_SOUND_6 - DEAD_SOUND_1) + 1) + DEAD_SOUND_1);
 	}
 }
 
@@ -135,7 +135,7 @@ void Audio::PlayFightSound(Unit* unit) {
 	if (App->render->CullingCam(unit->entityPosition) && (unit->faction == FREE_MEN || unit->isActive == true))
 	{
 		if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER || unit->type == ELVEN_CAVALRY || unit->type == DUNEDAIN_RANGE)
-			App->audio->PlayFx(rand() % ((BOW_ATTACK_7 - BOW_ATTACK_1) + 1) + BOW_ATTACK_1 - 1);
+			App->audio->PlayFx(rand() % ((BOW_ATTACK_7 - BOW_ATTACK_1) + 1) + BOW_ATTACK_1);
 		else
 			App->audio->PlayFx(rand() % ((SWORD_ATTACK_7 - SWORD_ATTACK_1) + 1) + SWORD_ATTACK_1);
 	}

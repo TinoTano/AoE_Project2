@@ -303,7 +303,7 @@ bool EntityManager::PostUpdate()
 
 			if ((*unitToDestroy)->entityType == ENTITY_BUILDING) App->quest->StepCallback((Building*)(*unitToDestroy));
 
-			DestroyEntity((*unitToDestroy));
+			(*unitToDestroy)->state = DESTROYED;
 		}
 
 		removeEntityList.clear();

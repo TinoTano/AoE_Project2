@@ -307,7 +307,7 @@ void UnitAttackOrder::Execute(Unit* unit) {
 					App->entityManager->RallyCall(nearest_enemy);
 
 				if (nearest_enemy->Life <= 0) {
-					nearest_enemy->Destroy();
+					nearest_enemy->state = DESTROYED;
 					state = NEEDS_START;
 				}
 				else if (nearest_enemy->collider->type == COLLIDER_UNIT && nearest_enemy->state != ATTACKING) {

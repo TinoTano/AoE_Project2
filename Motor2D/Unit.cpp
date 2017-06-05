@@ -108,8 +108,34 @@ bool Unit::Update(float dt)
 		}
 	}
 	else {
+		
+		if (entityTexture != unitDieTexture)
+		{
+			SetTexture(state = DESTROYED);
+			App->audio->PlayUnitDeadSound(this);
+		}
+
 		if (currentAnim->at(currentDirection).Finished())
-			Destroy();
+		{
+			if (faction == App->entityManager->player->faction) {
+				App->entityManager->player->units.remove(this);
+				if (IsVillager)
+					App->entityManager->player->villagers.remove((Villager*)this);
+			}
+			else {
+				App->entityManager->AI_faction->units.remove(this);
+				if (IsVillager)
+					App->entityManager->AI_faction->villagers.remove((Villager*)this);
+			}
+
+			App->collision->DeleteCollider(collider);
+			App->collision->DeleteCollider(range);
+			App->collision->DeleteCollider(los);
+
+			if (faction == FREE_MEN) App->fog->DeleteEntityFog(this->entityID);
+
+			App->entityManager->DeleteEntity(this);
+		}
 	}
 
 	return true;
@@ -132,12 +158,7 @@ void Unit::Destroy() {
 	App->collision->DeleteCollider(range);
 	App->collision->DeleteCollider(los);
 
-	SetTexture(DESTROYED);
-	state = DESTROYED;
-
 	if (faction == FREE_MEN) App->fog->DeleteEntityFog(this->entityID);
-
-	App->audio->PlayUnitDeadSound(this);
 
 	App->entityManager->DeleteEntity(this);
 }

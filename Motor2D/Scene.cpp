@@ -209,7 +209,7 @@ bool Scene::Start()
 
 	// Villager
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y + 50, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y + 50, LEGOLAS);
+
 	//AI 
 	App->ai->enabled = true;
 
@@ -400,16 +400,19 @@ bool Scene::PostUpdate()
 	bool ret = true;
 
 	if ((App->entityManager->player->Town_center->Life <= 0 && game_finished == false) || (App->entityManager->player->units.size() <= 0 && game_finished == false)) {
+		uint w, h;
+		App->win->GetWindowSize(w, h);
 		game_finished = true;
-		Label* defeat = (Label*)App->gui->CreateLabel("DEFEAT", 600 - App->render->camera.x,280-App->render->camera.y, App->font->fonts[EIGHTY]);
+		Label* defeat = (Label*)App->gui->CreateLabel("DEFEAT", w/3 - App->render->camera.x, h/3 - App->render->camera.y, App->font->fonts[EIGHTY]);
 		defeat->SetColor({ 255, 0, 0, 255 });
 		App->audio->PlayFx(DEFEAT);
 		App->entityManager->game_stops = true;
 	}
 
 	else if (App->entityManager->AI_faction->Town_center->Life <= 0 && game_finished == false) {
-
-		Label* victory = (Label*)App->gui->CreateLabel("VICTORY", 600-App->render->camera.x, 280 - App->render->camera.y, App->font->fonts[EIGHTY]);
+		uint w, h;
+		App->win->GetWindowSize(w, h);
+		Label* victory = (Label*)App->gui->CreateLabel("VICTORY", w/3 - App->render->camera.x, h/3 - App->render->camera.y, App->font->fonts[EIGHTY]);
 		App->audio->PlayFx(VICTORY);
 		victory->SetColor({ 0, 255, 0, 255 });
 		game_finished = true;
