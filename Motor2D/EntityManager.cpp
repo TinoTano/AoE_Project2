@@ -150,11 +150,14 @@ bool EntityManager::Update(float arg_dt)
 					}
 
 				default:
-					for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
-						Unit* unit = (Unit*)(*it);
-						unit->order_list.push_front(new MoveToOrder(unit, mouse));
-					}
+					
 					break;
+				}
+
+				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
+					Unit* unit = (Unit*)(*it);
+					if(unit->order_list.empty())
+						unit->order_list.push_front(new MoveToOrder(unit, mouse));
 				}
 			}
 

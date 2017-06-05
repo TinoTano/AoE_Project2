@@ -217,6 +217,9 @@ bool Scene::Start()
 	App->entityManager->AI_faction->Town_center;
 	App->ai->selected_building = App->entityManager->AI_faction->Town_center = App->entityManager->CreateBuilding(enemyTownCenterPos.x, enemyTownCenterPos.y, SAURON_TOWER);
 
+	App->entityManager->CreateUnit(enemyTownCenterPos.x + 150, enemyTownCenterPos.y , TROLL_MAULER);
+	App->entityManager->CreateUnit(enemyTownCenterPos.x - 150, enemyTownCenterPos.y , TROLL_MAULER);
+
 	Building* aux = App->entityManager->CreateBuilding(0, 500, ORC_BARRACKS);
 	aux->Life = aux->MaxLife;
 	aux->entityTexture = App->entityManager->buildingsDB[ORC_BARRACKS]->entityTexture;
