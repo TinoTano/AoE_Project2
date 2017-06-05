@@ -14,18 +14,20 @@ void QuestHUD::Start()
 	objective_lbl->SetColor({ 255, 255 ,255 ,255 });
 
 	desc_lbl = (Label*)App->gui->CreateLabel("Destroy Sauron's tower to win.", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 22, nullptr);
-	desc_lbl->SetColor({ 255, 255 ,255 ,255 });
+	desc_lbl->SetColor({ 255, 25 ,25 ,255 });
 
-	questx = x - App->render->camera.x - 300;
-
-	quest_lbl = (Label*)App->gui->CreateLabel("Side Quests", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 32, App->font->fonts[SIXTEEN]);
+	quest_lbl = (Label*)App->gui->CreateLabel("Side Quests", x - App->render->camera.x - 300, y / 2 - App->render->camera.y + 36, App->font->fonts[SIXTEEN]);
 	quest_lbl->SetColor({ 255, 255 ,255 ,255 });
-
-	questy = y / 2 - App->render->camera.y + 58;
 }
 
 void QuestHUD::Update()
 {
+	uint x, y;
+	App->win->GetWindowSize(x, y);
+	winx = x; winy = y;
+
+	questx = x - App->render->camera.x - 300;
+	questy = y / 2 - App->render->camera.y + 58;
 
 	Sprite quad;
 	quad.rect.x = winx - App->render->camera.x - 300;
@@ -44,19 +46,28 @@ void QuestHUD::Update()
 		no_quest_lbl = nullptr;
 	}
 	else if (vec_quest.size() > 0) {
-		if (vec_quest.front()->name_lbl == nullptr) {
-			vec_quest.front()->name += ":";
-			vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name , questx, questy, App->font->fonts[FOURTEEN]);
-			vec_quest.front()->name_lbl->SetColor({255, 255, 255, 255});
-			vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14, nullptr);
-			vec_quest.front()->desc_lbl->SetColor({ 255, 255, 255, 255 });
+		if (vec_quest.size() == 1) {
+			if (vec_quest.front()->name_lbl == nullptr) {
+				vec_quest.front()->name += ":";
+				vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy, App->font->fonts[FOURTEEN]);
+				vec_quest.front()->name_lbl->SetColor({ 255, 165, 0, 255 });
+				vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14, nullptr);
+				vec_quest.front()->desc_lbl->SetColor({ 255, 255, 255, 255 });
+			}
 		}
 		if (vec_quest.size() == 2) {
+			if (vec_quest.front()->name_lbl == nullptr) {
+				vec_quest.front()->name += ":";
+				vec_quest.front()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy, App->font->fonts[FOURTEEN]);
+				vec_quest.front()->name_lbl->SetColor({ 255, 165, 0, 255 });
+				vec_quest.front()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14, nullptr);
+				vec_quest.front()->desc_lbl->SetColor({ 255, 255, 255, 255 });
+			}
 			if (vec_quest.back()->name_lbl == nullptr) {
 				vec_quest.back()->name += ":";
-				vec_quest.back()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->name, questx, questy + 14 + 12, App->font->fonts[FOURTEEN]);
-				vec_quest.back()->name_lbl->SetColor({ 255, 255, 255, 255 });
-				vec_quest.back()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.front()->desc, questx, questy + 14 + 12 + 14, nullptr);
+				vec_quest.back()->name_lbl = (Label*)App->gui->CreateLabel(vec_quest.back()->name, questx, questy + 14 + 12, App->font->fonts[FOURTEEN]);
+				vec_quest.back()->name_lbl->SetColor({ 255, 165, 0, 255 });
+				vec_quest.back()->desc_lbl = (Label*)App->gui->CreateLabel(vec_quest.back()->desc, questx, questy + 14 + 12 + 14, nullptr);
 				vec_quest.back()->desc_lbl->SetColor({ 255, 255, 255, 255 });
 			}
 		}
@@ -90,6 +101,8 @@ void QuestHUD::CleanUp()
 
 void QuestHUD::AddActiveQuest(string argname, string argdesc, int id)
 {
+	RemoveQuest(id);
+
 	QuestsShown* quest;
 	quest = new QuestsShown();
 	quest->AddQuest(argname, argdesc, id);
@@ -106,6 +119,7 @@ void QuestHUD::RemoveQuest(int argid)
 
 			c = it._Ptr->_Myval;
 			it._Ptr->_Myval->CleanUpQuest();
+			vec_quest.remove((*it));
 		}
 	}
 }
