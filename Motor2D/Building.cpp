@@ -144,7 +144,7 @@ bool Building::Draw()
 {
 	Sprite aux;
 	
-	if (state == BEING_BUILT)
+	if (state == BEING_BUILT || state == DESTROYED)
 	{
 		aux.texture = entityTexture;
 		aux.pos.x = entityPosition.x - (imageWidth / 2);
