@@ -28,10 +28,20 @@ Resource::Resource(int posX, int posY, Resource* resource)
 	int rectID = rand() % resource->blit_rects.size();
 	blit_rect = resource->blit_rects.at(rectID);
 
-	if(selectionWidth)
-		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y }, selectionWidth, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+	if (res_type >= MOUNT_1 && res_type <= MOUNT_6)
+	{
+		if (selectionWidth)
+			collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y + 200 }, selectionWidth, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+		else
+			collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y + 200 }, blit_rect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+	}
 	else
-		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y }, blit_rect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+	{
+		if (selectionWidth)
+			collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y}, selectionWidth, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+		else
+			collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y}, blit_rect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
+	}
 
 	entityType = ENTITY_RESOURCE;
 	
@@ -59,7 +69,7 @@ Resource::Resource(int posX, int posY, Resource* resource, SDL_Rect rect)
 		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y }, selectionWidth, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
 	else
 		collider = App->collision->AddCollider({ entityPosition.x, entityPosition.y - selectionAreaCenterPoint.y }, blit_rect.w / 2, COLLIDER_RESOURCE, (Module*)App->entityManager, this);
-
+	
 	entityType = ENTITY_RESOURCE;
 
 	faction = NATURE;
@@ -75,9 +85,20 @@ Resource::~Resource()
 bool Resource::Draw()
 {
 	Sprite resource;
-	resource.pos.x = entityPosition.x - (blit_rect.w / 2);
-	resource.pos.y = entityPosition.y - blit_rect.h;
-	resource.texture = entityTexture;
+
+	if (res_type >= MOUNT_1 && res_type <= MOUNT_6)
+	{
+		resource.pos.x = entityPosition.x - (blit_rect.w / 2);
+		resource.pos.y = entityPosition.y - selectionAreaCenterPoint.y - 200;
+		resource.texture = entityTexture;
+	}
+	else
+	{
+		resource.pos.x = entityPosition.x - (blit_rect.w / 2);
+		resource.pos.y = entityPosition.y - selectionAreaCenterPoint.y + 15;
+		resource.texture = entityTexture;
+	}
+
 	if (collider != nullptr) {
 		resource.priority = collider->pos.y;
 	}

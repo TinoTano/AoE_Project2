@@ -49,6 +49,10 @@ bool CutSceneManager::Start()
 
 	App->pathfinding->isGameScene = false;
 
+	// Music ==========================================================================================================
+
+	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
+
 	return true;
 }
 

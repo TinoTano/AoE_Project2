@@ -188,10 +188,6 @@ bool Scene::Start()
 	villagers = (Label*)App->gui->CreateLabel("0/0", -STARTING_CAMERA_X + 480, -STARTING_CAMERA_Y + 5, nullptr);
 	villagers->SetColor({ 255, 255, 255 ,255 });
 
-	// Music ==========================================================================================================
-
-	App->audio->PlayMusic("audio/music/m_scene.ogg", 0.0f);
-
 	// Fog of war, entities & resources ===============================================================================
 
 	App->fog->Start();
