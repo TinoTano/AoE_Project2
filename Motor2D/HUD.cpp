@@ -344,7 +344,7 @@ void HUD::Update() {
 											}
 											else 
 												if (skill_bt_support != nullptr) skill_bt_support->enabled = false;
-											if (skill_bt_support != nullptr && (skill_bt_support->current == CLICKUP || App->input->GetKey(App->input->controls[HERO_SPECIAL_ATTACK]) == KEY_DOWN))
+											if ((skill_bt_support != nullptr) && (skill_bt_support->current == CLICKUP || App->input->GetKey(App->input->controls[HERO_SPECIAL_ATTACK]) == KEY_DOWN))
 											{
 												hero->skill->Activate(hero);
 											}

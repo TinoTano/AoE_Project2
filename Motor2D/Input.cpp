@@ -42,7 +42,7 @@ bool Input::Awake(pugi::xml_node& config)
 			controls[i] = SelectedKey(config.child("shortcuts").attribute("select_villagers").as_string());
 		}
 		if (i == HERO_SPECIAL_ATTACK) {
-			controls[i] = SelectedKey(config.child("shortcuts").attribute("hero__attack").as_string());
+			controls[i] = SelectedKey(config.child("shortcuts").attribute("hero_attack").as_string());
 		}
 		if (i == MOVE_CAMERA) {
 			controls[i] = SelectedKey(config.child("shortcuts").attribute("restart_camera").as_string());

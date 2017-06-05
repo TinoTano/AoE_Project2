@@ -237,10 +237,10 @@ bool Scene::Start()
 
 	game_finished = false;
 
-	App->entityManager->player->resources.food += 100;
-	App->entityManager->player->resources.stone += 100;
-	App->entityManager->player->resources.gold += 100;
-	App->entityManager->player->resources.wood += 100;
+	App->entityManager->player->resources.food += 0;
+	App->entityManager->player->resources.stone += 0;
+	App->entityManager->player->resources.gold += 0;
+	App->entityManager->player->resources.wood += 0;
 
 	UpdateResources();
 
@@ -398,7 +398,7 @@ bool Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if ((App->entityManager->player->Town_center->Life <= 0 && game_finished == false) || (App->entityManager->player->units.size() <= 0 && game_finished == false)) {
+	if ((App->entityManager->player->Town_center->Life <= 0 && game_finished == false) || (App->entityManager->player->units.size() <= 0 && App->entityManager->player->resources.food < 50 && game_finished == false)) {
 		uint w, h;
 		App->win->GetWindowSize(w, h);
 		game_finished = true;

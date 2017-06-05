@@ -44,14 +44,7 @@ bool Hero::HeroUpdate() {
 
 		// this should be replaced by skill_effect bliting
 
-		Sprite aux;
-
-		aux.pos = { entityPosition.x, entityPosition.y + (r.h / 2) };
-		aux.priority = entityPosition.y - (r.h / 2) + r.h - 1;
-		aux.radius = 25;
-		aux.r = aux.g = aux.b = 255;
-
-		App->render->sprites_toDraw.push_back(aux);
+		App->render->DrawIsometricCircle(entityPosition.x, entityPosition.y + selectionAreaCenterPoint.y, selectionRadius + 10, 0, 0, 255, 255);
 
 	}
 	if (skill_timer.ReadSec() > skill->cooldown)
