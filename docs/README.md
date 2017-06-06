@@ -16,7 +16,7 @@ alt="IMAGE ALT TEXT HERE" width="800" height="450" border="10" /></a>
 # Gameplay 
 
 # The Team
-
+![alt text](http://i.imgur.com/LntS8Jj.png)
 Nemesis Studio is an indie studio created in 2017 by 6 UPC students for the subject Project 2. 
 
 Team Lead & Management: [Marc de Pedro](https://tinotano.github.io/AoE_Project2/MarcPage)
