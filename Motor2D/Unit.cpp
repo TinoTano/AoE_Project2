@@ -103,7 +103,7 @@ bool Unit::Update(float dt)
 				order_list.pop_front();
 		}
 		else {
-			if (state != IDLE) 
+			if (entityTexture != unitIdleTexture)
 				SetTexture(state = IDLE);
 		}
 	}

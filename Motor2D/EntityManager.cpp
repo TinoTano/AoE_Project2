@@ -1219,34 +1219,39 @@ Entity* EntityManager::FindTarget(Entity* entity) {
 
 	list<Unit*>* enemy_units = nullptr;
 	Entity* ret = nullptr;
-
-	if (entity->faction == FREE_MEN)
-		enemy_units = &AI_faction->units;
-	else
-		enemy_units = &player->units;
-
 	iPoint aux{ -1,-1 };
-	for (list<Unit*>::iterator it = enemy_units->begin(); it != enemy_units->end(); it++) {
-		if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < aux.DistanceTo((*it)->collider->pos)) {
-			ret = (*it);
-			aux = (*it)->entityPosition;
+
+	if (entity->faction == FREE_MEN) {
+
+		for (list<Unit*>::iterator it = AI_faction->units.begin(); it != AI_faction->units.end(); it++) {
+			if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < entity->collider->pos.DistanceTo(aux)) {
+				ret = (*it);
+				aux = (*it)->entityPosition;
+			}
+		}
+
+		for (list<Building*>::iterator it = AI_faction->buildings.begin(); it != AI_faction->buildings.end(); it++) {
+			if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < entity->collider->pos.DistanceTo(aux)) {
+				ret = (*it);
+				aux = (*it)->collider->pos;
+			}
 		}
 	}
+	else {
+		for (list<Unit*>::iterator it = player->units.begin(); it != player->units.end(); it++) {
+			if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < entity->collider->pos.DistanceTo(aux)) {
+				ret = (*it);
+				aux = (*it)->entityPosition;
+			}
+		}
 
-	list<Building*>* enemy_buildings = nullptr;
-
-	if (entity->faction == player->faction)
-		enemy_buildings = &AI_faction->buildings;
-	else
-		enemy_buildings = &player->buildings;
-
-	for (list<Building*>::iterator it = enemy_buildings->begin(); it != enemy_buildings->end(); it++) {
-		if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < entity->collider->pos.DistanceTo(aux)) {
-			ret = (*it);
-			aux = (*it)->collider->pos;
+		for (list<Building*>::iterator it = player->buildings.begin(); it != player->buildings.end(); it++) {
+			if ((*it)->collider != nullptr && entity->collider != nullptr && (*it)->state != DESTROYED && entity->collider->pos.DistanceTo((*it)->collider->pos) < entity->collider->pos.DistanceTo(aux)) {
+				ret = (*it);
+				aux = (*it)->collider->pos;
+			}
 		}
 	}
-
 
 	return ret;
 }
