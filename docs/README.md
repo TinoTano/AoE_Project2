@@ -12,7 +12,7 @@ Feel the fierce battles of the trilogy between the Free people and the Sauron ar
 
 Nemesis Studio is an indie studio created in 2017 by 6 UPC students for the subject Project 2.
 
-Team Lead & Management: [Marc de Pedro](../docs/MarcPage.md)
+Team Lead & Management: [Marc de Pedro](../docs/MarcPage)
 
 Code: [Adrià Martín]()
 
