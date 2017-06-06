@@ -5,7 +5,7 @@
 Josep Huguet, born in 1997. Nineteen year-old student at UPC.
 
 ## What did I do?
-I was in charge of the whole UI system: Images, buttons, texts, etc. Also created the scene manager that holds the scenes.
+I was in charge of the whole UI system with help of XML: Images, buttons, texts, etc. Also created the scene manager that holds the scenes.
 
 ![hello](http://i.imgur.com/3FdL0Y1.jpg)
 
@@ -41,7 +41,6 @@ This was done on top of Rodrigo's previous design but it was reworked because we
 
 ![i](http://i.imgur.com/OZ609AX.png)
 
-##Safe/Load
+Safe/Load was done with Marc and Adrià.
 
-That was done with Marc and Adrià
-
+I did the Settings window with the mute and the fullscreen and made them work.
