@@ -13,3 +13,7 @@ The resource system, the menu, the surrender menu and the population/building ca
 ![i](http://i.imgur.com/DSW711Y.png)
 ![i](http://i.imgur.com/eDjIenx.png)
 ![i](http://i.imgur.com/yFq3dXh.png)
+The quest manager HUD, updates automatically after discovering new quests.
+![i](http://i.imgur.com/1AXgZO5.png)
+Bars during researches (blue), unit creation (salmon) and heroes (gold) 
+![i](http://i.imgur.com/cXsNxgs.png)
