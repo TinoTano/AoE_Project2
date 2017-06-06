@@ -134,7 +134,7 @@ void Audio::PlayFightSound(Unit* unit) {
 
 	if (App->render->CullingCam(unit->entityPosition) && (unit->faction == FREE_MEN || unit->isActive == true))
 	{
-		if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER || unit->type == ELVEN_CAVALRY || unit->type == DUNEDAIN_RANGE)
+		if (unit->type == ORC_ARCHER || unit->type == ELVEN_ARCHER || unit->type == ELVEN_CAVALRY || unit->type == DUNEDAIN_RANGE || unit->type == LEGOLAS)
 			App->audio->PlayFx(rand() % ((BOW_ATTACK_7 - BOW_ATTACK_1) + 1) + BOW_ATTACK_1);
 		else
 			App->audio->PlayFx(rand() % ((SWORD_ATTACK_7 - SWORD_ATTACK_1) + 1) + SWORD_ATTACK_1);
