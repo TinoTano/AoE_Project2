@@ -7,7 +7,8 @@ Name: Rodrigo De Pedro
 Age: 20              
 Occupation: DDV student in UPC              
 Residence: Vilassar de Mar, BCN (Spain)                 
-Role in the project: Game Designer               
+Role in the project: Game Designer      
+![Me](http://i.imgur.com/Gx916kg.png)
 
 ## Responsabilities
 
