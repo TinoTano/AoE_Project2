@@ -33,7 +33,7 @@ UI: [Josep Huguet](https://tinotano.github.io/AoE_Project2/JosepPage)
 
 QA: [David Franco](https://tinotano.github.io/AoE_Project2/docs/DavidPage)
 
-
+![alt text](http://i.imgur.com/A2vHHxH.png)
 ## How to install?
 
 To play you only have to execute the ".exe" inside the game. It may happen that the antivirus blocks the game. Don't worry, this is because we need to unzip the animation video of the beginning. If it's not
