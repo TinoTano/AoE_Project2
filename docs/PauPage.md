@@ -10,4 +10,4 @@ I've done mostly all the art of the game, the logo and the intro animation for t
 
 ![](https://i.gyazo.com/9d040d7711cdd9bb76b185f58028364a.png) 
 
-[![Watch the video](https://raw.github.com/GabLeRoux/WebMole/master/ressources/WebMole_Youtube_Video.png)](http://youtu.be/vt5fpE0bzSY)
+[![Animation](https://img.youtube.com/vi/T-D1KVIuvjA/0.jpg)](https://www.youtube.com/watch?v=w72vBgOmsOI&feature=youtu.be)
