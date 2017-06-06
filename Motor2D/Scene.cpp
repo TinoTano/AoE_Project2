@@ -406,6 +406,7 @@ bool Scene::PostUpdate()
 		Label* defeat = (Label*)App->gui->CreateLabel("DEFEAT", w/3 - App->render->camera.x, h/3 - App->render->camera.y, App->font->fonts[EIGHTY]);
 		defeat->SetColor({ 255, 0, 0, 255 });
 		App->audio->PlayFx(DEFEAT);
+		App->entityManager->player->Town_center->Destroy();
 		App->entityManager->game_stops = true;
 	}
 
@@ -416,6 +417,7 @@ bool Scene::PostUpdate()
 		App->audio->PlayFx(VICTORY);
 		victory->SetColor({ 0, 255, 0, 255 });
 		game_finished = true;
+		App->entityManager->AI_faction->Town_center->Destroy();
 		App->entityManager->game_stops = true;
 	}
 
