@@ -1,6 +1,7 @@
 # Josep Huguet
 
 ## About Me
+![i](http://i.imgur.com/bMWlbE5.png)
 
 Josep Huguet, born in 1997. Nineteen year-old student at UPC.
 
