@@ -32,4 +32,15 @@ Also for Hero skills, when the cooldown bar is full the hero skill button appear
 ![i](http://i.imgur.com/4aeOFya.png)
 ![i](http://i.imgur.com/o9fHmAv.png)
 
+You can select multiple units too.
+
+![i](http://i.imgur.com/L9YvlMV.png)
+
+I took part in huge part of the game design and tech development. Here are some charts of what I designed, including the whole technology system and how everything can be gotten from which building, etc.
+This was done on top of Rodrigo's previous design but it was reworked because we needed to simplify. So using the tech concept and the units/buildings we had this was done:
+
+![i](http://i.imgur.com/OZ609AX.png)
+
+##Safe/Load
+That was done with Marc and Adrià
 
