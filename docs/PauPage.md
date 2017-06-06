@@ -1,4 +1,4 @@
-## Abouot me: Pau Bordes Españo
+## About me: Pau Bordes Español
 
 I'm 20 years old, and my goal is to be 3D artist.
 
