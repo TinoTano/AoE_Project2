@@ -131,13 +131,7 @@ bool Building::Update(float dt)
 		}
 	}
 
-	else if (state == DESTROYED)
-	{
-		if (App->render->CullingCam(this->entityPosition))
-			App->audio->PlayFx(rand() % ((BUILDING_DEATH_4 - BUILDING_DEATH_1) + 1) + BUILDING_DEATH_1);
-
-		Destroy();
-	}
+	else if (state == DESTROYED) Destroy();
 	
 	return true;
 }
@@ -146,7 +140,7 @@ bool Building::Draw()
 {
 	Sprite aux;
 	
-	if (state == BEING_BUILT || (faction == SAURON_ARMY && state == DESTROYED && (type != SAURON_TOWER || type != ORC_BARRACKS || type != ARCHERY_RANGE)))
+	if (state == BEING_BUILT || (faction == SAURON_ARMY && state == DESTROYED && type != SAURON_TOWER && type != ORC_BARRACKS && type != ORC_ARCHERY_RANGE))
 	{
 		aux.texture = entityTexture;
 		aux.pos.x = entityPosition.x - (imageWidth / 2);
@@ -185,7 +179,7 @@ bool Building::Draw()
 
 	if (lifebar_timer.ReadSec() < 5) {
 		iPoint p;
-		if (state == BEING_BUILT || (faction == SAURON_ARMY && state == DESTROYED && (type != SAURON_TOWER || type != ORC_BARRACKS || type != ORC_ARCHERY_RANGE)))
+		if (state == BEING_BUILT || (faction == SAURON_ARMY && state == DESTROYED && type != SAURON_TOWER && type != ORC_BARRACKS && type != ORC_ARCHERY_RANGE))
 			p = { entityPosition.x - 25, entityPosition.y };
 		else
 			p = {entityPosition.x - 25, entityPosition.y - selectionAreaCenterPoint.y};
@@ -201,7 +195,7 @@ bool Building::Draw()
 
 void Building::Destroy() {
 
-	if (faction == SAURON_ARMY && state == DESTROYED && (type != SAURON_TOWER || type != ORC_BARRACKS || type != ORC_ARCHERY_RANGE)){
+	if (faction == SAURON_ARMY && state == DESTROYED && type != SAURON_TOWER && type != ORC_BARRACKS && type != ORC_ARCHERY_RANGE){
 		Life = -1;
 		creation_timer.Start();
 	}
@@ -217,6 +211,12 @@ void Building::Destroy() {
 			App->collision->DeleteCollider(range);
 
 		if (faction == FREE_MEN) App->fog->DeleteEntityFog(this->entityID);
+
+		if (Life <= 0)
+		{
+			if (App->render->CullingCam(this->entityPosition))
+				App->audio->PlayFx(rand() % ((BUILDING_DEATH_4 - BUILDING_DEATH_1) + 1) + BUILDING_DEATH_1);
+		}
 
 		App->entityManager->DeleteEntity(this);
 	}

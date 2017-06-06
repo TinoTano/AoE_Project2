@@ -193,9 +193,18 @@ void HUD::Update() {
 									bar.a = 255;
 									App->render->ui_toDraw.push_back(bar);
 									bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
-									bar.r = 0;
-									bar.g = 255;
-									bar.b = 0;
+									if (unit->faction == FREE_MEN)
+									{
+										bar.r = 0;
+										bar.g = 255;
+										bar.b = 0;
+									}
+									else
+									{
+										bar.r = 255;
+										bar.g = 0;
+										bar.b = 0;
+									}
 									App->render->ui_toDraw.push_back(bar);
 									x += App->gui->SpriteUnits.front().GetRect().w;
 								}
@@ -255,9 +264,18 @@ void HUD::Update() {
 							bar.a = 255;
 							App->render->ui_toDraw.push_back(bar);
 							bar.rect.w = min(App->gui->SpriteBuildings.front().GetRect().w, max(App->gui->SpriteBuildings.front().GetRect().w - barPercent, 0));
-							bar.r = 0;
-							bar.g = 255;
-							bar.b = 0;
+							if (unit->faction == FREE_MEN)
+							{
+								bar.r = 0;
+								bar.g = 255;
+								bar.b = 0;
+							}
+							else
+							{
+								bar.r = 255;
+								bar.g = 0;
+								bar.b = 0;
+							}
 							App->render->ui_toDraw.push_back(bar);
 							if (name->str == "ELF VILLAGER") {
 								switch (villager_state) {

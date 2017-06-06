@@ -205,7 +205,7 @@ bool Scene::Start()
 
 	// Villager
 	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y + 50, ELF_VILLAGER);
-	App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 200, VENOMOUS_SPIDER);
+	//App->entityManager->CreateUnit(TOWN_HALL_POS_X + 250, TOWN_HALL_POS_Y - 200, VENOMOUS_SPIDER);
 
 	//AI 
 	App->ai->enabled = true;
