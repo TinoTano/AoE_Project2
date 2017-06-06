@@ -10,10 +10,26 @@ I was in charge of the whole UI system: Images, buttons, texts, etc. Also create
 ![hello](http://i.imgur.com/3FdL0Y1.jpg)
 
 The resource system, the menu, the surrender menu and the population/building cap.
+
 ![i](http://i.imgur.com/DSW711Y.png)
 ![i](http://i.imgur.com/eDjIenx.png)
 ![i](http://i.imgur.com/yFq3dXh.png)
+
 The quest manager HUD, updates automatically after discovering new quests.
 ![i](http://i.imgur.com/1AXgZO5.png)
+
 Bars during researches (blue), unit creation (salmon) and heroes (gold) 
+
 ![i](http://i.imgur.com/cXsNxgs.png)
+
+A whole button system that automatically changes on each building or unit. With visual information when the mouse interacts with them.
+
+![i](http://i.imgur.com/CC7irfk.png)
+![i](http://i.imgur.com/vgOILuA.png)
+
+Also for Hero skills, when the cooldown bar is full the hero skill button appears. Also, you can see how the stats of what you have selected appears on screen.
+
+![i](http://i.imgur.com/4aeOFya.png)
+![i](http://i.imgur.com/o9fHmAv.png)
+
+
