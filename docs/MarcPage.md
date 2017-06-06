@@ -1,7 +1,7 @@
 # Marc de Pedro
 ## About me
 I'm a ninteen year-old student at UPC.   
-![image](http://imgur.com/1ekBgcI)  
+![image](https://s18.postimg.org/ws6gzh3d5/DSC0148.jpg)  
 
 ## What did I do?
 I was the Team Leader and Manager of my team so basically I did all the tasks calendar and distribution.  
