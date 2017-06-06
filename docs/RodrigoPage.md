@@ -21,6 +21,7 @@ As the game designer, I have the task of creating and modifying game mechanics i
 
 I've created and maintained the Game Design Document, a living document which serves as reference to the whole team to understand the game vision. It features all mechanics of the game, as well as the assets and data to create all game elements.
 [GDD LINK](https://github.com/TinoTano/AoE_Project2/wiki/GDD)
+![GDD](http://i.imgur.com/sFP2Oi5.png)
 
 ### AI
 
@@ -34,7 +35,7 @@ I've designed the map layout to provide an interesting and replayable game level
 
 ### Techs and Techtree
 
-I've designed the different techs in the game and their effects, as well as the in-game code to manage them.
+I've designed the different techs in the game and their effects, as well as the in-game code to manage them. Later this techs were simplified by team partners.
 
 ## *Related to Code*
 
