@@ -108,11 +108,6 @@ void AI::SelectBuilding(AI_state ai_state) {
 	vector<Building*> buildings;
 
 	for (list<Building*>::iterator it = Enemies->buildings.begin(); it != Enemies->buildings.end(); it++) {
-		if (((*it)->state != DESTROYED && (*it)->type == ORC_ARCHERY_RANGE))
-			selected_building = (*it);
-	}
-
-	for (list<Building*>::iterator it = Enemies->buildings.begin(); it != Enemies->buildings.end(); it++) {
 		if (((*it)->state == DESTROYED && ai_state == EXPANDING && (*it)->creation_timer.ReadSec() > 60) || ((*it)->state != DESTROYED && ai_state != EXPANDING))
 			buildings.push_back(*it);
 	}
@@ -121,9 +116,15 @@ void AI::SelectBuilding(AI_state ai_state) {
 
 		selected_building = buildings.front();
 
-		for (vector<Building*>::iterator it2 = buildings.begin(); it2 != buildings.end(); it2++) {
-			if ((*it2)->MaxLife < selected_building->MaxLife)
-				selected_building = (*it2);
+		if (ai_state == EXPANDING) {
+			for (vector<Building*>::iterator it2 = buildings.begin(); it2 != buildings.end(); it2++) {
+				if ((*it2)->MaxLife < selected_building->MaxLife)
+					selected_building = (*it2);
+			}
+		}
+		else {
+			int random = rand() % buildings.size();
+			selected_building = buildings.at(random);
 		}
 	}
 	else
