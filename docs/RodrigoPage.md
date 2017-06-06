@@ -30,6 +30,8 @@ I've designed and developed the game Artificial Intelligence, which manages all 
 
 I've designed the map layout to provide an interesting and replayable game level, which offers different tactics to follow and works as another game mechanic itself.
 
+![Map](http://i.imgur.com/KUDVBr1.jpg)
+
 ### Techs and Techtree
 
 I've designed the different techs in the game and their effects, as well as the in-game code to manage them.
