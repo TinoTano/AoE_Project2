@@ -8,11 +8,15 @@ Also, I was in charge of basically 4 main tasks:
   
 Fog of War  
 ![image](https://media.giphy.com/media/3ohzdQR67Lqjhow57q/giphy.gif)  
-Quest manager (not visual part)  
+
+Cutscene    
 ![image](https://media.giphy.com/media/xUPGcgWu2rTzxmj8Fa/giphy.gif)  
-Cutscene manager  
+
+Quest manager (not visual part)   
 ![image](https://media.giphy.com/media/3ohzdQdGqDrDip52iQ/giphy.gif)  
+
 Ordering sprites  
 ![image](https://media.giphy.com/media/xUPGcIZtCca32IvOZG/giphy.gif)  
+
 I also did Video player and part of Save and Load.
 
