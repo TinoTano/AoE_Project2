@@ -157,8 +157,18 @@ bool EntityManager::Update(float arg_dt)
 
 				for (list<Entity*>::iterator it = selectedEntityList.begin(); it != selectedEntityList.end(); it++) {
 					Unit* unit = (Unit*)(*it);
-					if(unit->order_list.empty())
+					if (unit->order_list.empty()) {
 						unit->order_list.push_front(new MoveToOrder(unit, mouse));
+
+						iPoint last_tileMap = App->map->WorldToMap(unit->path.back().x, unit->path.back().y);
+						last_tileMap = App->pathfinding->FindNearestAvailable(last_tileMap, 5);
+
+						if (last_tileMap.x != -1) {
+							iPoint last_tileWorld = App->map->MapToWorld(last_tileMap.x, last_tileMap.y);
+							unit->path.pop_back();
+							unit->path.push_back(last_tileWorld);
+						}
+					}
 				}
 			}
 
