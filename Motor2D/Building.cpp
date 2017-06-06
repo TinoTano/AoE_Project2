@@ -130,6 +130,7 @@ bool Building::Update(float dt)
 	}
 	else if (Life <= 0) Destroy();
 	
+
 	return true;
 }
 
@@ -193,7 +194,7 @@ bool Building::Draw()
 void Building::Destroy() {
 
 	if (faction == SAURON_ARMY && state == DESTROYED && type != SAURON_TOWER && type != ORC_BARRACKS && type != ORC_ARCHERY_RANGE){
-		Life = -1;
+		Life = 1;
 		creation_timer.Start();
 	}
 	else {
