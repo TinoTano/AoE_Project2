@@ -603,8 +603,8 @@ THEORAPLAY_Decoder *THEORAPLAY_startDecodeFile(const char *fname,
 		return NULL;
 
 	HZIP hz;
-	hz = OpenZip(_T("..\\Game\\data.zip"), 0);
-	SetUnzipBaseDir(hz, _T("..\\Game"));
+	hz = OpenZip(_T("data.zip"), 0);
+	SetUnzipBaseDir(hz, _T("."));
 	ZIPENTRY ze; GetZipItem(hz, -1, &ze); int numitems = ze.index;
 	for (int zi = 0; zi<numitems; zi++)
 	{
