@@ -18,7 +18,7 @@ Just like the original AoE games, players can build units and create buildings t
 alt="IMAGE ALT TEXT HERE" width="800" height="450" border="10" /></a>
 
 # Gameplay
-<a href="https://youtu.be/ht3HRH7WMjU" target=_blank"><img src="http://i.imgur.com/A2vHHxH.png" alt="IMAGE ALT TEXT HERE" width="1277" height"719" border ="10" /></a>
+<a href="https://www.youtube.com/watch?v=ht3HRH7WMjU&feature=youtu.be" target=_blank"><img src="http://i.imgur.com/A2vHHxH.png" alt="IMAGE ALT TEXT HERE" width="1277" height"719" border ="10" /></a>
 
 
 ## How to install?
