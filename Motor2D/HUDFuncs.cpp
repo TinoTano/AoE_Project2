@@ -270,7 +270,7 @@ void HUD::HUDCreateUnits()
 	for (uint i = 0; i < available_units.size(); ++i) {
 		for (uint i2 = 0; i2 < App->gui->unit_bt.size(); ++i2) {
 			if (App->gui->unit_bt[i2].type == available_units[i] && App->gui->unit_bt[i2].button == nullptr) {
-				App->gui->unit_bt[i2].button = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[c].x - CAMERA_OFFSET_X, buttons_positions[c].y - CAMERA_OFFSET_Y, buildings_rects[c], buttons_positions, TIER2);
+				App->gui->unit_bt[i2].button = (Button*)App->gui->CreateButton("gui/UnitMiniatures.png", buttons_positions[c].x - CAMERA_OFFSET_X, buttons_positions[c].y - CAMERA_OFFSET_Y, App->gui->unit_bt[i2].blit_sections, buttons_positions, TIER2);
 				c++;
 				all_bt.push_back(App->gui->unit_bt[i2].button);
 			}
