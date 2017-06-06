@@ -147,10 +147,8 @@ void AI::ChangeState() {
 void AI::LaunchAttack() {
 
 	
-	for (list<Unit*>::iterator it = last_attack_squad.begin(); it != last_attack_squad.end(); it++) {
+	for (list<Unit*>::iterator it = last_attack_squad.begin(); it != last_attack_squad.end(); it++) 
 		(*it)->order_list.push_front(new MoveToOrder((*it), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y + 200}));
-		(*it)->order_list.push_back(new UnitAttackOrder());
-	}
 
 	last_attack_squad.clear();
 }
@@ -244,16 +242,22 @@ void AI::CheckCollisions() {
 		for (list<Unit*>::iterator ally = App->entityManager->player->units.begin(); ally != App->entityManager->player->units.end(); ally++) {
 
 			if ((*enemy)->los->CheckCollision((*ally)->collider)) {
-				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING) 
+				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING) {
+					(*enemy)->order_list.clear();
 					(*enemy)->order_list.push_front(new UnitAttackOrder());
+					(*enemy)->order_list.push_front(new MoveToOrder((*enemy), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y + 200 }));
+				}
 			}
 		}
 
 		for (list<Building*>::iterator ally_building = App->entityManager->player->buildings.begin(); ally_building != App->entityManager->player->buildings.end(); ally_building++) {
 
 			if ((*enemy)->los->CheckCollision((*ally_building)->collider)) {
-				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING)
+				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING) {
+					(*enemy)->order_list.clear();
 					(*enemy)->order_list.push_front(new UnitAttackOrder());
+					(*enemy)->order_list.push_front(new MoveToOrder((*enemy), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y + 200 }));
+				}
 			}
 		}
 

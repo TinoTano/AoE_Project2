@@ -261,7 +261,7 @@ void Unit::SetTexture(EntityState texture_of)
 }
 
 void Unit::SubordinatedMovement(iPoint p) {
-
+	
 	if (sub_movement == nullptr) {
 		sub_movement = new MoveToOrder(this, p);
 		if (sub_movement->state == NEEDS_START)
