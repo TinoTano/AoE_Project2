@@ -127,7 +127,7 @@ void AI::SelectBuilding(AI_state ai_state) {
 		}
 	}
 	else
-		selected_building = App->entityManager->AI_faction->Town_center;*/
+		selected_building = App->entityManager->AI_faction->Town_center;
 }
 
 void AI::ChangeState() {

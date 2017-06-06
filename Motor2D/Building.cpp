@@ -100,7 +100,7 @@ bool Building::Update(float dt)
 			
 			if (creation_timer.Read() - aux_timer > App->entityManager->unitsDB[units_in_queue.front()]->cooldown_time * 1000) {
 
-				iPoint creation_place = App->map->WorldToMap(entityPosition.x, entityPosition.y);
+				iPoint creation_place = App->map->WorldToMap(entityPosition.x, entityPosition.y + 100);
 				creation_place = App->pathfinding->FindNearestAvailable(creation_place, 10);
 				creation_place = App->map->MapToWorld(creation_place.x, creation_place.y);
 
