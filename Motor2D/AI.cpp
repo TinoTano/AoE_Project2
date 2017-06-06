@@ -245,7 +245,7 @@ void AI::CheckCollisions() {
 				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING) {
 					(*enemy)->order_list.clear();
 					(*enemy)->order_list.push_front(new UnitAttackOrder());
-					(*enemy)->order_list.push_front(new MoveToOrder((*enemy), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y + 200 }));
+					(*enemy)->order_list.push_back(new MoveToOrder((*enemy), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y + 200 }));
 				}
 			}
 		}
@@ -256,7 +256,7 @@ void AI::CheckCollisions() {
 				if ((*enemy)->order_list.empty() || (*enemy)->state != ATTACKING) {
 					(*enemy)->order_list.clear();
 					(*enemy)->order_list.push_front(new UnitAttackOrder());
-					(*enemy)->order_list.push_front(new MoveToOrder((*enemy), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y + 200 }));
+					(*enemy)->order_list.push_back(new MoveToOrder((*enemy), { TOWN_HALL_POS_X, TOWN_HALL_POS_Y + 200 }));
 				}
 			}
 		}
