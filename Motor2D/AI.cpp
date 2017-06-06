@@ -108,7 +108,7 @@ void AI::SelectBuilding(AI_state ai_state) {
 	vector<Building*> buildings;
 
 	for (list<Building*>::iterator it = Enemies->buildings.begin(); it != Enemies->buildings.end(); it++) {
-		if (((*it)->state == DESTROYED && ai_state == EXPANDING && (*it)->creation_timer.ReadSec() > 60) || ((*it)->state != DESTROYED && ai_state != EXPANDING))
+		if (((*it)->state == DESTROYED && ai_state == EXPANDING && (*it)->creation_timer.ReadSec() > 30) || ((*it)->state != DESTROYED && ai_state != EXPANDING))
 			buildings.push_back(*it);
 	}
 
@@ -140,7 +140,7 @@ void AI::ChangeState() {
 		forced_building = nullptr;
 	}
 	else {
-		state = (AI_state)((rand() % (MAX_STATES - 1)) + 1);
+		state = EXPANDING;// (AI_state)((rand() % (MAX_STATES - 1)) + 1);
 		SelectBuilding(state);
 	}
 

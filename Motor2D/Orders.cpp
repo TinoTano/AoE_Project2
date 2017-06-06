@@ -176,7 +176,6 @@ void MoveToOrder::Start(Unit* unit) {
 			}
 			unit->destinationTileWorld = unit->path.front();
 		}
-		unit->state = MOVING;
 		unit->SetTexture(MOVING);
 		state = EXECUTING;
 	}
