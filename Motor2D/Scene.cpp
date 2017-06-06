@@ -229,8 +229,6 @@ bool Scene::Start()
 	aux->state = IDLE;
 
 	App->entityManager->CreateBuilding(enemyTownCenterPos.x + 250, enemyTownCenterPos.y - 250, BEAST_PIT);
-	App->entityManager->CreateBuilding(enemyTownCenterPos.x - 250, enemyTownCenterPos.y - 250, ORC_ARCHERY_RANGE);
-	App->entityManager->CreateBuilding(enemyTownCenterPos.x + 400, enemyTownCenterPos.y, ORC_BARRACKS);
 	App->entityManager->CreateBuilding(enemyTownCenterPos.x - 400, enemyTownCenterPos.y, URUK_HAI_PIT);
 	App->entityManager->CreateBuilding(enemyTownCenterPos.x, enemyTownCenterPos.y + 300, ORC_BLACKSMITH);
 
