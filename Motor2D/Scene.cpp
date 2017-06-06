@@ -497,3 +497,17 @@ bool Scene::CheckUnitsRoom()
 	}
 	return ((App->entityManager->player->units.size() + units_in_queue) < (houses_count * 5) + 2);
 }
+
+bool Scene::CheckHousesRoom()
+{
+	uint houses_count = 0;
+	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); ++it) {
+		if ((*it)->type == HOUSE) houses_count++;
+	}
+	return (houses_count <= MAX_HOUSES);
+}
+
+bool Scene::CheckBuildingsRoom()
+{
+	return (App->entityManager->player->buildings.size() <= MAX_BUILDINGS);
+}

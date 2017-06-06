@@ -14,7 +14,8 @@
 
 #define STARTING_CAMERA_X 1650
 #define STARTING_CAMERA_Y -1900
-
+#define MAX_HOUSES 5
+#define MAX_BUILDINGS 18
 class Unit;
 class Building;
 class Resource;
@@ -63,6 +64,9 @@ public:
 	void UpdateResources();
 	void UpdatePopulation();
 	bool CheckUnitsRoom();
+	bool CheckHousesRoom();
+	bool CheckBuildingsRoom();
+
 private:
 	// TIMER
 	Timer timer;

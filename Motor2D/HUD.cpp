@@ -303,10 +303,22 @@ void HUD::Update() {
 											for (uint i = 0; i < App->gui->building_bt.size(); ++i)
 											{
 												if (App->gui->building_bt[i].button != nullptr) {
-													if (!App->entityManager->placingBuilding && App->gui->building_bt[i].button->current == CLICKUP) {
+													
+													if (App->gui->building_bt[i].type == HOUSE && App->sceneManager->level1_scene->CheckHousesRoom() && App->sceneManager->level1_scene->CheckBuildingsRoom())
+													{
+														if (!App->entityManager->placingBuilding && App->gui->building_bt[i].button->current == CLICKUP) {
 
-														App->entityManager->placingBuilding = true;
-														App->entityManager->placing_type = App->gui->building_bt[i].type;
+															App->entityManager->placingBuilding = true;
+															App->entityManager->placing_type = App->gui->building_bt[i].type;
+														}
+													}
+													else if (App->sceneManager->level1_scene->CheckBuildingsRoom() && App->gui->building_bt[i].type != HOUSE)
+													{
+														if (!App->entityManager->placingBuilding && App->gui->building_bt[i].button->current == CLICKUP) {
+
+															App->entityManager->placingBuilding = true;
+															App->entityManager->placing_type = App->gui->building_bt[i].type;
+														}
 													}
 												}
 											}
