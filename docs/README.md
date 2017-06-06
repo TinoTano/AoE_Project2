@@ -1,4 +1,6 @@
 # AGE OF THE RING
+![alt text](https://camo.githubusercontent.com/132d69c9b7700c5389bb00ff9f814ba5bfc56e3c/68747470733a2f2f692e6779617a6f2e636f6d2f32663830333861353833613863366265653664313465363765366163643633392e6a7067)
+
 
 Age of the Ring is a PC strategy game featuring an Age of Empires 2 based gameplay inside the Lord of the Rings environment, with lots of new content to provide players an amazing experience like never before.
 
