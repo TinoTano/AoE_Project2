@@ -27,6 +27,8 @@ I've created and maintained the Game Design Document, a living document which se
 
 I've designed and developed the game Artificial Intelligence, which manages all enemy units and must face the player. It's purpose is to provide a balanced experience with a skill level similar to that of the user. 
 
+![AI](http://i.imgur.com/NAhOTmN.png)
+
 ### Map design
 
 I've designed the map layout to provide an interesting and replayable game level, which offers different tactics to follow and works as another game mechanic itself.
@@ -36,6 +38,8 @@ I've designed the map layout to provide an interesting and replayable game level
 ### Techs and Techtree
 
 I've designed the different techs in the game and their effects, as well as the in-game code to manage them. Later this techs were simplified by team partners.
+
+![Techs](http://i.imgur.com/Udhf5tq.png)
 
 ## *Related to Code*
 
