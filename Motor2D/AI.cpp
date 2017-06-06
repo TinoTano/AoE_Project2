@@ -140,7 +140,7 @@ void AI::ChangeState() {
 		forced_building = nullptr;
 	}
 	else {
-		state = EXPANDING;// (AI_state)((rand() % (MAX_STATES - 1)) + 1);
+		state = (AI_state)((rand() % (MAX_STATES - 1)) + 1);
 		SelectBuilding(state);
 	}
 
