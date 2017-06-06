@@ -75,7 +75,7 @@ Art & Audio: [Pau Bordes](https://tinotano.github.io/AoE_Project2/MarcPage)
 
 UI: [Josep Huguet](https://tinotano.github.io/AoE_Project2/JosepPage)
 
-QA: [David Franco](https://tinotano.github.io/AoE_Project2/docs/DavidPage)
+QA: [David Franco](https://tinotano.github.io/AoE_Project2/DavidPage)
 
 # Contact us
 
