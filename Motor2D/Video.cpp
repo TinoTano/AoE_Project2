@@ -178,7 +178,7 @@ void Video::PlayVideo(const char *fname)
 {
 	// Loading video ---------------------
 	videoName = fname;
-	videoName = "..\\Game\\" + videoName;
+	//videoName = "..\\Game\\" + videoName;
 
 	ResetValues();
 	LoadVideo(fname);

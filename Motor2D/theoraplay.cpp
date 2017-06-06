@@ -11,12 +11,14 @@
 //  code.
 #define _CRT_SECURE_NO_WARNINGS
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include <tchar.h>
 #include <stdio.h>
+
 
 #ifdef _WIN32
 #pragma comment( lib, "ogg/libogg.lib" )
@@ -39,8 +41,10 @@
 #include "theora/theoradec.h"
 #include "vorbis/codec.h"
 #include "unzip.h"
-#include "p2Log.h"
 #include <string>
+
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
 
 #define THEORAPLAY_INTERNAL 1
 
@@ -616,6 +620,9 @@ THEORAPLAY_Decoder *THEORAPLAY_startDecodeFile(const char *fname,
 	}
 	CloseZip(hz);
 
+	while (!fs::exists("VideoLogoNemesis.ogv")) {
+
+	}
 	FILE *f = fopen(fname, "rb");
 	if (f == NULL)
 	{
