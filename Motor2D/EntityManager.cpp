@@ -1165,9 +1165,30 @@ void EntityManager::RallyCall(Entity* entity) {
 	else
 		allied_units = &AI_faction->units;
 
+	
+
 	for (list<Unit*>::iterator it = allied_units->begin(); it != allied_units->end(); it++) {
-		if (entity->collider->pos.DistanceTo((*it)->collider->pos) < (*it)->los->r && (*it)->type != SLAVE_VILLAGER && (*it)->type != ELF_VILLAGER)
-			(*it)->order_list.push_back(new UnitAttackOrder());
+		if (entity->collider->pos.DistanceTo((*it)->collider->pos) < (*it)->los->r && (*it)->type != SLAVE_VILLAGER && (*it)->type != ELF_VILLAGER) {
+
+			if ((*it)->order_list.empty())
+				return;
+			else if (((*it)->order_list.front()->order_type == MOVETO))
+				return;
+
+			(*it)->order_list.push_front(new MoveToOrder((*it), entity->entityPosition));
+
+			if (!(*it)->path.empty()) {
+				iPoint last_tileMap = App->map->WorldToMap((*it)->path.back().x, (*it)->path.back().y);
+				last_tileMap = App->pathfinding->FindNearestAvailable(last_tileMap, 5);
+
+				if (last_tileMap.x != -1) {
+					iPoint last_tileWorld = App->map->MapToWorld(last_tileMap.x, last_tileMap.y);
+					(*it)->path.pop_back();
+					(*it)->path.push_back(last_tileWorld);
+				}
+			}
+
+		}
 	}
 	
 }

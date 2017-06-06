@@ -310,7 +310,7 @@ void UnitAttackOrder::Execute(Unit* unit) {
 					nearest_enemy->state = DESTROYED;
 					state = NEEDS_START;
 				}
-				else if (nearest_enemy->collider->type == COLLIDER_UNIT && nearest_enemy->state != ATTACKING) {
+				else if (nearest_enemy->collider->type == COLLIDER_UNIT && nearest_enemy->state != ATTACKING && nearest_enemy->faction == FREE_MEN) {
 					Unit* enemy = (Unit*)nearest_enemy;
 					enemy->order_list.push_front(new UnitAttackOrder());
 					enemy->state = ATTACKING;

@@ -108,6 +108,11 @@ void AI::SelectBuilding(AI_state ai_state) {
 	vector<Building*> buildings;
 
 	for (list<Building*>::iterator it = Enemies->buildings.begin(); it != Enemies->buildings.end(); it++) {
+		if (((*it)->state != DESTROYED && (*it)->type == ORC_ARCHERY_RANGE))
+			selected_building = (*it);
+	}
+
+	for (list<Building*>::iterator it = Enemies->buildings.begin(); it != Enemies->buildings.end(); it++) {
 		if (((*it)->state == DESTROYED && ai_state == EXPANDING && (*it)->creation_timer.ReadSec() > 60) || ((*it)->state != DESTROYED && ai_state != EXPANDING))
 			buildings.push_back(*it);
 	}
@@ -122,7 +127,7 @@ void AI::SelectBuilding(AI_state ai_state) {
 		}
 	}
 	else
-		selected_building = App->entityManager->AI_faction->Town_center;
+		selected_building = App->entityManager->AI_faction->Town_center;*/
 }
 
 void AI::ChangeState() {
