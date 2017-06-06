@@ -368,17 +368,19 @@ void GatherOrder::Start(Unit* unit) {
 	if (villager->resource_carried != NONE) {
 		if (Resource* resource = App->entityManager->FindNearestResource(villager->resource_carried, villager->entityPosition)) {
 
-			if (resource->collider !=nullptr && !villager->collider->CheckCollision(resource->collider))
-				unit->SubordinatedMovement(resource->collider->pos);
-			else {
+			if (!(villager->curr_capacity > 0)) {
+				if (resource->collider != nullptr && !villager->collider->CheckCollision(resource->collider))
+					unit->SubordinatedMovement(resource->collider->pos);
+				else {
 
-				if (unit->sub_movement) {
-					RELEASE(unit->sub_movement);
-					unit->sub_movement = nullptr;
+					if (unit->sub_movement) {
+						RELEASE(unit->sub_movement);
+						unit->sub_movement = nullptr;
+					}
+					state = EXECUTING;
+					unit->SetTexture(GATHERING);
+					return;
 				}
-				state = EXECUTING;
-				unit->SetTexture(GATHERING);
-				return;
 			}
 		}
 		else
