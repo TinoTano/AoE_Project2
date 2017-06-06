@@ -6,7 +6,7 @@ I'm 20 years old, and my goal is to be 3D artist.
 
 ## What I done in Age Of The Ring:
 
-I've done mostly all the art of the game, the logo and the intro animation for the logo, the final version of the map and some buttons for the UI.
+I've done mostly all the art of the game, the logo and the intro animation for the logo, the final version of the map and some buttons for the UI. These are some examples: 
 
 ![](https://i.gyazo.com/9d040d7711cdd9bb76b185f58028364a.png) 
 
@@ -18,4 +18,3 @@ I've done mostly all the art of the game, the logo and the intro animation for t
 
 
 
-![](https://i.gyazo.com/fa3f3fef928fe0b22ce2e6707a94e85d.png)
