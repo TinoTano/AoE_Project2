@@ -17,17 +17,17 @@ Feel the fierce battles of the trilogy between the Free people and the Sauron ar
 
 Nemesis Studio is an indie studio created in 2017 by 6 UPC students for the subject Project 2. 
 
-Team Lead & Management: [Marc de Pedro](../docs/MarcPage.md)
+Team Lead & Management: [Marc de Pedro](https://tinotano.github.io/AoE_Project2/MarcPage.md)
 
-Code: [Adrià Martín](../docs/AdriaPage.md)
+Code: [Adrià Martín](https://tinotano.github.io/AoE_Project2/AdriaPage.md)
 
-Design: [Rodrigo de Pedro](../docs/RodrigoPage.md)
+Design: [Rodrigo de Pedro](https://tinotano.github.io/AoE_Project2/RodrigoPage.md)
 
-Art & Audio: [Pau Bordes](../docs/MarcPage.md)
+Art & Audio: [Pau Bordes](https://tinotano.github.io/AoE_Project2/MarcPage.md)
 
-UI: [Josep Huguet](../docs/JosepPage.md)
+UI: [Josep Huguet](https://tinotano.github.io/AoE_Project2/JosepPage.md)
 
-QA: [David Franco](../docs/DavidPage.md)
+QA: [David Franco](https://tinotano.github.io/AoE_Project2/docs/DavidPage.md)
 
 # Contact us
 
