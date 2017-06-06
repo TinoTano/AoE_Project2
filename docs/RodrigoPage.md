@@ -48,4 +48,8 @@ I've collaborated with team partners to create the collision detection and manag
 
 I've implemented an order system which allows units in game to perform complex tasks as gathering resources or attack enemies in an intelligent and efficient way.
 
+### Heroes and skills
+
+I've collaborated with team partners to create heroes and their respective skills.
+
 
