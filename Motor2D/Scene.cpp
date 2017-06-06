@@ -476,18 +476,21 @@ void Scene::UpdateResources()
 void Scene::UpdatePopulation()
 {
 	uint houses_count = 0;
+	uint units_in_queue = 0;
 	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); ++it) {
 		if ((*it)->type == HOUSE) houses_count++;
+		units_in_queue += (*it)->units_in_queue.size();
 	}
-	villagers->SetString(to_string(App->entityManager->player->units.size()) + '/' + to_string((houses_count * 5) + 2));
+	villagers->SetString(to_string(App->entityManager->player->units.size() + units_in_queue) + '/' + to_string((houses_count * 5) + 2));
 }
 
 bool Scene::CheckUnitsRoom()
 {
 	uint houses_count = 0;
+	uint units_in_queue = 0;
 	for (list<Building*>::iterator it = App->entityManager->player->buildings.begin(); it != App->entityManager->player->buildings.end(); ++it) {
 		if ((*it)->type == HOUSE) houses_count++;
+		units_in_queue += (*it)->units_in_queue.size();
 	}
-
-	return (App->entityManager->player->units.size() < (houses_count * 5) + 2);
+	return ((App->entityManager->player->units.size() + units_in_queue) < (houses_count * 5) + 2);
 }
