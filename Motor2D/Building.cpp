@@ -128,7 +128,7 @@ bool Building::Update(float dt)
 			else state = IDLE;
 		}
 	}
-	else if (Life < 0) Destroy();
+	else if (Life <= 0) Destroy();
 	
 	return true;
 }
