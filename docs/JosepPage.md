@@ -47,3 +47,5 @@ Safe/Load was done with Marc and Adrià.
 I did the Settings window with the mute and the fullscreen and made them work.
 
 And also did the particle system that takes care of shooting arrows to targets.
+
+![i](http://i.imgur.com/7P8jW17.png)
