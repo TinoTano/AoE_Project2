@@ -72,7 +72,7 @@ Code: [Adrià Martín](https://tinotano.github.io/AoE_Project2/AdriaPage)
 
 Design: [Rodrigo de Pedro](https://tinotano.github.io/AoE_Project2/RodrigoPage)
 
-Art & Audio: [Pau Bordes](https://tinotano.github.io/AoE_Project2/MarcPage)
+Art & Audio: [Pau Bordes](https://tinotano.github.io/AoE_Project2/PauPage)
 
 UI: [Josep Huguet](https://tinotano.github.io/AoE_Project2/JosepPage)
 
