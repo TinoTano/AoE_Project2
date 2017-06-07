@@ -45,3 +45,5 @@ This was done on top of Rodrigo's previous design but it was reworked because we
 Safe/Load was done with Marc and Adrià.
 
 I did the Settings window with the mute and the fullscreen and made them work.
+
+And also did the particle system that takes care of shooting arrows to targets.
